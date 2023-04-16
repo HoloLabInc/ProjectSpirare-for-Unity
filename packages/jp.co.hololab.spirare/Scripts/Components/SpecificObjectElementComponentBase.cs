@@ -57,14 +57,14 @@ namespace HoloLab.Spirare
                 var updating = false;
                 pec.OnElementUpdated += async _ =>
                 {
-                    // マルチスレッドでフラグの整合性を保つのは大変なのでメインスレッドに処理は移譲する
+                    // It is difficult to maintain the consistency of flags in multithreading, so the processing is delegated to the main thread.
                     var isMainThread = SynchronizationContext.Current != null;
                     if (isMainThread == false)
                     {
                         await UniTask.SwitchToMainThread();
                     }
 
-                    // UpdateGameObject が1フレームで終わらない可能性があるため、更新要求フラグを立てる実装にしている。
+                    // Since UpdateGameObject might not finish in one frame, an update request flag is used.
                     updateRequested = true;
                     if (updating) { return; }
                     try
