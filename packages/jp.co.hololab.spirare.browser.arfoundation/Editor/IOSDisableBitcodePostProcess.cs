@@ -1,5 +1,3 @@
-// Copyright (c) 2021 HoloLab Inc. All rights reserved.
-
 #if UNITY_EDITOR && UNITY_IOS
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +5,7 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEditor.iOS.Xcode;
 
-namespace HoloLab.Toolkit.Media.ARPlayback
+namespace HoloLab.Spirare.Browser.ARFoundation.Editor
 {
     public class IOSDisableBitcodePostProcess : IPostprocessBuildWithReport
     {
