@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6638b2cd96453694c9f44e303cd1e873, type: 3}
+  m_Name: StandardImageElementObjectFactory
+  m_EditorClassIdentifier: 
+  imageElementComponentPrefab: {fileID: -4791431317151491657, guid: 1e8ac7e4f2d9a92478f49f1b50321df5,
+    type: 3}
