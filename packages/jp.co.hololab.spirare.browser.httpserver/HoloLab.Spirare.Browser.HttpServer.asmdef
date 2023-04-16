@@ -1,0 +1,18 @@
+{
+    "name": "HoloLab.Spirare.Browser.HttpServer",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e0c997780b5b8ac43ac18452857ceebe",
+        "GUID:37b0734553548f7499a0626e79cc619c",
+        "GUID:aff71cdf049aa224c9a2bd98a554b3b9"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

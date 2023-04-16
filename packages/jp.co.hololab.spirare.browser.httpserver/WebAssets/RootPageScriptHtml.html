@@ -1,0 +1,23 @@
+<script>
+  const contentInfoList = Array.from(
+    document.getElementsByClassName('content-info')
+  )
+
+  contentInfoList.forEach((contentInfo) => {
+    const contentIdInput = contentInfo.querySelector('.content-id')
+    const contentId = contentIdInput.value
+
+    // Send auto-reload ON/OFF
+    const checkbox = contentInfo.querySelector('.auto-reload-checkbox')
+    checkbox.addEventListener('change', () => {
+      const data = new URLSearchParams()
+      data.append('enabled', checkbox.checked ? 'true' : 'false')
+
+      const url = `/content/${contentId}/auto-reload`
+      fetch(url, {
+        method: 'post',
+        body: data,
+      })
+    })
+  })
+</script>
