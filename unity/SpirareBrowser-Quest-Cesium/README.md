@@ -1,4 +1,4 @@
-# SpirareBrowser-ARFoundation-Immersal
+# SpirareBrowser-Quest-Cesium
 
 This project is a browser application for Spirare.
 
