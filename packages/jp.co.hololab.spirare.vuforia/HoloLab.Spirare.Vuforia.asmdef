@@ -1,0 +1,23 @@
+{
+    "name": "HoloLab.Spirare.Vuforia",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e0c997780b5b8ac43ac18452857ceebe",
+        "GUID:38d6742b921dd3345be1a1c5413dacf6"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.ptc.vuforia.engine",
+            "expression": "",
+            "define": "VUFORIA_PRESENT"
+        }
+    ],
+    "noEngineReferences": false
+}
