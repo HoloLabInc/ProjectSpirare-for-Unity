@@ -1,0 +1,10 @@
+{
+    "name": "jp.co.hololab.spirare.mrtk",
+    "version": "1.0.0",
+    "displayName": "Spirare MRTK",
+    "description": "Project Spirare MRTK",
+    "unity": "2019.4",
+    "author": {
+        "name": "HoloLab Inc."
+    }
+}
