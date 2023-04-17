@@ -1,0 +1,6 @@
+/proguard-user.txt
+/proguard-user.txt.meta
+/*.jar
+/*.jar.meta
+/*.aar
+/*.aar.meta
