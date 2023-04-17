@@ -1,4 +1,4 @@
-# SpirareBrowser-HoloLens-Immersal
+# SpirareBrowser-HoloLens-VAT
 
 This project is a browser application for Spirare.
 
