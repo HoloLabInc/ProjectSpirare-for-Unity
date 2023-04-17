@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vuforia:
     vuforiaLicenseKey: 
-    ufoLicenseKey: QVVMWE1HWC8vLy8vQUFBQUtNdEt6L0tsWkV3d29UcXhGMDE3REFVYWY4anZtalhaWmtUdTZtOFFxVGl0UWxzb05STXFmRWZYMVdhL3c4YzEySmxqUnJuOXpGWHZDNWZqZXgvZjlEVUlmV0o5L0tvOHl0QjdodGJsM1I4N1UyVHFYOW5DNWNnTnl0QXJHR1BXejdKNG1UU1QzdnUvR2xCdGswOGNlYzNnUk1NVE5xNDdLdGJoVnp4V09CQmVxazcwMjBKRWZYVTdqQ0hWVytWOEcrWm51d1RwY2R2cWp2WHBzS013NmVzbzNHQkwyTHIxQkZoZzFVdjNWL1pydEszbkFvQlZMZTBnUUtwRmU2cXo2ZkJjRG9rV1Z4U25pdmwvWnZjL3VXaHpaT1Nuc2ptVk1BeElzdGxwcXFPOVA3RkVicndKc245YzZJNmpiSmJmUkMwd0Z1QmFUZ216MFcrTFF1djlFbzFJZlFvVVhsZTNySzZuOGt1REhyTmo=
+    ufoLicenseKey: 
     delayedInitialization: 1
     cameraFocusModeSetting: 2
     cameraDeviceModeSetting: -1
