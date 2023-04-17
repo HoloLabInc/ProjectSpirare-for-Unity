@@ -1,0 +1,17 @@
+{
+    "name": "HoloLab.Spirare.Mrtk",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e0c997780b5b8ac43ac18452857ceebe",
+        "GUID:a7a4c34601384f9389d5c4207f3c6331"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
