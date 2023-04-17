@@ -1,5 +1,5 @@
 # Spirare-Cesium-Dev
-This is a project for the development of `HoloLab Spirare Cesium` package.
+This is a project for the development of `Spirare Cesium` package.
 
 ## Project Setup
 Select **Cesium** > **Cesium** in Unity Editor.  
