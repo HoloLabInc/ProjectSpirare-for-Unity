@@ -187,37 +187,37 @@
       "hash": "d7a295760b2b745eba293002d700bcb05586c036"
     },
     "jp.co.hololab.spirare": {
-      "version": "file:../../../Packages/jp.co.hololab.spirare",
+      "version": "file:../../../packages/jp.co.hololab.spirare",
       "depth": 0,
       "source": "local",
       "dependencies": {}
     },
     "jp.co.hololab.spirare.browser": {
-      "version": "file:../../../Packages/jp.co.hololab.spirare.browser",
+      "version": "file:../../../packages/jp.co.hololab.spirare.browser",
       "depth": 0,
       "source": "local",
       "dependencies": {}
     },
     "jp.co.hololab.spirare.tests": {
-      "version": "file:../../../Packages/jp.co.hololab.spirare.tests",
+      "version": "file:../../../packages/jp.co.hololab.spirare.tests",
       "depth": 0,
       "source": "local",
       "dependencies": {}
     },
     "jp.co.hololab.spirare.wasm": {
-      "version": "file:../../../Packages/jp.co.hololab.spirare.wasm",
+      "version": "file:../../../packages/jp.co.hololab.spirare.wasm",
       "depth": 0,
       "source": "local",
       "dependencies": {}
     },
     "jp.co.hololab.spirare.wasm.iwasm": {
-      "version": "file:../../../Packages/jp.co.hololab.spirare.wasm.iwasm",
+      "version": "file:../../../packages/jp.co.hololab.spirare.wasm.iwasm",
       "depth": 0,
       "source": "local",
       "dependencies": {}
     },
     "jp.co.hololab.spirare.wasm.tests": {
-      "version": "file:../../../Packages/jp.co.hololab.spirare.wasm.tests",
+      "version": "file:../../../packages/jp.co.hololab.spirare.wasm.tests",
       "depth": 0,
       "source": "local",
       "dependencies": {}
