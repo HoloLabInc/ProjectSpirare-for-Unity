@@ -45,15 +45,15 @@
     "com.unity.xr.openxr": "1.2.8",
     "com.gwaredd.mggif": "https://github.com/gwaredd/mgGif.git?path=Assets/mgGif",
     "jp.co.hololab.immersal": "https://github.com/HoloLabInc/HoloLab.Immersal.git?path=Assets/HoloLab.Immersal",
-    "jp.co.hololab.iwasmunity": "https://github.com/HoloLabInc/IwasmUnity.git?path=Assets/IwasmUnity#v0.1.0",
+    "jp.co.hololab.iwasmunity": "https://github.com/HoloLabInc/IwasmUnity.git?path=Assets/IwasmUnity#v0.2.0",
     "jp.co.hololab.mrtk.ja": "0.3.0",
     "jp.co.hololab.positioningtools": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools",
     "jp.co.hololab.positioningtools.geographiccoordinate": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.geographiccoordinate",
-    "jp.co.hololab.spirare": "file:../../../Packages/jp.co.hololab.spirare",
-    "jp.co.hololab.spirare.browser": "file:../../../Packages/jp.co.hololab.spirare.browser",
-    "jp.co.hololab.spirare.browser.httpserver": "file:../../../Packages/jp.co.hololab.spirare.browser.httpserver",
-    "jp.co.hololab.spirare.mrtk": "file:../../../Packages/jp.co.hololab.spirare.mrtk",
-    "jp.co.hololab.spirare.wasm": "file:../../../Packages/jp.co.hololab.spirare.wasm",
+    "jp.co.hololab.spirare": "file:../../../packages/jp.co.hololab.spirare",
+    "jp.co.hololab.spirare.browser": "file:../../../packages/jp.co.hololab.spirare.browser",
+    "jp.co.hololab.spirare.browser.httpserver": "file:../../../packages/jp.co.hololab.spirare.browser.httpserver",
+    "jp.co.hololab.spirare.mrtk": "file:../../../packages/jp.co.hololab.spirare.mrtk",
+    "jp.co.hololab.spirare.wasm": "file:../../../packages/jp.co.hololab.spirare.wasm",
     "jp.co.hololab.uniwebserver": "https://github.com/HoloLabInc/UniWebServer.git?path=packages/jp.co.hololab.uniwebserver",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
@@ -85,7 +85,6 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0",
-    "jp.co.hololab.toolkit.modules.yaml": "https://github.com/HoloLabInc/HoloLabToolkit.git?path=Assets/HoloLab.Toolkit.Modules/Yaml#v3.1.2"
+    "com.unity.modules.xr": "1.0.0"
   }
 }

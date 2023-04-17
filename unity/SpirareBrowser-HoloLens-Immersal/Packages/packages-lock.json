@@ -297,11 +297,11 @@
       "hash": "e3aebe0224b9564de9e91354e3d6e8c82e4fd142"
     },
     "jp.co.hololab.iwasmunity": {
-      "version": "https://github.com/HoloLabInc/IwasmUnity.git?path=Assets/IwasmUnity#v0.1.0",
+      "version": "https://github.com/HoloLabInc/IwasmUnity.git?path=Assets/IwasmUnity#v0.2.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "fe80ee3e25fa98f84f151f8078fe514265267762"
+      "hash": "e0033bed325356cb1a3a34e96f2c8beca67677e0"
     },
     "jp.co.hololab.mrtk.ja": {
       "version": "0.3.0",
@@ -325,41 +325,34 @@
       "hash": "d7a295760b2b745eba293002d700bcb05586c036"
     },
     "jp.co.hololab.spirare": {
-      "version": "file:../../../Packages/jp.co.hololab.spirare",
+      "version": "file:../../../packages/jp.co.hololab.spirare",
       "depth": 0,
       "source": "local",
       "dependencies": {}
     },
     "jp.co.hololab.spirare.browser": {
-      "version": "file:../../../Packages/jp.co.hololab.spirare.browser",
+      "version": "file:../../../packages/jp.co.hololab.spirare.browser",
       "depth": 0,
       "source": "local",
       "dependencies": {}
     },
     "jp.co.hololab.spirare.browser.httpserver": {
-      "version": "file:../../../Packages/jp.co.hololab.spirare.browser.httpserver",
+      "version": "file:../../../packages/jp.co.hololab.spirare.browser.httpserver",
       "depth": 0,
       "source": "local",
       "dependencies": {}
     },
     "jp.co.hololab.spirare.mrtk": {
-      "version": "file:../../../Packages/jp.co.hololab.spirare.mrtk",
+      "version": "file:../../../packages/jp.co.hololab.spirare.mrtk",
       "depth": 0,
       "source": "local",
       "dependencies": {}
     },
     "jp.co.hololab.spirare.wasm": {
-      "version": "file:../../../Packages/jp.co.hololab.spirare.wasm",
+      "version": "file:../../../packages/jp.co.hololab.spirare.wasm",
       "depth": 0,
       "source": "local",
       "dependencies": {}
-    },
-    "jp.co.hololab.toolkit.modules.yaml": {
-      "version": "https://github.com/HoloLabInc/HoloLabToolkit.git?path=Assets/HoloLab.Toolkit.Modules/Yaml#v3.1.2",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "d15557091670b56bb708273049e60425051c96a4"
     },
     "jp.co.hololab.uniwebserver": {
       "version": "https://github.com/HoloLabInc/UniWebServer.git?path=packages/jp.co.hololab.uniwebserver",
