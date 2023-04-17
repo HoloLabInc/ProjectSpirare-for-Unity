@@ -1,0 +1,19 @@
+{
+    "name": "HoloLab.Spirare.Wasm.Iwasm",
+    "rootNamespace": "HoloLab.Spirare.Wasm.Iwasm",
+    "references": [
+        "GUID:e0c997780b5b8ac43ac18452857ceebe",
+        "GUID:209652e964b629141bd8ee58b70a6e1f",
+        "GUID:18ef24067f7c8a84582fda8bb727a195",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
