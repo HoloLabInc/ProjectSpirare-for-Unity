@@ -549,9 +549,9 @@ PlayerSettings:
   enableInternalProfiler: 0
   logObjCUncaughtExceptions: 1
   enableCrashReportAPI: 0
-  cameraUsageDescription: "\u30AB\u30E1\u30E9\u3092\u5229\u7528\u3057\u307E\u3059"
-  locationUsageDescription: "\u4F4D\u7F6E\u60C5\u5831\u3092\u5229\u7528\u3057\u307E\u3059"
-  microphoneUsageDescription: "\u30DE\u30A4\u30AF\u3092\u5229\u7528\u3057\u307E\u3059"
+  cameraUsageDescription: Use camera
+  locationUsageDescription: Use location
+  microphoneUsageDescription: Use microphone
   bluetoothUsageDescription: 
   switchNMETAOverride: 
   switchNetLibKey: 
