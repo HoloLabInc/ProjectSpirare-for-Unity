@@ -60,11 +60,11 @@ POML has the following features:
 
 ### [Spirare-Dev](./unity/Spirare-Dev)
 
-A project for the development of `HoloLab Spirare` package.
+A project for the development of `Spirare` package.
 
 ### [Spirare-Cesium-Dev](./unity/Spirare-Cesium-Dev)
 
-A project for the development of `HoloLab Spirare Cesium` package.
+A project for the development of `Spirare Cesium` package.
 
 ## License
 
