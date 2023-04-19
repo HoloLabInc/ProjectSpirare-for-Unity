@@ -23,6 +23,9 @@ If `VuforiaLicenseKeySettings` does not exist, play the `SpirareBrowser-HoloLens
 
 <img width="640" alt="Vuforia License settings" src="https://user-images.githubusercontent.com/4415085/230548660-7d367480-27a6-4cf4-827c-7b960c197378.png">
 
+## Compilation Notice
+Please note that the initial build may take approximately 1 hour due to the compilation of shader variants.
+
 ## Usage
 
 ### Place Vuforia map files
