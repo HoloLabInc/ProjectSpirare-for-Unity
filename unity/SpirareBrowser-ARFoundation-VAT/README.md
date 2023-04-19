@@ -21,6 +21,9 @@ If `VuforiaLicenseKeySettings` does not exist, play the `SpirareBrowser_VuforiaA
 
 <img width="640" alt="Vuforia License settings" src="https://user-images.githubusercontent.com/4415085/230545525-f11b9075-3793-48cd-91d7-c978dcc7279e.png">
 
+## Compilation Notice
+Please note that the initial build may take approximately 1 hour due to the compilation of shader variants.
+
 ## Usage
 To create a folder for placing the map files, please launch the application once.  
 
