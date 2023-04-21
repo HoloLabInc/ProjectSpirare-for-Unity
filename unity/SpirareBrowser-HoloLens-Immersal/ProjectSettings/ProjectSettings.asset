@@ -40,7 +40,7 @@ PlayerSettings:
     width: 1
     height: 1
   m_SplashScreenLogos: []
-  m_VirtualRealitySplashScreen: {fileID: 2800000, guid: 7654b6e9567f49c48a6db2fd58b377cd, type: 3}
+  m_VirtualRealitySplashScreen: {fileID: 2800000, guid: 1df42761793d41f4fb5855a32011e29a, type: 3}
   m_HolographicTrackingLossScreen: {fileID: 0}
   defaultScreenWidth: 1024
   defaultScreenHeight: 768
@@ -136,6 +136,9 @@ PlayerSettings:
     Others: 1
   bundleVersion: 0.1
   preloadedAssets:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -281,7 +284,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 4fbf6c111f0f22445a2304e76ca9c5f5, type: 3}
+      m_Icon: {fileID: 2800000, guid: e952d5e5591e0b9459ce27c1916ceec3, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0
@@ -637,80 +640,80 @@ PlayerSettings:
   metroCertificatePassword: 
   metroCertificateSubject: HoloLab Inc.
   metroCertificateIssuer: HoloLab Inc.
-  metroCertificateNotAfter: 80d4d6391e87da01
+  metroCertificateNotAfter: 80b45a5b2492da01
   metroApplicationDescription: Spirare Browser Immersal
   wsaImages:
-    65552: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_16x16.png
-    65560: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_24x24.png
-    65568: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_32x32.png
-    65584: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_48x48.png
-    65636: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_50x50.png
-    65661: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_63x63.png
-    65686: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_75x75.png
-    65736: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_100x100.png
-    65792: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_256x256.png
-    65936: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_200x200.png
-    131088: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_16x16.png
-    131096: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_24x24.png
-    131104: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_32x32.png
-    131120: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_48x48.png
-    131172: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_620x300.png
-    131197: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_775x375.png
-    131222: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_930x450.png
-    131272: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_1240x600.png
-    131328: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_256x256.png
+    65552: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_16x16.png
+    65560: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_24x24.png
+    65568: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_32x32.png
+    65584: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_48x48.png
+    65636: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_50x50.png
+    65661: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_63x63.png
+    65686: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_75x75.png
+    65736: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_100x100.png
+    65792: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_256x256.png
+    65936: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_200x200.png
+    131088: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_16x16.png
+    131096: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_24x24.png
+    131104: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_32x32.png
+    131120: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_48x48.png
+    131172: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_620x300.png
+    131197: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_775x375.png
+    131222: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_930x450.png
+    131272: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_1240x600.png
+    131328: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_256x256.png
     131472: Assets/TileGenerator/BaseWindowImage_2480x1200.png
-    2031632: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_16x16.png
-    2031640: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_24x24.png
-    2031648: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_32x32.png
-    2031664: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_48x48.png
-    2031716: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_44x44.png
-    2031741: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_55x55.png
-    2031766: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_66x66.png
-    2031816: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_88x88.png
-    2031872: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_256x256.png
-    2032016: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_176x176.png
-    2097168: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_16x16.png
-    2097176: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_24x24.png
-    2097184: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_32x32.png
-    2097200: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_48x48.png
-    2097252: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_71x71.png
-    2097277: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_89x89.png
-    2097302: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_107x107.png
-    2097352: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_142x142.png
-    2097408: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_256x256.png
-    2097552: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_284x284.png
-    2162704: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_16x16.png
-    2162712: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_24x24.png
-    2162720: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_32x32.png
-    2162736: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_48x48.png
-    2162788: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_150x150.png
-    2162813: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_188x188.png
-    2162838: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_225x225.png
-    2162888: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_300x300.png
-    2162944: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_256x256.png
-    2163088: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_600x600.png
-    2228240: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_16x16.png
-    2228248: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_24x24.png
-    2228256: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_32x32.png
-    2228272: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_48x48.png
-    2228324: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_310x310.png
-    2228349: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_388x388.png
-    2228374: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_465x465.png
-    2228424: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_620x620.png
-    2228480: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_256x256.png
+    2031632: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_16x16.png
+    2031640: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_24x24.png
+    2031648: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_32x32.png
+    2031664: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_48x48.png
+    2031716: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_44x44.png
+    2031741: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_55x55.png
+    2031766: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_66x66.png
+    2031816: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_88x88.png
+    2031872: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_256x256.png
+    2032016: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_176x176.png
+    2097168: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_16x16.png
+    2097176: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_24x24.png
+    2097184: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_32x32.png
+    2097200: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_48x48.png
+    2097252: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_71x71.png
+    2097277: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_89x89.png
+    2097302: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_107x107.png
+    2097352: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_142x142.png
+    2097408: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_256x256.png
+    2097552: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_284x284.png
+    2162704: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_16x16.png
+    2162712: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_24x24.png
+    2162720: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_32x32.png
+    2162736: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_48x48.png
+    2162788: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_150x150.png
+    2162813: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_188x188.png
+    2162838: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_225x225.png
+    2162888: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_300x300.png
+    2162944: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_256x256.png
+    2163088: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_600x600.png
+    2228240: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_16x16.png
+    2228248: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_24x24.png
+    2228256: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_32x32.png
+    2228272: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_48x48.png
+    2228324: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_310x310.png
+    2228349: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_388x388.png
+    2228374: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_465x465.png
+    2228424: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_620x620.png
+    2228480: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_256x256.png
     2228624: Assets/TileGenerator/BaseIcon_1240x1240.png
-    2293776: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_16x16.png
-    2293784: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_24x24.png
-    2293792: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_32x32.png
-    2293808: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_48x48.png
-    2293860: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_310x150.png
-    2293885: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_388x188.png
-    2293910: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_465x225.png
-    2293960: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_620x300.png
-    2294016: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_256x256.png
-    2294160: Assets/TileGenerator/SpirareBrowser-HoloLens-VAT_AppIcon_1240x600.png
-  metroTileShortName: SpirareBrowser-VAT
+    2293776: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_16x16.png
+    2293784: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_24x24.png
+    2293792: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_32x32.png
+    2293808: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_48x48.png
+    2293860: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_310x150.png
+    2293885: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_388x188.png
+    2293910: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_465x225.png
+    2293960: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_620x300.png
+    2294016: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_256x256.png
+    2294160: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_1240x600.png
+  metroTileShortName: SB Immersal
   metroTileShowName: 0
   metroMediumTileShowName: 1
   metroLargeTileShowName: 0
@@ -719,9 +722,9 @@ PlayerSettings:
   metroLastRequiredScene: 0
   metroDefaultTileSize: 1
   metroTileForegroundText: 2
-  metroTileBackgroundColor: {r: 0.30980393, g: 0.30980393, b: 0.30980393, a: 1}
-  metroSplashScreenBackgroundColor: {r: 0.12941177, g: 0.17254902, b: 0.21568628, a: 1}
-  metroSplashScreenUseBackgroundColor: 0
+  metroTileBackgroundColor: {r: 0.38039216, g: 0.6313726, b: 0.8, a: 1}
+  metroSplashScreenBackgroundColor: {r: 0.38039216, g: 0.6313726, b: 0.8, a: 1}
+  metroSplashScreenUseBackgroundColor: 1
   platformCapabilities:
     WindowsStoreApps:
       GazeInput: True
@@ -780,7 +783,13 @@ PlayerSettings:
   activeInputHandler: 2
   cloudProjectId: 
   framebufferDepthMemorylessMode: 0
-  qualitySettingsNames: []
+  qualitySettingsNames:
+  - Very Low
+  - Low
+  - Medium
+  - High
+  - Very High
+  - Ultra
   projectName: 
   organizationId: 
   cloudEnabled: 0
