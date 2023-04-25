@@ -28,7 +28,7 @@ Please note that the initial build may take approximately 1 hour due to the comp
 To create a folder for placing the map files, please launch the application once.  
 
 ### Android
-Place Vuforia map files (.dat, .xml) under the `Android\data\jp.co.hololab.SpirareBrowserVAT\files\AreaTargetData` folder.
+Place Vuforia map files (.dat, .xml) under the `Android\data\jp.co.hololab.spirarebrowservat\files\AreaTargetData` folder.
 
 ### iOS
-Open the `Files` app and place Vuforia map files (.dat, .xml) under the `On My iPad\Spirare VAT\AreaTargetData` folder.
+Open the `Files` app and place Vuforia map files (.dat, .xml) under the `On My iPad\SB VAT\AreaTargetData` folder.
