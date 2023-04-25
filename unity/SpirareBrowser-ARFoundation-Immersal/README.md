@@ -18,6 +18,12 @@ Download the Immersal SDK Core unitypackage from the [developer portal](https://
 
 ### Alignment with Immersal
 
+Enter your email address and password and press **Sign In** button.
+
+TODO: screenshot
+
+Enter the map ID and press the **Load Map** button.
+
 ### Loading POML from web server
 
 Please enter the URL where the POML is being served in the input field and press the **Load** button.
