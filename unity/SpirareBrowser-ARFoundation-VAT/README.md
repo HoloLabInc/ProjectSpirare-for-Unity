@@ -31,6 +31,8 @@ Please note that the initial build may take approximately 1 hour due to the comp
 
 ## Usage
 
+TODO: screenshot
+
 ### Alignment with Vuforia Area Target
 
 To create a folder for placing the map files, please launch the application once.
