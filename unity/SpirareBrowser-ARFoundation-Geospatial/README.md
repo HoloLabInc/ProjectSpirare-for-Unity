@@ -36,8 +36,8 @@ Please enter the URL where the POML is being served in the input field and press
  
 To create a folder for placing the map files, please launch the application once.  
 
-### Android
+#### Android
 Place POML files (.poml) or POML.zip files (.poml.zip) under the `Android\data\jp.co.hololab.spirarebrowsergeospatial\files\LocalContent` folder.
 
-### iOS
+#### iOS
 Open the `Files` app and place POML files (.poml) or POML.zip files (.poml.zip) under the `On My iPad\SB Geospatial\LocalContent` folder.
