@@ -20,7 +20,7 @@ Download the Immersal SDK Core unitypackage from the [developer portal](https://
 
 Enter your email address and password and press **Sign In** button.
 
-![SB Immersal Sign In Menu](https://user-images.githubusercontent.com/4415085/234493232-f2bafb64-b0fc-470a-92dd-d1fa1e959c85.jpg)
+<img width="640" alt="SB Immersal Sign In Menu" src="https://user-images.githubusercontent.com/4415085/234493232-f2bafb64-b0fc-470a-92dd-d1fa1e959c85.jpg">
 
 Enter the map ID and press the **Load Map** button.
 
