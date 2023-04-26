@@ -24,7 +24,7 @@ Enter your email address and password and press **Sign In** button.
 
 Enter the map ID and press the **Load Map** button.
 
-![SB Immersal Load Map Menu](https://user-images.githubusercontent.com/4415085/234493301-233e2847-f78e-484d-8321-d37c3e1edcfc.jpg)
+<img width="640" alt="SB Immersal Load Map Menu" src="https://user-images.githubusercontent.com/4415085/234493301-233e2847-f78e-484d-8321-d37c3e1edcfc.jpg">
 
 ### Loading POML from web server
 
