@@ -31,7 +31,7 @@ Please note that the initial build may take approximately 1 hour due to the comp
 
 ## Usage
 
-TODO: screenshot
+<img width="640" alt="SB VAT" src="https://user-images.githubusercontent.com/4415085/234495791-74c4ec6f-71c0-4d72-9cf6-c7c8756e077e.jpg">
 
 ### Alignment with Vuforia Area Target
 
