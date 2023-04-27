@@ -22,7 +22,7 @@ Select **Edit** > **ProjectSettings** > **XR Plug-in Management** > **ARCore Ext
 
 ## Usage
 
-TODO: screenshot
+<img width="480" alt="SB Geospatial" src="https://user-images.githubusercontent.com/4415085/234727741-8e560559-27c9-4cdf-accb-ed84b94dbe58.jpg">
 
 ### Alignment
 
@@ -30,14 +30,17 @@ Press the **Align** button.
 By doing this, the alignment will be performed based on the geodetic position obtained from the ARCore Geospatial API.
 
 ### Loading POML from web server
+
 Please enter the URL where the POML is being served in the input field and press the **Load** button.
 
 ### Loading POML from local files
- 
-To create a folder for placing the map files, please launch the application once.  
+
+To create a folder for placing the map files, please launch the application once.
 
 #### Android
+
 Place POML files (.poml) or POML.zip files (.poml.zip) under the `Android\data\jp.co.hololab.spirarebrowsergeospatial\files\LocalContent` folder.
 
 #### iOS
+
 Open the `Files` app and place POML files (.poml) or POML.zip files (.poml.zip) under the `On My iPad\SB Geospatial\LocalContent` folder.
