@@ -22,7 +22,7 @@ Select **Edit** > **ProjectSettings** > **XR Plug-in Management** > **ARCore Ext
 
 ## Usage
 
-<img width="480" alt="SB Geospatial" src="https://user-images.githubusercontent.com/4415085/234727741-8e560559-27c9-4cdf-accb-ed84b94dbe58.jpg">
+<img width="640" alt="SB Geospatial" src="https://user-images.githubusercontent.com/4415085/234727741-8e560559-27c9-4cdf-accb-ed84b94dbe58.jpg">
 
 ### Alignment
 
