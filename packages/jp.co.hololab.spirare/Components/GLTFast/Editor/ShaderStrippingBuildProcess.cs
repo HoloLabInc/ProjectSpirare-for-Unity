@@ -14,11 +14,6 @@ namespace HoloLab.Spirare
 
         public void OnProcessShader(Shader shader, ShaderSnippetData snippet, IList<ShaderCompilerData> shaderCompilerData)
         {
-            Debug.Log("----");
-            Debug.Log(shader.name);
-            Debug.Log(snippet.passName);
-            Debug.Log(snippet.passType);
-
             var targetShaderName = new string[]
             {
                 "Shader Graphs/glTF-pbrSpecularGlossiness",
@@ -41,9 +36,7 @@ namespace HoloLab.Spirare
 
             if (targetShaderName.Contains(shader.name) && strippedPassName.Contains(snippet.passName))
             {
-                Debug.Log("trim!!");
                 shaderCompilerData.Clear();
-                return;
             }
         }
     }
