@@ -1289,6 +1289,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 995636813834651946, guid: 27299b169ded5d240b92fa474f8e3fa3, type: 3}
+      propertyPath: screenSpaceCamera
+      value: 
+      objectReference: {fileID: 324546968}
     - target: {fileID: 995636813834651947, guid: 27299b169ded5d240b92fa474f8e3fa3, type: 3}
       propertyPath: m_Name
       value: InteractionManager
