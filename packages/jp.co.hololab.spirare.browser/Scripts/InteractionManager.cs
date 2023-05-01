@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace HoloLab.Spirare.Browser
         [SerializeField]
         private Camera screenSpaceCamera;
 
-        private RaycastHit[] raycastHits = new RaycastHit[1];
+        private RaycastHit[] raycastHits = new RaycastHit[100];
 
         private void Awake()
         {
@@ -26,23 +27,38 @@ namespace HoloLab.Spirare.Browser
                 return;
             }
 
-            var hit = RaycastInScreenSpace(screenSpaceCamera, selectedPoint.Value, raycastHits);
+            var result = SelectScreenSpaceObject(selectedPoint.Value);
 
-            if (hit == false)
+            if (result == false)
             {
-                hit = RaycastInWorldSpace(mainCamera, selectedPoint.Value, raycastHits);
+                SelectWorldSpaceObject(selectedPoint.Value);
+            }
+        }
+
+        private bool SelectScreenSpaceObject(Vector2 selectedPoint)
+        {
+            var hitCount = RaycastInScreenSpace(screenSpaceCamera, selectedPoint, raycastHits);
+
+            if (hitCount == 0)
+            {
+                return false;
             }
 
-            if (hit)
+            SelectNearestHitObject(raycastHits, hitCount, screenSpaceCamera.transform.position);
+            return true;
+        }
+
+        private bool SelectWorldSpaceObject(Vector2 selectedPoint)
+        {
+            var hitCount = RaycastInWorldSpace(mainCamera, selectedPoint, raycastHits);
+
+            if (hitCount == 0)
             {
-                var firstHit = raycastHits[0];
-                var hitObject = firstHit.collider.gameObject;
-                var hitPomlelement = hitObject.GetComponentInParent<PomlObjectElementComponent>();
-                if (hitPomlelement != null)
-                {
-                    hitPomlelement.Select();
-                }
+                return false;
             }
+
+            SelectNearestHitObject(raycastHits, hitCount, mainCamera.transform.position);
+            return true;
         }
 
         private Vector2? GetSelectedScreenPoint()
@@ -81,25 +97,53 @@ namespace HoloLab.Spirare.Browser
             return null;
         }
 
-        private static bool RaycastInScreenSpace(Camera screenSpaceCamera, Vector2 screenPoint, RaycastHit[] raycastHits)
+        private static void SelectNearestHitObject(RaycastHit[] raycastHits, int hitCount, Vector3 origin)
+        {
+            if (hitCount == 0)
+            {
+                return;
+            }
+
+            var minDistance = Mathf.Infinity;
+            var nearestHit = raycastHits[0];
+
+            for (var i = 0; i < hitCount; i++)
+            {
+                var sqrDistance = (origin - raycastHits[i].point).sqrMagnitude;
+                if (sqrDistance < minDistance)
+                {
+                    minDistance = sqrDistance;
+                    nearestHit = raycastHits[i];
+                }
+            }
+
+            var hitObject = nearestHit.collider.gameObject;
+            var hitPomlelement = hitObject.GetComponentInParent<PomlObjectElementComponent>();
+            if (hitPomlelement != null)
+            {
+                hitPomlelement.Select();
+            }
+        }
+
+        private static int RaycastInScreenSpace(Camera screenSpaceCamera, Vector2 screenPoint, RaycastHit[] raycastHits)
         {
             if (screenSpaceCamera == null)
             {
-                return false;
+                return 0;
             }
 
             var ray = screenSpaceCamera.ScreenPointToRay(screenPoint);
             var hitCount = Physics.RaycastNonAlloc(ray, raycastHits, screenSpaceCamera.farClipPlane, screenSpaceCamera.cullingMask);
 
-            return hitCount > 0;
+            return hitCount;
         }
 
-        private static bool RaycastInWorldSpace(Camera camera, Vector2 screenPoint, RaycastHit[] raycastHits)
+        private static int RaycastInWorldSpace(Camera camera, Vector2 screenPoint, RaycastHit[] raycastHits)
         {
             var ray = camera.ScreenPointToRay(screenPoint);
             var hitCount = Physics.RaycastNonAlloc(ray, raycastHits, float.MaxValue, camera.cullingMask);
 
-            return hitCount > 0;
+            return hitCount;
         }
     }
 }
