@@ -104,12 +104,12 @@ namespace HoloLab.Spirare.Browser
                 return;
             }
 
-            float minDistance = Mathf.Infinity;
-            RaycastHit nearestHit = raycastHits[0];
+            var minDistance = Mathf.Infinity;
+            var nearestHit = raycastHits[0];
 
-            for (int i = 0; i < hitCount; i++)
+            for (var i = 0; i < hitCount; i++)
             {
-                float sqrDistance = (origin - raycastHits[i].point).sqrMagnitude;
+                var sqrDistance = (origin - raycastHits[i].point).sqrMagnitude;
                 if (sqrDistance < minDistance)
                 {
                     minDistance = sqrDistance;
