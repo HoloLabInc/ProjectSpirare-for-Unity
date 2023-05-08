@@ -17,7 +17,10 @@ namespace HoloLab.Spirare
         public event Action<PomlElementComponent> OnUpdate;
         public event Action<PomlElementComponent> OnDestroyed;
 
-        private void Awake()
+        /// <summary>
+        /// This method should be called from the main thread.
+        /// </summary>
+        public void Initialize()
         {
             mainThreadContext = SynchronizationContext.Current;
             mainThreadId = Thread.CurrentThread.ManagedThreadId;

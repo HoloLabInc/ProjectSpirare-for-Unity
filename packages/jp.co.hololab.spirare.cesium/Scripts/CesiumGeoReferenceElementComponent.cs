@@ -19,6 +19,8 @@ namespace HoloLab.Spirare.Cesium
 
         internal CesiumGeoReferenceElementComponent Initialize(PomlGeoReferenceElement geoReferenceElement)
         {
+            base.Initialize();
+
             GeoReferenceElement = geoReferenceElement;
 
             anchor = gameObject.AddComponent<CesiumGlobeAnchor>();

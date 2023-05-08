@@ -30,6 +30,8 @@ namespace HoloLab.Spirare
 
         internal PomlObjectElementComponent Initialize(PomlElement element)
         {
+            base.Initialize();
+
             PomlElement = element;
             cameraTransform = Camera.main.transform;
 

@@ -4,6 +4,8 @@ namespace HoloLab.Spirare
     {
         internal RealWorldSpaceReferenceElementComponent Initialize(PomlSpaceReferenceElement spaceReferenceElement)
         {
+            base.Initialize();
+
             SpaceReferenceElement = spaceReferenceElement;
 
             if (gameObject.TryGetComponent<MultiSpaceReferenceComponent>(out var multiSpaceReferenceComponent) == false)
