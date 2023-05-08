@@ -30,6 +30,8 @@ namespace HoloLab.Spirare
 
         internal RealWorldGeoReferenceElementComponent Initialize(PomlGeoReferenceElement geoReferenceElement)
         {
+            base.Initialize();
+
             GeoReferenceElement = geoReferenceElement;
 
             var wco = gameObject.AddComponent<WorldCoordinateOrigin>();
