@@ -20,7 +20,7 @@ namespace HoloLab.Spirare
         /// <summary>
         /// This method should be called from the main thread.
         /// </summary>
-        internal void Initialize()
+        public void Initialize()
         {
             mainThreadContext = SynchronizationContext.Current;
             mainThreadId = Thread.CurrentThread.ManagedThreadId;
