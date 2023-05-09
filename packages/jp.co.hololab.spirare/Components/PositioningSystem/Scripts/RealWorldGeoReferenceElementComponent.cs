@@ -30,7 +30,7 @@ namespace HoloLab.Spirare
 
         internal RealWorldGeoReferenceElementComponent Initialize(PomlGeoReferenceElement geoReferenceElement)
         {
-            base.Initialize();
+            base.Initialize(geoReferenceElement);
 
             GeoReferenceElement = geoReferenceElement;
 
