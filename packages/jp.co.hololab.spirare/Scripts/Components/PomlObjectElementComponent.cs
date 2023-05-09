@@ -88,9 +88,9 @@ namespace HoloLab.Spirare
 
             if (Application.isPlaying)
             {
+                InvokeOnUpdate();
                 UpdateRotation();
                 UpdateScale();
-                InvokeOnUpdate();
             }
         }
 
