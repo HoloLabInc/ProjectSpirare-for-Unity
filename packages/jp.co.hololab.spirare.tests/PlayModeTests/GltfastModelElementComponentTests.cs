@@ -159,21 +159,23 @@ public class GltfastModelElementComponentTests
     [Test]
     public async Task ModelObject_ParentHasChangedVisible_ChangeVisible()
     {
-        var modelElement = new PomlModelElement()
-        {
-            Display = PomlDisplayType.Visible,
-            Src = modelDataPath
-        };
-
         var parentElement = new PomlEmptyElement()
         {
             Display = PomlDisplayType.None,
-            Children = new PomlElement[] { modelElement }
         };
+
+        var modelElement = new PomlModelElement()
+        {
+            Parent = parentElement,
+            Display = PomlDisplayType.Visible,
+            Src = modelDataPath,
+        };
+
+        parentElement.Children = new PomlElement[] { modelElement };
 
         var parentComponent = CreateEmptyElementObject(parentElement);
 
-        var go = await CreateObjectAsync(modelElement, normalLoadOptions);
+        var go = await CreateObjectAsync(modelElement, normalLoadOptions, parentComponent.transform);
         var objectElementComponent = go.GetComponent<PomlObjectElementComponent>();
 
         Assert.That(objectElementComponent, Is.Not.Null);

@@ -11,6 +11,8 @@ namespace HoloLab.Spirare
         protected PomlDisplayType currentDisplayInHierarchy;
         protected PomlDisplayType currentArDisplayInHierarchy;
 
+        private PomlElementComponent parentElementComponent;
+
         private SynchronizationContext mainThreadContext;
         private int mainThreadId = -1;
 
@@ -32,10 +34,26 @@ namespace HoloLab.Spirare
 
             mainThreadContext = SynchronizationContext.Current;
             mainThreadId = Thread.CurrentThread.ManagedThreadId;
+
+            var parent = transform.parent;
+            if (parent != null && parent.TryGetComponent(out parentElementComponent))
+            {
+                parentElementComponent.OnElementDisplayTypeUpdated += ParentElementComponent_OnElementDisplayTypeUpdated;
+            }
+        }
+
+        private void ParentElementComponent_OnElementDisplayTypeUpdated(PomlElement parentElement)
+        {
+            InvokeElementUpdated();
         }
 
         protected virtual void OnDestroy()
         {
+            if (parentElementComponent != null)
+            {
+                parentElementComponent.OnElementDisplayTypeUpdated -= ParentElementComponent_OnElementDisplayTypeUpdated;
+            }
+
             OnDestroyed?.Invoke(this);
         }
 
@@ -50,7 +68,6 @@ namespace HoloLab.Spirare
                 currentDisplayInHierarchy = PomlElement.DisplayInHierarchy;
                 currentArDisplayInHierarchy = PomlElement.ArDisplayInHierarchy;
             }
-
 
             var threadId = Thread.CurrentThread.ManagedThreadId;
             if (threadId == mainThreadId)
