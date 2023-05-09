@@ -28,11 +28,10 @@ namespace HoloLab.Spirare
             }
         }
 
-        internal PomlObjectElementComponent Initialize(PomlElement element)
+        public override void Initialize(PomlElement element)
         {
-            base.Initialize();
+            base.Initialize(element);
 
-            PomlElement = element;
             cameraTransform = Camera.main.transform;
 
             UpdateGameObject(PomlElement);
@@ -40,8 +39,6 @@ namespace HoloLab.Spirare
             OnElementUpdated += UpdateGameObject;
 
             ConnectWebSocketAsync().Forget();
-
-            return this;
         }
 
         private void Start()
