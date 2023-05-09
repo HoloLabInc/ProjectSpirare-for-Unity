@@ -14,6 +14,7 @@ namespace HoloLab.Spirare.Wasm.Core.Spirare
         ElementNotFound = 4,
         InsufficientBufferSize = 5,
         UnsupportedOperation = 6,
+        CameraNotFount = 7,
     }
 
     internal enum SpecialElementDescriptor
@@ -41,6 +42,12 @@ namespace HoloLab.Spirare.Wasm.Core.Spirare
         Start = 0,
         Update = 1,
         Select = 2,
+    }
+
+    internal enum CameraType : uint
+    {
+        Perspective = 0,
+        Orthographic = 1,
     }
 }
 
