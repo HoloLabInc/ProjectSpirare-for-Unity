@@ -140,7 +140,8 @@ namespace HoloLab.Spirare
 
             if (go.TryGetComponent<PomlObjectElementComponent>(out var pomlObjectElementComponent) == false)
             {
-                pomlObjectElementComponent = go.AddComponent<PomlObjectElementComponent>().Initialize(element);
+                pomlObjectElementComponent = go.AddComponent<PomlObjectElementComponent>();
+                pomlObjectElementComponent.Initialize(element);
             }
             pomlComponent.RegisterComponent(pomlObjectElementComponent);
 
