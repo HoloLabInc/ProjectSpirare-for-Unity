@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Linq;
 
 namespace HoloLab.Spirare
 {
-    public sealed class TextElementComponent : SpecificObjectElementComponentBase<PomlTextElement>
+    public sealed class TextElementComponent : SpecificObjectElementComponentBase<PomlTextElement>, IWithinCamera
     {
         [SerializeField]
         private TextMeshPro textMeshPro = null;
@@ -35,9 +36,22 @@ namespace HoloLab.Spirare
         // Default font size [m]
         private const float DEFAULT_FONT_SIZE = 1;
 
+        private CameraVisibleHelper[] _cameraVisibleHelpers;
+
+        public bool IsWithinCamera(Camera camera)
+        {
+            return _cameraVisibleHelpers.Any(x => x.IsInsideCameraBounds(camera));
+        }
+
         public override void Initialize(PomlTextElement element, PomlLoadOptions loadOptions)
         {
             base.Initialize(element, loadOptions);
+
+            _cameraVisibleHelpers = new CameraVisibleHelper[2]
+            {
+                textMeshPro.gameObject.AddComponent<CameraVisibleHelper>(),
+                backPlate.gameObject.AddComponent<CameraVisibleHelper>(),
+            };
 
             cameraTransform = Camera.main.transform;
 

@@ -558,8 +558,27 @@ namespace HoloLab.Spirare.Wasm.Core.Spirare
 
         public int is_within_camera(IntPtr memoryPtr, uint memoryLength, int cameraDescriptor, int elementDescriptor, int resultPtr)
         {
-            // TODO: not implemented yet
-            var result = false;
+            int errorCode;
+
+            if (CameraDescriptorHelper.TryGetCamera(cameraDescriptor, out var camera, out errorCode) == false)
+            {
+                return errorCode;
+            }
+            if (_helper.TryGetElement<PomlElement>(elementDescriptor, out PomlElementComponent elementComponent, out var element, out errorCode) == false)
+            {
+                return errorCode;
+            }
+
+            bool result;
+            if (elementComponent.TryGetComponent<IWithinCamera>(out var x))
+            {
+                result = x.IsWithinCamera(camera);
+            }
+            else
+            {
+                result = false;
+            }
+
             if (MemoryHelper.TryWrite<bool>(memoryPtr, memoryLength, resultPtr, result) == false)
             {
                 return (int)Errno.InvalidArgument;

@@ -20,6 +20,8 @@ namespace HoloLab.Spirare
         private GameObject currentModelObject;
         private string _currentModelSource;
 
+        private CameraVisibleHelper[] _cameraVisibleHelpers;
+
         public override WrapMode WrapMode
         {
             get
@@ -32,6 +34,11 @@ namespace HoloLab.Spirare
                 if (_animation == null) { return; }
                 _animation.wrapMode = value;
             }
+        }
+
+        public override bool IsWithinCamera(Camera camera)
+        {
+            return _cameraVisibleHelpers?.Any(x => x.IsInsideCameraBounds(camera)) ?? false;
         }
 
 #if UNITY_EDITOR
@@ -78,6 +85,7 @@ namespace HoloLab.Spirare
                 return;
             }
 
+            _cameraVisibleHelpers = null;
             currentModelObject = new GameObject("ModelObject");
             currentModelObject.transform.SetParent(transform, false);
 
@@ -96,6 +104,13 @@ namespace HoloLab.Spirare
                 _animationStates = _animation.OfType<AnimationState>().ToArray();
                 _animation.Play();
             }
+
+            _cameraVisibleHelpers = currentModelObject.GetComponentsInChildren<Renderer>(true)
+                .Select(renderer =>
+                {
+                    return renderer.gameObject.AddComponent<CameraVisibleHelper>();
+                })
+                .ToArray();
 
             await UniTask.Yield();
         }

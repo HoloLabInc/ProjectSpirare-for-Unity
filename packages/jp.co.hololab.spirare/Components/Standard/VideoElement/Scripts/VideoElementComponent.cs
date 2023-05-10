@@ -11,7 +11,7 @@ using System.Text;
 
 namespace HoloLab.Spirare
 {
-    public sealed class VideoElementComponent : SpecificObjectElementComponentBase<PomlVideoElement>
+    public sealed class VideoElementComponent : SpecificObjectElementComponentBase<PomlVideoElement>, IWithinCamera
     {
         [SerializeField]
         private GameObject videoPlane = null;
@@ -26,6 +26,7 @@ namespace HoloLab.Spirare
 
         private Renderer videoPlaneRenderer;
         private Collider videoPlaneCollider;
+        private CameraVisibleHelper _cameraVisibleHelper;
 
         private static event Action<VideoElementComponent> onVideoPlay;
 
@@ -34,6 +35,7 @@ namespace HoloLab.Spirare
         public override void Initialize(PomlVideoElement element, PomlLoadOptions loadOptions)
         {
             base.Initialize(element, loadOptions);
+            _cameraVisibleHelper = videoPlane.AddComponent<CameraVisibleHelper>();
 
             videoPlaneRenderer = videoPlane.GetComponent<Renderer>();
             videoPlaneCollider = videoPlane.GetComponent<Collider>();
@@ -55,6 +57,11 @@ namespace HoloLab.Spirare
 
             var pomlElementComponent = GetComponent<PomlObjectElementComponent>();
             pomlElementComponent.OnSelect += OnSelect;
+        }
+
+        public bool IsWithinCamera(Camera camera)
+        {
+            return _cameraVisibleHelper.IsInsideCameraBounds(camera);
         }
 
         private void OnEnable()

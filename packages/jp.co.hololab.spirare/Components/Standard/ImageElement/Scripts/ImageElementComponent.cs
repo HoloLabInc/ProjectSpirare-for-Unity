@@ -8,22 +8,29 @@ using System.Linq;
 
 namespace HoloLab.Spirare
 {
-    public sealed class ImageElementComponent : SpecificObjectElementComponentBase<PomlImageElement>
+    public sealed class ImageElementComponent : SpecificObjectElementComponentBase<PomlImageElement>, IWithinCamera
     {
         [SerializeField]
         private GameObject imagePlane = null;
 
         private new Renderer renderer;
         private new Collider collider;
+        private CameraVisibleHelper _cameraVisibleHelper;
 
         public override void Initialize(PomlImageElement element, PomlLoadOptions loadOptions)
         {
             base.Initialize(element, loadOptions);
+            _cameraVisibleHelper = imagePlane.AddComponent<CameraVisibleHelper>();
 
             // Hide until the image is fully loaded.
             renderer = imagePlane.GetComponent<Renderer>();
             collider = imagePlane.GetComponent<Collider>();
             ChangeEnabled(false, false);
+        }
+
+        public bool IsWithinCamera(Camera camera)
+        {
+            return _cameraVisibleHelper.IsInsideCameraBounds(camera);
         }
 
         protected override async Task UpdateGameObjectCore()
