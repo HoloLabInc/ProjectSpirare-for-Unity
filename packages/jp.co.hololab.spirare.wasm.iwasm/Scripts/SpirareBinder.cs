@@ -119,6 +119,9 @@ namespace HoloLab.Spirare.Wasm.Iwasm
             imports.ImportFunc(S, nameof(_api.set_rotation), Bind<int, int>(_api.set_rotation));
             imports.ImportFunc(S, nameof(_api.get_scale), Bind<int, int>(_api.get_scale));
             imports.ImportFunc(S, nameof(_api.set_scale), Bind<int, int>(_api.set_scale));
+            imports.ImportFunc(S, nameof(_api.get_position_from), Bind<int, int, int>(_api.get_position_from));
+            imports.ImportFunc(S, nameof(_api.get_rotation_from), Bind<int, int, int>(_api.get_rotation_from));
+            //imports.ImportFunc(S, nameof(_api.get_scale_from), Bind<int, int, int>(_api.get_scale_from));
             imports.ImportFunc(S, nameof(_api.get_display), Bind<int, int>(_api.get_display));
             imports.ImportFunc(S, nameof(_api.set_display), Bind<int, int>(_api.set_display));
             imports.ImportFunc(S, nameof(_api.get_id_len), Bind<int, int>(_api.get_id_len));
