@@ -19,7 +19,7 @@ namespace HoloLab.Spirare.Cesium
 
         internal CesiumGeoReferenceElementComponent Initialize(PomlGeoReferenceElement geoReferenceElement)
         {
-            base.Initialize();
+            base.Initialize(geoReferenceElement);
 
             GeoReferenceElement = geoReferenceElement;
 

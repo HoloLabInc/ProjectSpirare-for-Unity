@@ -156,10 +156,53 @@ public class GltfastModelElementComponentTests
         SpirareTestUtils.AssertThatMeshIsInvisible(go);
     }
 
+    [Test]
+    public async Task ModelObject_ParentHasChangedVisible_ChangeVisible()
+    {
+        var parentElement = new PomlEmptyElement()
+        {
+            Display = PomlDisplayType.None,
+        };
+
+        var modelElement = new PomlModelElement()
+        {
+            Parent = parentElement,
+            Display = PomlDisplayType.Visible,
+            Src = modelDataPath,
+        };
+
+        parentElement.Children = new PomlElement[] { modelElement };
+
+        var parentComponent = CreateEmptyElementObject(parentElement);
+
+        var go = await CreateObjectAsync(modelElement, normalLoadOptions, parentComponent.transform);
+        var objectElementComponent = go.GetComponent<PomlObjectElementComponent>();
+
+        Assert.That(objectElementComponent, Is.Not.Null);
+        SpirareTestUtils.AssertThatMeshIsInvisible(go);
+
+        // Change parent to visible
+        parentElement.Display = PomlDisplayType.Visible;
+        parentComponent.InvokeElementUpdated();
+
+        // wait until loading has completed
+        await UniTask.Delay(100);
+
+        SpirareTestUtils.AssertThatMeshIsVisible(go, loaderSettings.occlusionMaterial);
+    }
+
     private async Task<GameObject> CreateObjectAsync(PomlModelElement element, PomlLoadOptions loadOptions, Transform parentTransform = null)
     {
         var go = factory.CreateObject(element, loadOptions, parentTransform);
         await Task.Delay(100);
         return go;
+    }
+
+    private PomlObjectElementComponent CreateEmptyElementObject(PomlElement element)
+    {
+        var go = new GameObject();
+        var pomlObjectElementComponent = go.AddComponent<PomlObjectElementComponent>();
+        pomlObjectElementComponent.Initialize(element);
+        return pomlObjectElementComponent;
     }
 }
