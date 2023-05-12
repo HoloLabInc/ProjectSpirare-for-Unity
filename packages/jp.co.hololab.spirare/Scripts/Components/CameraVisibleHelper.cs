@@ -1,36 +1,31 @@
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace HoloLab.Spirare
 {
+    [RequireComponent(typeof(Renderer))]
     public sealed class CameraVisibleHelper : MonoBehaviour
     {
-        private readonly List<Camera> _isInsideCameraBounds = new List<Camera>();
+        private Renderer _renderer;
+        private Plane[] frustrumPlanes = new Plane[6];
 
         public bool IsInsideCameraBounds(Camera camera)
         {
-            return _isInsideCameraBounds.Contains(camera);
-        }
-
-        private void LateUpdate()
-        {
-            _isInsideCameraBounds.Clear();
-        }
-
-        private void OnWillRenderObject()
-        {
-            var currentCamera = Camera.current;
-
-            if (
-                currentCamera != null
-#if UNITY_EDITOR
-                && currentCamera.name != "SceneCamera"
-                && currentCamera.name != "Preview Camera"
-#endif
-                )
+            if (_renderer == null)
             {
-                _isInsideCameraBounds.Add(currentCamera);
+                if (TryGetComponent<Renderer>(out _renderer) == false)
+                {
+                    return false;
+                }
             }
+
+            var renderer = _renderer;
+            if (renderer.enabled == false) { return false; }
+            if (gameObject.activeInHierarchy == false) { return false; }
+
+            GeometryUtility.CalculateFrustumPlanes(camera, frustrumPlanes);
+            var result = GeometryUtility.TestPlanesAABB(frustrumPlanes, renderer.bounds);
+            return result;
         }
     }
 }
