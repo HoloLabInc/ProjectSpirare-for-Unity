@@ -21,9 +21,13 @@ namespace HoloLab.Spirare
         {
             var currentCamera = Camera.current;
 
+            if (
+                currentCamera != null
 #if UNITY_EDITOR
-            if (currentCamera.name != "SceneCamera" && currentCamera.name != "Preview Camera")
+                && currentCamera.name != "SceneCamera"
+                && currentCamera.name != "Preview Camera"
 #endif
+                )
             {
                 _isInsideCameraBounds.Add(currentCamera);
             }
