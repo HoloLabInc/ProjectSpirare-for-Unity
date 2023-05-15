@@ -2,7 +2,7 @@
 
 namespace HoloLab.Spirare
 {
-    public abstract class ModelElementComponent : SpecificObjectElementComponentBase<PomlModelElement>
+    public abstract class ModelElementComponent : SpecificObjectElementComponentBase<PomlModelElement>, IWithinCamera
     {
         [SerializeField]
         protected string modelSource;
@@ -25,5 +25,7 @@ namespace HoloLab.Spirare
 
         public abstract void PlayAnimation(WrapMode wrap);
         public abstract void StopAnimation();
+
+        public abstract bool IsWithinCamera(Camera camera);
     }
 }

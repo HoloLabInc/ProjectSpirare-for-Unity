@@ -119,6 +119,9 @@ namespace HoloLab.Spirare.Wasm.Iwasm
             imports.ImportFunc(S, nameof(_api.set_rotation), Bind<int, int>(_api.set_rotation));
             imports.ImportFunc(S, nameof(_api.get_scale), Bind<int, int>(_api.get_scale));
             imports.ImportFunc(S, nameof(_api.set_scale), Bind<int, int>(_api.set_scale));
+            imports.ImportFunc(S, nameof(_api.get_position_from), Bind<int, int, int>(_api.get_position_from));
+            imports.ImportFunc(S, nameof(_api.get_rotation_from), Bind<int, int, int>(_api.get_rotation_from));
+            //imports.ImportFunc(S, nameof(_api.get_scale_from), Bind<int, int, int>(_api.get_scale_from));
             imports.ImportFunc(S, nameof(_api.get_display), Bind<int, int>(_api.get_display));
             imports.ImportFunc(S, nameof(_api.set_display), Bind<int, int>(_api.set_display));
             imports.ImportFunc(S, nameof(_api.get_id_len), Bind<int, int>(_api.get_id_len));
@@ -133,6 +136,12 @@ namespace HoloLab.Spirare.Wasm.Iwasm
             imports.ImportFunc(S, nameof(_api.get_anim_state), Bind<int, int>(_api.get_anim_state));
             imports.ImportFunc(S, nameof(_api.set_anim_state), Bind<int, int>(_api.set_anim_state));
             imports.ImportFunc(S, nameof(_api.get_current_anim), Bind<int, int>(_api.get_current_anim));
+            imports.ImportFunc(S, nameof(_api.get_camera_position), Bind<int, int, int>(_api.get_camera_position));
+            imports.ImportFunc(S, nameof(_api.get_camera_rotation), Bind<int, int, int>(_api.get_camera_rotation));
+            imports.ImportFunc(S, nameof(_api.get_camera_type), Bind<int, int>(_api.get_camera_type));
+            imports.ImportFunc(S, nameof(_api.get_camera_perspective_params), Bind<int, int, int, int, int>(_api.get_camera_perspective_params));
+            imports.ImportFunc(S, nameof(_api.is_within_camera), Bind<int, int, int>(_api.is_within_camera));
+            imports.ImportFunc(S, nameof(_api.get_main_camera), Bind<int>(_api.get_main_camera));
         }
 
         private void run_loop(ImportedContext context)

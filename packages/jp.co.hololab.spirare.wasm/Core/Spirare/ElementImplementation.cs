@@ -199,6 +199,75 @@ namespace HoloLab.Spirare.Wasm.Core.Spirare
             });
         }
 
+        public int get_position_from(IntPtr memoryPtr, uint memoryLength, int elementDescriptor, int referenceElementDescriptor, int positionPtr)
+        {
+            int errorCode;
+            if (_helper.TryGetElement<PomlElement>(elementDescriptor, out var elementComponent, out var element, out errorCode) == false)
+            {
+                return errorCode;
+            }
+            if (_helper.TryGetElement<PomlElement>(referenceElementDescriptor, out var referenceComponent, out var reference, out errorCode) == false)
+            {
+                return errorCode;
+            }
+            var worldToLocal = referenceComponent.transform.worldToLocalMatrix;
+            var elementWorldPos = elementComponent.transform.position;
+            var localPos = worldToLocal.MultiplyPoint(elementWorldPos);
+            localPos = CoordinateUtility.ToSpirareCoordinate(localPos, true);
+            if (MemoryHelper.TryWrite(memoryPtr, memoryLength, positionPtr, localPos) == false)
+            {
+                return (int)Errno.InvalidArgument;
+            }
+            return (int)Errno.Success;
+        }
+
+        public int get_rotation_from(IntPtr memoryPtr, uint memoryLength, int elementDescriptor, int referenceElementDescriptor, int rotationPtr)
+        {
+            int errorCode;
+            if (_helper.TryGetElement<PomlElement>(elementDescriptor, out var elementComponent, out var element, out errorCode) == false)
+            {
+                return errorCode;
+            }
+            if (_helper.TryGetElement<PomlElement>(referenceElementDescriptor, out var referenceComponent, out var reference, out errorCode) == false)
+            {
+                return errorCode;
+            }
+            var rot = elementComponent.transform.rotation * Quaternion.Inverse(referenceComponent.transform.rotation);
+            rot = CoordinateUtility.ToSpirareCoordinate(rot);
+            if (MemoryHelper.TryWrite(memoryPtr, memoryLength, rotationPtr, rot) == false)
+            {
+                return (int)Errno.InvalidArgument;
+            }
+            return (int)Errno.Success;
+        }
+
+        [Obsolete("not implemented yet", true)]
+        public int get_scale_from(IntPtr memoryPtr, uint memoryLength, int elementDescriptor, int referenceElementDescriptor, int scalePtr)
+        {
+            int errorCode;
+            if (_helper.TryGetElement<PomlElement>(elementDescriptor, out var elementComponent, out var element, out errorCode) == false)
+            {
+                return errorCode;
+            }
+            if (_helper.TryGetElement<PomlElement>(referenceElementDescriptor, out var referenceComponent, out var reference, out errorCode) == false)
+            {
+                return errorCode;
+            }
+            var scale = elementComponent.transform.lossyScale;
+            var referenceScale = referenceComponent.transform.lossyScale;
+
+            throw new NotImplementedException();
+
+            //scale.x /= referenceScale.x;
+            //scale.y /= referenceScale.y;
+            //scale.z /= referenceScale.z;
+            //if (MemoryHelper.TryWrite(memoryPtr, memoryLength, scalePtr, scale) == false)
+            //{
+            //    return (int)Errno.InvalidArgument;
+            //}
+            //return (int)Errno.Success;
+        }
+
         public int get_display(IntPtr memoryPtr, uint memoryLength, int elementDescriptor, int displayPtr)
         {
             return _helper.GetAttribute(elementDescriptor, (element) =>
@@ -458,6 +527,141 @@ namespace HoloLab.Spirare.Wasm.Core.Spirare
                 return (int)Errno.InvalidArgument;
             }
 
+            return (int)Errno.Success;
+        }
+
+        public int get_camera_position(IntPtr memoryPtr, uint memoryLength, int cameraDescriptor, int referenceElementDescriptor, int positionPtr)
+        {
+            int errorCode;
+            if (_helper.TryGetElement<PomlElement>(referenceElementDescriptor, out var referenceComponent, out var reference, out errorCode) == false)
+            {
+                return errorCode;
+            }
+            if (CameraDescriptorHelper.TryGetCamera(cameraDescriptor, out var camera, out errorCode) == false)
+            {
+                return errorCode;
+            }
+            var worldToLocal = referenceComponent.transform.worldToLocalMatrix;
+            var cameraWorldPos = camera.transform.position;
+            var localPos = worldToLocal.MultiplyPoint(cameraWorldPos);
+            localPos = CoordinateUtility.ToSpirareCoordinate(localPos, true);
+            if (MemoryHelper.TryWrite(memoryPtr, memoryLength, positionPtr, localPos) == false)
+            {
+                return (int)Errno.InvalidArgument;
+            }
+            return (int)Errno.Success;
+        }
+
+        public int get_camera_rotation(IntPtr memoryPtr, uint memoryLength, int cameraDescriptor, int referenceElementDescriptor, int rotationPtr)
+        {
+            int errorCode;
+            if (_helper.TryGetElement<PomlElement>(referenceElementDescriptor, out var referenceComponent, out var reference, out errorCode) == false)
+            {
+                return errorCode;
+            }
+            if (CameraDescriptorHelper.TryGetCamera(cameraDescriptor, out var camera, out errorCode) == false)
+            {
+                return errorCode;
+            }
+            var rot = camera.transform.rotation * Quaternion.Inverse(referenceComponent.transform.rotation);
+            rot = CoordinateUtility.ToSpirareCoordinate(rot);
+            if (MemoryHelper.TryWrite(memoryPtr, memoryLength, rotationPtr, rot) == false)
+            {
+                return (int)Errno.InvalidArgument;
+            }
+            return (int)Errno.Success;
+        }
+
+        public int get_camera_type(IntPtr memoryPtr, uint memoryLength, int cameraDescriptor, int typePtr)
+        {
+            int errorCode;
+            if (CameraDescriptorHelper.TryGetCamera(cameraDescriptor, out var camera, out errorCode) == false)
+            {
+                return errorCode;
+            }
+            var type = camera.orthographic ? CameraType.Perspective : CameraType.Orthographic;
+            if (MemoryHelper.TryWrite<CameraType>(memoryPtr, memoryLength, typePtr, type) == false)
+            {
+                return (int)Errno.InvalidArgument;
+            }
+            return (int)Errno.Success;
+        }
+
+        public int get_camera_perspective_params(
+            IntPtr memoryPtr,
+            uint memoryLength,
+            int cameraDescriptor,
+            int fovyPtr,
+            int aspectPtr,
+            int nearPtr,
+            int farPtr)
+        {
+            int errorCode;
+            if (CameraDescriptorHelper.TryGetCamera(cameraDescriptor, out var camera, out errorCode) == false)
+            {
+                return errorCode;
+            }
+            var fovy = camera.fieldOfView;
+            var aspect = camera.aspect;
+            var near = camera.nearClipPlane;
+            var far = camera.farClipPlane;
+
+            if (MemoryHelper.TryWrite<float>(memoryPtr, memoryLength, fovyPtr, fovy) == false)
+            {
+                return (int)Errno.InvalidArgument;
+            }
+            if (MemoryHelper.TryWrite<float>(memoryPtr, memoryLength, aspectPtr, aspect) == false)
+            {
+                return (int)Errno.InvalidArgument;
+            }
+            if (MemoryHelper.TryWrite<float>(memoryPtr, memoryLength, nearPtr, near) == false)
+            {
+                return (int)Errno.InvalidArgument;
+            }
+            if (MemoryHelper.TryWrite<float>(memoryPtr, memoryLength, farPtr, far) == false)
+            {
+                return (int)Errno.InvalidArgument;
+            }
+            return (int)Errno.Success;
+        }
+
+        public int is_within_camera(IntPtr memoryPtr, uint memoryLength, int cameraDescriptor, int elementDescriptor, int resultPtr)
+        {
+            int errorCode;
+
+            if (CameraDescriptorHelper.TryGetCamera(cameraDescriptor, out var camera, out errorCode) == false)
+            {
+                return errorCode;
+            }
+            if (_helper.TryGetElement<PomlElement>(elementDescriptor, out PomlElementComponent elementComponent, out var element, out errorCode) == false)
+            {
+                return errorCode;
+            }
+
+            bool result;
+            if (elementComponent.TryGetComponent<IWithinCamera>(out var x))
+            {
+                result = x.IsWithinCamera(camera);
+            }
+            else
+            {
+                result = false;
+            }
+
+            if (MemoryHelper.TryWrite<bool>(memoryPtr, memoryLength, resultPtr, result) == false)
+            {
+                return (int)Errno.InvalidArgument;
+            }
+            return (int)Errno.Success;
+        }
+
+        public int get_main_camera(IntPtr memoryPtr, uint memoryLength, int cameraDescriptorPtr)
+        {
+            var descriptor = CameraDescriptorHelper.MainCameraDescriptor;
+            if (MemoryHelper.TryWrite<int>(memoryPtr, memoryLength, cameraDescriptorPtr, descriptor) == false)
+            {
+                return (int)Errno.InvalidArgument;
+            }
             return (int)Errno.Success;
         }
 
