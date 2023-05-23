@@ -3,6 +3,7 @@ using HoloLab.PositioningTools;
 using HoloLab.PositioningTools.CoordinateSystem;
 using HoloLab.PositioningTools.GeographicCoordinate;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -54,7 +55,46 @@ namespace HoloLab.Spirare
             {
                 throw new HttpRequestException(response.ReasonPhrase);
             }
-            return await response.Content.ReadAsStringAsync();
+
+            var contentString = await response.Content.ReadAsStringAsync();
+            _ = ReloadWithRefreshHeader(response);
+
+            return contentString;
+        }
+
+        /// <summary>
+        /// Reload content if response contains refresh header
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        private async UniTask ReloadWithRefreshHeader(HttpResponseMessage response)
+        {
+            if (response.Headers.TryGetValues("Refresh", out var refreshHeaders) == false)
+            {
+                return;
+            }
+
+            var refreshHeader = refreshHeaders.FirstOrDefault();
+            if (refreshHeader == null)
+            {
+                return;
+            }
+
+            var refreshHeaderParts = refreshHeader.Split(';');
+            if (refreshHeaderParts.Length == 1)
+            {
+                var delayString = refreshHeaderParts[0];
+                if (float.TryParse(delayString, out var delaySecond))
+                {
+                    var token = gameObject.GetCancellationTokenOnDestroy();
+                    await Task.Delay(TimeSpan.FromSeconds(delaySecond), token);
+                    await ReloadAsync(cancellationToken: token);
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Redirect with Refresh header is not supported");
+            }
         }
 
 
