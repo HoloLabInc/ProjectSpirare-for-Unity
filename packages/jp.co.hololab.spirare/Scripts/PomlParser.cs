@@ -144,7 +144,7 @@ namespace HoloLab.Spirare
 
             // transform
             var position = ReadVector3Attribute(node, "position", 0);
-            var scale = ReadVector3Attribute(node, "scale", 1);
+            var scale = ReadScaleAttribute(node, "scale", 1);
             var rotation = ReadRotationAttribute(node, "rotation");
 
             var rotationMode = ReadRotationMode(node, "rotation-mode");
@@ -501,6 +501,22 @@ namespace HoloLab.Spirare
             var y = GetValueByIndex(values, 1, defaultValue);
             var z = GetValueByIndex(values, 2, defaultValue);
             return new Vector3(x, y, z);
+        }
+
+        private static Vector3 ReadScaleAttribute(XmlNode node, string key, float defaultValue)
+        {
+            if (!node.TryGetAttribute(key, out var attribute))
+            {
+                return new Vector3(defaultValue, defaultValue, defaultValue);
+            }
+
+            var values = ReadFloatArray(attribute);
+            return values.Count switch
+            {
+                1 => new Vector3(values[0], values[0], values[0]),
+                3 => new Vector3(values[0], values[1], values[2]),
+                _ => new Vector3(defaultValue, defaultValue, defaultValue),
+            };
         }
 
         private static (double X, double Y, double Z) ReadDouble3Attribute(XmlNode node, string key, double defaultValue)
