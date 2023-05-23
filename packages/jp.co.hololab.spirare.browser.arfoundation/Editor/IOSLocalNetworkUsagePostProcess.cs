@@ -20,7 +20,7 @@ namespace HoloLab.Spirare.Browser.ARFoundation.Editor
                 var plist = new PlistDocument();
                 plist.ReadFromFile(plistPath);
 
-                plist.root.SetString("Privacy - Local Network Usage Description", "local network");
+                plist.root.SetString("NSLocalNetworkUsageDescription", "local network");
 
                 plist.WriteToFile(plistPath);
             }
