@@ -5,6 +5,7 @@ using HoloLab.PositioningTools.GeographicCoordinate;
 using System;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -19,6 +20,8 @@ namespace HoloLab.Spirare
         // private bool sendGeolocationWithHeader = false;
 
         private Camera mainCamera;
+
+        private CancellationTokenSource nextReloadTokenSource;
 
         private static HttpClient httpClient = new HttpClient();
 
@@ -39,6 +42,9 @@ namespace HoloLab.Spirare
 
         protected override async Task<string> GetContentXml(string path)
         {
+            nextReloadTokenSource?.Cancel();
+            nextReloadTokenSource = null;
+
             var request = new HttpRequestMessage(HttpMethod.Get, path);
             var geoheader = await GetGeolocationHeaderAsync();
             if (geoheader.Geolocation != null)
@@ -86,7 +92,9 @@ namespace HoloLab.Spirare
                 var delayString = refreshHeaderParts[0];
                 if (float.TryParse(delayString, out var delaySecond))
                 {
-                    var token = gameObject.GetCancellationTokenOnDestroy();
+                    nextReloadTokenSource = CancellationTokenSource.CreateLinkedTokenSource(gameObject.GetCancellationTokenOnDestroy());
+                    var token = nextReloadTokenSource.Token;
+
                     await Task.Delay(TimeSpan.FromSeconds(delaySecond), token);
                     await ReloadAsync(cancellationToken: token);
                 }

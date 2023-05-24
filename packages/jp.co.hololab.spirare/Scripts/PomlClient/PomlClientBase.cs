@@ -148,6 +148,11 @@ namespace HoloLab.Spirare
                 return (false, new InvalidOperationException("Poml is not specified"));
             }
 
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return (false, new OperationCanceledException(cancellationToken));
+            }
+
             try
             {
                 var xml = await GetContentXml(pomlPath);
