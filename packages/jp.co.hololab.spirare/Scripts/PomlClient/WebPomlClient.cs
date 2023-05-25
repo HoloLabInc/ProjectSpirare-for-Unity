@@ -3,11 +3,13 @@ using HoloLab.PositioningTools;
 using HoloLab.PositioningTools.CoordinateSystem;
 using HoloLab.PositioningTools.GeographicCoordinate;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace HoloLab.Spirare
 {
@@ -22,9 +24,6 @@ namespace HoloLab.Spirare
         private Camera mainCamera;
 
         private CancellationTokenSource nextReloadTokenSource;
-
-        private static HttpClient httpClient = new HttpClient();
-
 
         private void Awake()
         {
@@ -45,47 +44,56 @@ namespace HoloLab.Spirare
             nextReloadTokenSource?.Cancel();
             nextReloadTokenSource = null;
 
-            var request = new HttpRequestMessage(HttpMethod.Get, path);
-            var geoheader = await GetGeolocationHeaderAsync();
-            if (geoheader.Geolocation != null)
+            var request = UnityWebRequest.Get(path);
+
+            // Set request headers
+            var (geolocation, geoheading) = await GetGeolocationHeaderAsync();
+            SetRequestHeaders(request, new Dictionary<string, string>()
             {
-                request.Headers.Add("Geolocation", geoheader.Geolocation);
-            }
-            if (geoheader.Geoheading != null)
+                { "Geolocation", geolocation },
+                { "Geoheading", geoheading },
+            });
+
+            await request.SendWebRequest();
+
+            if (request.result != UnityWebRequest.Result.Success)
             {
-                request.Headers.Add("Geoheading", geoheader.Geoheading);
+                throw new HttpRequestException(request.error);
             }
 
-            var response = await httpClient.SendAsync(request);
-            if (response.IsSuccessStatusCode == false)
-            {
-                throw new HttpRequestException(response.ReasonPhrase);
-            }
+            var contentString = request.downloadHandler.text;
+            var responseHeaders = request.GetResponseHeaders();
 
-            var contentString = await response.Content.ReadAsStringAsync();
-            _ = ReloadWithRefreshHeader(response);
+            _ = ReloadWithRefreshHeader(responseHeaders);
 
+            request.Dispose();
             return contentString;
+
         }
 
-        /// <summary>
-        /// Reload content if response contains refresh header
-        /// </summary>
-        /// <param name="response"></param>
-        /// <returns></returns>
-        private async UniTask ReloadWithRefreshHeader(HttpResponseMessage response)
+        private void SetRequestHeaders(UnityWebRequest request, Dictionary<string, string> headers)
         {
-            if (response.Headers.TryGetValues("Refresh", out var refreshHeaders) == false)
+            foreach (var pair in headers)
+            {
+                if (pair.Value != null)
+                {
+                    request.SetRequestHeader(pair.Key, pair.Value);
+                }
+            }
+        }
+
+        private async UniTask ReloadWithRefreshHeader(Dictionary<string, string> responseHeaders)
+        {
+            if (responseHeaders.TryGetValue("Refresh", out var refreshHeader) == false)
             {
                 return;
             }
 
-            var refreshHeader = refreshHeaders.FirstOrDefault();
-            if (refreshHeader == null)
-            {
-                return;
-            }
+            await ReloadWithRefreshHeader(refreshHeader);
+        }
 
+        private async UniTask ReloadWithRefreshHeader(string refreshHeader)
+        {
             var refreshHeaderParts = refreshHeader.Split(';');
             if (refreshHeaderParts.Length == 1)
             {
@@ -94,9 +102,9 @@ namespace HoloLab.Spirare
                 {
                     nextReloadTokenSource = CancellationTokenSource.CreateLinkedTokenSource(gameObject.GetCancellationTokenOnDestroy());
                     var token = nextReloadTokenSource.Token;
-
                     await Task.Delay(TimeSpan.FromSeconds(delaySecond), token);
-                    await ReloadAsync(cancellationToken: token);
+
+                    await ReloadAsync();
                 }
             }
             else
@@ -104,7 +112,6 @@ namespace HoloLab.Spirare
                 Debug.LogWarning("Redirect with Refresh header is not supported");
             }
         }
-
 
         // TODO: Move the code to the Positioning Tools
         private async UniTask<(bool Success, CardinalDirection CardinalDirection)> GetCardinalDirectionAsync(int timeoutMilliseconds)

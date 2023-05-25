@@ -143,18 +143,25 @@ namespace HoloLab.Spirare
 
         public async Task<(bool Success, Exception Error)> ReloadAsync(bool hardRefresh = false, CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrEmpty(pomlPath))
-            {
-                return (false, new InvalidOperationException("Poml is not specified"));
-            }
-
             if (cancellationToken.IsCancellationRequested)
             {
                 return (false, new OperationCanceledException(cancellationToken));
             }
 
+            if (isLoading)
+            {
+                return (false, new InvalidOperationException("Already loading"));
+            }
+
+            if (string.IsNullOrEmpty(pomlPath))
+            {
+                return (false, new InvalidOperationException("Poml is not specified"));
+            }
+
             try
             {
+                isLoading = true;
+
                 var xml = await GetContentXml(pomlPath);
 
                 if (hardRefresh == true || xml != latestPoml)
@@ -171,6 +178,8 @@ namespace HoloLab.Spirare
             }
             finally
             {
+                isLoading = false;
+
                 if (autoReload)
                 {
                     ReloadAutomatically(cancellationToken).Forget();
