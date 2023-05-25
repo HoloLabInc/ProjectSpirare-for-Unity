@@ -28,6 +28,7 @@ namespace HoloLab.Spirare
         private VideoElementObjectFactory videoElementObjectFactory;
         private TextElementObjectFactory textElementObjectFactory;
         private GeometryElementObjectFactory geometryElementObjectFactory;
+        private ScreenSpaceElementObjectFactory screenSpaceElementObjectFactory;
 
         private SpaceReferenceElementComponentFactory spaceReferenceElementComponentFactory;
         private GeoReferenceElementComponentFactory geoReferenceElementComponentFactory;
@@ -44,6 +45,7 @@ namespace HoloLab.Spirare
             videoElementObjectFactory = pomlLoaderSettings.videoElementObjectFactory;
             textElementObjectFactory = pomlLoaderSettings.textElementObjectFactory;
             geometryElementObjectFactory = pomlLoaderSettings.geometryElementObjectFactory;
+            screenSpaceElementObjectFactory = pomlLoaderSettings.screenSpaceElementObjectFactory;
 
             spaceReferenceElementComponentFactory = pomlLoaderSettings.spaceReferenceElementComponentFactory;
             geoReferenceElementComponentFactory = pomlLoaderSettings.geoReferenceElementComponentFactory;
@@ -235,13 +237,13 @@ namespace HoloLab.Spirare
                 case PomlElementType.Cesium3dTiles:
                     if (element is PomlCesium3dTilesElement cesium3dTilesElement)
                     {
-                        return InstantialteCesium3dTiles(cesium3dTilesElement, parentTransform);
+                        return InstantiateCesium3dTiles(cesium3dTilesElement, parentTransform);
                     }
                     break;
                 case PomlElementType.ScreenSpace:
                     if (element is PomlScreenSpaceElement screenSpaceElement)
                     {
-                        return InstantialteScreenSpaceElement(screenSpaceElement, parentTransform);
+                        return InstantiateScreenSpaceElement(screenSpaceElement, parentTransform);
                     }
                     break;
             }
@@ -314,7 +316,7 @@ namespace HoloLab.Spirare
             return go;
         }
 
-        private GameObject InstantialteCesium3dTiles(PomlCesium3dTilesElement cesium3dTilesElement, Transform parentTransform)
+        private GameObject InstantiateCesium3dTiles(PomlCesium3dTilesElement cesium3dTilesElement, Transform parentTransform)
         {
             var factory = pomlLoaderSettings.cesium3dTilesElementFactory;
             if (factory == null)
@@ -326,11 +328,23 @@ namespace HoloLab.Spirare
             return elementObject;
         }
 
-        private GameObject InstantialteScreenSpaceElement(PomlScreenSpaceElement screenSpaceElement, Transform parentTransform)
+        private GameObject InstantiateScreenSpaceElement(PomlScreenSpaceElement screenSpaceElement, Transform parentTransform)
         {
+            /*
             var go = new GameObject("screen-space");
             go.transform.SetParent(parentTransform, false);
             return go;
+            */
+
+            if (screenSpaceElementObjectFactory == null)
+            {
+                Debug.LogWarning($"{nameof(ScreenSpaceElementObjectFactory)} is not specified");
+                return null;
+            }
+            else
+            {
+                return screenSpaceElementObjectFactory.CreateObject(screenSpaceElement, loadOptions, parentTransform);
+            }
         }
     }
 }
