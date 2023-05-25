@@ -3,9 +3,13 @@ using HoloLab.PositioningTools;
 using HoloLab.PositioningTools.CoordinateSystem;
 using HoloLab.PositioningTools.GeographicCoordinate;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace HoloLab.Spirare
 {
@@ -19,8 +23,7 @@ namespace HoloLab.Spirare
 
         private Camera mainCamera;
 
-        private static HttpClient httpClient = new HttpClient();
-
+        private CancellationTokenSource nextReloadTokenSource;
 
         private void Awake()
         {
@@ -38,25 +41,76 @@ namespace HoloLab.Spirare
 
         protected override async Task<string> GetContentXml(string path)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, path);
-            var geoheader = await GetGeolocationHeaderAsync();
-            if (geoheader.Geolocation != null)
+            nextReloadTokenSource?.Cancel();
+            nextReloadTokenSource = null;
+
+            var request = UnityWebRequest.Get(path);
+
+            // Set request headers
+            var (geolocation, geoheading) = await GetGeolocationHeaderAsync();
+            SetRequestHeaders(request, new Dictionary<string, string>()
             {
-                request.Headers.Add("Geolocation", geoheader.Geolocation);
-            }
-            if (geoheader.Geoheading != null)
+                { "Geolocation", geolocation },
+                { "Geoheading", geoheading },
+            });
+
+            await request.SendWebRequest();
+
+            if (request.result != UnityWebRequest.Result.Success)
             {
-                request.Headers.Add("Geoheading", geoheader.Geoheading);
+                throw new HttpRequestException(request.error);
             }
 
-            var response = await httpClient.SendAsync(request);
-            if (response.IsSuccessStatusCode == false)
-            {
-                throw new HttpRequestException(response.ReasonPhrase);
-            }
-            return await response.Content.ReadAsStringAsync();
+            var contentString = request.downloadHandler.text;
+            var responseHeaders = request.GetResponseHeaders();
+
+            ReloadWithRefreshHeader(responseHeaders).Forget();
+
+            request.Dispose();
+            return contentString;
         }
 
+        private void SetRequestHeaders(UnityWebRequest request, Dictionary<string, string> headers)
+        {
+            foreach (var pair in headers)
+            {
+                if (pair.Value != null)
+                {
+                    request.SetRequestHeader(pair.Key, pair.Value);
+                }
+            }
+        }
+
+        private async UniTask ReloadWithRefreshHeader(Dictionary<string, string> responseHeaders)
+        {
+            if (responseHeaders.TryGetValue("Refresh", out var refreshHeader) == false)
+            {
+                return;
+            }
+
+            await ReloadWithRefreshHeader(refreshHeader);
+        }
+
+        private async UniTask ReloadWithRefreshHeader(string refreshHeader)
+        {
+            var refreshHeaderParts = refreshHeader.Split(';');
+            if (refreshHeaderParts.Length == 1)
+            {
+                var delayString = refreshHeaderParts[0];
+                if (float.TryParse(delayString, out var delaySecond))
+                {
+                    nextReloadTokenSource = CancellationTokenSource.CreateLinkedTokenSource(gameObject.GetCancellationTokenOnDestroy());
+                    var token = nextReloadTokenSource.Token;
+                    await UniTask.Delay(TimeSpan.FromSeconds(delaySecond), cancellationToken: token);
+
+                    await ReloadAsync();
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Redirect with Refresh header is not supported");
+            }
+        }
 
         // TODO: Move the code to the Positioning Tools
         private async UniTask<(bool Success, CardinalDirection CardinalDirection)> GetCardinalDirectionAsync(int timeoutMilliseconds)
