@@ -28,7 +28,6 @@ namespace HoloLab.Spirare
             transform.SetPositionAndRotation(
                 CoordinateUtility.ToUnityCoordinate(element.Position, directional: true),
                 CoordinateUtility.ToUnityCoordinate(element.Rotation));
-            // transform.localScale = CoordinateUtility.ToUnityCoordinate(element.Scale, directional: false);
         }
     }
 }

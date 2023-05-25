@@ -330,12 +330,6 @@ namespace HoloLab.Spirare
 
         private GameObject InstantiateScreenSpaceElement(PomlScreenSpaceElement screenSpaceElement, Transform parentTransform)
         {
-            /*
-            var go = new GameObject("screen-space");
-            go.transform.SetParent(parentTransform, false);
-            return go;
-            */
-
             if (screenSpaceElementObjectFactory == null)
             {
                 Debug.LogWarning($"{nameof(ScreenSpaceElementObjectFactory)} is not specified");
