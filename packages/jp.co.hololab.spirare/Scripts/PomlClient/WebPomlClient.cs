@@ -64,11 +64,10 @@ namespace HoloLab.Spirare
             var contentString = request.downloadHandler.text;
             var responseHeaders = request.GetResponseHeaders();
 
-            _ = ReloadWithRefreshHeader(responseHeaders);
+            ReloadWithRefreshHeader(responseHeaders).Forget();
 
             request.Dispose();
             return contentString;
-
         }
 
         private void SetRequestHeaders(UnityWebRequest request, Dictionary<string, string> headers)
@@ -102,7 +101,7 @@ namespace HoloLab.Spirare
                 {
                     nextReloadTokenSource = CancellationTokenSource.CreateLinkedTokenSource(gameObject.GetCancellationTokenOnDestroy());
                     var token = nextReloadTokenSource.Token;
-                    await Task.Delay(TimeSpan.FromSeconds(delaySecond), token);
+                    await UniTask.Delay(TimeSpan.FromSeconds(delaySecond), cancellationToken: token);
 
                     await ReloadAsync();
                 }
