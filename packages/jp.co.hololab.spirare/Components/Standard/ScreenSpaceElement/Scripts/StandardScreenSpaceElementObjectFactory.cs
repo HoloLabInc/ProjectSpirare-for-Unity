@@ -1,9 +1,7 @@
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace HoloLab.Spirare
 {
-    [CreateAssetMenu(menuName = "Spirare/StandardScreenSpaceElementObjectFactory")]
     public class StandardScreenSpaceElementObjectFactory : ScreenSpaceElementObjectFactory
     {
         [SerializeField]
@@ -13,10 +11,7 @@ namespace HoloLab.Spirare
         {
             var screenSpaceElementComponent = Instantiate(screenSpaceElementComponentPrefab, parentTransform);
             screenSpaceElementComponent.name = "screen-space";
-
-            // screenSpaceElementComponent.GetComponent<PomlObjectElementComponent>().Initialize(element);
-            // screenSpaceElementComponent.Initialize(element, loadOptions);
-            // _ = screenSpaceElementComponent.UpdateGameObject();
+            screenSpaceElementComponent.Initialize(element, loadOptions);
 
             return screenSpaceElementComponent.gameObject;
         }
