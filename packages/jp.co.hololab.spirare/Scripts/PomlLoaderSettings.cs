@@ -12,6 +12,7 @@ namespace HoloLab.Spirare
         public VideoElementObjectFactory videoElementObjectFactory;
         public TextElementObjectFactory textElementObjectFactory;
         public GeometryElementObjectFactory geometryElementObjectFactory;
+        public ScreenSpaceElementObjectFactory screenSpaceElementObjectFactory;
 
         [FormerlySerializedAs("placementElementComponentFactory")]
         public SpaceReferenceElementComponentFactory spaceReferenceElementComponentFactory;
