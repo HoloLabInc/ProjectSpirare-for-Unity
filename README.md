@@ -70,3 +70,8 @@ A project for the development of `Spirare Cesium` package.
 
 This project is licensed under the terms of the license provided in the [LICENSE.md](LICENSE.md) file.  
 Please refer to the file for more information.
+
+## Related Projects
+
+- [project-spirare-docs](https://github.com/HoloLabInc/project-spirare-docs)
+- [spirare-babylonjs](https://github.com/HoloLabInc/spirare-babylonjs)
