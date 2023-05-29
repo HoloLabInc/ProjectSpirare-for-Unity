@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using Cysharp.Threading.Tasks;
 using HoloLab.Spirare.Wasm.Core.Spirare;
+using System.Linq;
 
 namespace HoloLab.Spirare.Wasm.Iwasm
 {
@@ -89,10 +90,10 @@ namespace HoloLab.Spirare.Wasm.Iwasm
 
         private async Task LoadScriptAsync()
         {
-            var url = PomlElement.Src;
-
-            var args = new string[0];
+            var element = PomlElement as PomlScriptElement;
+            var url = element.Src;
             var envs = new string[0];
+            var args = element.Args.ToArray();
 
             var data = await GetScriptDataAsync(url);
             await Task.Delay(1000);     // TODO: Wait until all elements of the poml are loaded (especially glb model).

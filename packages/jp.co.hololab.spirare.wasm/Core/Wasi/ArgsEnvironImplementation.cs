@@ -41,7 +41,7 @@ namespace HoloLab.Spirare.Wasm.Core.Wasi
             var bufOffset = (uint)bufferOffset;
             foreach (var text in textList)
             {
-                if (!MemoryHelper.TryWrite(memoryPtr, memoryLength, offset, bufferOffset))
+                if (!MemoryHelper.TryWrite(memoryPtr, memoryLength, offset, bufOffset))
                 {
                     return (int)Errno.Inval;
                 }
