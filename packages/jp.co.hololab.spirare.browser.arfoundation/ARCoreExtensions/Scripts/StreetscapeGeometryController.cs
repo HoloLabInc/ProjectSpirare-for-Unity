@@ -1,10 +1,12 @@
+#if ARCOREEXTENSIONS_1_37_0_OR_NEWER
 using Google.XR.ARCoreExtensions;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.XR.ARSubsystems;
+#endif
+using UnityEngine;
 
 namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
 {
