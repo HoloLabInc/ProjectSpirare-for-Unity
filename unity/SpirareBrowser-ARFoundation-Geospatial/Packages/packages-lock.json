@@ -20,7 +20,7 @@
       "url": "https://package.openupm.com"
     },
     "com.google.ar.core.arfoundation.extensions": {
-      "version": "https://github.com/google-ar/arcore-unity-extensions.git",
+      "version": "https://github.com/google-ar/arcore-unity-extensions.git#v1.37.0",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -28,7 +28,7 @@
         "com.unity.xr.arcore": "4.1.5",
         "com.unity.xr.arkit": "4.1.5"
       },
-      "hash": "b9496c2059453594d324761d5cfc00494b29cc4a"
+      "hash": "c27a931ef21c212686e5abd8bbf4f334a64ec9d5"
     },
     "com.gwaredd.mggif": {
       "version": "https://github.com/gwaredd/mgGif.git?path=Assets/mgGif",
