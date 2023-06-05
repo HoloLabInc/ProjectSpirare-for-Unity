@@ -1,0 +1,23 @@
+{
+    "name": "HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions",
+    "rootNamespace": "",
+    "references": [
+        "GUID:b35d8248e1a04478bb2d70fe76652ddf",
+        "GUID:92703082f92b41ba80f0d6912de66115"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.google.ar.core.arfoundation.extensions",
+            "expression": "1.37.0",
+            "define": "ARCOREEXTENSIONS_1_37_0_OR_NEWER"
+        }
+    ],
+    "noEngineReferences": false
+}
