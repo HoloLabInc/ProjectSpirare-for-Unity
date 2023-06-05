@@ -57,6 +57,11 @@ namespace HoloLab.Spirare
                 return CreateErrroResult<byte[]>(ex);
             }
 
+            if (IsFileUrl(url))
+            {
+                return await LoadLocalFile(url);
+            }
+
             // Local cache is only enabled for HTTP requests.
             if (IsHttpUrl(url) == false)
             {
@@ -92,6 +97,27 @@ namespace HoloLab.Spirare
                     var exception = new Exception(webRequest.error);
                     return CreateErrroResult<byte[]>(exception);
                 }
+            }
+            catch (Exception ex)
+            {
+                return CreateErrroResult<byte[]>(ex);
+            }
+        }
+
+        private async UniTask<SpirareHttpClientResult<byte[]>> LoadLocalFile(string url)
+        {
+            try
+            {
+                if (url.StartsWith("file://"))
+                {
+                    url = url.Substring("file://".Length);
+                }
+
+                using FileStream stream = new FileStream(url, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, true);
+                var fileBytes = new byte[stream.Length];
+                await stream.ReadAsync(fileBytes, 0, (int)stream.Length);
+
+                return CreateSuccessResult(fileBytes);
             }
             catch (Exception ex)
             {
@@ -166,6 +192,15 @@ namespace HoloLab.Spirare
                 Debug.LogException(ex);
                 return;
             }
+        }
+
+        private static bool IsFileUrl(string url)
+        {
+            if (url.StartsWith("file://"))
+            {
+                return true;
+            }
+            return false;
         }
 
         private static bool IsHttpUrl(string url)
