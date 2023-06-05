@@ -2,7 +2,6 @@
 using Google.XR.ARCoreExtensions;
 using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using UnityEngine.XR.ARSubsystems;
 #endif
@@ -19,44 +18,22 @@ namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
         [SerializeField]
         private Material streetscapeGeometryMaterial;
 
-        private readonly ConcurrentQueue<ARStreetscapeGeometriesChangedEventArgs> streetscapeGeometriesChangedEventQueue
-            = new ConcurrentQueue<ARStreetscapeGeometriesChangedEventArgs>();
-
         private readonly Dictionary<TrackableId, GameObject> streetscapeGeometryGameObjects =
             new Dictionary<TrackableId, GameObject>();
 
         private void OnEnable()
         {
-            arStreetscapeGeometryManager.StreetscapeGeometriesChanged += GetStreetscapeGeometry;
+            arStreetscapeGeometryManager.StreetscapeGeometriesChanged += StreetscapeGeometriesChanged;
         }
 
         private void OnDisable()
         {
-            arStreetscapeGeometryManager.StreetscapeGeometriesChanged -= GetStreetscapeGeometry;
-
-            // Clear event queue
-            while (streetscapeGeometriesChangedEventQueue.Count > 0)
-            {
-                streetscapeGeometriesChangedEventQueue.TryDequeue(out _);
-            }
+            arStreetscapeGeometryManager.StreetscapeGeometriesChanged -= StreetscapeGeometriesChanged;
 
             DestroyAllGeometryObjects();
         }
 
-        private void Update()
-        {
-            if (streetscapeGeometriesChangedEventQueue.TryDequeue(out var changedEvent))
-            {
-                ApplyChangedEvent(changedEvent);
-            }
-        }
-
-        private void GetStreetscapeGeometry(ARStreetscapeGeometriesChangedEventArgs eventArgs)
-        {
-            streetscapeGeometriesChangedEventQueue.Enqueue(eventArgs);
-        }
-
-        private void ApplyChangedEvent(ARStreetscapeGeometriesChangedEventArgs eventArgs)
+        private void StreetscapeGeometriesChanged(ARStreetscapeGeometriesChangedEventArgs eventArgs)
         {
             AddGeometries(eventArgs.Added);
             UpdateGeometries(eventArgs.Updated);
