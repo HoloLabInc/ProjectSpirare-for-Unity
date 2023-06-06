@@ -32,9 +32,13 @@ namespace HoloLab.Spirare
             }
         }
 
-        protected override async Task<string> GetContentXml(string path)
+        protected override async Task<(string Poml, string DestinationPath)> GetContentXml(string path)
         {
-            return await Task.Run(() => File.ReadAllText(path));
+            return await Task.Run(() =>
+            {
+                var poml = File.ReadAllText(path);
+                return (Poml: poml, DestinationPath: path);
+            });
         }
     }
 }

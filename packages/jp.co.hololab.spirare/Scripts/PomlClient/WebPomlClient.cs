@@ -39,7 +39,7 @@ namespace HoloLab.Spirare
             }
         }
 
-        protected override async Task<string> GetContentXml(string path)
+        protected override async Task<(string Poml, string DestinationPath)> GetContentXml(string path)
         {
             nextReloadTokenSource?.Cancel();
             nextReloadTokenSource = null;
@@ -61,13 +61,14 @@ namespace HoloLab.Spirare
                 throw new HttpRequestException(request.error);
             }
 
+            var destinationUrl = request.url;
             var contentString = request.downloadHandler.text;
             var responseHeaders = request.GetResponseHeaders();
 
             ReloadWithRefreshHeader(responseHeaders).Forget();
 
             request.Dispose();
-            return contentString;
+            return (Poml: contentString, DestinationPath: destinationUrl);
         }
 
         private void SetRequestHeaders(UnityWebRequest request, Dictionary<string, string> headers)
