@@ -119,9 +119,9 @@ namespace HoloLab.Spirare
                 isLoading = true;
 
                 pomlPath = path;
-                var xml = await GetContentXml(path);
+                var (poml, destinationPath) = await GetContentXml(path);
 
-                await LoadPomlAsync(xml, path);
+                await LoadPomlAsync(poml, destinationPath);
             }
             catch (Exception ex)
             {
@@ -162,13 +162,13 @@ namespace HoloLab.Spirare
             {
                 isLoading = true;
 
-                var xml = await GetContentXml(pomlPath);
+                var (poml, destinationPath) = await GetContentXml(pomlPath);
 
-                if (hardRefresh == true || xml != latestPoml)
+                if (hardRefresh == true || poml != latestPoml)
                 {
                     RemoveLoadedContent();
 
-                    await LoadPomlAsync(xml, pomlPath);
+                    await LoadPomlAsync(poml, destinationPath);
                 }
             }
             catch (Exception ex)
@@ -256,6 +256,6 @@ namespace HoloLab.Spirare
             Destroy(latestPomlObject);
         }
 
-        protected abstract Task<string> GetContentXml(string path);
+        protected abstract Task<(string Poml, string DestinationPath)> GetContentXml(string path);
     }
 }
