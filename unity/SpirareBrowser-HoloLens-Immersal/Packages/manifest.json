@@ -45,7 +45,7 @@
     "com.unity.xr.openxr": "1.2.8",
     "com.gwaredd.mggif": "https://github.com/gwaredd/mgGif.git?path=Assets/mgGif",
     "jp.co.hololab.immersal": "https://github.com/HoloLabInc/HoloLab.Immersal.git?path=Assets/HoloLab.Immersal",
-    "jp.co.hololab.iwasmunity": "https://github.com/HoloLabInc/IwasmUnity.git?path=Assets/IwasmUnity#windows-arm64",
+    "jp.co.hololab.iwasmunity": "https://github.com/HoloLabInc/IwasmUnity.git?path=Assets/IwasmUnity#v0.3.0",
     "jp.co.hololab.mrtk.ja": "0.3.0",
     "jp.co.hololab.positioningtools": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools",
     "jp.co.hololab.positioningtools.geographiccoordinate": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.geographiccoordinate",
