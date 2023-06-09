@@ -304,11 +304,11 @@
       "url": "https://packages.unity.com"
     },
     "jp.co.hololab.iwasmunity": {
-      "version": "https://github.com/HoloLabInc/IwasmUnity.git?path=Assets/IwasmUnity#v0.2.0",
+      "version": "https://github.com/HoloLabInc/IwasmUnity.git?path=Assets/IwasmUnity#v0.3.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "e0033bed325356cb1a3a34e96f2c8beca67677e0"
+      "hash": "156a84363b5db486eb3f74bdbfb33daf714416ea"
     },
     "jp.co.hololab.mrtk.ja": {
       "version": "0.3.0",
@@ -370,6 +370,12 @@
     },
     "jp.co.hololab.spirare.wasm": {
       "version": "file:../../../packages/jp.co.hololab.spirare.wasm",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
+    "jp.co.hololab.spirare.wasm.iwasm": {
+      "version": "file:../../../packages/jp.co.hololab.spirare.wasm.iwasm",
       "depth": 0,
       "source": "local",
       "dependencies": {}
