@@ -1,4 +1,6 @@
 using CesiumForUnity;
+using Unity.Mathematics;
+using UnityEngine;
 
 namespace HoloLab.Spirare.Cesium
 {
@@ -31,16 +33,21 @@ namespace HoloLab.Spirare.Cesium
 
         private void UpdateAnchorPose()
         {
-            if (anchor != null)
+            if (anchor == null)
             {
-                var longitude = GeoReferenceElement.Longitude;
-                var latitude = GeoReferenceElement.Latitude;
-                var height = GeoReferenceElement.EllipsoidalHeight;
-                anchor.SetPositionLongitudeLatitudeHeight(longitude, latitude, height);
-
-                var enuRotation = CoordinateUtility.ToUnityCoordinate(GeoReferenceElement.EnuRotation);
-                gameObject.transform.rotation = enuRotation;
+                return;
             }
+
+            var longitude = GeoReferenceElement.Longitude;
+            var latitude = GeoReferenceElement.Latitude;
+            var height = GeoReferenceElement.EllipsoidalHeight;
+            anchor.longitudeLatitudeHeight = new double3(longitude, latitude, height);
+
+            var geoReferenceRotation = CoordinateUtility.ToUnityCoordinate(GeoReferenceElement.EnuRotation);
+            var objectElementRotation = CoordinateUtility.ToUnityCoordinate(GeoReferenceElement.Parent?.Rotation ?? Quaternion.identity);
+            var enuRotation = geoReferenceRotation * objectElementRotation;
+
+            anchor.rotationEastUpNorth = enuRotation;
         }
     }
 }
