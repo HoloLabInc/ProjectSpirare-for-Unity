@@ -16,10 +16,7 @@ namespace HoloLab.Spirare
                 {
                     if (worldCoordinateOrigin != null)
                     {
-                        worldCoordinateOrigin.GeodeticPosition = new GeodeticPosition(
-                            GeoReferenceElement.Latitude,
-                            GeoReferenceElement.Longitude,
-                            GeoReferenceElement.EllipsoidalHeight);
+                        UpdateGameObject();
 
                         var wb = CoordinateManager.Instance.LatestWorldBinding;
                         worldCoordinateOrigin.BindCoordinates(wb);
@@ -33,13 +30,28 @@ namespace HoloLab.Spirare
             base.Initialize(geoReferenceElement);
 
             GeoReferenceElement = geoReferenceElement;
+            worldCoordinateOrigin = gameObject.AddComponent<WorldCoordinateOrigin>();
 
-            var wco = gameObject.AddComponent<WorldCoordinateOrigin>();
-            wco.GeodeticPosition = new GeodeticPosition(geoReferenceElement.Latitude, geoReferenceElement.Longitude, geoReferenceElement.EllipsoidalHeight);
-            wco.EnuRotation = CoordinateUtility.ToUnityCoordinate(geoReferenceElement.EnuRotation);
-            worldCoordinateOrigin = wco;
+            UpdateGameObject();
 
             return this;
+        }
+
+        private void UpdateGameObject()
+        {
+            if (worldCoordinateOrigin == null)
+            {
+                return;
+            }
+
+            var geodeticPosition = new GeodeticPosition(GeoReferenceElement.Latitude, GeoReferenceElement.Longitude, GeoReferenceElement.EllipsoidalHeight);
+            worldCoordinateOrigin.GeodeticPosition = geodeticPosition;
+
+            var geoReferenceRotation = CoordinateUtility.ToUnityCoordinate(GeoReferenceElement.EnuRotation);
+            var objectElementRotation = CoordinateUtility.ToUnityCoordinate(GeoReferenceElement.Parent?.Rotation ?? Quaternion.identity);
+            var enuRotation = geoReferenceRotation * objectElementRotation;
+
+            worldCoordinateOrigin.EnuRotation = enuRotation;
         }
     }
 }
