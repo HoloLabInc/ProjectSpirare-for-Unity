@@ -14,6 +14,9 @@ namespace HoloLab.SpirareBrowser
         private WorldCoordinateBinderWithLocationService worldCoordinateBinderWithLocationService = null;
 
         [SerializeField]
+        private Toggle autoAlignToggle = null;
+
+        [SerializeField]
         private Button bindButton = null;
 
         [SerializeField]
@@ -31,8 +34,9 @@ namespace HoloLab.SpirareBrowser
             SubReferencePoint
         }
 
-        private void Awake()
+        private void Start()
         {
+            autoAlignToggle.onValueChanged.AddListener(AutoAlignToggle_OnValueChanged);
             bindButton.onClick.AddListener(BindButton_OnClick);
             unbindButton.onClick.AddListener(UnbindButton_OnClick);
 
@@ -45,6 +49,8 @@ namespace HoloLab.SpirareBrowser
                     worldCoordinateBinderWithLocationService.OnSubReferencePointBound += OnBound;
                     break;
             }
+
+            AutoAlignToggle_OnValueChanged(autoAlignToggle.isOn);
         }
 
         private void OnBound(WorldBinding worldBinding)
@@ -62,6 +68,23 @@ namespace HoloLab.SpirareBrowser
         {
             bindButton.onClick.RemoveListener(BindButton_OnClick);
             unbindButton.onClick.RemoveListener(UnbindButton_OnClick);
+        }
+
+        private void AutoAlignToggle_OnValueChanged(bool autoAlignEnabled)
+        {
+            if (bindButton != null)
+            {
+                bindButton.interactable = !autoAlignEnabled;
+            }
+            if (unbindButton != null)
+            {
+                unbindButton.interactable = !autoAlignEnabled;
+            }
+
+            if (worldCoordinateBinderWithLocationService != null)
+            {
+                worldCoordinateBinderWithLocationService.AutoUpdateReferencePoint = autoAlignEnabled;
+            }
         }
 
         private void BindButton_OnClick()
