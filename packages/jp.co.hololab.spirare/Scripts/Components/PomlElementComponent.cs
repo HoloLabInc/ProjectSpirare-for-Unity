@@ -57,7 +57,7 @@ namespace HoloLab.Spirare
             OnDestroyed?.Invoke(this);
         }
 
-        internal void InvokeElementUpdated()
+        public void InvokeElementUpdated()
         {
             var displayInHierarchyChanged =
                 currentDisplayInHierarchy != PomlElement.DisplayInHierarchy ||
