@@ -115,6 +115,25 @@ public class PomlParserTests
     }
 
     [Test]
+    public void CustomAttributes()
+    {
+        var xml = @"
+<poml>
+    <scene>
+        <element id=""test"" _custom-key1=""value1"" _custom-key2=""value2"">
+        </element>
+    </scene>
+</poml>";
+
+        var elements = ParseSceneElements(xml);
+        var element = elements[0];
+
+        Assert.That(element.CustomAttributes.Count, Is.EqualTo(2));
+        Assert.That(element.CustomAttributes["_custom-key1"], Is.EqualTo("value1"));
+        Assert.That(element.CustomAttributes["_custom-key2"], Is.EqualTo("value2"));
+    }
+
+    [Test]
     public void ElementHierarchy()
     {
         var xml = @"
