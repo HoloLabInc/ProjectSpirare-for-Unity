@@ -43,6 +43,9 @@ namespace HoloLab.Spirare
     {
         public PomlElementType ElementType { get; }
         public ElementAttributeType Attribute { get; set; }
+
+        public Dictionary<string, string> CustomAttributes { get; } = new Dictionary<string, string>();
+
         public string Id { get; set; }
         public string WsRecvUrl { get; set; }
         public Vector3 Position { get; set; }

@@ -136,6 +136,15 @@ namespace HoloLab.Spirare
                 }
             }
 
+            // Read custom attributes
+            foreach (XmlAttribute attr in node.Attributes)
+            {
+                if (attr.Name.StartsWith("_"))
+                {
+                    pomlElement.CustomAttributes[attr.Name] = attr.Value;
+                }
+            }
+
             // Read common attributes
             var id = node.GetAttribute("id", null);
             var wsRecvUrl = node.GetAttribute("ws-recv-url", null);
