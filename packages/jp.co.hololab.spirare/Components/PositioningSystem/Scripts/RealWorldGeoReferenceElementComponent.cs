@@ -7,20 +7,16 @@ namespace HoloLab.Spirare
     public sealed class RealWorldGeoReferenceElementComponent : GeoReferenceElementComponent
     {
         private WorldCoordinateOrigin worldCoordinateOrigin;
+        private CoordinateManager coordinateManager;
 
         private void Start()
         {
+            // For update via websocket
             if (TryGetComponent<PomlObjectElementComponent>(out var elementComponent))
             {
                 elementComponent.OnElementUpdated += _ =>
                 {
-                    if (worldCoordinateOrigin != null)
-                    {
-                        UpdateGameObject();
-
-                        var wb = CoordinateManager.Instance.LatestWorldBinding;
-                        worldCoordinateOrigin.BindCoordinates(wb);
-                    }
+                    UpdateGameObject();
                 };
             }
         }
@@ -32,12 +28,38 @@ namespace HoloLab.Spirare
             GeoReferenceElement = geoReferenceElement;
             worldCoordinateOrigin = gameObject.AddComponent<WorldCoordinateOrigin>();
 
+            coordinateManager = CoordinateManager.Instance;
+
             UpdateGameObject();
+            OnElementUpdated += PomlElementComponent_UpdateGameObject;
 
             return this;
         }
 
+        private void PomlElementComponent_UpdateGameObject(PomlElement element)
+        {
+            UpdateGameObject();
+        }
+
         private void UpdateGameObject()
+        {
+            UpdateWorldCoordinateOrigin();
+            BindCoordinates();
+        }
+
+        private void BindCoordinates()
+        {
+            if (coordinateManager != null && worldCoordinateOrigin != null)
+            {
+                var worldBinding = coordinateManager.LatestWorldBinding;
+                if (worldBinding != null)
+                {
+                    worldCoordinateOrigin.BindCoordinates(worldBinding);
+                }
+            }
+        }
+
+        private void UpdateWorldCoordinateOrigin()
         {
             if (worldCoordinateOrigin == null)
             {
