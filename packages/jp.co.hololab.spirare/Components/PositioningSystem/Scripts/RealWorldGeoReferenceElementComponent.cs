@@ -1,6 +1,5 @@
 using HoloLab.PositioningTools.CoordinateSystem;
 using HoloLab.PositioningTools.GeographicCoordinate;
-using System;
 using UnityEngine;
 
 namespace HoloLab.Spirare

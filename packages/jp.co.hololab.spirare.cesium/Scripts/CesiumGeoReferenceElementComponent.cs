@@ -24,11 +24,17 @@ namespace HoloLab.Spirare.Cesium
             base.Initialize(geoReferenceElement);
 
             GeoReferenceElement = geoReferenceElement;
-
             anchor = gameObject.AddComponent<CesiumGlobeAnchor>();
+
             UpdateAnchorPose();
+            OnElementUpdated += PomlElementCOmponent_OnElementUpdated;
 
             return this;
+        }
+
+        private void PomlElementCOmponent_OnElementUpdated(PomlElement element)
+        {
+            UpdateAnchorPose();
         }
 
         private void UpdateAnchorPose()
