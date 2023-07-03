@@ -14,11 +14,11 @@ namespace HoloLab.Spirare
         {
             None,
             DataFetching,
-            DataLoading,
+            ModelLoading,
             ModelInstantiating,
             Loaded,
             DataFetchError,
-            DataLoadError,
+            ModelLoadError,
             ModelInstantiateError
         }
 
@@ -36,7 +36,7 @@ namespace HoloLab.Spirare
             }
 
             // Model loading
-            InvokeLoadingStatusChanged(LoadingStatus.DataLoading, onLoadingStatusChanged);
+            InvokeLoadingStatusChanged(LoadingStatus.ModelLoading, onLoadingStatusChanged);
 
             IMaterialGenerator materialGenerator = null;
             if (material != null)
@@ -48,7 +48,7 @@ namespace HoloLab.Spirare
             var loadResult = await gltfImport.LoadGltfBinary(result.Data);
             if (loadResult == false)
             {
-                InvokeLoadingStatusChanged(LoadingStatus.DataLoadError, onLoadingStatusChanged);
+                InvokeLoadingStatusChanged(LoadingStatus.ModelLoadError, onLoadingStatusChanged);
                 return;
             }
 

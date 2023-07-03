@@ -36,7 +36,7 @@ public class GltfastGlbLoaderTests
         var expectedStatusList = new List<GltfastGlbLoader.LoadingStatus>()
         {
             GltfastGlbLoader.LoadingStatus.DataFetching,
-            GltfastGlbLoader.LoadingStatus.DataLoading,
+            GltfastGlbLoader.LoadingStatus.ModelLoading,
             GltfastGlbLoader.LoadingStatus.ModelInstantiating,
             GltfastGlbLoader.LoadingStatus.Loaded,
         };
@@ -83,8 +83,8 @@ public class GltfastGlbLoaderTests
         var expectedStatusList = new List<GltfastGlbLoader.LoadingStatus>()
         {
             GltfastGlbLoader.LoadingStatus.DataFetching,
-            GltfastGlbLoader.LoadingStatus.DataLoading,
-            GltfastGlbLoader.LoadingStatus.DataLoadError,
+            GltfastGlbLoader.LoadingStatus.ModelLoading,
+            GltfastGlbLoader.LoadingStatus.ModelLoadError,
         };
         Assert.That(loadingStatusList, Is.EquivalentTo(expectedStatusList));
 
