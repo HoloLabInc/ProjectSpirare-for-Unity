@@ -191,6 +191,64 @@ public class GltfastModelElementComponentTests
         SpirareTestUtils.AssertThatMeshIsVisible(go, loaderSettings.occlusionMaterial);
     }
 
+    [Test]
+    public async Task ModelObject_LoadingStatusChangedEventInvoked()
+    {
+        var element = new PomlModelElement()
+        {
+            Display = PomlDisplayType.Visible,
+            Src = modelDataPath
+        };
+
+        var go = factory.CreateObject(element, normalLoadOptions);
+        var modelElementComponent = go.GetComponent<ModelElementComponent>();
+        Assert.That(modelElementComponent.LoadingStatus, Is.EqualTo(PomlElementLoadingStatus.DataFetching));
+
+        var loadingStatusList = new List<PomlElementLoadingStatus>();
+        modelElementComponent.LoadingStatusChanged += (status) =>
+        {
+            loadingStatusList.Add(status);
+        };
+
+        await WaitUntilModelIsLoaded(modelElementComponent);
+
+        var expectedStatusList = new[]
+        {
+            PomlElementLoadingStatus.Loading,
+            PomlElementLoadingStatus.Loaded
+        };
+        Assert.That(loadingStatusList, Is.EquivalentTo(expectedStatusList));
+    }
+
+    [Test]
+    public async Task ModelObject_DataFethErrorThrownWhenSrcIsInvalid()
+    {
+        var element = new PomlModelElement()
+        {
+            Display = PomlDisplayType.Visible,
+            Src = "invalidPath"
+        };
+
+        var go = factory.CreateObject(element, normalLoadOptions);
+        var modelElementComponent = go.GetComponent<ModelElementComponent>();
+        Assert.That(modelElementComponent.LoadingStatus, Is.EqualTo(PomlElementLoadingStatus.DataFetching));
+
+        var loadingStatusList = new List<PomlElementLoadingStatus>();
+        modelElementComponent.LoadingStatusChanged += (status) =>
+        {
+            loadingStatusList.Add(status);
+        };
+
+        var expectedStatusList = new[]
+        {
+            PomlElementLoadingStatus.DataFetchError,
+        };
+
+        await WaitUntilModelIsLoaded(modelElementComponent);
+
+        Assert.That(loadingStatusList, Is.EquivalentTo(expectedStatusList));
+    }
+
     private async Task<GameObject> CreateObjectAsync(PomlModelElement element, PomlLoadOptions loadOptions, Transform parentTransform = null)
     {
         var go = factory.CreateObject(element, loadOptions, parentTransform);
@@ -204,5 +262,25 @@ public class GltfastModelElementComponentTests
         var pomlObjectElementComponent = go.AddComponent<PomlObjectElementComponent>();
         pomlObjectElementComponent.Initialize(element);
         return pomlObjectElementComponent;
+    }
+
+    private static async Task WaitUntilModelIsLoaded(ModelElementComponent modelElementComponent, int timeoutMilliseconds = 5000)
+    {
+        var timeoutController = new TimeoutController();
+
+        await UniTask.WaitUntil(
+            () =>
+            {
+                switch (modelElementComponent.LoadingStatus)
+                {
+                    case PomlElementLoadingStatus.Loaded:
+                    case PomlElementLoadingStatus.DataFetchError:
+                    case PomlElementLoadingStatus.LoadError:
+                        return true;
+                    default:
+                        return false;
+                }
+            },
+            cancellationToken: timeoutController.Timeout(timeoutMilliseconds));
     }
 }

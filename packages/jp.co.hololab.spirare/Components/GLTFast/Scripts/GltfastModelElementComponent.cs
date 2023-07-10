@@ -76,6 +76,7 @@ namespace HoloLab.Spirare
             {
                 Destroy(currentModelObject);
                 currentModelObject = null;
+                ChangeLoadingStatus(PomlElementLoadingStatus.NotLoaded);
             }
 
             currentDisplayType = DisplayType;
@@ -95,7 +96,9 @@ namespace HoloLab.Spirare
                 material = loadOptions.OcclusionMaterial;
             }
 
-            await GltfastGlbLoader.LoadAsync(currentModelObject, element.Src, material);
+            await GltfastGlbLoader.LoadAsync(currentModelObject, element.Src, material,
+                onLoadingStatusChanged: OnLoadingStatusChanged);
+
             _currentModelSource = element.Src;
 
             _animation = GetComponentInChildren<Animation>(true);
@@ -195,6 +198,35 @@ namespace HoloLab.Spirare
             }
             index = -1;
             return false;
+        }
+
+        private void OnLoadingStatusChanged(GltfastGlbLoader.LoadingStatus loadingStatus)
+        {
+            PomlElementLoadingStatus pomlElementLoadingStatus;
+            switch (loadingStatus)
+            {
+                case GltfastGlbLoader.LoadingStatus.DataFetching:
+                    pomlElementLoadingStatus = PomlElementLoadingStatus.DataFetching;
+                    break;
+                case GltfastGlbLoader.LoadingStatus.ModelLoading:
+                case GltfastGlbLoader.LoadingStatus.ModelInstantiating:
+                    pomlElementLoadingStatus = PomlElementLoadingStatus.Loading;
+                    break;
+                case GltfastGlbLoader.LoadingStatus.Loaded:
+                    pomlElementLoadingStatus = PomlElementLoadingStatus.Loaded;
+                    break;
+                case GltfastGlbLoader.LoadingStatus.DataFetchError:
+                    pomlElementLoadingStatus = PomlElementLoadingStatus.DataFetchError;
+                    break;
+                case GltfastGlbLoader.LoadingStatus.ModelLoadError:
+                case GltfastGlbLoader.LoadingStatus.ModelInstantiateError:
+                    pomlElementLoadingStatus = PomlElementLoadingStatus.LoadError;
+                    break;
+                default:
+                    return;
+            }
+
+            ChangeLoadingStatus(pomlElementLoadingStatus);
         }
 
 #if UNITY_EDITOR
