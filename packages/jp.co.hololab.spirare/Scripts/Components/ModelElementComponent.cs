@@ -6,12 +6,12 @@ namespace HoloLab.Spirare
     public enum PomlElementLoadingStatus
     {
         NotLoaded,
+        UnknownError,
         DataFetching,
         Loading,
         Loaded,
         DataFetchError,
-        LoadError,
-        Error,
+        LoadError
     }
 
     public abstract class ModelElementComponent : SpecificObjectElementComponentBase<PomlModelElement>, IWithinCamera
