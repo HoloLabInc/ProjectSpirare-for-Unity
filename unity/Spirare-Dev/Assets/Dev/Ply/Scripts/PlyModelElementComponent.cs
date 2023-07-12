@@ -26,9 +26,14 @@ namespace HoloLab.Spirare.Pcx
 
         private PointCloudRenderer pointCloudRenderer;
 
+        [SerializeField]
+        private MeshFilter meshFilter;
+
         private void Awake()
         {
-            pointCloudRenderer = gameObject.AddComponent<PointCloudRenderer>();
+            // pointCloudRenderer = gameObject.AddComponent<PointCloudRenderer>();
+            //pointCloudRenderer = gameObject.AddComponent<PointCloudRenderer>();
+            // meshFilter = gameObject.GetComponent<MeshFilter>();
         }
 
         public override bool ChangeAnimation(int animationIndex)
@@ -72,12 +77,14 @@ namespace HoloLab.Spirare.Pcx
                 return;
             }
 
+            /*
             if (currentModelObject != null)
             {
                 Destroy(currentModelObject);
                 currentModelObject = null;
                 ChangeLoadingStatus(PomlElementLoadingStatus.NotLoaded);
             }
+            */
 
             currentDisplayType = DisplayType;
 
@@ -87,8 +94,6 @@ namespace HoloLab.Spirare.Pcx
             }
 
             _cameraVisibleHelpers = null;
-            currentModelObject = new GameObject("ModelObject");
-            currentModelObject.transform.SetParent(transform, false);
 
             Material material = null;
             if (DisplayType == PomlDisplayType.Occlusion)
@@ -96,8 +101,6 @@ namespace HoloLab.Spirare.Pcx
                 material = loadOptions.OcclusionMaterial;
             }
 
-            // await GltfastGlbLoader.LoadAsync(currentModelObject, element.Src, material,
-            //   onLoadingStatusChanged: OnLoadingStatusChanged);
             var (result, savedPath) = await SaveToFileAsync();
             if (result == false)
             {
@@ -108,12 +111,14 @@ namespace HoloLab.Spirare.Pcx
 
             _currentModelSource = element.Src;
 
+            /*
             _cameraVisibleHelpers = currentModelObject.GetComponentsInChildren<Renderer>(true)
                 .Select(renderer =>
                 {
                     return renderer.gameObject.AddComponent<CameraVisibleHelper>();
                 })
                 .ToArray();
+            */
 
             await UniTask.Yield();
         }
@@ -159,7 +164,8 @@ namespace HoloLab.Spirare.Pcx
         {
             var importer = new RuntimePlyImporter();
             // var cloud = importer.ImportAsPointCloudData(filePath);
-             var cloud = importer.ImportAsMesh(filePath);
+            var mesh = importer.ImportAsMesh(filePath);
+            meshFilter.mesh = mesh;
             // pointCloudRenderer.sourceData = cloud;
         }
 

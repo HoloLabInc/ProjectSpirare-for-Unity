@@ -3,27 +3,21 @@ using UnityEngine;
 
 namespace HoloLab.Spirare.Pcx
 {
-    // add create menu
-    [CreateAssetMenu(menuName = "Spirare/PlyModelElementObjectFactory")]
     public class PlyModelElementObjectFactory : ModelElementObjectFactory
     {
+        [SerializeField]
+        private PlyModelElementComponent plyModelElementComponentPrefab;
+
         public override GameObject CreateObject(PomlModelElement element, PomlLoadOptions loadOptions, Transform parentTransform = null)
         {
-            var go = new GameObject("model");
+            var plyModelElementComponent = Instantiate(plyModelElementComponentPrefab, parentTransform);
+            plyModelElementComponent.name = "model";
 
-            if (parentTransform != null)
-            {
-                go.transform.SetParent(parentTransform, false);
-            }
+            plyModelElementComponent.GetComponent<PomlObjectElementComponent>().Initialize(element);
+            plyModelElementComponent.Initialize(element, loadOptions);
+            _ = plyModelElementComponent.UpdateGameObject();
 
-            var pomlObjectElementComponent = go.AddComponent<PomlObjectElementComponent>();
-            pomlObjectElementComponent.Initialize(element);
-
-            var modelElementComponent = go.AddComponent<PlyModelElementComponent>();
-            modelElementComponent.Initialize(element, loadOptions);
-            _ = modelElementComponent.UpdateGameObject();
-
-            return go;
+            return plyModelElementComponent.gameObject;
         }
     }
 }

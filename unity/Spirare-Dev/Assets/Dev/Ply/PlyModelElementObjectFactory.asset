@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 728adf7645a9bdf40a888e952986f5dd, type: 3}
   m_Name: PlyModelElementObjectFactory
   m_EditorClassIdentifier: 
+  plyModelElementComponentPrefab: {fileID: 5070313821778850097, guid: 0f07220f0bcc02f44b873e864677fb3c,
+    type: 3}
