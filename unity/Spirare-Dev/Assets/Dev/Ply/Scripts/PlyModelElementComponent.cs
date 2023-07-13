@@ -3,7 +3,6 @@ using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using System.Linq;
-using Pcx;
 using System.IO;
 using System.Text;
 using System.Security.Cryptography;
@@ -13,9 +12,6 @@ namespace HoloLab.Spirare.Pcx
 {
     public sealed class PlyModelElementComponent : ModelElementComponent
     {
-        private bool localModel;
-
-        private GameObject currentModelObject;
         private string _currentModelSource;
 
         private CameraVisibleHelper[] _cameraVisibleHelpers;
@@ -24,17 +20,8 @@ namespace HoloLab.Spirare.Pcx
 
         public override WrapMode WrapMode { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        private PointCloudRenderer pointCloudRenderer;
-
         [SerializeField]
         private MeshFilter meshFilter;
-
-        private void Awake()
-        {
-            // pointCloudRenderer = gameObject.AddComponent<PointCloudRenderer>();
-            //pointCloudRenderer = gameObject.AddComponent<PointCloudRenderer>();
-            // meshFilter = gameObject.GetComponent<MeshFilter>();
-        }
 
         public override bool ChangeAnimation(int animationIndex)
         {
@@ -93,13 +80,13 @@ namespace HoloLab.Spirare.Pcx
                 return;
             }
 
-            _cameraVisibleHelpers = null;
-
-            Material material = null;
             if (DisplayType == PomlDisplayType.Occlusion)
             {
-                material = loadOptions.OcclusionMaterial;
+                Debug.LogWarning("Occlusion with point cloud is not supprted");
+                return;
             }
+
+            _cameraVisibleHelpers = null;
 
             var (result, savedPath) = await SaveToFileAsync();
             if (result == false)
@@ -168,36 +155,5 @@ namespace HoloLab.Spirare.Pcx
             meshFilter.mesh = mesh;
             // pointCloudRenderer.sourceData = cloud;
         }
-
-        /*
-        private void OnLoadingStatusChanged(GltfastGlbLoader.LoadingStatus loadingStatus)
-        {
-            PomlElementLoadingStatus pomlElementLoadingStatus;
-            switch (loadingStatus)
-            {
-                case GltfastGlbLoader.LoadingStatus.DataFetching:
-                    pomlElementLoadingStatus = PomlElementLoadingStatus.DataFetching;
-                    break;
-                case GltfastGlbLoader.LoadingStatus.ModelLoading:
-                case GltfastGlbLoader.LoadingStatus.ModelInstantiating:
-                    pomlElementLoadingStatus = PomlElementLoadingStatus.Loading;
-                    break;
-                case GltfastGlbLoader.LoadingStatus.Loaded:
-                    pomlElementLoadingStatus = PomlElementLoadingStatus.Loaded;
-                    break;
-                case GltfastGlbLoader.LoadingStatus.DataFetchError:
-                    pomlElementLoadingStatus = PomlElementLoadingStatus.DataFetchError;
-                    break;
-                case GltfastGlbLoader.LoadingStatus.ModelLoadError:
-                case GltfastGlbLoader.LoadingStatus.ModelInstantiateError:
-                    pomlElementLoadingStatus = PomlElementLoadingStatus.LoadError;
-                    break;
-                default:
-                    return;
-            }
-
-            ChangeLoadingStatus(pomlElementLoadingStatus);
-        }
-        */
     }
 }
