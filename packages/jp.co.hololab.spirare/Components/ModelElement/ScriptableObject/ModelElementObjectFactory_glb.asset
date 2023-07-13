@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26ea377757f96d841801761f9b92b306, type: 3}
+  m_Name: ModelElementObjectFactory_glb
+  m_EditorClassIdentifier: 
+  defaultModelElementObjectFactory: {fileID: 11400000, guid: 6fb702dc062e8c64f866e4c9c2ba33b4,
+    type: 2}
+  factories:
+  - extension: .glb
+    modelElementObjectFactory: {fileID: 11400000, guid: 6fb702dc062e8c64f866e4c9c2ba33b4,
+      type: 2}
