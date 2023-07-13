@@ -12,6 +12,17 @@ namespace HoloLab.Spirare.Pcx
 {
     public sealed class PlyModelElementComponent : ModelElementComponent
     {
+        private enum RenderMode { Mesh, PointCloud }
+
+        [SerializeField]
+        private RenderMode importMode = RenderMode.PointCloud;
+
+        [SerializeField]
+        private MeshFilter meshFilter;
+
+        [SerializeField]
+        private PointCloudRenderer pointCloudRenderer;
+
         private string _currentModelSource;
 
         private CameraVisibleHelper[] _cameraVisibleHelpers;
@@ -20,8 +31,18 @@ namespace HoloLab.Spirare.Pcx
 
         public override WrapMode WrapMode { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        [SerializeField]
-        private MeshFilter meshFilter;
+        private void Awake()
+        {
+            switch (importMode)
+            {
+                case RenderMode.Mesh:
+                    GameObject.Destroy(pointCloudRenderer);
+                    break;
+                case RenderMode.PointCloud:
+                    GameObject.Destroy(meshFilter.gameObject);
+                    break;
+            }
+        }
 
         public override bool ChangeAnimation(int animationIndex)
         {
@@ -150,10 +171,18 @@ namespace HoloLab.Spirare.Pcx
         private void LoadPly(string filePath)
         {
             var importer = new RuntimePlyImporter();
-            // var cloud = importer.ImportAsPointCloudData(filePath);
-            var mesh = importer.ImportAsMesh(filePath);
-            meshFilter.mesh = mesh;
-            // pointCloudRenderer.sourceData = cloud;
+
+            switch (importMode)
+            {
+                case RenderMode.Mesh:
+                    var mesh = importer.ImportAsMesh(filePath);
+                    meshFilter.mesh = mesh;
+                    break;
+                case RenderMode.PointCloud:
+                    var cloud = importer.ImportAsPointCloudData(filePath);
+                    pointCloudRenderer.sourceData = cloud;
+                    break;
+            }
         }
     }
 }
