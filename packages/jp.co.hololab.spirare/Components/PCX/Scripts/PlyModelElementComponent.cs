@@ -15,7 +15,7 @@ namespace HoloLab.Spirare.Pcx
         private enum RenderMode { Mesh, PointCloud }
 
         [SerializeField]
-        private RenderMode importMode = RenderMode.PointCloud;
+        private RenderMode renderMode = RenderMode.PointCloud;
 
         [SerializeField]
         private MeshFilter meshFilter;
@@ -27,11 +27,15 @@ namespace HoloLab.Spirare.Pcx
 
         private string cacheFolderPath => Path.Combine(Application.temporaryCachePath, "ply");
 
-        public override WrapMode WrapMode { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override WrapMode WrapMode
+        {
+            get => WrapMode.Default;
+            set { }
+        }
 
         private void Awake()
         {
-            switch (importMode)
+            switch (renderMode)
             {
                 case RenderMode.Mesh:
                     GameObject.Destroy(pointCloudRenderer);
@@ -151,7 +155,7 @@ namespace HoloLab.Spirare.Pcx
         {
             var importer = new RuntimePlyImporter();
 
-            switch (importMode)
+            switch (renderMode)
             {
                 case RenderMode.Mesh:
                     var mesh = importer.ImportAsMesh(filePath);
@@ -166,7 +170,7 @@ namespace HoloLab.Spirare.Pcx
 
         private void UnloadPly()
         {
-            switch (importMode)
+            switch (renderMode)
             {
                 case RenderMode.Mesh:
                     var mesh = meshFilter.mesh;
