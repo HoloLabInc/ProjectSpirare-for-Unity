@@ -172,7 +172,7 @@ namespace HoloLab.Spirare
                 if (coordinateManager != null)
                 {
                     var worldBinding = coordinateManager.LatestWorldBinding;
-                    if (worldBinding != null)
+                    if (worldBinding != null && mainCamera != null)
                     {
                         // TODO: Refactor.
                         var cameraPosition = mainCamera.transform.position;
