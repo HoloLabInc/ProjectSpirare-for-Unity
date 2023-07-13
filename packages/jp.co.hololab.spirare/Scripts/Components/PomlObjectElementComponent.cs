@@ -2,7 +2,6 @@
 using System;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-using System.Threading.Tasks;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -32,7 +31,7 @@ namespace HoloLab.Spirare
         {
             base.Initialize(element);
 
-            cameraTransform = Camera.main.transform;
+            GetCameraTransformPeriodically().Forget();
 
             UpdateGameObject(PomlElement);
 
@@ -156,8 +155,42 @@ namespace HoloLab.Spirare
             OnSelect?.Invoke();
         }
 
+        private async UniTask GetCameraTransformPeriodically()
+        {
+            var token = this.GetCancellationTokenOnDestroy();
+            while (Application.isPlaying)
+            {
+                if (token.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                GetCameraTransform();
+                await UniTask.Delay(5000, cancellationToken: token);
+            }
+        }
+
+        private void GetCameraTransform()
+        {
+            if (cameraTransform != null)
+            {
+                return;
+            }
+
+            var mainCamera = Camera.main;
+            if (mainCamera != null)
+            {
+                cameraTransform = mainCamera.transform;
+            }
+        }
+
         private void UpdateRotation()
         {
+            if (cameraTransform == null)
+            {
+                return;
+            }
+
             switch (PomlElement.RotationMode)
             {
                 case PomlRotationMode.None:
@@ -180,6 +213,11 @@ namespace HoloLab.Spirare
 
         private void UpdateScale()
         {
+            if (cameraTransform == null)
+            {
+                return;
+            }
+
             if (PomlElement.ScaleByDistance.HasValue == false)
             {
                 return;

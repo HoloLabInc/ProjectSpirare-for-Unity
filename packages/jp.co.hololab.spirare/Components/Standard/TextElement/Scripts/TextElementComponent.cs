@@ -53,7 +53,7 @@ namespace HoloLab.Spirare
                 backPlate.gameObject.AddComponent<CameraVisibleHelper>(),
             };
 
-            cameraTransform = Camera.main.transform;
+            GetCameraTransformPeriodically().Forget();
 
             textRectTransform = textMeshPro.GetComponent<RectTransform>();
             backPlateRenderer = backPlate.GetComponent<Renderer>();
@@ -243,6 +243,12 @@ namespace HoloLab.Spirare
 
         private string InterpolateText(string originalText)
         {
+            if (cameraTransform == null)
+            {
+                return originalText;
+            }
+
+
             var formatString = originalText;
             var interpolationIndex = 0;
             var interpolationTexts = new List<object>();
@@ -274,6 +280,35 @@ namespace HoloLab.Spirare
         internal string GetFontSize()
         {
             return (element.FontSize != null) ? element.FontSize : "";
+        }
+
+        private async UniTask GetCameraTransformPeriodically()
+        {
+            var token = this.GetCancellationTokenOnDestroy();
+            while (Application.isPlaying)
+            {
+                if (token.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                GetCameraTransform();
+                await UniTask.Delay(5000, cancellationToken: token);
+            }
+        }
+
+        private void GetCameraTransform()
+        {
+            if (cameraTransform != null)
+            {
+                return;
+            }
+
+            var mainCamera = Camera.main;
+            if (mainCamera != null)
+            {
+                cameraTransform = mainCamera.transform;
+            }
         }
 
         private static float GetFontSizeForTextMeshPro(string fontSize)
