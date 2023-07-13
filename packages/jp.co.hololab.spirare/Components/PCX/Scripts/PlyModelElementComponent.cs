@@ -61,7 +61,8 @@ namespace HoloLab.Spirare.Pcx
 
         public override bool IsWithinCamera(Camera camera)
         {
-            return _cameraVisibleHelpers?.Any(x => x.IsInsideCameraBounds(camera)) ?? false;
+            // Not supported
+            return false;
         }
 
         public override void PlayAnimation(WrapMode wrap)
@@ -93,6 +94,7 @@ namespace HoloLab.Spirare.Pcx
                 ChangeLoadingStatus(PomlElementLoadingStatus.NotLoaded);
             }
             */
+            UnloadPly();
 
             currentDisplayType = DisplayType;
 
@@ -181,6 +183,23 @@ namespace HoloLab.Spirare.Pcx
                 case RenderMode.PointCloud:
                     var cloud = importer.ImportAsPointCloudData(filePath);
                     pointCloudRenderer.sourceData = cloud;
+                    break;
+            }
+        }
+
+        private void UnloadPly()
+        {
+            switch (importMode)
+            {
+                case RenderMode.Mesh:
+                    var mesh = meshFilter.mesh;
+                    meshFilter.mesh = null;
+                    Destroy(mesh);
+                    break;
+                case RenderMode.PointCloud:
+                    var cloud = pointCloudRenderer.sourceData;
+                    pointCloudRenderer.sourceData = null;
+                    Destroy(cloud);
                     break;
             }
         }

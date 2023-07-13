@@ -17,21 +17,24 @@ namespace HoloLab.Spirare.Pcx
 
         [SerializeField] PointCloudData _sourceData = null;
 
-        public PointCloudData sourceData {
+        public PointCloudData sourceData
+        {
             get { return _sourceData; }
             set { _sourceData = value; }
         }
 
         [SerializeField] Color _pointTint = new Color(0.5f, 0.5f, 0.5f, 1);
 
-        public Color pointTint {
+        public Color pointTint
+        {
             get { return _pointTint; }
             set { _pointTint = value; }
         }
 
         [SerializeField] float _pointSize = 0.05f;
 
-        public float pointSize {
+        public float pointSize
+        {
             get { return _pointSize; }
             set { _pointSize = value; }
         }
@@ -161,11 +164,11 @@ namespace HoloLab.Spirare.Pcx
                 _pointMaterial.SetColor("_Tint", _pointTint);
                 _pointMaterial.SetMatrix("_Transform", transform.localToWorldMatrix);
                 _pointMaterial.SetBuffer("_PointBuffer", pointBuffer);
-                #if UNITY_2019_1_OR_NEWER
+#if UNITY_2019_1_OR_NEWER
                 Graphics.DrawProceduralNow(MeshTopology.Points, pointBuffer.count, 1);
-                #else
+#else
                 Graphics.DrawProcedural(MeshTopology.Points, pointBuffer.count, 1);
-                #endif
+#endif
             }
             else
             {
@@ -174,11 +177,11 @@ namespace HoloLab.Spirare.Pcx
                 _diskMaterial.SetMatrix("_Transform", transform.localToWorldMatrix);
                 _diskMaterial.SetBuffer("_PointBuffer", pointBuffer);
                 _diskMaterial.SetFloat("_PointSize", pointSize);
-                #if UNITY_2019_1_OR_NEWER
+#if UNITY_2019_1_OR_NEWER
                 Graphics.DrawProceduralNow(MeshTopology.Points, pointBuffer.count, 1);
-                #else
+#else
                 Graphics.DrawProcedural(MeshTopology.Points, pointBuffer.count, 1);
-                #endif
+#endif
             }
         }
 
