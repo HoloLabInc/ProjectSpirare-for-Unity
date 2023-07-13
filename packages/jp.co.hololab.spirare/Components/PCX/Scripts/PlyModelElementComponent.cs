@@ -2,11 +2,6 @@
 using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using System.Linq;
-using System.IO;
-using System.Text;
-using System.Security.Cryptography;
-using UnityEngine.Networking;
 
 namespace HoloLab.Spirare.Pcx
 {
@@ -27,7 +22,7 @@ namespace HoloLab.Spirare.Pcx
 
         private string _currentModelSource;
 
-        private string cacheFolderPath => Path.Combine(Application.temporaryCachePath, "ply");
+        private SpirareHttpClient spirareHttpClient;
 
         public override WrapMode WrapMode
         {
@@ -37,6 +32,8 @@ namespace HoloLab.Spirare.Pcx
 
         private void Awake()
         {
+            spirareHttpClient = SpirareHttpClient.Instance;
+
             switch (renderMode)
             {
                 case RenderMode.Mesh:
@@ -110,13 +107,11 @@ namespace HoloLab.Spirare.Pcx
             {
                 UnloadPly();
 
-                var (result, savedPath) = await SaveToFileAsync();
-                if (result == false)
+                var loadResult = await LoadPlyAsync();
+                if (loadResult == false)
                 {
-                    return;
+                    Debug.LogWarning($"Failed to load {element.Src}");
                 }
-
-                LoadPly(savedPath);
             }
 
             EnableRenderer();
@@ -147,46 +142,29 @@ namespace HoloLab.Spirare.Pcx
             }
         }
 
-        private async Task<(bool Success, string savedPath)> SaveToFileAsync()
+        private async UniTask<bool> LoadPlyAsync()
         {
             var src = element.Src;
 
-            var extension = element.GetSrcFileExtension();
-            var filename = GetCacheFilename(src, extension);
-            var savePath = Path.Combine(cacheFolderPath, filename);
-
-            // TODO use SpirareHttpClient
-
-            using (var request = UnityWebRequest.Get(src))
+            if (src.StartsWith("file://"))
             {
-                request.downloadHandler = new DownloadHandlerFile(savePath);
-                await request.SendWebRequest();
-
-                if (request.result == UnityWebRequest.Result.Success)
+                return LoadPlyFromFile(src);
+            }
+            else
+            {
+                var result = await spirareHttpClient.DownloadToFileAsync(src, enableCache: true);
+                if (result.Success)
                 {
-                    return (true, savePath);
+                    return LoadPlyFromFile(result.Data);
                 }
                 else
                 {
-                    Debug.LogError(request.error);
-                    return (false, null);
+                    return false;
                 }
             }
         }
 
-        private string GetCacheFilename(string url, string extension)
-        {
-            var urlBytes = Encoding.UTF8.GetBytes(url);
-
-            using (var provider = MD5.Create())
-            {
-                var hash = provider.ComputeHash(urlBytes);
-                var hashString = BitConverter.ToString(hash).Replace("-", string.Empty);
-                return hashString + extension;
-            }
-        }
-
-        private void LoadPly(string filePath)
+        private bool LoadPlyFromFile(string filePath)
         {
             var importer = new RuntimePlyImporter();
 
@@ -195,12 +173,13 @@ namespace HoloLab.Spirare.Pcx
                 case RenderMode.Mesh:
                     var mesh = importer.ImportAsMesh(filePath);
                     meshFilter.mesh = mesh;
-                    break;
+                    return mesh != null;
                 case RenderMode.PointCloud:
                     var cloud = importer.ImportAsPointCloudData(filePath);
                     pointCloudRenderer.sourceData = cloud;
-                    break;
+                    return cloud != null;
             }
+            return false;
         }
 
         private void UnloadPly()
