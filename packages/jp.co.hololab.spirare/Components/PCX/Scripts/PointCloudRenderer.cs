@@ -10,7 +10,6 @@ using UnityEngine;
 namespace HoloLab.Spirare.Pcx
 {
     /// A renderer class that renders a point cloud contained by PointCloudData.
-    [ExecuteInEditMode]
     public sealed class PointCloudRenderer : MonoBehaviour
     {
         #region Editable attributes
@@ -36,6 +35,9 @@ namespace HoloLab.Spirare.Pcx
             set { _pointSize = value; }
         }
 
+        [SerializeField] Material _pointMaterialBase = null;
+        [SerializeField] Material _diskMaterialBase = null;
+
         #endregion
 
         #region Public properties (nonserialized)
@@ -59,6 +61,17 @@ namespace HoloLab.Spirare.Pcx
         #endregion
 
         #region MonoBehaviour implementation
+
+        private void Awake()
+        {
+            _pointMaterial = new Material(_pointMaterialBase);
+            _pointMaterial.hideFlags = HideFlags.DontSave;
+            _pointMaterial.EnableKeyword("_COMPUTE_BUFFER");
+
+            _diskMaterial = new Material(_diskMaterialBase);
+            _diskMaterial.hideFlags = HideFlags.DontSave;
+            _diskMaterial.EnableKeyword("_COMPUTE_BUFFER");
+        }
 
         void OnValidate()
         {
