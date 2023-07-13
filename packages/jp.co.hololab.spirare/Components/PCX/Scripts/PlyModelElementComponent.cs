@@ -25,8 +25,6 @@ namespace HoloLab.Spirare.Pcx
 
         private string _currentModelSource;
 
-        private CameraVisibleHelper[] _cameraVisibleHelpers;
-
         private string cacheFolderPath => Path.Combine(Application.temporaryCachePath, "ply");
 
         public override WrapMode WrapMode { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -86,14 +84,6 @@ namespace HoloLab.Spirare.Pcx
                 return;
             }
 
-            /*
-            if (currentModelObject != null)
-            {
-                Destroy(currentModelObject);
-                currentModelObject = null;
-                ChangeLoadingStatus(PomlElementLoadingStatus.NotLoaded);
-            }
-            */
             UnloadPly();
 
             currentDisplayType = DisplayType;
@@ -109,8 +99,6 @@ namespace HoloLab.Spirare.Pcx
                 return;
             }
 
-            _cameraVisibleHelpers = null;
-
             var (result, savedPath) = await SaveToFileAsync();
             if (result == false)
             {
@@ -120,17 +108,6 @@ namespace HoloLab.Spirare.Pcx
             LoadPly(savedPath);
 
             _currentModelSource = element.Src;
-
-            /*
-            _cameraVisibleHelpers = currentModelObject.GetComponentsInChildren<Renderer>(true)
-                .Select(renderer =>
-                {
-                    return renderer.gameObject.AddComponent<CameraVisibleHelper>();
-                })
-                .ToArray();
-            */
-
-            await UniTask.Yield();
         }
 
         private async Task<(bool Success, string savedPath)> SaveToFileAsync()
