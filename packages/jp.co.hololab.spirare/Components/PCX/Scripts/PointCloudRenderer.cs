@@ -6,6 +6,7 @@
 // https://github.com/keijiro/Pcx
 
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace HoloLab.Spirare.Pcx
 {
@@ -57,6 +58,9 @@ namespace HoloLab.Spirare.Pcx
 
         Material _pointMaterial;
         Material _diskMaterial;
+        Camera _currentCamera;
+
+        bool _useScriptableRenderPipeline;
 
         #endregion
 
@@ -71,11 +75,34 @@ namespace HoloLab.Spirare.Pcx
             _diskMaterial = new Material(_diskMaterialBase);
             _diskMaterial.hideFlags = HideFlags.DontSave;
             _diskMaterial.EnableKeyword("_COMPUTE_BUFFER");
+
+            _useScriptableRenderPipeline = GraphicsSettings.renderPipelineAsset != null;
         }
 
         void OnValidate()
         {
             _pointSize = Mathf.Max(0, _pointSize);
+        }
+
+        void OnEnable()
+        {
+            if (_useScriptableRenderPipeline)
+            {
+                RenderPipelineManager.beginCameraRendering += OnBeginCameraRendering;
+            }
+        }
+
+        void OnDisable()
+        {
+            if (_useScriptableRenderPipeline)
+            {
+                RenderPipelineManager.beginCameraRendering -= OnBeginCameraRendering;
+            }
+        }
+
+        void OnBeginCameraRendering(ScriptableRenderContext context, Camera camera)
+        {
+            _currentCamera = camera;
         }
 
         void OnDestroy()
@@ -101,9 +128,14 @@ namespace HoloLab.Spirare.Pcx
             if (_sourceData == null && sourceBuffer == null) return;
 
             // Check the camera condition.
-            var camera = Camera.current;
-            if ((camera.cullingMask & (1 << gameObject.layer)) == 0) return;
-            if (camera.name == "Preview Scene Camera") return;
+            if (_useScriptableRenderPipeline == false)
+            {
+                _currentCamera = Camera.current;
+            }
+
+            if (_currentCamera == null) return;
+            if ((_currentCamera.cullingMask & (1 << gameObject.layer)) == 0) return;
+            if (_currentCamera.name == "Preview Scene Camera") return;
 
             // TODO: Do view frustum culling here.
 
