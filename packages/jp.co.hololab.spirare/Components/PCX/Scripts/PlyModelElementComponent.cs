@@ -23,6 +23,8 @@ namespace HoloLab.Spirare.Pcx
         [SerializeField]
         private PointCloudRenderer pointCloudRenderer;
 
+        private MeshRenderer meshRenderer;
+
         private string _currentModelSource;
 
         private string cacheFolderPath => Path.Combine(Application.temporaryCachePath, "ply");
@@ -38,6 +40,7 @@ namespace HoloLab.Spirare.Pcx
             switch (renderMode)
             {
                 case RenderMode.Mesh:
+                    meshRenderer = meshFilter.GetComponent<MeshRenderer>();
                     GameObject.Destroy(pointCloudRenderer);
                     break;
                 case RenderMode.PointCloud:
@@ -88,30 +91,60 @@ namespace HoloLab.Spirare.Pcx
                 return;
             }
 
-            UnloadPly();
-
             currentDisplayType = DisplayType;
 
             if (DisplayType == PomlDisplayType.None)
             {
+                DisableRenderer();
                 return;
             }
 
             if (DisplayType == PomlDisplayType.Occlusion)
             {
+                DisableRenderer();
                 Debug.LogWarning("Occlusion with point cloud is not supprted");
                 return;
             }
 
-            var (result, savedPath) = await SaveToFileAsync();
-            if (result == false)
+            if (_currentModelSource != element.Src)
             {
-                return;
+                UnloadPly();
+
+                var (result, savedPath) = await SaveToFileAsync();
+                if (result == false)
+                {
+                    return;
+                }
+
+                LoadPly(savedPath);
             }
 
-            LoadPly(savedPath);
+            EnableRenderer();
 
             _currentModelSource = element.Src;
+        }
+
+        private void EnableRenderer()
+        {
+            SetRendererActive(true);
+        }
+
+        private void DisableRenderer()
+        {
+            SetRendererActive(false);
+        }
+
+        private void SetRendererActive(bool enabled)
+        {
+            switch (renderMode)
+            {
+                case RenderMode.Mesh:
+                    meshRenderer.enabled = enabled;
+                    break;
+                case RenderMode.PointCloud:
+                    pointCloudRenderer.enabled = enabled;
+                    break;
+            }
         }
 
         private async Task<(bool Success, string savedPath)> SaveToFileAsync()
@@ -121,6 +154,8 @@ namespace HoloLab.Spirare.Pcx
             var extension = element.GetSrcFileExtension();
             var filename = GetCacheFilename(src, extension);
             var savePath = Path.Combine(cacheFolderPath, filename);
+
+            // TODO use SpirareHttpClient
 
             using (var request = UnityWebRequest.Get(src))
             {

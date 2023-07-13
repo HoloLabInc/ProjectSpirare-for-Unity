@@ -104,6 +104,44 @@ namespace HoloLab.Spirare
             }
         }
 
+        public async UniTask<SpirareHttpClientResult<string>> DownloadToFileAsync(string url, string filepath)
+        {
+            if (string.IsNullOrEmpty(url))
+            {
+                var ex = new ArgumentException();
+                return CreateErrroResult<string>(ex);
+            }
+
+            if (IsFileUrl(url))
+            {
+                var ex = new ArgumentException();
+                return CreateErrroResult<string>(ex);
+            }
+
+            try
+            {
+                using (var request = UnityWebRequest.Get(url))
+                {
+                    request.downloadHandler = new DownloadHandlerFile(filepath);
+                    var webRequest = await request.SendWebRequest();
+
+                    if (webRequest.result == UnityWebRequest.Result.Success)
+                    {
+                        return CreateSuccessResult(filepath);
+                    }
+                    else
+                    {
+                        var exception = new Exception(webRequest.error);
+                        return CreateErrroResult<string>(exception);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return CreateErrroResult<string>(ex);
+            }
+        }
+
         private async UniTask<SpirareHttpClientResult<byte[]>> LoadLocalFile(string url)
         {
             try
