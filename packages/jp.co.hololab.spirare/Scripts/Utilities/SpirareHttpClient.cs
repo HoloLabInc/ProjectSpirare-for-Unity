@@ -158,16 +158,25 @@ namespace HoloLab.Spirare
             }
         }
 
+        public static string ConvertFileScemeUrlToFilePath(string url)
+        {
+            string filepath = url;
+            if (url.StartsWith("file://"))
+            {
+                filepath = url.Substring("file://".Length);
+            }
+
+            // The URL might need to be decoded
+            // filepath = Uri.UnescapeDataString(filepath);
+            return filepath;
+        }
+
         private async UniTask<SpirareHttpClientResult<byte[]>> LoadLocalFile(string url)
         {
             try
             {
-                if (url.StartsWith("file://"))
-                {
-                    url = url.Substring("file://".Length);
-                }
-
-                using FileStream stream = new FileStream(url, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, true);
+                var filepath = ConvertFileScemeUrlToFilePath(url);
+                using FileStream stream = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, true);
                 var fileBytes = new byte[stream.Length];
                 await stream.ReadAsync(fileBytes, 0, (int)stream.Length);
 
