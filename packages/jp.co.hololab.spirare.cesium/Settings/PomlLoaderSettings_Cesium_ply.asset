@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: deddd2a2488e60641854a003e28b44cd, type: 3}
-  m_Name: DefaultPomlLoaderSettings
+  m_Name: PomlLoaderSettings_Cesium_ply
   m_EditorClassIdentifier: 
-  modelElementObjectFactory: {fileID: 11400000, guid: f6dd5d184ff69f5419cfc27912c78afe,
+  modelElementObjectFactory: {fileID: 11400000, guid: 6406a3ec9f57d684d8cfa4a7ae3e878f,
     type: 2}
   imageElementObjectFactory: {fileID: 11400000, guid: 0a72e0a0c773ebf4995186ce611ed0fe,
     type: 2}
@@ -22,15 +22,15 @@ MonoBehaviour:
     type: 2}
   geometryElementObjectFactory: {fileID: 11400000, guid: e9a836534f9aa4d45a7f91027336e4fa,
     type: 2}
-  screenSpaceElementObjectFactory: {fileID: 11400000, guid: bc1373b381031d445a326684e927b381,
-    type: 2}
+  screenSpaceElementObjectFactory: {fileID: 0}
   spaceReferenceElementComponentFactory: {fileID: 11400000, guid: d8b3599310e6f0542b6c5686a9009046,
     type: 2}
-  geoReferenceElementComponentFactory: {fileID: 11400000, guid: c9aa2bdc0fc2aad4584f403ee106bbb2,
+  geoReferenceElementComponentFactory: {fileID: 11400000, guid: 080afc39abf94c64ea13a444d0d10bd1,
     type: 2}
   scriptElementComponentFactory: {fileID: 11400000, guid: 13a611523b00a10449431cbd45349907,
     type: 2}
-  cesium3dTilesElementFactory: {fileID: 0}
+  cesium3dTilesElementFactory: {fileID: 11400000, guid: a357d263d61b7714f8fe205afaae3c0f,
+    type: 2}
   occlusionMaterial: {fileID: 2100000, guid: 309b0b26b311cf64e8e9f689bec8ff43, type: 2}
   defaultLayerName: Default
   screenSpaceLayerName: SpirareScreenSpace

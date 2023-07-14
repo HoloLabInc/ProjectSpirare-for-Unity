@@ -104,6 +104,60 @@ namespace HoloLab.Spirare
             }
         }
 
+        public async UniTask<SpirareHttpClientResult<string>> DownloadToFileAsync(string url, bool enableCache = false)
+        {
+            if (string.IsNullOrEmpty(url))
+            {
+                var ex = new ArgumentException();
+                return CreateErrroResult<string>(ex);
+            }
+
+            if (IsFileUrl(url))
+            {
+                var ex = new ArgumentException();
+                return CreateErrroResult<string>(ex);
+            }
+
+            if (enableCache)
+            {
+                if (cacheFileDictionary.TryGetValue(url, out var cachePath))
+                {
+                    return CreateSuccessResult(cachePath);
+                }
+            }
+
+            try
+            {
+                var randomFileName = Path.GetRandomFileName();
+                var filepath = Path.Combine(cacheFolderPath, randomFileName);
+
+                using (var request = UnityWebRequest.Get(url))
+                {
+                    request.downloadHandler = new DownloadHandlerFile(filepath);
+                    var webRequest = await request.SendWebRequest();
+
+                    if (webRequest.result == UnityWebRequest.Result.Success)
+                    {
+                        if (enableCache)
+                        {
+                            cacheFileDictionary.TryAdd(url, filepath);
+                        }
+
+                        return CreateSuccessResult(filepath);
+                    }
+                    else
+                    {
+                        var exception = new Exception(webRequest.error);
+                        return CreateErrroResult<string>(exception);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return CreateErrroResult<string>(ex);
+            }
+        }
+
         private async UniTask<SpirareHttpClientResult<byte[]>> LoadLocalFile(string url)
         {
             try

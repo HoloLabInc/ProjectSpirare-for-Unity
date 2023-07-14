@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: deddd2a2488e60641854a003e28b44cd, type: 3}
-  m_Name: DefaultPomlLoaderSettings
+  m_Name: PomlLoaderSettings_ply
   m_EditorClassIdentifier: 
-  modelElementObjectFactory: {fileID: 11400000, guid: f6dd5d184ff69f5419cfc27912c78afe,
+  modelElementObjectFactory: {fileID: 11400000, guid: 14c029cdc732f1147a840682c87d9a1d,
     type: 2}
   imageElementObjectFactory: {fileID: 11400000, guid: 0a72e0a0c773ebf4995186ce611ed0fe,
     type: 2}
