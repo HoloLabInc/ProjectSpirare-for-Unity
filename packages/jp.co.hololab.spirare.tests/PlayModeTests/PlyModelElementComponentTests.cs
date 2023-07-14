@@ -61,21 +61,8 @@ public class PlyModelElementComponentTests
             Src = modelDataPath
         };
 
-        var go = await CreateObjectAsync(element, normalLoadOptions);
+        var (go, _, _) = await CreateObjectAsync(element, normalLoadOptions);
         AssertThatMeshIsVisible(go);
-    }
-
-    private void AssertThatMeshIsVisible(GameObject go)
-    {
-        var pointCloudRenderer = go.GetComponentInChildren<PointCloudRenderer>();
-        Assert.That(pointCloudRenderer.enabled, Is.True);
-        Assert.That(pointCloudRenderer.sourceData, Is.Not.Null);
-    }
-
-    private void AssertThatMeshIsInvisible(GameObject go)
-    {
-        var pointCloudRenderer = go.GetComponentInChildren<PointCloudRenderer>();
-        Assert.That(pointCloudRenderer.enabled, Is.False);
     }
 
     [Test]
@@ -87,7 +74,7 @@ public class PlyModelElementComponentTests
             Src = modelDataPath
         };
 
-        var go = await CreateObjectAsync(element, normalLoadOptions);
+        var (go, _, _) = await CreateObjectAsync(element, normalLoadOptions);
         AssertThatMeshIsInvisible(go);
     }
 
@@ -116,18 +103,11 @@ public class PlyModelElementComponentTests
             Src = modelDataPath
         };
 
-        var go = await CreateObjectAsync(element, normalLoadOptions);
-        var objectElementComponent = go.GetComponent<PomlObjectElementComponent>();
-        var modelElementComponent = go.GetComponent<ModelElementComponent>();
-
-        Assert.That(objectElementComponent, Is.Not.Null);
-        Assert.That(modelElementComponent, Is.Not.Null);
+        var (go, objectElementComponent, modelElementComponent) = await CreateObjectAsync(element, normalLoadOptions);
 
         element.Display = PomlDisplayType.Visible;
         objectElementComponent.InvokeElementUpdated();
 
-        // wait until loading has completed
-        // await UniTask.Delay(100);
         await WaitUntilModelIsLoaded(modelElementComponent);
 
         AssertThatMeshIsVisible(go);
@@ -169,18 +149,11 @@ public class PlyModelElementComponentTests
             Src = modelDataPath
         };
 
-        var go = await CreateObjectAsync(element, normalLoadOptions);
-        var objectElementComponent = go.GetComponent<PomlObjectElementComponent>();
-        var modelElementComponent = go.GetComponent<ModelElementComponent>();
-
-        Assert.That(objectElementComponent, Is.Not.Null);
-        Assert.That(modelElementComponent, Is.Not.Null);
+        var (go, objectElementComponent, modelElementComponent) = await CreateObjectAsync(element, normalLoadOptions);
 
         element.Display = PomlDisplayType.None;
         objectElementComponent.InvokeElementUpdated();
 
-        // wait until loading has completed
-        //await UniTask.Delay(100);
         await WaitUntilModelIsLoaded(modelElementComponent);
 
         AssertThatMeshIsInvisible(go);
@@ -205,12 +178,7 @@ public class PlyModelElementComponentTests
 
         var parentComponent = CreateEmptyElementObject(parentElement);
 
-        var go = await CreateObjectAsync(modelElement, normalLoadOptions, parentComponent.transform);
-        var objectElementComponent = go.GetComponent<PomlObjectElementComponent>();
-        var modelElementComponent = go.GetComponent<ModelElementComponent>();
-
-        Assert.That(objectElementComponent, Is.Not.Null);
-        Assert.That(modelElementComponent, Is.Not.Null);
+        var (go, _, modelElementComponent) = await CreateObjectAsync(modelElement, normalLoadOptions, parentComponent.transform);
 
         AssertThatMeshIsInvisible(go);
 
@@ -218,51 +186,25 @@ public class PlyModelElementComponentTests
         parentElement.Display = PomlDisplayType.Visible;
         parentComponent.InvokeElementUpdated();
 
-        // wait until loading has completed
-        // await UniTask.Delay(100);
         await WaitUntilModelIsLoaded(modelElementComponent);
 
         AssertThatMeshIsVisible(go);
     }
 
-    /*
-    [Test]
-    public async Task ModelObject_LoadingStatusChangedEventInvoked()
+    private async Task<(GameObject GameObject, PomlObjectElementComponent PomlObjectElementComponent, ModelElementComponent ModelElementComponent)>
+        CreateObjectAsync(PomlModelElement element, PomlLoadOptions loadOptions, Transform parentTransform = null)
     {
-        var element = new PomlModelElement()
-        {
-            Display = PomlDisplayType.Visible,
-            Src = modelDataPath
-        };
+        var go = factory.CreateObject(element, loadOptions, parentTransform);
 
-        var go = factory.CreateObject(element, normalLoadOptions);
+        var objectElementComponent = go.GetComponent<PomlObjectElementComponent>();
         var modelElementComponent = go.GetComponent<ModelElementComponent>();
-        Assert.That(modelElementComponent.LoadingStatus, Is.EqualTo(PomlElementLoadingStatus.DataFetching));
 
-        var loadingStatusList = new List<PomlElementLoadingStatus>();
-        modelElementComponent.LoadingStatusChanged += (status) =>
-        {
-            loadingStatusList.Add(status);
-        };
+        Assert.That(objectElementComponent, Is.Not.Null);
+        Assert.That(modelElementComponent, Is.Not.Null);
 
         await WaitUntilModelIsLoaded(modelElementComponent);
 
-        var expectedStatusList = new[]
-        {
-            PomlElementLoadingStatus.Loading,
-            PomlElementLoadingStatus.Loaded
-        };
-        Assert.That(loadingStatusList, Is.EquivalentTo(expectedStatusList));
-    }
-    */
-
-    private async Task<GameObject> CreateObjectAsync(PomlModelElement element, PomlLoadOptions loadOptions, Transform parentTransform = null)
-    {
-        var go = factory.CreateObject(element, loadOptions, parentTransform);
-        await Task.Delay(100);
-
-        // TODD wait
-        return go;
+        return (go, objectElementComponent, modelElementComponent);
     }
 
     private PomlObjectElementComponent CreateEmptyElementObject(PomlElement element)
@@ -271,6 +213,19 @@ public class PlyModelElementComponentTests
         var pomlObjectElementComponent = go.AddComponent<PomlObjectElementComponent>();
         pomlObjectElementComponent.Initialize(element);
         return pomlObjectElementComponent;
+    }
+
+    private static void AssertThatMeshIsVisible(GameObject go)
+    {
+        var pointCloudRenderer = go.GetComponentInChildren<PointCloudRenderer>();
+        Assert.That(pointCloudRenderer.enabled, Is.True);
+        Assert.That(pointCloudRenderer.sourceData, Is.Not.Null);
+    }
+
+    private static void AssertThatMeshIsInvisible(GameObject go)
+    {
+        var pointCloudRenderer = go.GetComponentInChildren<PointCloudRenderer>();
+        Assert.That(pointCloudRenderer.enabled, Is.False);
     }
 
     private static async Task WaitUntilModelIsLoaded(ModelElementComponent modelElementComponent, int timeoutMilliseconds = 5000)
