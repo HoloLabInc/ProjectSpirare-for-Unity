@@ -61,7 +61,7 @@ public class PlyModelElementComponentTests
             Src = modelDataPath
         };
 
-        var (go, _, _) = await CreateObjectAsync(element, normalLoadOptions);
+        var (go, _, _) = await CreateObjectAsync(element, normalLoadOptions, waitUntilLoaded: true);
         AssertThatMeshIsVisible(go);
     }
 
@@ -149,12 +149,10 @@ public class PlyModelElementComponentTests
             Src = modelDataPath
         };
 
-        var (go, objectElementComponent, modelElementComponent) = await CreateObjectAsync(element, normalLoadOptions);
+        var (go, objectElementComponent, modelElementComponent) = await CreateObjectAsync(element, normalLoadOptions, waitUntilLoaded: true);
 
         element.Display = PomlDisplayType.None;
         objectElementComponent.InvokeElementUpdated();
-
-        await WaitUntilModelIsLoaded(modelElementComponent);
 
         AssertThatMeshIsInvisible(go);
     }
@@ -192,7 +190,7 @@ public class PlyModelElementComponentTests
     }
 
     private async Task<(GameObject GameObject, PomlObjectElementComponent PomlObjectElementComponent, ModelElementComponent ModelElementComponent)>
-        CreateObjectAsync(PomlModelElement element, PomlLoadOptions loadOptions, Transform parentTransform = null)
+        CreateObjectAsync(PomlModelElement element, PomlLoadOptions loadOptions, Transform parentTransform = null, bool waitUntilLoaded = false)
     {
         var go = factory.CreateObject(element, loadOptions, parentTransform);
 
@@ -202,7 +200,11 @@ public class PlyModelElementComponentTests
         Assert.That(objectElementComponent, Is.Not.Null);
         Assert.That(modelElementComponent, Is.Not.Null);
 
-        await WaitUntilModelIsLoaded(modelElementComponent);
+        if (waitUntilLoaded)
+        {
+            Debug.Log(modelElementComponent.LoadingStatus);
+            await WaitUntilModelIsLoaded(modelElementComponent);
+        }
 
         return (go, objectElementComponent, modelElementComponent);
     }
