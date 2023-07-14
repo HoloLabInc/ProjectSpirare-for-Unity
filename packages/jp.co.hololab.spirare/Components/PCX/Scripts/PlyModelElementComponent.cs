@@ -154,7 +154,9 @@ namespace HoloLab.Spirare.Pcx
             {
                 ChangeLoadingStatus(PomlElementLoadingStatus.DataFetching);
                 ChangeLoadingStatus(PomlElementLoadingStatus.Loading);
-                loadResult = LoadPlyFromFile(src);
+
+                var filepath = SpirareHttpClient.ConvertFileScemeUrlToFilePath(src);
+                loadResult = LoadPlyFromFile(filepath);
             }
             else
             {
