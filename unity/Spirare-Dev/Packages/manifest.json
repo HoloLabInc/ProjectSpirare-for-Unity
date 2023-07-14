@@ -16,7 +16,6 @@
     "com.unity.textmeshpro": "3.0.6",
     "com.unity.timeline": "1.4.8",
     "com.unity.ugui": "1.0.0",
-    "jp.keijiro.pcx": "1.0.1",
     "jp.co.hololab.positioningtools": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools",
     "jp.co.hololab.positioningtools.geographiccoordinate": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.geographiccoordinate",
     "jp.co.hololab.spirare": "file:../../../packages/jp.co.hololab.spirare",
@@ -79,11 +78,6 @@
         "com.microsoft.mixedreality.toolkit.standardassets",
         "com.microsoft.mixedreality.toolkit.tools"
       ]
-    },
-    {
-      "name": "Keijiro",
-      "url": "https://registry.npmjs.com",
-      "scopes": [ "jp.keijiro" ]
     }
   ]
 }
