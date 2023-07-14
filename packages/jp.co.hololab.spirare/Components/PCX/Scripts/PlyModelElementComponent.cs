@@ -93,12 +93,14 @@ namespace HoloLab.Spirare.Pcx
             if (DisplayType == PomlDisplayType.None)
             {
                 DisableRenderer();
+                ChangeLoadingStatus(PomlElementLoadingStatus.NotLoaded);
                 return;
             }
 
             if (DisplayType == PomlDisplayType.Occlusion)
             {
                 DisableRenderer();
+                ChangeLoadingStatus(PomlElementLoadingStatus.NotLoaded);
                 Debug.LogWarning("Occlusion with point cloud is not supprted");
                 return;
             }
@@ -106,6 +108,7 @@ namespace HoloLab.Spirare.Pcx
             if (_currentModelSource != element.Src)
             {
                 UnloadPly();
+                ChangeLoadingStatus(PomlElementLoadingStatus.NotLoaded);
 
                 var loadResult = await LoadPlyAsync();
                 if (loadResult == false)
@@ -144,24 +147,40 @@ namespace HoloLab.Spirare.Pcx
 
         private async UniTask<bool> LoadPlyAsync()
         {
-            var src = element.Src;
+            bool loadResult;
 
+            var src = element.Src;
             if (src.StartsWith("file://"))
             {
-                return LoadPlyFromFile(src);
+                ChangeLoadingStatus(PomlElementLoadingStatus.DataFetching);
+                ChangeLoadingStatus(PomlElementLoadingStatus.Loading);
+                loadResult = LoadPlyFromFile(src);
             }
             else
             {
+                // Download from URL
+                ChangeLoadingStatus(PomlElementLoadingStatus.DataFetching);
                 var result = await spirareHttpClient.DownloadToFileAsync(src, enableCache: true);
-                if (result.Success)
+                if (result.Success == false)
                 {
-                    return LoadPlyFromFile(result.Data);
-                }
-                else
-                {
+                    ChangeLoadingStatus(PomlElementLoadingStatus.DataFetchError);
                     return false;
                 }
+
+                // Load from file
+                ChangeLoadingStatus(PomlElementLoadingStatus.Loading);
+                loadResult = LoadPlyFromFile(result.Data);
             }
+
+            if (loadResult)
+            {
+                ChangeLoadingStatus(PomlElementLoadingStatus.Loaded);
+            }
+            else
+            {
+                ChangeLoadingStatus(PomlElementLoadingStatus.LoadError);
+            }
+            return loadResult;
         }
 
         private bool LoadPlyFromFile(string filePath)
