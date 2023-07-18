@@ -271,39 +271,40 @@
       "hash": "9ada65c28d2222630865eee88f5bff1b2d6b224a"
     },
     "jp.co.hololab.spirare": {
-      "version": "https://github.com/HoloLabInc/ProjectSpirare-for-Unity.git?path=packages/jp.co.hololab.spirare",
+      "version": "file:../../../packages/jp.co.hololab.spirare",
       "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "1e9d0f7746993819e9cadc4a46af7a4dd1dce53b"
+      "source": "local",
+      "dependencies": {}
     },
     "jp.co.hololab.spirare.browser": {
-      "version": "https://github.com/HoloLabInc/ProjectSpirare-for-Unity.git?path=packages/jp.co.hololab.spirare.browser",
+      "version": "file:../../../packages/jp.co.hololab.spirare.browser",
       "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "b6e0b3f4b04b2713f24200d04f49bc1bb8441422"
+      "source": "local",
+      "dependencies": {}
+    },
+    "jp.co.hololab.spirare.browser.desktop": {
+      "version": "file:../../../packages/jp.co.hololab.spirare.browser.desktop",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
     },
     "jp.co.hololab.spirare.cesium": {
-      "version": "https://github.com/HoloLabInc/ProjectSpirare-for-Unity.git?path=packages/jp.co.hololab.spirare.cesium",
+      "version": "file:../../../packages/jp.co.hololab.spirare.cesium",
       "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "93b9dcd8f68acff167c8204bb8028e179b631d5d"
+      "source": "local",
+      "dependencies": {}
     },
     "jp.co.hololab.spirare.wasm": {
-      "version": "https://github.com/HoloLabInc/ProjectSpirare-for-Unity.git?path=packages/jp.co.hololab.spirare.wasm",
+      "version": "file:../../../packages/jp.co.hololab.spirare.wasm",
       "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "b6e0b3f4b04b2713f24200d04f49bc1bb8441422"
+      "source": "local",
+      "dependencies": {}
     },
     "jp.co.hololab.spirare.wasm.iwasm": {
-      "version": "https://github.com/HoloLabInc/ProjectSpirare-for-Unity.git?path=packages/jp.co.hololab.spirare.wasm.iwasm",
+      "version": "file:../../../packages/jp.co.hololab.spirare.wasm.iwasm",
       "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "b6e0b3f4b04b2713f24200d04f49bc1bb8441422"
+      "source": "local",
+      "dependencies": {}
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
