@@ -3,11 +3,7 @@ using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine.Video;
 using UnityEngine.UI;
-using UnityEngine.Networking;
 using System.Threading.Tasks;
-using System.IO;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace HoloLab.Spirare
 {
@@ -29,8 +25,6 @@ namespace HoloLab.Spirare
         private CameraVisibleHelper _cameraVisibleHelper;
 
         private static event Action<VideoElementComponent> onVideoPlay;
-
-        private string cacheFolderPath => Path.Combine(Application.temporaryCachePath, "video");
 
         public override void Initialize(PomlVideoElement element, PomlLoadOptions loadOptions)
         {
@@ -226,37 +220,18 @@ namespace HoloLab.Spirare
         private async Task DownloadAndPrepare()
         {
             var src = element.Src;
-
             var extension = element.GetSrcFileExtension();
-            var filename = GetCacheFilename(src, extension);
-            var savePath = Path.Combine(cacheFolderPath, filename);
-
-            using (var request = UnityWebRequest.Get(src))
+            var result = await SpirareHttpClient.Instance.DownloadToFileAsync(src, enableCache: true, extension: extension);
+            if (result.Success)
             {
-                request.downloadHandler = new DownloadHandlerFile(savePath);
-                await request.SendWebRequest();
-
-                if (request.result == UnityWebRequest.Result.Success)
-                {
-                    videoPlayer.url = savePath;
-                    videoPlayer.Prepare();
-                }
-                else
-                {
-                    Debug.LogError(request.error);
-                }
+                var filepath = result.Data;
+                var url = $"file://{filepath}";
+                videoPlayer.url = url;
+                videoPlayer.Prepare();
             }
-        }
-
-        private string GetCacheFilename(string url, string extension)
-        {
-            var urlBytes = Encoding.UTF8.GetBytes(url);
-
-            using (var provider = MD5.Create())
+            else
             {
-                var hash = provider.ComputeHash(urlBytes);
-                var hashString = BitConverter.ToString(hash).Replace("-", string.Empty);
-                return hashString + extension;
+                Debug.LogError(result.Error);
             }
         }
     }

@@ -104,7 +104,14 @@ namespace HoloLab.Spirare
             }
         }
 
-        public async UniTask<SpirareHttpClientResult<string>> DownloadToFileAsync(string url, bool enableCache = false)
+        /// <summary>
+        /// Download file to local cache folder.
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="enableCache"></param>
+        /// <param name="extension">File extension with dot</param>
+        /// <returns></returns>
+        public async UniTask<SpirareHttpClientResult<string>> DownloadToFileAsync(string url, bool enableCache = false, string extension = "")
         {
             if (string.IsNullOrEmpty(url))
             {
@@ -128,7 +135,7 @@ namespace HoloLab.Spirare
 
             try
             {
-                var randomFileName = Path.GetRandomFileName();
+                var randomFileName = $"{Path.GetRandomFileName()}{extension}";
                 var filepath = Path.Combine(cacheFolderPath, randomFileName);
 
                 using (var request = UnityWebRequest.Get(url))
