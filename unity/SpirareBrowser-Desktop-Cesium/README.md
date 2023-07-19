@@ -2,7 +2,7 @@
 
 This is a browser application project for Spirare.
 
-[Spirare Browser Desktop Demo](https://github.com/HoloLabInc/ProjectSpirare-for-Unity/assets/4415085/3217887d-a368-41de-b093-8e858fa06a58)
+<img width="640" alt="Spirare Browser Desktop Demo" src="https://github.com/HoloLabInc/ProjectSpirare-for-Unity/assets/4415085/3217887d-a368-41de-b093-8e858fa06a58">
 
 ## Target Devices
 
