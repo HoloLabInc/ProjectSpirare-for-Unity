@@ -2,6 +2,8 @@
 
 This is a browser application project for Spirare.
 
+[Spirare Browser Desktop Demo](https://github.com/HoloLabInc/ProjectSpirare-for-Unity/assets/4415085/3217887d-a368-41de-b093-8e858fa06a58)
+
 ## Target Devices
 
 Desktop computer
@@ -15,7 +17,7 @@ https://assetstore.unity.com/packages/essentials/starter-assets-third-person-cha
 
 ### Import TextMesh Pro
 
-Open the `Assets\App\Scenes\SpirareBrowserCesium_3DTileTerrain.scene` in the Unity Editor.
+Open the `Assets\App\Scenes\SpirareBrowserCesium_3DTileTerrain.scene` in the Unity Editor.  
 When the 'TMP Importer' dialog appears, click on 'Import TMP Essentials'.
 
 ## a. Project Setup for Google Photorealistic 3D Tiles
@@ -61,3 +63,7 @@ Select the **Token** button and enter your access token for Cesium ion.
 <img width="480" alt="Cesium ion token" src="https://user-images.githubusercontent.com/4415085/230542155-3748e190-97dd-4b94-b641-c3fc566400c3.png">
 
 ### Build settings
+
+Select `App/Scenes/SpirareBrowserCesium_PLATEAU_Terrain` in the build settings and then build the project.
+
+<img width="480" alt="Build settings image" src="https://github.com/HoloLabInc/ProjectSpirare-for-Unity/assets/4415085/6bc341f7-f1d9-4da4-b6e3-4c36121b9016">
