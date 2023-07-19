@@ -14,7 +14,7 @@ PlayerSettings:
   accelerometerFrequency: 60
   companyName: HoloLab Inc.
   productName: SpirareBrowser-Desktop-Cesium
-  defaultCursor: {fileID: 2800000, guid: 1115d06a3e25f954dbae10d22371b052, type: 3}
+  defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
   m_ShowUnitySplashScreen: 0
