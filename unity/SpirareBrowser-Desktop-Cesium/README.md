@@ -39,7 +39,7 @@ Select `Assets\Resources\Spirare\TilesetSourceSettings` and enter the following 
 
 `https://tile.googleapis.com/v1/3dtiles/root.json?key=<Your API Key>`
 
-<img width="575" alt="image" src="https://github.com/HoloLabInc/ProjectSpirare-for-Unity/assets/4415085/785b0d8e-6bce-44d5-853b-f620321a7c8b">
+<img width="575" alt="Tileset API Key Settings" src="https://github.com/HoloLabInc/ProjectSpirare-for-Unity/assets/4415085/785b0d8e-6bce-44d5-853b-f620321a7c8b">
 
 ### Build settings
 
@@ -58,6 +58,8 @@ https://github.com/Project-PLATEAU/plateau-streaming-tutorial/blob/main/terrain/
 ### Open scene
 
 Open `Assets\App\Scenes\SpirareBrowserCesium_3DTileTerrain.scene` with Unity Editor.
+
+### Set Cesium Ion Access Token
 
 In the Unity Editor, select **Cesium** > **Cesium**.
 Select the **Token** button and enter your access token for Cesium ion.
