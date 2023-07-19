@@ -2,7 +2,7 @@
 
 This is a browser application project for Spirare.
 
-<img width="640" alt="Spirare Browser Desktop Demo" src="https://github.com/HoloLabInc/ProjectSpirare-for-Unity/assets/4415085/3217887d-a368-41de-b093-8e858fa06a58">
+<img width="480" alt="Spirare Browser Desktop Demo" src="https://github.com/HoloLabInc/ProjectSpirare-for-Unity/assets/4415085/3217887d-a368-41de-b093-8e858fa06a58">
 
 ## Target Devices
 
@@ -19,6 +19,8 @@ https://assetstore.unity.com/packages/essentials/starter-assets-third-person-cha
 
 Open the `Assets\App\Scenes\SpirareBrowserCesium_3DTileTerrain.scene` in the Unity Editor.  
 When the 'TMP Importer' dialog appears, click on 'Import TMP Essentials'.
+
+<img width="480" alt="TMP Importer" src="https://github.com/HoloLabInc/ProjectSpirare-for-Unity/assets/4415085/34afda65-262a-40ea-aac9-628795d7af5e">
 
 ## a. Project Setup for Google Photorealistic 3D Tiles
 
