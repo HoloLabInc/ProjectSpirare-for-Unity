@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.atteneder.gltfast": "5.0.0",
-    "com.cesium.unity": "1.0.0",
+    "com.cesium.unity": "1.4.0",
     "com.cysharp.unitask": "2.3.3",
     "com.gwaredd.mggif": "https://github.com/gwaredd/mgGif.git?path=Assets/mgGif",
     "com.unity.collab-proxy": "2.0.1",
