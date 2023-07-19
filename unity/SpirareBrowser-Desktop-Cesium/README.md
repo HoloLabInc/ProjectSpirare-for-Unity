@@ -6,7 +6,7 @@ This is a browser application project for Spirare.
 
 ## Target Devices
 
-Desktop computer
+Desktop computers
 
 ## Common Project Setup
 
