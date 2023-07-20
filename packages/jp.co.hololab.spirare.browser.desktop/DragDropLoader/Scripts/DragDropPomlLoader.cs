@@ -40,7 +40,7 @@ namespace HoloLab.Spirare.Browser.Desktop
                 }
                 else
                 {
-                    await LoadPomlAsync(filePath);
+                    await LoadFileAsync(filePath);
                 }
             }
         }
@@ -60,6 +60,19 @@ namespace HoloLab.Spirare.Browser.Desktop
             }
         }
 
+        private async Task LoadFileAsync(string filePath)
+        {
+            var lowerFilePath = filePath.ToLower();
+            if (Path.GetFileName(lowerFilePath) == "tileset.json")
+            {
+                await Load3DTilesAsync(filePath);
+            }
+            else
+            {
+                await LoadPomlAsync(filePath);
+            }
+        }
+
         private async Task LoadPomlAsync(string filePath)
         {
             var lowerFilePath = filePath.ToLower();
@@ -70,6 +83,35 @@ namespace HoloLab.Spirare.Browser.Desktop
             else if (lowerFilePath.EndsWith(".poml.zip"))
             {
                 await onetimeLocalPomlLoader.LoadPomlZipAsync(filePath);
+            }
+        }
+
+        private async Task Load3DTilesAsync(string filePath)
+        {
+            var lowerFilePath = filePath.ToLower();
+            if (lowerFilePath.EndsWith(".json"))
+            {
+                var poml = @$"
+<poml>
+  <scene>
+    <cesium3dtiles src=""{filePath}""></cesium3dtiles>
+  </scene>
+</poml>";
+
+                string tempPath = Path.GetTempPath();
+                string tempFileName = Path.GetRandomFileName() + ".poml";
+                string tempFilePath = Path.Combine(tempPath, tempFileName);
+
+                try
+                {
+                    File.WriteAllText(tempFilePath, poml);
+                    await LoadPomlAsync(tempFilePath);
+                    File.Delete(tempFilePath);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex);
+                }
             }
         }
 
