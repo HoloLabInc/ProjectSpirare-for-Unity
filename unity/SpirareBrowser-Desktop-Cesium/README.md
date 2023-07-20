@@ -71,3 +71,34 @@ Select the **Token** button and enter your access token for Cesium ion.
 Select `App/Scenes/SpirareBrowserCesium_PLATEAU_Terrain` in the build settings and then build the project.
 
 <img width="480" alt="Build settings image" src="https://github.com/HoloLabInc/ProjectSpirare-for-Unity/assets/4415085/6bc341f7-f1d9-4da4-b6e3-4c36121b9016">
+
+## Usage
+
+### Menu
+
+Please press the `Esc` key to open the menu.
+
+<img width="502" alt="App menu" src="https://github.com/HoloLabInc/ProjectSpirare-for-Unity/assets/4415085/9792afa6-7f02-4997-a10b-665cc3ebd6de">
+
+#### Teleport
+
+Enter the latitude and longitude in the format `latitude, longitude`, and press the `Teleport` button to move to that location.  
+You can copy this format of latitude and longitude from the menu that appears when you right-click on Google Maps.
+
+#### Load POML
+
+To load POML, enter the URL into the input field and press the `Load POML` button.
+The content will be loaded.
+
+In addition, you can also load a `.poml` or `.poml.zip` file by dragging and dropping it from your local machine into the window.
+
+### Move
+
+Please close the menu using the `Esc` key when you want to move the charactor.
+
+W: Move Forward
+A: Move Left
+S: Move Backward
+D: Move Right
+Shift: Speed Up
+Space: Jump
