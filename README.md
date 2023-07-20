@@ -37,6 +37,11 @@ POML has the following features:
 - Position Alignment Method
   - Vuforia Area Target
 
+### [SpirareBrowser-Desktop-Cesium](./unity/SpirareBrowser-Desktop-Cesium)
+
+- Target Devices
+  - Desktop computers
+
 ### [SpirareBrowser-HoloLens-Immersal](./unity/SpirareBrowser-HoloLens-Immersal)
 
 - Target Devices

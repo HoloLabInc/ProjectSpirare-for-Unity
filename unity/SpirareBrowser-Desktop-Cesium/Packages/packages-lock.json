@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.atteneder.gltfast": {
-      "version": "5.0.0",
+      "version": "5.0.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -13,14 +13,12 @@
       "url": "https://package.openupm.com"
     },
     "com.cesium.unity": {
-      "version": "1.4.0",
+      "version": "1.0.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.mathematics": "1.2.0",
-        "com.unity.test-framework": "1.1.31",
-        "com.unity.shadergraph": "12.1.6",
-        "com.unity.inputsystem": "1.4.2"
+        "com.unity.test-framework": "1.1.31"
       },
       "url": "https://unity.pkg.cesium.com"
     },
@@ -47,9 +45,25 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.cinemachine": {
+      "version": "2.8.9",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.test-framework": "1.1.31"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.collab-proxy": {
       "version": "2.0.1",
       "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.editorcoroutines": {
+      "version": "1.0.0",
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -60,6 +74,20 @@
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
+    },
+    "com.unity.feature.development": {
+      "version": "1.0.1",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.ide.visualstudio": "2.0.17",
+        "com.unity.ide.rider": "3.0.18",
+        "com.unity.ide.vscode": "1.2.5",
+        "com.unity.editorcoroutines": "1.0.0",
+        "com.unity.performance.profile-analyzer": "1.2.2",
+        "com.unity.test-framework": "1.1.31",
+        "com.unity.testtools.codecoverage": "1.2.2"
+      }
     },
     "com.unity.ide.rider": {
       "version": "3.0.18",
@@ -103,8 +131,15 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.nuget.newtonsoft-json": {
-      "version": "3.1.0",
+      "version": "3.0.2",
       "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.performance.profile-analyzer": {
+      "version": "1.2.2",
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -137,6 +172,13 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.settings-manager": {
+      "version": "1.0.3",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.shadergraph": {
       "version": "12.1.10",
       "depth": 1,
@@ -154,6 +196,16 @@
         "com.unity.ext.nunit": "1.0.6",
         "com.unity.modules.imgui": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.testtools.codecoverage": {
+      "version": "1.2.2",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.test-framework": "1.0.16",
+        "com.unity.settings-manager": "1.0.1"
       },
       "url": "https://packages.unity.com"
     },
@@ -198,25 +250,25 @@
       "url": "https://packages.unity.com"
     },
     "jp.co.hololab.iwasmunity": {
-      "version": "https://github.com/HoloLabInc/IwasmUnity.git?path=Assets/IwasmUnity#v0.2.0",
+      "version": "https://github.com/HoloLabInc/IwasmUnity.git?path=Assets/IwasmUnity#v0.3.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "e0033bed325356cb1a3a34e96f2c8beca67677e0"
+      "hash": "156a84363b5db486eb3f74bdbfb33daf714416ea"
     },
     "jp.co.hololab.positioningtools": {
       "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "d7a295760b2b745eba293002d700bcb05586c036"
+      "hash": "9ada65c28d2222630865eee88f5bff1b2d6b224a"
     },
     "jp.co.hololab.positioningtools.geographiccoordinate": {
       "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.geographiccoordinate",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "d7a295760b2b745eba293002d700bcb05586c036"
+      "hash": "9ada65c28d2222630865eee88f5bff1b2d6b224a"
     },
     "jp.co.hololab.spirare": {
       "version": "file:../../../packages/jp.co.hololab.spirare",
@@ -226,6 +278,12 @@
     },
     "jp.co.hololab.spirare.browser": {
       "version": "file:../../../packages/jp.co.hololab.spirare.browser",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
+    "jp.co.hololab.spirare.browser.desktop": {
+      "version": "file:../../../packages/jp.co.hololab.spirare.browser.desktop",
       "depth": 0,
       "source": "local",
       "dependencies": {}
