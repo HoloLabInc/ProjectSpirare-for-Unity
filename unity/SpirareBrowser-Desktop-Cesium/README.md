@@ -78,7 +78,7 @@ Select `App/Scenes/SpirareBrowserCesium_PLATEAU_Terrain` in the build settings a
 
 Please press the `Esc` key to open the menu.
 
-<img width="502" alt="App menu" src="https://github.com/HoloLabInc/ProjectSpirare-for-Unity/assets/4415085/9792afa6-7f02-4997-a10b-665cc3ebd6de">
+<img width="469" alt="App menu" src="https://github.com/HoloLabInc/ProjectSpirare-for-Unity/assets/4415085/23b87ec8-3e07-4274-bca8-ae7557a581e6">
 
 #### Teleport
 
@@ -96,9 +96,11 @@ In addition, you can also load a `.poml` or `.poml.zip` file by dragging and dro
 
 Please close the menu using the `Esc` key when you want to move the charactor.
 
-W: Move Forward
-A: Move Left
-S: Move Backward
-D: Move Right
-Shift: Speed Up
-Space: Jump
+| Key   | Action        |
+| ----- | ------------- |
+| W     | Move Forward  |
+| A     | Move Left     |
+| S     | Move Backward |
+| D     | Move Right    |
+| Shift | Speed Up      |
+| Space | Jump          |
