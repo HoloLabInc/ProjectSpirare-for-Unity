@@ -92,7 +92,7 @@ The content will be loaded.
 
 In addition, you can also load a `.poml` or `.poml.zip` file by dragging and dropping it from your local machine into the window.
 
-### Move
+### Movement
 
 Please close the menu using the `Esc` key when you want to move the charactor.
 
