@@ -96,6 +96,16 @@ Edit the `DrawPointCloudShadingProperties` method in the `Cesium3DTilesetEditor.
             }
 ```
 
+### Chagne `CesiumPointCloudShading.hlsl`
+
+Edit the `Vertex` function in the `CesiumPointCloudShading.hlsl` file in the `Packages\com.cesium.unity@<version>\Runtime\Resources` folder.
+
+```diff
+-	float pointSize = min((geometricError / depth) * depthMultiplier, maximumPointSize);
++	float pointSizeInSpace = _attenuationParameters.w;
++	float pointSize = pointSizeInSpace * 2000 / depth;
+```
+
 ## a. Project Setup for Google Photorealistic 3D Tiles
 
 ### Get Google API Key
