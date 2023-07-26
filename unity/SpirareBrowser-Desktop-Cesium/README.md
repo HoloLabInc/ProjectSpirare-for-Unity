@@ -22,6 +22,18 @@ When the 'TMP Importer' dialog appears, click on 'Import TMP Essentials'.
 
 <img width="480" alt="TMP Importer" src="https://github.com/HoloLabInc/ProjectSpirare-for-Unity/assets/4415085/34afda65-262a-40ea-aac9-628795d7af5e">
 
+### (Optional) Customize Cesium for Unity to enable changing point cloud size
+
+If you want to display point cloud, it is recommended to make the following changes to allow for adjustments to the point size of point cloud.
+
+#### Move Cesium for Unity package
+
+Move the `Library\PackageCache\com.cesium.unity@<version>` folder to the `Packages` folder in order to enable changes.
+
+#### Remove 'com.cesium.unity' from the manifest.json
+
+Remove the line with 'com.cesium.unity' from the `Packages\manifest.json`.
+
 ## a. Project Setup for Google Photorealistic 3D Tiles
 
 ### Get Google API Key
