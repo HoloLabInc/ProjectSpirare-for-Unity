@@ -105,3 +105,5 @@ Assets/MRTK/Providers/WindowsMixedReality/Shared/DotNetAdapter/.obj/
 # Auto generated certificate
 Assets/WSATestCertificate.pfx
 Assets/WSATestCertificate.pfx.meta
+
+Packages/com.cesium.unity@*
