@@ -26,42 +26,71 @@ namespace HoloLab.Spirare.Browser
         [SerializeField]
         private TMP_Text pointSizeText;
 
+        private const string pointSizeSaveKey = "PointCloudSettingsUi_pointSizeKey";
+
         private void Awake()
         {
+            LoadPointSize();
+
             pointSizeSlider.onValueChanged.AddListener(PointSizeSlider_OnValueChanged);
         }
 
         private void PointSizeSlider_OnValueChanged(float value)
         {
-            if (pointCloudRenderSettings != null)
+            if (pointCloudRenderSettings == null)
             {
-                float pointSize = 0;
-                if (value > 0)
-                {
-                    pointSize = LogarithmicLerp(minPointSize, maxPointSize, value);
-                }
-                pointCloudRenderSettings.PointSize = pointSize;
-
-                var pointSizeInMillimeter = pointSize * 1000;
-                string pointSizeString;
-                if (pointSize > 0.01)
-                {
-                    pointSizeString = Mathf.Round(pointSizeInMillimeter).ToString();
-                }
-                else if (pointSize > 0.001)
-                {
-                    pointSizeString = pointSizeInMillimeter.ToString("F1");
-                }
-                else
-                {
-                    pointSizeString = pointSizeInMillimeter.ToString("F2");
-                }
-
-                pointSizeText.text = $"Point cloud point size: {pointSizeString}mm";
+                return;
             }
+
+            float pointSize = 0;
+            if (value > 0)
+            {
+                pointSize = LogarithmicLerp(minPointSize, maxPointSize, value);
+            }
+            pointCloudRenderSettings.PointSize = pointSize;
+
+            SavePointSize(pointSize);
+
+            // Update point size text
+            var pointSizeInMillimeter = pointSize * 1000;
+            string pointSizeString;
+            if (pointSize > 0.01)
+            {
+                pointSizeString = Mathf.Round(pointSizeInMillimeter).ToString();
+            }
+            else if (pointSize > 0.001)
+            {
+                pointSizeString = pointSizeInMillimeter.ToString("F1");
+            }
+            else
+            {
+                pointSizeString = pointSizeInMillimeter.ToString("F2");
+            }
+
+            pointSizeText.text = $"Point cloud point size: {pointSizeString}mm";
         }
 
-        private float LogarithmicLerp(float a, float b, float t)
+        private void SavePointSize(float pointSize)
+        {
+            PlayerPrefs.SetFloat(pointSizeSaveKey, pointSize);
+            PlayerPrefs.Save();
+        }
+
+        private void LoadPointSize()
+        {
+            var pointSize = PlayerPrefs.GetFloat(pointSizeSaveKey, 0f);
+
+            float sliderValue = 0;
+            if (pointSize > 0f)
+            {
+                sliderValue = LogarithmicInverseLerp(minPointSize, maxPointSize, pointSize);
+            }
+
+            pointSizeSlider.value = sliderValue;
+            PointSizeSlider_OnValueChanged(pointSizeSlider.value);
+        }
+
+        private static float LogarithmicLerp(float a, float b, float t)
         {
             var logA = Mathf.Log(a);
             var logB = Mathf.Log(b);
@@ -69,7 +98,7 @@ namespace HoloLab.Spirare.Browser
             return Mathf.Exp(Mathf.Lerp(logA, logB, t));
         }
 
-        private float LogarithmicInverseLerp(float a, float b, float t)
+        private static float LogarithmicInverseLerp(float a, float b, float t)
         {
             var logA = Mathf.Log(a);
             var logB = Mathf.Log(b);
