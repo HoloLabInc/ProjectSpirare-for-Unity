@@ -30,9 +30,28 @@ If you want to display point cloud, it is recommended to make the following chan
 
 Move the `Library\PackageCache\com.cesium.unity@<version>` folder to the `Packages` folder in order to enable changes.
 
-#### Remove 'com.cesium.unity' from the manifest.json
+#### Change `CesiumPointCloudShading.cs`
 
-Remove the line with 'com.cesium.unity' from the `Packages\manifest.json`.
+Edit the `CesiumPointCloudShading.cs` file in the `Packages\com.cesium.unity@<version>\Runtime` folder.
+
+```diff
+        public float baseResolution
+        {
+            get => this._baseResolution;
+            set => this._baseResolution = Mathf.Max(value, 0.0f);
+        }
++
++       [SerializeField]
++       private float _pointSize = 0;
++
++       public float pointSize
++       {
++           get => this._pointSize;
++           set => this._pointSize = Mathf.Max(value, 0.0f);
++       }
+    }
+}
+```
 
 ## a. Project Setup for Google Photorealistic 3D Tiles
 
