@@ -53,6 +53,49 @@ Edit the `CesiumPointCloudShading.cs` file in the `Packages\com.cesium.unity@<ve
 }
 ```
 
+### Change `CesiumPointCloudRenderer.cs`
+
+Edit the `UpdateAttenuationParameters` method in the `CesiumPointCloudRenderer.cs` file in the `Packages\com.cesium.unity@<version>\Runtime` folder.
+
+```diff
+            this._attenuationParameters =
+-               new Vector4(maximumPointSize, geometricError, depthMultplier, 0);
++               new Vector4(maximumPointSize, geometricError, depthMultplier, pointCloudShading.pointSize);
+```
+
+### Change `Cesium3DTilesetEditor.cs`
+
+Edit the `DrawPointCloudShadingProperties` method in the `Cesium3DTilesetEditor.cs` file in the `Packages\com.cesium.unity@<version>\Editor` folder.
+
+```diff
+            float baseResolutionValue = EditorGUILayout.FloatField(
+                baseResolutionContent,
+                baseResolutionProperty.floatValue);
+
++           SerializedProperty pointSizeProperty =
++               this._pointCloudShading.FindPropertyRelative("_pointSize");
++           GUIContent pointSizeContent = new GUIContent(
++               "Point Size",
++               "");
++           float pointSizeValue = EditorGUILayout.FloatField(
++               pointSizeContent,
++               pointSizeProperty.floatValue);
++
+           if (EditorGUI.EndChangeCheck())
+            {
+                Undo.RecordObject(
+                    this._tileset,
+                    "Modified Point Cloud Shading in " + this._tileset.gameObject.name);
+                this._tileset.pointCloudShading.attenuation = attenuationValue;
+                this._tileset.pointCloudShading.geometricErrorScale = geometricErrorScaleValue;
+                this._tileset.pointCloudShading.maximumAttenuation = maximumAttenuationValue;
+                this._tileset.pointCloudShading.baseResolution = baseResolutionValue;
++               this._tileset.pointCloudShading.pointSize = pointSizeValue;
+                // Force the scene view to repaint so that the changes are immediately reflected.
+                SceneView.RepaintAll();
+            }
+```
+
 ## a. Project Setup for Google Photorealistic 3D Tiles
 
 ### Get Google API Key
