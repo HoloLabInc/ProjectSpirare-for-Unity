@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 404690091185039550}
   - component: {fileID: 404690091185039551}
+  - component: {fileID: 7132098358766341769}
   m_Layer: 0
   m_Name: Cesium3dTileset
   m_TagString: Untagged
@@ -61,13 +62,29 @@ MonoBehaviour:
   _enforceCulledScreenSpaceError: 1
   _culledScreenSpaceError: 64
   _opaqueMaterial: {fileID: 0}
+  _generateSmoothNormals: 0
   _pointCloudShading:
     _attenuation: 0
     _geometricErrorScale: 1
     _maximumAttenuation: 0
     _baseResolution: 0
+    _pointSize: 0
   _suspendUpdate: 0
   _showTilesInHierarchy: 0
   _updateInEditor: 1
   _logSelectionStats: 0
   _createPhysicsMeshes: 1
+--- !u!114 &7132098358766341769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 404690091185039488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8c4479cefca2094c816c1165eda4938, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pointCloudRenderSettings: {fileID: 11400000, guid: ded41cd6464be1743836dcb24d3829f9,
+    type: 2}
