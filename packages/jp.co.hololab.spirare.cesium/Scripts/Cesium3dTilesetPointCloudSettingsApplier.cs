@@ -37,6 +37,11 @@ namespace HoloLab.Spirare.Cesium
 
         private void ApplySettings()
         {
+            if (pointSizeProperty == null)
+            {
+                return;
+            }
+
             var pointCloudShading = cesium3DTileset.pointCloudShading;
 
             if (pointCloudRenderSettings == null || pointCloudRenderSettings.PointSize == 0)
@@ -48,7 +53,7 @@ namespace HoloLab.Spirare.Cesium
                 pointCloudShading.attenuation = true;
 
                 // Use reflection to set pointSize because pointSize proerty exists in the customized version.
-                pointSizeProperty?.SetValue(pointCloudShading, pointCloudRenderSettings.PointSize);
+                pointSizeProperty.SetValue(pointCloudShading, pointCloudRenderSettings.PointSize);
             }
         }
     }
