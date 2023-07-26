@@ -79,23 +79,25 @@ namespace HoloLab.Spirare
 
             try
             {
-                var request = UnityWebRequest.Get(url);
-                var webRequest = await request.SendWebRequest();
-
-                if (webRequest.result == UnityWebRequest.Result.Success)
+                using (var request = UnityWebRequest.Get(url))
                 {
-                    var data = webRequest.downloadHandler.data;
+                    var webRequest = await request.SendWebRequest();
 
-                    if (enableCache)
+                    if (webRequest.result == UnityWebRequest.Result.Success)
                     {
-                        await SaveCacheAsync(url, data);
+                        var data = webRequest.downloadHandler.data;
+
+                        if (enableCache)
+                        {
+                            await SaveCacheAsync(url, data);
+                        }
+                        return CreateSuccessResult(data);
                     }
-                    return CreateSuccessResult(data);
-                }
-                else
-                {
-                    var exception = new Exception(webRequest.error);
-                    return CreateErrroResult<byte[]>(exception);
+                    else
+                    {
+                        var exception = new Exception(webRequest.error);
+                        return CreateErrroResult<byte[]>(exception);
+                    }
                 }
             }
             catch (Exception ex)
