@@ -18,7 +18,11 @@ namespace HoloLab.Spirare.Pcx
         [SerializeField]
         private PointCloudRenderer pointCloudRenderer;
 
+        [SerializeField]
+        private PointCloudRenderSettings pointCloudRenderSettings;
+
         private MeshRenderer meshRenderer;
+        private Material meshMaterial;
 
         private string _currentModelSource;
 
@@ -38,10 +42,30 @@ namespace HoloLab.Spirare.Pcx
             {
                 case RenderMode.Mesh:
                     meshRenderer = meshFilter.GetComponent<MeshRenderer>();
+                    meshMaterial = meshRenderer.material;
                     GameObject.Destroy(pointCloudRenderer);
                     break;
                 case RenderMode.PointCloud:
                     GameObject.Destroy(meshFilter.gameObject);
+                    break;
+            }
+
+            if (pointCloudRenderSettings != null)
+            {
+                PointCloudRenderSettings_OnPointSizeChanged(pointCloudRenderSettings.PointSize);
+                pointCloudRenderSettings.OnPointSizeChanged += PointCloudRenderSettings_OnPointSizeChanged;
+            }
+        }
+
+        private void PointCloudRenderSettings_OnPointSizeChanged(float pointSize)
+        {
+            switch (renderMode)
+            {
+                case RenderMode.Mesh:
+                    meshMaterial.SetFloat("_PointSize", pointSize / 2);
+                    break;
+                case RenderMode.PointCloud:
+                    pointCloudRenderer.pointSize = pointSize / 2;
                     break;
             }
         }
