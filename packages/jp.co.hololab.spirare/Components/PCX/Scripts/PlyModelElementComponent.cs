@@ -62,10 +62,10 @@ namespace HoloLab.Spirare.Pcx
             switch (renderMode)
             {
                 case RenderMode.Mesh:
-                    meshMaterial.SetFloat("_PointSize", pointSize);
+                    meshMaterial.SetFloat("_PointSize", pointSize / 2);
                     break;
                 case RenderMode.PointCloud:
-                    pointCloudRenderer.pointSize = pointSize;
+                    pointCloudRenderer.pointSize = pointSize / 2;
                     break;
             }
         }
