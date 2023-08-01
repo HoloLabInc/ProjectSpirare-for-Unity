@@ -177,8 +177,12 @@ namespace HoloLab.Spirare
                         // TODO: Refactor.
                         var cameraPosition = mainCamera.transform.position;
 
+#if POSITIONING_TOOLS_0_2_0_OR_NEWER
+                        var enuPositionVector = Quaternion.Inverse(worldBinding.GetCurrentRotation()) * (cameraPosition - worldBinding.GetCurrentPosition());
+#else
                         var boundPoseInUnity = worldBinding.ApplicationPose;
                         var enuPositionVector = Quaternion.Inverse(boundPoseInUnity.rotation) * (cameraPosition - boundPoseInUnity.position);
+#endif
                         var enuPosition = new EnuPosition(enuPositionVector.x, enuPositionVector.z, enuPositionVector.y);
 
                         // Convert to latitude and longitude.
