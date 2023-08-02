@@ -5,64 +5,112 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CesiumGeoreference))]
-[RequireComponent(typeof(WorldCoordinateOrigin))]
-public class WorldCoordinateOriginForCesiumGeoreference : MonoBehaviour
+namespace HoloLab.Spirare.Cesium
 {
-    private CesiumGeoreference cesiumGeoreference;
-    private WorldCoordinateOrigin worldCoordinateOrigin;
-
-    private CoordinateManager coordinateManager;
-
-    private WorldBinding latestWorldBinding;
-
-    private void Start()
+    [RequireComponent(typeof(CesiumGeoreference))]
+    [RequireComponent(typeof(WorldCoordinateOrigin))]
+    [ExecuteAlways]
+    public class WorldCoordinateOriginForCesiumGeoreference : MonoBehaviour
     {
-        cesiumGeoreference = GetComponent<CesiumGeoreference>();
-        worldCoordinateOrigin = GetComponent<WorldCoordinateOrigin>();
-        worldCoordinateOrigin.PositionSettingMode = WorldCoordinateOrigin.PositionSettingModeType.GeodeticPosition;
+        private CesiumGeoreference cesiumGeoreference;
+        private WorldCoordinateOrigin worldCoordinateOrigin;
 
-        coordinateManager = CoordinateManager.Instance;
-        coordinateManager.OnCoordinatesBound += OnCoordinatesBound;
-        gameObject.SetActive(false);
+        private CoordinateManager coordinateManager;
 
-        if (coordinateManager.LatestWorldBinding != null)
+        private void Start()
         {
-            OnCoordinatesBound(coordinateManager.LatestWorldBinding);
-        }
-    }
-
-    private void OnCoordinatesBound(WorldBinding worldBinding)
-    {
-        BindCoordinates(worldBinding);
-        gameObject.SetActive(true);
-    }
-
-    private void BindCoordinates(WorldBinding worldBinding)
-    {
-        if (worldBinding == null)
-        {
-            return;
-        }
-
-        latestWorldBinding = worldBinding;
-
-        var geodeticPose = worldBinding.GeodeticPose;
-        var geodeticPosition = geodeticPose.GeodeticPosition;
-
-        if (cesiumGeoreference != null)
-        {
-            if (cesiumGeoreference.isActiveAndEnabled == false)
+            if (!Application.isPlaying)
             {
-                cesiumGeoreference.Initialize();
+                return;
             }
-            cesiumGeoreference.SetOriginLongitudeLatitudeHeight(geodeticPosition.Longitude, geodeticPosition.Latitude, geodeticPosition.EllipsoidalHeight);
+
+            cesiumGeoreference = GetComponent<CesiumGeoreference>();
+            worldCoordinateOrigin = GetComponent<WorldCoordinateOrigin>();
+            worldCoordinateOrigin.PositionSettingMode = WorldCoordinateOrigin.PositionSettingModeType.GeodeticPosition;
+
+            coordinateManager = CoordinateManager.Instance;
+            coordinateManager.OnCoordinatesBound += OnCoordinatesBound;
+            gameObject.SetActive(false);
+
+            if (coordinateManager.LatestWorldBinding != null)
+            {
+                OnCoordinatesBound(coordinateManager.LatestWorldBinding);
+            }
         }
 
-        if (worldCoordinateOrigin != null)
+        private void Update()
         {
-            worldCoordinateOrigin.GeodeticPosition = geodeticPosition;
-            worldCoordinateOrigin.EnuRotation = Quaternion.identity;
+#if UNITY_EDITOR
+            if (Application.isPlaying == false)
+            {
+                BindCoordinatesInEditMode();
+            }
+#endif
+        }
+
+#if UNITY_EDITOR
+        private void BindCoordinatesInEditMode()
+        {
+            WorldBinding worldBinding;
+
+            var parentBinder = GetComponentInParent<WorldCoordinateBinder>();
+            if (parentBinder != null)
+            {
+                worldBinding = parentBinder.TransformWorldBinding;
+            }
+            else if (coordinateManager == null)
+            {
+                coordinateManager = FindObjectOfType<CoordinateManager>();
+
+                if (coordinateManager == null)
+                {
+                    return;
+                }
+                worldBinding = coordinateManager.WorldBindingInEditor;
+            }
+            else
+            {
+                return;
+            }
+
+            cesiumGeoreference = GetComponent<CesiumGeoreference>();
+            worldCoordinateOrigin = GetComponent<WorldCoordinateOrigin>();
+            worldCoordinateOrigin.PositionSettingMode = WorldCoordinateOrigin.PositionSettingModeType.GeodeticPosition;
+
+            BindCoordinates(worldBinding);
+        }
+#endif
+
+        private void OnCoordinatesBound(WorldBinding worldBinding)
+        {
+            BindCoordinates(worldBinding);
+            gameObject.SetActive(true);
+        }
+
+        private void BindCoordinates(WorldBinding worldBinding)
+        {
+            if (worldBinding == null)
+            {
+                return;
+            }
+
+            var geodeticPose = worldBinding.GeodeticPose;
+            var geodeticPosition = geodeticPose.GeodeticPosition;
+
+            if (cesiumGeoreference != null)
+            {
+                if (cesiumGeoreference.isActiveAndEnabled == false)
+                {
+                    cesiumGeoreference.Initialize();
+                }
+                cesiumGeoreference.SetOriginLongitudeLatitudeHeight(geodeticPosition.Longitude, geodeticPosition.Latitude, geodeticPosition.EllipsoidalHeight);
+            }
+
+            if (worldCoordinateOrigin != null)
+            {
+                worldCoordinateOrigin.GeodeticPosition = geodeticPosition;
+                worldCoordinateOrigin.EnuRotation = Quaternion.identity;
+            }
         }
     }
 }
