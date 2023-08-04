@@ -29,7 +29,11 @@ namespace HoloLab.Spirare.Cesium
                 targetTransform = Camera.main.transform;
             }
 
+#if UNITY_2021_3_18_OR_NEWER
             cesiumGeoreference = FindFirstObjectByType<CesiumGeoreference>();
+#else
+            cesiumGeoreference = FindObjectOfType<CesiumGeoreference>();
+#endif
         }
 
         private void Update()
