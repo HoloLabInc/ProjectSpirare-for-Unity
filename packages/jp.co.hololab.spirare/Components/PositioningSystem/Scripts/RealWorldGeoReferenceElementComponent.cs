@@ -7,7 +7,10 @@ namespace HoloLab.Spirare
     public sealed class RealWorldGeoReferenceElementComponent : GeoReferenceElementComponent
     {
         private WorldCoordinateOrigin worldCoordinateOrigin;
+
+#if !POSITIONING_TOOLS_0_2_0_OR_NEWER
         private CoordinateManager coordinateManager;
+#endif
 
         private void Start()
         {
@@ -28,7 +31,9 @@ namespace HoloLab.Spirare
             GeoReferenceElement = geoReferenceElement;
             worldCoordinateOrigin = gameObject.AddComponent<WorldCoordinateOrigin>();
 
+#if !POSITIONING_TOOLS_0_2_0_OR_NEWER
             coordinateManager = CoordinateManager.Instance;
+#endif
 
             UpdateGameObject();
             OnElementUpdated += PomlElementComponent_UpdateGameObject;
@@ -44,9 +49,12 @@ namespace HoloLab.Spirare
         private void UpdateGameObject()
         {
             UpdateWorldCoordinateOrigin();
+#if !POSITIONING_TOOLS_0_2_0_OR_NEWER
             BindCoordinates();
+#endif
         }
 
+#if !POSITIONING_TOOLS_0_2_0_OR_NEWER
         private void BindCoordinates()
         {
             if (coordinateManager != null && worldCoordinateOrigin != null)
@@ -58,6 +66,7 @@ namespace HoloLab.Spirare
                 }
             }
         }
+#endif
 
         private void UpdateWorldCoordinateOrigin()
         {
