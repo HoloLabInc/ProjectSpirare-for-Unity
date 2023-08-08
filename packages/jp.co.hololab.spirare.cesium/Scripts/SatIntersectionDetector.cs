@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace HoloLab.Spirare.Cesium
 {
-    internal static class SatCollisionDetector
+    internal static class SatIntersectionDetector
     {
         public struct Rect
         {

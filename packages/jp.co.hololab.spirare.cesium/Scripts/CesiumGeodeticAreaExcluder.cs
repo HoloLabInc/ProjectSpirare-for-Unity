@@ -88,7 +88,7 @@ namespace HoloLab.Spirare.Cesium
 
         private CesiumGeoreference cesiumGeoreference;
 
-        private SatCollisionDetector.Rect? displayArea;
+        private SatIntersectionDetector.Rect? displayArea;
 
         protected override void OnEnable()
         {
@@ -120,7 +120,7 @@ namespace HoloLab.Spirare.Cesium
             }
 
             var tileRect = BoundsToRect(tile.bounds);
-            return !SatCollisionDetector.Intersects(tileRect, displayArea.Value);
+            return !SatIntersectionDetector.Intersects(tileRect, displayArea.Value);
         }
 
         private void UpdateBounds()
@@ -142,7 +142,7 @@ namespace HoloLab.Spirare.Cesium
             var vector1 = Vector2.Dot(lowerRight2D - upperLeft2D, axis1) * axis1;
             var vector2 = Vector2.Dot(lowerRight2D - upperLeft2D, axis2) * axis2;
 
-            displayArea = new SatCollisionDetector.Rect()
+            displayArea = new SatIntersectionDetector.Rect()
             {
                 Corner = upperLeft2D,
                 Vector1 = vector1,
@@ -150,12 +150,12 @@ namespace HoloLab.Spirare.Cesium
             };
         }
 
-        private static SatCollisionDetector.Rect BoundsToRect(Bounds bounds)
+        private static SatIntersectionDetector.Rect BoundsToRect(Bounds bounds)
         {
             var center = new Vector2(bounds.center.x, bounds.center.z);
             var extents = new Vector2(bounds.extents.x, bounds.extents.z);
 
-            return new SatCollisionDetector.Rect()
+            return new SatIntersectionDetector.Rect()
             {
                 Corner = center - extents,
                 Vector1 = new Vector2(extents.x * 2, 0),
