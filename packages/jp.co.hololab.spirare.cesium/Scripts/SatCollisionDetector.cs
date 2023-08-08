@@ -10,9 +10,9 @@ namespace HoloLab.Spirare.Cesium
     {
         public struct Rect
         {
-            public Vector2 TopLeft;
-            public Vector2 Right;
-            public Vector2 Down;
+            public Vector2 Corner;
+            public Vector2 Vector1;
+            public Vector2 Vector2;
         }
 
         private struct Range
@@ -23,7 +23,7 @@ namespace HoloLab.Spirare.Cesium
 
         public static bool Intersects(Rect rect1, Rect rect2)
         {
-            var axes = new[] { rect1.Right, rect1.Down, rect2.Right, rect2.Down };
+            var axes = new[] { rect1.Vector1, rect1.Vector2, rect2.Vector1, rect2.Vector2 };
             foreach (var axis in axes)
             {
                 var intersect = IntersectWithAxis(rect1, rect2, axis);
@@ -51,11 +51,11 @@ namespace HoloLab.Spirare.Cesium
 
         private static Range ProjectOntoAxis(Rect rect, Vector2 axis)
         {
-            var topLeft = rect.TopLeft;
-            var topRight = topLeft + rect.Right;
-            var bottomLeft = topLeft + rect.Down;
-            var bottomRight = bottomLeft + rect.Right;
-            var points = new[] { topLeft, topRight, bottomLeft, bottomRight };
+            var point1 = rect.Corner;
+            var point2 = point1 + rect.Vector1;
+            var point3 = point1 + rect.Vector2;
+            var point4 = point1 + rect.Vector1 + rect.Vector2;
+            var points = new[] { point1, point2, point3, point4 };
 
             var projections = points.Select(x => Vector2.Dot(x, axis)).ToArray();
 
