@@ -21,8 +21,8 @@ namespace HoloLab.Spirare.Cesium
         [SerializeField]
         private float northHeading;
 
-        [SerializeField]
-        private bool invert = false;
+        //[SerializeField]
+        //private bool invert = false;
 
         public double UpperLeftLatitude
         {
@@ -184,8 +184,8 @@ namespace HoloLab.Spirare.Cesium
             var maxZ = Mathf.Max((float)upperLeftPoint.z, (float)lowerRightPoint.z);
             bounds.max = new Vector3(maxX, 10000, maxZ);
 
-            var axis1 = CreateVector2FromAngle(northHeading);
-            var axis2 = CreateVector2FromAngle(northHeading + 90);
+            var axis1 = CreateVector2FromAngle(-northHeading);
+            var axis2 = CreateVector2FromAngle(-northHeading + 90);
 
             Debug.Log(axis1 + ", " + axis2);
 
