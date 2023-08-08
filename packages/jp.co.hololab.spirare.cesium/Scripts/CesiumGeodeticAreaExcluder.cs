@@ -21,9 +21,6 @@ namespace HoloLab.Spirare.Cesium
         [SerializeField]
         private float northHeading;
 
-        //[SerializeField]
-        //private bool invert = false;
-
         public double UpperLeftLatitude
         {
             get
@@ -90,16 +87,12 @@ namespace HoloLab.Spirare.Cesium
         }
 
         private CesiumGeoreference cesiumGeoreference;
-        private Bounds bounds;
 
         private SatCollisionDetector.Rect? displayArea;
-
-        private BoxCollider boxCollider;
 
         protected override void OnEnable()
         {
             cesiumGeoreference = GetComponentInParent<CesiumGeoreference>();
-            boxCollider = GetComponent<BoxCollider>();
 
             base.OnEnable();
 
@@ -121,22 +114,6 @@ namespace HoloLab.Spirare.Cesium
                 return false;
             }
 
-            /*
-            if (this.invert)
-            {
-                return this.CompletelyContains(tile.bounds);
-            }
-
-            return !this.bounds.Intersects(tile.bounds);
-            */
-            /*
-            var tileBounds = tile.bounds;
-            var tileRect = new SatCollisionDetector.Rect()
-            {
-                TopLeft =tileBounds.mi
-            }
-            */
-            //return !SatCollisionDetector.Intersects();
             if (displayArea.HasValue == false)
             {
                 return false;
@@ -144,26 +121,6 @@ namespace HoloLab.Spirare.Cesium
 
             var tileRect = BoundsToRect(tile.bounds);
             return !SatCollisionDetector.Intersects(tileRect, displayArea.Value);
-            //return false;
-        }
-
-        private SatCollisionDetector.Rect BoundsToRect(Bounds bounds)
-        {
-            var center = new Vector2(bounds.center.x, bounds.center.z);
-            var extents = new Vector2(bounds.extents.x, bounds.extents.z);
-
-            return new SatCollisionDetector.Rect()
-            {
-                Corner = center - extents,
-                Vector1 = new Vector2(extents.x * 2, 0),
-                Vector2 = new Vector2(0, extents.y * 2)
-            };
-        }
-
-        private bool CompletelyContains(Bounds bounds)
-        {
-            return Vector3.Min(this.bounds.max, bounds.max) == bounds.max &&
-                   Vector3.Max(this.bounds.min, bounds.min) == bounds.min;
         }
 
         private void UpdateBounds()
@@ -176,18 +133,8 @@ namespace HoloLab.Spirare.Cesium
             var upperLeftPoint = GeodeticPositionToUnityPosition(cesiumGeoreference, upperLeftLatitude, upperLeftLongitude, 0);
             var lowerRightPoint = GeodeticPositionToUnityPosition(cesiumGeoreference, lowerRightLatitude, lowerRightLongitude, 0);
 
-            var minX = Mathf.Min((float)upperLeftPoint.x, (float)lowerRightPoint.x);
-            var minZ = Mathf.Min((float)upperLeftPoint.z, (float)lowerRightPoint.z);
-            bounds.min = new Vector3(minX, -10000, minZ);
-
-            var maxX = Mathf.Max((float)upperLeftPoint.x, (float)lowerRightPoint.x);
-            var maxZ = Mathf.Max((float)upperLeftPoint.z, (float)lowerRightPoint.z);
-            bounds.max = new Vector3(maxX, 10000, maxZ);
-
             var axis1 = CreateVector2FromAngle(-northHeading);
             var axis2 = CreateVector2FromAngle(-northHeading + 90);
-
-            Debug.Log(axis1 + ", " + axis2);
 
             var upperLeft2D = new Vector2((float)upperLeftPoint.x, (float)upperLeftPoint.z);
             var lowerRight2D = new Vector2((float)lowerRightPoint.x, (float)lowerRightPoint.z);
@@ -201,12 +148,19 @@ namespace HoloLab.Spirare.Cesium
                 Vector1 = vector1,
                 Vector2 = vector2,
             };
+        }
 
-            if (boxCollider != null)
+        private static SatCollisionDetector.Rect BoundsToRect(Bounds bounds)
+        {
+            var center = new Vector2(bounds.center.x, bounds.center.z);
+            var extents = new Vector2(bounds.extents.x, bounds.extents.z);
+
+            return new SatCollisionDetector.Rect()
             {
-                boxCollider.center = bounds.center;
-                boxCollider.size = bounds.size;
-            }
+                Corner = center - extents,
+                Vector1 = new Vector2(extents.x * 2, 0),
+                Vector2 = new Vector2(0, extents.y * 2)
+            };
         }
 
         private static Vector2 CreateVector2FromAngle(float angleInDegrees)
