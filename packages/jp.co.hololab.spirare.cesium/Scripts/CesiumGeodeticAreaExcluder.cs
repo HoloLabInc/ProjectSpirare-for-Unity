@@ -131,13 +131,13 @@ namespace HoloLab.Spirare.Cesium
             }
 
             var upperLeftPoint = GeodeticPositionToUnityPosition(cesiumGeoreference, upperLeftLatitude, upperLeftLongitude, 0);
+            var upperLeft2D = new Vector2((float)upperLeftPoint.x, (float)upperLeftPoint.z);
+
             var lowerRightPoint = GeodeticPositionToUnityPosition(cesiumGeoreference, lowerRightLatitude, lowerRightLongitude, 0);
+            var lowerRight2D = new Vector2((float)lowerRightPoint.x, (float)lowerRightPoint.z);
 
             var axis1 = CreateVector2FromAngle(-northHeading);
             var axis2 = CreateVector2FromAngle(-northHeading + 90);
-
-            var upperLeft2D = new Vector2((float)upperLeftPoint.x, (float)upperLeftPoint.z);
-            var lowerRight2D = new Vector2((float)lowerRightPoint.x, (float)lowerRightPoint.z);
 
             var vector1 = Vector2.Dot(lowerRight2D - upperLeft2D, axis1) * axis1;
             var vector2 = Vector2.Dot(lowerRight2D - upperLeft2D, axis2) * axis2;
