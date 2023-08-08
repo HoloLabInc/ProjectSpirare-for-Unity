@@ -19,6 +19,9 @@ namespace HoloLab.Spirare.Cesium
         private double lowerRightLongitude;
 
         [SerializeField]
+        private float northHeading;
+
+        [SerializeField]
         private bool invert = false;
 
         public double UpperLeftLatitude
@@ -69,6 +72,19 @@ namespace HoloLab.Spirare.Cesium
             set
             {
                 lowerRightLongitude = value;
+                UpdateBounds();
+            }
+        }
+
+        public float NorthHeading
+        {
+            get
+            {
+                return northHeading;
+            }
+            set
+            {
+                northHeading = value;
                 UpdateBounds();
             }
         }
