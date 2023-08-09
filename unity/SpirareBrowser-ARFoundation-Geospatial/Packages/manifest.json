@@ -18,7 +18,7 @@
     "com.unity.xr.arcore": "4.2.7",
     "com.unity.xr.arfoundation": "4.2.7",
     "com.unity.xr.arkit": "4.2.7",
-    "jp.co.hololab.arcameracomposition": "https://github.com/HoloLabInc/ARCameraComposition-Unity.git?path=packages/jp.co.hololab.arcameracomposition",
+    "jp.co.hololab.arcameracomposition": "https://github.com/HoloLabInc/ARCameraComposition-Unity.git?path=packages/jp.co.hololab.arcameracomposition#v0.2.0",
     "jp.co.hololab.iwasmunity": "https://github.com/HoloLabInc/IwasmUnity.git?path=Assets/IwasmUnity#v0.2.0",
     "jp.co.hololab.positioningtools": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools#v0.3.0",
     "jp.co.hololab.positioningtools.arcoreextensions": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.arcoreextensions#v0.3.0",
