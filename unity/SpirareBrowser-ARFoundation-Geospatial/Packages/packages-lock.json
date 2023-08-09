@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.atteneder.gltfast": {
-      "version": "5.0.0",
+      "version": "5.0.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -11,6 +11,18 @@
         "com.unity.burst": "1.6.6"
       },
       "url": "https://package.openupm.com"
+    },
+    "com.cesium.unity": {
+      "version": "1.5.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.mathematics": "1.2.0",
+        "com.unity.test-framework": "1.1.31",
+        "com.unity.shadergraph": "12.1.6",
+        "com.unity.inputsystem": "1.4.2"
+      },
+      "url": "https://unity.pkg.cesium.com"
     },
     "com.cysharp.unitask": {
       "version": "2.2.5",
@@ -90,6 +102,15 @@
       "depth": 0,
       "source": "registry",
       "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.inputsystem": {
+      "version": "1.5.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.uielements": "1.0.0"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.mathematics": {
@@ -316,6 +337,12 @@
     },
     "jp.co.hololab.spirare.browser.arfoundation": {
       "version": "file:../../../packages/jp.co.hololab.spirare.browser.arfoundation",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
+    "jp.co.hololab.spirare.cesium": {
+      "version": "file:../../../packages/jp.co.hololab.spirare.cesium",
       "depth": 0,
       "source": "local",
       "dependencies": {}
