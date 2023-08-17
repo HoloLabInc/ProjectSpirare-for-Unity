@@ -8,7 +8,7 @@ fi
 filepath="$1/Packages/$2"
 download_url="$3"
 
-curl -o ${filepath} -L ${download_url}
+curl -o ${filepath} -L ${download_url} ${CURL_OPTIONS}
 
 # Update manifest.json
 manifest_file="$1/Packages/manifest.json"
