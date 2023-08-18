@@ -1010,29 +1010,62 @@ namespace HoloLab.Spirare
         public static bool TryParseHtmlString(string htmlColor, out Color color)
         {
             color = default;
-            if (string.IsNullOrEmpty(htmlColor)) { return false; }
-
-            // #RRGGBB or #RGB
-            if (htmlColor[0] == '#' && (htmlColor.Length == 7 || htmlColor.Length == 4))
+            if (string.IsNullOrEmpty(htmlColor))
             {
-                if (htmlColor.Length == 7)
+                return false;
+            }
+
+            if (htmlColor[0] == '#')
+            {
+                switch (htmlColor.Length)
                 {
-                    var r = Convert.ToInt32(htmlColor.Substring(1, 2), 16);
-                    var g = Convert.ToInt32(htmlColor.Substring(3, 2), 16);
-                    var b = Convert.ToInt32(htmlColor.Substring(5, 2), 16);
-                    color = new Color(r / 255f, g / 255f, b / 255f);
-                    return true;
-                }
-                else
-                {
-                    var rStr = char.ToString(htmlColor[1]);
-                    var gStr = char.ToString(htmlColor[2]);
-                    var bStr = char.ToString(htmlColor[3]);
-                    var r = Convert.ToInt32(rStr + rStr, 16);
-                    var g = Convert.ToInt32(gStr + gStr, 16);
-                    var b = Convert.ToInt32(bStr + bStr, 16);
-                    color = new Color(r / 255f, g / 255f, b / 255f);
-                    return true;
+                    // #RRGGBBAA
+                    case 9:
+                        {
+                            var r = Convert.ToInt32(htmlColor.Substring(1, 2), 16);
+                            var g = Convert.ToInt32(htmlColor.Substring(3, 2), 16);
+                            var b = Convert.ToInt32(htmlColor.Substring(5, 2), 16);
+                            var a = Convert.ToInt32(htmlColor.Substring(7, 2), 16);
+                            color = new Color(r / 255f, g / 255f, b / 255f, a / 255f);
+                            return true;
+                        }
+                    // #RRGGBB
+                    case 7:
+                        {
+                            var r = Convert.ToInt32(htmlColor.Substring(1, 2), 16);
+                            var g = Convert.ToInt32(htmlColor.Substring(3, 2), 16);
+                            var b = Convert.ToInt32(htmlColor.Substring(5, 2), 16);
+                            color = new Color(r / 255f, g / 255f, b / 255f);
+                            return true;
+                        }
+                    // #RGBA
+                    case 5:
+                        {
+                            var rStr = char.ToString(htmlColor[1]);
+                            var gStr = char.ToString(htmlColor[2]);
+                            var bStr = char.ToString(htmlColor[3]);
+                            var aStr = char.ToString(htmlColor[4]);
+                            var r = Convert.ToInt32(rStr + rStr, 16);
+                            var g = Convert.ToInt32(gStr + gStr, 16);
+                            var b = Convert.ToInt32(bStr + bStr, 16);
+                            var a = Convert.ToInt32(aStr + aStr, 16);
+                            color = new Color(r / 255f, g / 255f, b / 255f, a / 255f);
+                            return true;
+                        }
+                    // #RGB
+                    case 4:
+                        {
+                            var rStr = char.ToString(htmlColor[1]);
+                            var gStr = char.ToString(htmlColor[2]);
+                            var bStr = char.ToString(htmlColor[3]);
+                            var r = Convert.ToInt32(rStr + rStr, 16);
+                            var g = Convert.ToInt32(gStr + gStr, 16);
+                            var b = Convert.ToInt32(bStr + bStr, 16);
+                            color = new Color(r / 255f, g / 255f, b / 255f);
+                            return true;
+                        }
+                    default:
+                        return false;
                 }
             }
             else
