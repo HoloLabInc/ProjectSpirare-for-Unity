@@ -10,5 +10,5 @@ destination_directory="$1/Assets"
 
 filename="ImmersalSDK.zip"
 
-curl -L -o "$filename" "$url"
+curl -L -o "$filename" "$url" ${CURL_OPTIONS}
 unzip -o "$filename" -d "$destination_directory"
