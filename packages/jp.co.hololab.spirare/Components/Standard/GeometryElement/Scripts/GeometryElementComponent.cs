@@ -17,12 +17,18 @@ namespace HoloLab.Spirare
 
         private GeoReferenceElementComponentFactory geoReferenceElementComponentFactory;
 
+        private Material lineMaterial;
+        private Material polygonMaterial;
+
         private readonly List<GameObject> geometryObjects = new List<GameObject>();
 
-        public void Initialize(PomlGeometryElement element, GeoReferenceElementComponentFactory geoReferenceElementComponentFactory, PomlLoadOptions loadOptions)
+        public void Initialize(PomlGeometryElement element, GeoReferenceElementComponentFactory geoReferenceElementComponentFactory, PomlLoadOptions loadOptions,
+            Material lineMaterial, Material polygonMaterial)
         {
             base.Initialize(element, loadOptions);
             this.geoReferenceElementComponentFactory = geoReferenceElementComponentFactory;
+            this.lineMaterial = lineMaterial;
+            this.polygonMaterial = polygonMaterial;
         }
 
         protected override Task UpdateGameObjectCore()
@@ -50,14 +56,14 @@ namespace HoloLab.Spirare
                             {
                                 renderType = RenderType.MeshRenderer;
                             }
-                            var lineObject = CreateLine(line, geoReferenceElementComponentFactory, transform, renderType);
+                            var lineObject = CreateLine(line, geoReferenceElementComponentFactory, transform, renderType, lineMaterial);
                             geometryObjects.Add(lineObject);
                         }
                         break;
                     case PomlGeometryType.Polygon:
                         if (geometry is PolygonGeometry polygon)
                         {
-                            var polygonObject = CreatePolygon(polygon, geoReferenceElementComponentFactory, transform);
+                            var polygonObject = CreatePolygon(polygon, geoReferenceElementComponentFactory, transform, polygonMaterial);
                             geometryObjects.Add(polygonObject);
                         }
                         break;
@@ -108,7 +114,7 @@ namespace HoloLab.Spirare
             }
         }
 
-        private static GameObject CreateLine(LineGeometry line, GeoReferenceElementComponentFactory geoReferenceElementComponentFactory, Transform parent, RenderType renderType)
+        private static GameObject CreateLine(LineGeometry line, GeoReferenceElementComponentFactory geoReferenceElementComponentFactory, Transform parent, RenderType renderType, Material baseMaterial)
         {
             var lineObj = new GameObject("line");
             lineObj.transform.SetParent(parent);
@@ -132,8 +138,10 @@ namespace HoloLab.Spirare
                     {
                         var meshRenderer = lineObj.AddComponent<MeshRenderer>();
 
-                        var material = new Material(Shader.Find("Unlit/Color"));
-                        material.color = line.Color;
+                        var material = new Material(baseMaterial)
+                        {
+                            color = line.Color
+                        };
                         meshRenderer.material = material;
 
                         var meshFilter = lineObj.AddComponent<MeshFilter>();
@@ -154,8 +162,10 @@ namespace HoloLab.Spirare
                         lineRenderer.startColor = line.Color;
                         lineRenderer.endColor = line.Color;
 
-                        var material = new Material(Shader.Find("Unlit/Color"));
-                        material.color = line.Color;
+                        var material = new Material(baseMaterial)
+                        {
+                            color = line.Color
+                        };
                         lineRenderer.material = material;
 
                         lineRenderer.SetPositions(points);
@@ -165,7 +175,7 @@ namespace HoloLab.Spirare
             return lineObj;
         }
 
-        private GameObject CreatePolygon(PolygonGeometry polygon, GeoReferenceElementComponentFactory geoReferenceElementComponentFactory, Transform parent)
+        private static GameObject CreatePolygon(PolygonGeometry polygon, GeoReferenceElementComponentFactory geoReferenceElementComponentFactory, Transform parent, Material baseMaterial)
         {
             var polygonObj = new GameObject("polygon");
             polygonObj.transform.SetParent(parent);
@@ -188,7 +198,7 @@ namespace HoloLab.Spirare
             var meshFilter = polygonObj.AddComponent<MeshFilter>();
             meshFilter.sharedMesh = ConvertPolygonGeometryToMesh(polygon);
 
-            var material = new Material(Shader.Find("Standard"))
+            var material = new Material(baseMaterial)
             {
                 color = polygon.Color
             };
@@ -213,11 +223,11 @@ namespace HoloLab.Spirare
                         return new Mesh();
                     }
 
-                    var firstPoint = polygon.GeodeticVertices[0];
+                    var firstVertex = polygon.GeodeticVertices[0];
                     vertices = polygon.GeodeticVertices.Select(x =>
                         GeographicCoordinateConversion.GeodeticToEnu(
                             x.Latitude, x.Longitude, x.EllipsoidalHeight,
-                            firstPoint.Latitude, x.Longitude, x.EllipsoidalHeight)
+                            firstVertex.Latitude, firstVertex.Longitude, firstVertex.EllipsoidalHeight)
                         .ToUnityVector()
                     ).ToArray();
                     break;

@@ -14,3 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   geometryElementComponentPrefab: {fileID: 6815015745283327228, guid: 9fd9d46e728bfb3438b646c46a23c8f7,
     type: 3}
+  builtInLineMaterial: {fileID: 0}
+  builtInPolygonMaterial: {fileID: 0}
+  urpLineMaterial: {fileID: 2100000, guid: 469af611541345a44b285c46c8dd176e, type: 2}
+  urpPolygonMaterial: {fileID: 2100000, guid: c54e9586091c31b4abf8fc44392d4747, type: 2}
