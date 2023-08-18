@@ -188,7 +188,13 @@ namespace HoloLab.Spirare
             var meshFilter = polygonObj.AddComponent<MeshFilter>();
             meshFilter.sharedMesh = ConvertPolygonGeometryToMesh(polygon);
 
+            var material = new Material(Shader.Find("Standard"))
+            {
+                color = polygon.Color
+            };
+
             var meshRenderer = polygonObj.AddComponent<MeshRenderer>();
+            meshRenderer.sharedMaterial = material;
 
             return polygonObj;
         }
