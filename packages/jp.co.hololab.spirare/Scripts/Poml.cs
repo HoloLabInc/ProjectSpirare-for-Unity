@@ -240,6 +240,20 @@ namespace HoloLab.Spirare
         Polygon,
     }
 
+    public readonly struct PomlGeodeticPosition
+    {
+        public PomlGeodeticPosition(double latitude, double longitude, double ellipsoidalHeight)
+        {
+            Latitude = latitude;
+            Longitude = longitude;
+            EllipsoidalHeight = ellipsoidalHeight;
+        }
+
+        public double Latitude { get; }
+        public double Longitude { get; }
+        public double EllipsoidalHeight { get; }
+    }
+
     public abstract class PomlGeometry
     {
         public PomlGeometryType Type { get; }
@@ -260,8 +274,8 @@ namespace HoloLab.Spirare
         public Vector3 Start { get; set; }
         public Vector3 End { get; set; }
 
-        public (double Latitude, double Longitude, double EllipsoidalHeight) StartGeoLocation { get; set; }
-        public (double Latitude, double Longitude, double EllipsoidalHeight) EndGeoLocation { get; set; }
+        public PomlGeodeticPosition StartGeoLocation { get; set; }
+        public PomlGeodeticPosition EndGeoLocation { get; set; }
 
         public Color Color { get; set; }
         public float Width { get; set; }

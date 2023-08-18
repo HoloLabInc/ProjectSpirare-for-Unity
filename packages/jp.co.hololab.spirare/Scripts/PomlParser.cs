@@ -400,8 +400,8 @@ namespace HoloLab.Spirare
                         line.End = ReadVector3Attribute(lineNode, "end", 0);
                         break;
                     case PositionType.GeoLocation:
-                        line.StartGeoLocation = ReadDouble3Attribute(lineNode, "start", 0);
-                        line.EndGeoLocation = ReadDouble3Attribute(lineNode, "end", 0);
+                        line.StartGeoLocation = ReadPomlGeodeticPositionAttribute(lineNode, "start", 0);
+                        line.EndGeoLocation = ReadPomlGeodeticPositionAttribute(lineNode, "end", 0);
                         break;
                     default:
                         break;
@@ -593,6 +593,26 @@ namespace HoloLab.Spirare
             }
         }
 
+        private static PomlGeodeticPosition ReadPomlGeodeticPositionAttribute(XmlNode node, string key, double defaultValue)
+        {
+            if (!node.TryGetAttribute(key, out var attribute))
+            {
+                return new PomlGeodeticPosition(defaultValue, defaultValue, defaultValue);
+            }
+
+            var split = attribute.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            return new PomlGeodeticPosition(
+                ExtractDouble(split, 0, defaultValue),
+                ExtractDouble(split, 1, defaultValue),
+                ExtractDouble(split, 2, defaultValue)
+            );
+
+            static double ExtractDouble(string[] values, int index, double defaultValue)
+            {
+                return (values.Length > index) && double.TryParse(values[index], out var a) ? a : defaultValue;
+            }
+        }
+
         private static Vector3? ReadMinMaxScaleAttribute(XmlNode node, string key)
         {
             if (node.TryGetAttribute(key, out var attribute) == false)
@@ -632,6 +652,24 @@ namespace HoloLab.Spirare
             foreach (var token in tokens)
             {
                 if (!float.TryParse(token, out var value))
+                {
+                    break;
+                }
+                values.Add(value);
+            }
+            return values;
+        }
+
+        private static List<double> ReadDoubleArray(string text)
+        {
+            var separator = new char[] { ',', ' ' };
+            var tokens = text.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+
+            var values = new List<double>(tokens.Length);
+
+            foreach (var token in tokens)
+            {
+                if (!double.TryParse(token, out var value))
                 {
                     break;
                 }

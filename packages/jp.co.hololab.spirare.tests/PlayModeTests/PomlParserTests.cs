@@ -332,9 +332,15 @@ public class PomlParserTests
 
             var line = geometry as LineGeometry;
             Assert.That(line.PositionType, Is.EqualTo(PositionType.GeoLocation));
-            Assert.That((1, 2, 4), Is.EqualTo((1, 2, 4)));
-            Assert.That(line.StartGeoLocation, Is.EqualTo((1d, 2d, 3d)));
-            Assert.That(line.EndGeoLocation, Is.EqualTo((4d, 5d, 6d)));
+
+            Assert.That(line.StartGeoLocation.Latitude, Is.EqualTo(1d));
+            Assert.That(line.StartGeoLocation.Longitude, Is.EqualTo(2d));
+            Assert.That(line.StartGeoLocation.EllipsoidalHeight, Is.EqualTo(3d));
+
+            Assert.That(line.EndGeoLocation.Latitude, Is.EqualTo(4d));
+            Assert.That(line.EndGeoLocation.Longitude, Is.EqualTo(5d));
+            Assert.That(line.EndGeoLocation.EllipsoidalHeight, Is.EqualTo(6d));
+
             Assert.That(line.Width, Is.EqualTo(0.1f));
         }
         {
