@@ -242,15 +242,15 @@ namespace HoloLab.Spirare
 
     public readonly struct PomlGeodeticPosition
     {
-        public PomlGeodeticPosition(double latitude, double longitude, double ellipsoidalHeight)
+        public PomlGeodeticPosition(double longitude, double latitude, double ellipsoidalHeight)
         {
-            Latitude = latitude;
             Longitude = longitude;
+            Latitude = latitude;
             EllipsoidalHeight = ellipsoidalHeight;
         }
 
-        public double Latitude { get; }
         public double Longitude { get; }
+        public double Latitude { get; }
         public double EllipsoidalHeight { get; }
     }
 
@@ -290,9 +290,9 @@ namespace HoloLab.Spirare
         public PositionType PositionType { get; set; }
 
         public Vector3[] Vertices { get; set; }
+        public PomlGeodeticPosition[] GeodeticVertices { get; set; }
 
-        // public (double Latitude, double Longitude, double EllipsoidalHeight) StartGeoLocation { get; set; }
-        // public (double Latitude, double Longitude, double EllipsoidalHeight) EndGeoLocation { get; set; }
+        public int[] Indices { get; set; }
 
         public Color Color { get; set; }
     }
