@@ -236,6 +236,8 @@ namespace HoloLab.Spirare
         Unknown = 0,
         [EnumLabel("line")]
         Line,
+        [EnumLabel("polygon")]
+        Polygon,
     }
 
     public abstract class PomlGeometry
@@ -263,6 +265,22 @@ namespace HoloLab.Spirare
 
         public Color Color { get; set; }
         public float Width { get; set; }
+    }
+
+    public sealed class PolygonGeometry : PomlGeometry
+    {
+        public PolygonGeometry() : base(PomlGeometryType.Polygon)
+        {
+        }
+
+        public PositionType PositionType { get; set; }
+
+        public Vector3[] Vertices { get; set; }
+
+        // public (double Latitude, double Longitude, double EllipsoidalHeight) StartGeoLocation { get; set; }
+        // public (double Latitude, double Longitude, double EllipsoidalHeight) EndGeoLocation { get; set; }
+
+        public Color Color { get; set; }
     }
 
     public class PomlScriptElement : PomlElement

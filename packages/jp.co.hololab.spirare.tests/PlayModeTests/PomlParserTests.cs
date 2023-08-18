@@ -287,7 +287,7 @@ public class PomlParserTests
     }
 
     [Test]
-    public void GeometryTag()
+    public void GeometryTag_Line()
     {
         var xml = @"
 <poml>
@@ -353,6 +353,77 @@ public class PomlParserTests
             Assert.That(line.End, Is.EqualTo(new Vector3(4, 5, 6)));
             Assert.That(line.Width, Is.EqualTo(10f));
         }
+    }
+
+    [Test]
+    public void GeometryTag_Polygon()
+    {
+        var xml = @"
+<poml>
+    <scene>
+        <geometry>
+            <polygon />
+        </geometry>
+        <geometry position-type=""geo-location"">
+            <polygon vertices=""0 1 2 3 4 5 6 7 8 9 10 11"" color=""white"" />
+        </geometry>
+        <geometry position-type=""relative"">
+            <polygon color=""white"" />
+        </geometry>
+    </scene>
+</poml>";
+
+        var elements = ParseSceneElements(xml);
+        Assert.That(elements.Length, Is.EqualTo(3));
+
+        {
+            var element = elements[0] as PomlGeometryElement;
+            Assert.That(element.ElementType, Is.EqualTo(PomlElementType.Geometry));
+
+            var geometries = element.Geometries;
+            Assert.That(geometries.Count, Is.EqualTo(1));
+
+            var geometry = geometries[0];
+            Assert.That(geometry.Type, Is.EqualTo(PomlGeometryType.Polygon));
+
+            var polygon = geometry as PolygonGeometry;
+            Assert.That(polygon.Vertices.Count, Is.EqualTo(0));
+        }
+        {
+            var element = elements[1] as PomlGeometryElement;
+            Assert.That(element.ElementType, Is.EqualTo(PomlElementType.Geometry));
+
+            var geometries = element.Geometries;
+            Assert.That(geometries.Count, Is.EqualTo(1));
+
+            var geometry = geometries[0];
+            Assert.That(geometry.Type, Is.EqualTo(PomlGeometryType.Polygon));
+
+            var polygon = geometry as PolygonGeometry;
+            Assert.That(polygon.PositionType, Is.EqualTo(PositionType.GeoLocation));
+            Assert.That(polygon.Color, Is.EqualTo(Color.white));
+            // Assert.That((1, 2, 4), Is.EqualTo((1, 2, 4)));
+            //Assert.That(polygon.StartGeoLocation, Is.EqualTo((1d, 2d, 3d)));
+            //Assert.That(polygon.EndGeoLocation, Is.EqualTo((4d, 5d, 6d)));
+        }
+        /*
+        {
+            var element = elements[2] as PomlGeometryElement;
+            Assert.That(element.ElementType, Is.EqualTo(PomlElementType.Geometry));
+
+            var geometries = element.Geometries;
+            Assert.That(geometries.Count, Is.EqualTo(1));
+
+            var geometry = geometries[0];
+            Assert.That(geometry.Type, Is.EqualTo(PomlGeometryType.Line));
+
+            var line = geometry as LineGeometry;
+            Assert.That(line.PositionType, Is.EqualTo(PositionType.Relative));
+            Assert.That(line.Start, Is.EqualTo(new Vector3(1, 2, 3)));
+            Assert.That(line.End, Is.EqualTo(new Vector3(4, 5, 6)));
+            Assert.That(line.Width, Is.EqualTo(10f));
+        }
+        */
     }
 
 

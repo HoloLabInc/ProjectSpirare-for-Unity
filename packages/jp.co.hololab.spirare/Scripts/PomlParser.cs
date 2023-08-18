@@ -373,6 +373,7 @@ namespace HoloLab.Spirare
                 PomlGeometry geometry = type switch
                 {
                     PomlGeometryType.Line => CreateLine(gNode, positionType),
+                    PomlGeometryType.Polygon => CreatePolygon(gNode, positionType),
                     _ => null,
                 };
                 if (geometry != null)
@@ -406,6 +407,30 @@ namespace HoloLab.Spirare
                         break;
                 }
                 return line;
+            }
+
+            static PolygonGeometry CreatePolygon(XmlNode polygonNode, PositionType positionType)
+            {
+                // <polygon vertices="0,1,2,3,4,5,6,7,8" color="red"/>
+
+                var polygon = new PolygonGeometry
+                {
+                    PositionType = positionType,
+                    Color = polygonNode.GetColorAttribute("color", Color.white),
+                };
+                switch (positionType)
+                {
+                    case PositionType.Relative:
+                        polygon.Vertices = ReadVector3ArrayAttribute(polygonNode, "vertices");
+                        break;
+                    case PositionType.GeoLocation:
+                        // polygon.StartGeoLocation = ReadDouble3Attribute(lineNode, "start", 0);
+                        // polygon.EndGeoLocation = ReadDouble3Attribute(lineNode, "end", 0);
+                        break;
+                    default:
+                        break;
+                }
+                return polygon;
             }
         }
 
@@ -512,6 +537,27 @@ namespace HoloLab.Spirare
             return new Vector3(x, y, z);
         }
 
+        private static Vector3[] ReadVector3ArrayAttribute(XmlNode node, string key)
+        {
+            if (!node.TryGetAttribute(key, out var attribute))
+            {
+                return Array.Empty<Vector3>();
+            }
+
+            var values = ReadFloatArray(attribute);
+
+            var result = new Vector3[values.Count / 3];
+            for (int i = 0; i < result.Length; i++)
+            {
+                var x = values[i * 3];
+                var y = values[i * 3 + 1];
+                var z = values[i * 3 + 2];
+                result[i] = new Vector3(x, y, z);
+            }
+
+            return result;
+        }
+
         private static Vector3 ReadScaleAttribute(XmlNode node, string key, float defaultValue)
         {
             if (!node.TryGetAttribute(key, out var attribute))
@@ -578,9 +624,11 @@ namespace HoloLab.Spirare
 
         private static List<float> ReadFloatArray(string text)
         {
-            var values = new List<float>();
             var separator = new char[] { ',', ' ' };
             var tokens = text.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+
+            var values = new List<float>(tokens.Length);
+
             foreach (var token in tokens)
             {
                 if (!float.TryParse(token, out var value))
