@@ -1,6 +1,7 @@
 using HoloLab.PositioningTools.GeographicCoordinate;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -51,6 +52,13 @@ namespace HoloLab.Spirare
                             }
                             var lineObject = CreateLine(line, geoReferenceElementComponentFactory, transform, renderType);
                             geometryObjects.Add(lineObject);
+                        }
+                        break;
+                    case PomlGeometryType.Polygon:
+                        if (geometry is PolygonGeometry polygon)
+                        {
+                            var polygonObject = CreatePolygon(polygon, geoReferenceElementComponentFactory, transform);
+                            geometryObjects.Add(polygonObject);
                         }
                         break;
                     case PomlGeometryType.Unknown:
@@ -155,6 +163,78 @@ namespace HoloLab.Spirare
                     break;
             }
             return lineObj;
+        }
+
+        private GameObject CreatePolygon(PolygonGeometry polygon, GeoReferenceElementComponentFactory geoReferenceElementComponentFactory, Transform parent)
+        {
+            var polygonObj = new GameObject("polygon");
+            polygonObj.transform.SetParent(parent);
+
+            if (polygon.PositionType == PositionType.GeoLocation)
+            {
+                if (polygon.GeodeticVertices.Length > 0)
+                {
+                    var firstVertex = polygon.GeodeticVertices[0];
+                    var geoReference = new PomlGeoReferenceElement()
+                    {
+                        Latitude = firstVertex.Latitude,
+                        Longitude = firstVertex.Longitude,
+                        EllipsoidalHeight = firstVertex.EllipsoidalHeight
+                    };
+                    geoReferenceElementComponentFactory.AddComponent(polygonObj, geoReference);
+                }
+            }
+
+            var meshFilter = polygonObj.AddComponent<MeshFilter>();
+            meshFilter.sharedMesh = ConvertPolygonGeometryToMesh(polygon);
+
+            var meshRenderer = polygonObj.AddComponent<MeshRenderer>();
+
+            return polygonObj;
+        }
+
+        private static Mesh ConvertPolygonGeometryToMesh(PolygonGeometry polygon)
+        {
+            Vector3[] vertices;
+            switch (polygon.PositionType)
+            {
+                case PositionType.Relative:
+                    vertices = polygon.Vertices.Select(x => CoordinateUtility.ToUnityCoordinate(x)).ToArray();
+                    break;
+                case PositionType.GeoLocation:
+                    if (polygon.GeodeticVertices.Length == 0)
+                    {
+                        return new Mesh();
+                    }
+
+                    var firstPoint = polygon.GeodeticVertices[0];
+                    vertices = polygon.GeodeticVertices.Select(x =>
+                        GeographicCoordinateConversion.GeodeticToEnu(
+                            x.Latitude, x.Longitude, x.EllipsoidalHeight,
+                            firstPoint.Latitude, x.Longitude, x.EllipsoidalHeight)
+                        .ToUnityVector()
+                    ).ToArray();
+                    break;
+                default:
+                    return new Mesh();
+            }
+
+            var indices = polygon.Indices;
+            var triangles = new int[indices.Length];
+            for (int i = 0; i < indices.Length / 3; i += 1)
+            {
+                triangles[i * 3] = indices[i * 3];
+                // Swap 2nd and 3rd
+                triangles[i * 3 + 1] = indices[i * 3 + 2];
+                triangles[i * 3 + 2] = indices[i * 3 + 1];
+            }
+
+            var mesh = new Mesh()
+            {
+                vertices = vertices,
+                triangles = triangles
+            };
+            return mesh;
         }
     }
 }
