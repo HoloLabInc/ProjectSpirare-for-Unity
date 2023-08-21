@@ -7,6 +7,7 @@ using Debug = UnityEngine.Debug;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 using Color = UnityEngine.Color;
+using UnityEditor;
 
 namespace HoloLab.Spirare
 {
@@ -373,6 +374,7 @@ namespace HoloLab.Spirare
                 PomlGeometry geometry = type switch
                 {
                     PomlGeometryType.Line => CreateLine(gNode, positionType),
+                    PomlGeometryType.Polygon => CreatePolygon(gNode, positionType),
                     _ => null,
                 };
                 if (geometry != null)
@@ -399,13 +401,37 @@ namespace HoloLab.Spirare
                         line.End = ReadVector3Attribute(lineNode, "end", 0);
                         break;
                     case PositionType.GeoLocation:
-                        line.StartGeoLocation = ReadDouble3Attribute(lineNode, "start", 0);
-                        line.EndGeoLocation = ReadDouble3Attribute(lineNode, "end", 0);
+                        line.StartGeoLocation = ReadPomlGeodeticPositionAttribute(lineNode, "start", 0);
+                        line.EndGeoLocation = ReadPomlGeodeticPositionAttribute(lineNode, "end", 0);
                         break;
                     default:
                         break;
                 }
                 return line;
+            }
+
+            static PolygonGeometry CreatePolygon(XmlNode polygonNode, PositionType positionType)
+            {
+                // <polygon vertices="0,1,2,3,4,5,6,7,8" indices="0,1,2" color="red"/>
+
+                var polygon = new PolygonGeometry
+                {
+                    PositionType = positionType,
+                    Color = polygonNode.GetColorAttribute("color", Color.white),
+                    Indices = ReadIntArrayAttribute(polygonNode, "indices"),
+                };
+                switch (positionType)
+                {
+                    case PositionType.Relative:
+                        polygon.Vertices = ReadVector3ArrayAttribute(polygonNode, "vertices");
+                        break;
+                    case PositionType.GeoLocation:
+                        polygon.GeodeticVertices = ReadPomlGeodeticPositionArrayAttribute(polygonNode, "vertices");
+                        break;
+                    default:
+                        break;
+                }
+                return polygon;
             }
         }
 
@@ -498,6 +524,17 @@ namespace HoloLab.Spirare
             return defaultValue;
         }
 
+        private static int[] ReadIntArrayAttribute(XmlNode node, string key)
+        {
+            if (!node.TryGetAttribute(key, out var attribute))
+            {
+                return Array.Empty<int>();
+            }
+
+            var values = ReadIntArray(attribute);
+            return values.ToArray();
+        }
+
         private static Vector3 ReadVector3Attribute(XmlNode node, string key, float defaultValue)
         {
             if (!node.TryGetAttribute(key, out var attribute))
@@ -510,6 +547,27 @@ namespace HoloLab.Spirare
             var y = GetValueByIndex(values, 1, defaultValue);
             var z = GetValueByIndex(values, 2, defaultValue);
             return new Vector3(x, y, z);
+        }
+
+        private static Vector3[] ReadVector3ArrayAttribute(XmlNode node, string key)
+        {
+            if (!node.TryGetAttribute(key, out var attribute))
+            {
+                return Array.Empty<Vector3>();
+            }
+
+            var values = ReadFloatArray(attribute);
+
+            var result = new Vector3[values.Count / 3];
+            for (int i = 0; i < result.Length; i++)
+            {
+                var x = values[i * 3];
+                var y = values[i * 3 + 1];
+                var z = values[i * 3 + 2];
+                result[i] = new Vector3(x, y, z);
+            }
+
+            return result;
         }
 
         private static Vector3 ReadScaleAttribute(XmlNode node, string key, float defaultValue)
@@ -528,23 +586,44 @@ namespace HoloLab.Spirare
             };
         }
 
-        private static (double X, double Y, double Z) ReadDouble3Attribute(XmlNode node, string key, double defaultValue)
+        private static PomlGeodeticPosition ReadPomlGeodeticPositionAttribute(XmlNode node, string key, double defaultValue)
         {
             if (!node.TryGetAttribute(key, out var attribute))
             {
-                return (defaultValue, defaultValue, defaultValue);
+                return new PomlGeodeticPosition(defaultValue, defaultValue, defaultValue);
             }
+
             var split = attribute.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            return (
-                X: ExtractDouble(split, 0, defaultValue),
-                Y: ExtractDouble(split, 1, defaultValue),
-                Z: ExtractDouble(split, 2, defaultValue)
+            return new PomlGeodeticPosition(
+                ExtractDouble(split, 1, defaultValue),
+                ExtractDouble(split, 0, defaultValue),
+                ExtractDouble(split, 2, defaultValue)
             );
 
             static double ExtractDouble(string[] values, int index, double defaultValue)
             {
                 return (values.Length > index) && double.TryParse(values[index], out var a) ? a : defaultValue;
             }
+        }
+
+        private static PomlGeodeticPosition[] ReadPomlGeodeticPositionArrayAttribute(XmlNode node, string key)
+        {
+            if (!node.TryGetAttribute(key, out var attribute))
+            {
+                return Array.Empty<PomlGeodeticPosition>();
+            }
+
+            var values = ReadDoubleArray(attribute);
+
+            var result = new PomlGeodeticPosition[values.Count / 3];
+            for (int i = 0; i < result.Length; i++)
+            {
+                var longitude = values[i * 3];
+                var latitude = values[i * 3 + 1];
+                var ellipsoidalHeight = values[i * 3 + 2];
+                result[i] = new PomlGeodeticPosition(longitude, latitude, ellipsoidalHeight);
+            }
+            return result;
         }
 
         private static Vector3? ReadMinMaxScaleAttribute(XmlNode node, string key)
@@ -576,11 +655,27 @@ namespace HoloLab.Spirare
             }
         }
 
+        private static List<int> ReadIntArray(string text)
+        {
+            var tokens = SplitArrayString(text);
+            var values = new List<int>(tokens.Length);
+
+            foreach (var token in tokens)
+            {
+                if (!int.TryParse(token, out var value))
+                {
+                    break;
+                }
+                values.Add(value);
+            }
+            return values;
+        }
+
         private static List<float> ReadFloatArray(string text)
         {
-            var values = new List<float>();
-            var separator = new char[] { ',', ' ' };
-            var tokens = text.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+            var tokens = SplitArrayString(text);
+            var values = new List<float>(tokens.Length);
+
             foreach (var token in tokens)
             {
                 if (!float.TryParse(token, out var value))
@@ -590,6 +685,29 @@ namespace HoloLab.Spirare
                 values.Add(value);
             }
             return values;
+        }
+
+        private static List<double> ReadDoubleArray(string text)
+        {
+            var tokens = SplitArrayString(text);
+            var values = new List<double>(tokens.Length);
+
+            foreach (var token in tokens)
+            {
+                if (!double.TryParse(token, out var value))
+                {
+                    break;
+                }
+                values.Add(value);
+            }
+            return values;
+        }
+
+        private static string[] SplitArrayString(string text)
+        {
+            var separator = new char[] { ',', ' ' };
+            var tokens = text.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+            return tokens;
         }
 
         private static T GetValueByIndex<T>(List<T> list, int index, T defaultValue)
@@ -892,29 +1010,62 @@ namespace HoloLab.Spirare
         public static bool TryParseHtmlString(string htmlColor, out Color color)
         {
             color = default;
-            if (string.IsNullOrEmpty(htmlColor)) { return false; }
-
-            // #RRGGBB or #RGB
-            if (htmlColor[0] == '#' && (htmlColor.Length == 7 || htmlColor.Length == 4))
+            if (string.IsNullOrEmpty(htmlColor))
             {
-                if (htmlColor.Length == 7)
+                return false;
+            }
+
+            if (htmlColor[0] == '#')
+            {
+                switch (htmlColor.Length)
                 {
-                    var r = Convert.ToInt32(htmlColor.Substring(1, 2), 16);
-                    var g = Convert.ToInt32(htmlColor.Substring(3, 2), 16);
-                    var b = Convert.ToInt32(htmlColor.Substring(5, 2), 16);
-                    color = new Color(r / 255f, g / 255f, b / 255f);
-                    return true;
-                }
-                else
-                {
-                    var rStr = char.ToString(htmlColor[1]);
-                    var gStr = char.ToString(htmlColor[2]);
-                    var bStr = char.ToString(htmlColor[3]);
-                    var r = Convert.ToInt32(rStr + rStr, 16);
-                    var g = Convert.ToInt32(gStr + gStr, 16);
-                    var b = Convert.ToInt32(bStr + bStr, 16);
-                    color = new Color(r / 255f, g / 255f, b / 255f);
-                    return true;
+                    // #RRGGBBAA
+                    case 9:
+                        {
+                            var r = Convert.ToInt32(htmlColor.Substring(1, 2), 16);
+                            var g = Convert.ToInt32(htmlColor.Substring(3, 2), 16);
+                            var b = Convert.ToInt32(htmlColor.Substring(5, 2), 16);
+                            var a = Convert.ToInt32(htmlColor.Substring(7, 2), 16);
+                            color = new Color(r / 255f, g / 255f, b / 255f, a / 255f);
+                            return true;
+                        }
+                    // #RRGGBB
+                    case 7:
+                        {
+                            var r = Convert.ToInt32(htmlColor.Substring(1, 2), 16);
+                            var g = Convert.ToInt32(htmlColor.Substring(3, 2), 16);
+                            var b = Convert.ToInt32(htmlColor.Substring(5, 2), 16);
+                            color = new Color(r / 255f, g / 255f, b / 255f);
+                            return true;
+                        }
+                    // #RGBA
+                    case 5:
+                        {
+                            var rStr = char.ToString(htmlColor[1]);
+                            var gStr = char.ToString(htmlColor[2]);
+                            var bStr = char.ToString(htmlColor[3]);
+                            var aStr = char.ToString(htmlColor[4]);
+                            var r = Convert.ToInt32(rStr + rStr, 16);
+                            var g = Convert.ToInt32(gStr + gStr, 16);
+                            var b = Convert.ToInt32(bStr + bStr, 16);
+                            var a = Convert.ToInt32(aStr + aStr, 16);
+                            color = new Color(r / 255f, g / 255f, b / 255f, a / 255f);
+                            return true;
+                        }
+                    // #RGB
+                    case 4:
+                        {
+                            var rStr = char.ToString(htmlColor[1]);
+                            var gStr = char.ToString(htmlColor[2]);
+                            var bStr = char.ToString(htmlColor[3]);
+                            var r = Convert.ToInt32(rStr + rStr, 16);
+                            var g = Convert.ToInt32(gStr + gStr, 16);
+                            var b = Convert.ToInt32(bStr + bStr, 16);
+                            color = new Color(r / 255f, g / 255f, b / 255f);
+                            return true;
+                        }
+                    default:
+                        return false;
                 }
             }
             else

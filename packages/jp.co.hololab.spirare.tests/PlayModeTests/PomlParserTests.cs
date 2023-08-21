@@ -287,7 +287,7 @@ public class PomlParserTests
     }
 
     [Test]
-    public void GeometryTag()
+    public void GeometryTag_Line()
     {
         var xml = @"
 <poml>
@@ -332,10 +332,10 @@ public class PomlParserTests
 
             var line = geometry as LineGeometry;
             Assert.That(line.PositionType, Is.EqualTo(PositionType.GeoLocation));
-            Assert.That((1, 2, 4), Is.EqualTo((1, 2, 4)));
-            Assert.That(line.StartGeoLocation, Is.EqualTo((1d, 2d, 3d)));
-            Assert.That(line.EndGeoLocation, Is.EqualTo((4d, 5d, 6d)));
             Assert.That(line.Width, Is.EqualTo(0.1f));
+
+            AssertPomlGeodticPosition(line.StartGeoLocation, 2d, 1d, 3d);
+            AssertPomlGeodticPosition(line.EndGeoLocation, 5d, 4d, 6d);
         }
         {
             var element = elements[2] as PomlGeometryElement;
@@ -355,6 +355,87 @@ public class PomlParserTests
         }
     }
 
+
+    [Test]
+    public void GeometryTag_Polygon()
+    {
+        var xml = @"
+<poml>
+    <scene>
+        <geometry>
+            <polygon />
+        </geometry>
+        <geometry position-type=""geo-location"">
+            <polygon vertices=""0 1 2 3 4 5 6 7 8 9 10 11"" indices=""0,1,2,1,2,3"" color=""red"" />
+        </geometry>
+        <geometry position-type=""relative"">
+            <polygon vertices=""0 1 2 3 4 5 6 7 8"" indices=""0,1,2"" color=""white"" />
+        </geometry>
+    </scene>
+</poml>";
+
+        var elements = ParseSceneElements(xml);
+        Assert.That(elements.Length, Is.EqualTo(3));
+
+        {
+            var element = elements[0] as PomlGeometryElement;
+            Assert.That(element.ElementType, Is.EqualTo(PomlElementType.Geometry));
+
+            var geometries = element.Geometries;
+            Assert.That(geometries.Count, Is.EqualTo(1));
+
+            var geometry = geometries[0];
+            Assert.That(geometry.Type, Is.EqualTo(PomlGeometryType.Polygon));
+
+            var polygon = geometry as PolygonGeometry;
+            Assert.That(polygon.Vertices.Count, Is.EqualTo(0));
+        }
+        {
+            var element = elements[1] as PomlGeometryElement;
+            Assert.That(element.ElementType, Is.EqualTo(PomlElementType.Geometry));
+
+            var geometries = element.Geometries;
+            Assert.That(geometries.Count, Is.EqualTo(1));
+
+            var geometry = geometries[0];
+            Assert.That(geometry.Type, Is.EqualTo(PomlGeometryType.Polygon));
+
+            var polygon = geometry as PolygonGeometry;
+            Assert.That(polygon.PositionType, Is.EqualTo(PositionType.GeoLocation));
+            Assert.That(polygon.Color, Is.EqualTo(Color.red));
+
+            Assert.That(polygon.GeodeticVertices.Count, Is.EqualTo(4));
+            AssertPomlGeodticPosition(polygon.GeodeticVertices[0], 0, 1, 2);
+            AssertPomlGeodticPosition(polygon.GeodeticVertices[1], 3, 4, 5);
+            AssertPomlGeodticPosition(polygon.GeodeticVertices[2], 6, 7, 8);
+            AssertPomlGeodticPosition(polygon.GeodeticVertices[3], 9, 10, 11);
+
+            Assert.That(polygon.Indices.Count, Is.EqualTo(6));
+            Assert.That(polygon.Indices, Is.EquivalentTo(new int[] { 0, 1, 2, 1, 2, 3 }));
+        }
+        {
+            var element = elements[2] as PomlGeometryElement;
+            Assert.That(element.ElementType, Is.EqualTo(PomlElementType.Geometry));
+
+            var geometries = element.Geometries;
+            Assert.That(geometries.Count, Is.EqualTo(1));
+
+            var geometry = geometries[0];
+            Assert.That(geometry.Type, Is.EqualTo(PomlGeometryType.Polygon));
+
+            var polygon = geometry as PolygonGeometry;
+            Assert.That(polygon.PositionType, Is.EqualTo(PositionType.Relative));
+            Assert.That(polygon.Color, Is.EqualTo(Color.white));
+
+            Assert.That(polygon.Vertices.Count, Is.EqualTo(3));
+            Assert.That(polygon.Vertices[0], Is.EqualTo(new Vector3(0, 1, 2)));
+            Assert.That(polygon.Vertices[1], Is.EqualTo(new Vector3(3, 4, 5)));
+            Assert.That(polygon.Vertices[2], Is.EqualTo(new Vector3(6, 7, 8)));
+
+            Assert.That(polygon.Indices.Count, Is.EqualTo(3));
+            Assert.That(polygon.Indices, Is.EquivalentTo(new int[] { 0, 1, 2 }));
+        }
+    }
 
     [Test]
     public void NestedElements()
@@ -559,5 +640,12 @@ public class PomlParserTests
         var elements = poml.Scene.Elements.ToArray();
 
         return elements;
+    }
+
+    private static void AssertPomlGeodticPosition(PomlGeodeticPosition position, double longitude, double latitude, double ellipsoidalHeight)
+    {
+        Assert.That(position.Longitude, Is.EqualTo(longitude));
+        Assert.That(position.Latitude, Is.EqualTo(latitude));
+        Assert.That(position.EllipsoidalHeight, Is.EqualTo(ellipsoidalHeight));
     }
 }
