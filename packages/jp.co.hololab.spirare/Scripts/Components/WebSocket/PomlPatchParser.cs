@@ -51,6 +51,13 @@ namespace HoloLab.Spirare
         public PomlPatchAdd() : base(PomlPatchOperation.Add) { }
     }
 
+    internal class PomlPatchUpdate : PomlPatch
+    {
+        public JObject Attributes { set; get; }
+
+        public PomlPatchUpdate() : base(PomlPatchOperation.Update) { }
+    }
+
     internal static class PomlPatchParser
     {
         public static bool TryParse(string json, out PomlPatch patch)
@@ -71,11 +78,27 @@ namespace HoloLab.Spirare
                 switch (operation)
                 {
                     case PomlPatch.PomlPatchOperation.Add:
+                        if (TryGetPomlPatchAddElement(jObj, out var addElement) == false)
+                        {
+                            return false;
+                        }
                         patch = new PomlPatchAdd()
                         {
-                            Target = target
+                            Target = target,
+                            Element = addElement
                         };
                         break;
+                    case PomlPatch.PomlPatchOperation.Update:
+                        patch = new PomlPatchUpdate()
+                        {
+                            Target = target,
+                            Attributes = GetAttributes(jObj)
+                        };
+                        break;
+                    case PomlPatch.PomlPatchOperation.Remove:
+                        throw new NotImplementedException();
+                    default:
+                        return false;
                 }
 
                 return true;
@@ -118,9 +141,13 @@ namespace HoloLab.Spirare
             return true;
         }
 
-        private static bool TryGetAttributes(JObject jObj, out JObject attributes)
+        private static JObject GetAttributes(JObject jObj)
         {
-            return jObj.TryGetJObject("attributes", out attributes);
+            if (jObj.TryGetJObject("attributes", out var attributes))
+            {
+                return attributes;
+            }
+            return null;
         }
 
         private static PomlPatchAddElement[] GetChildren(JObject jObj)
@@ -154,8 +181,7 @@ namespace HoloLab.Spirare
                 return false;
             }
 
-            TryGetAttributes(jObj, out var attributes);
-
+            var attributes = GetAttributes(jObj);
             var children = GetChildren(jObj);
 
             element = new PomlPatchAddElement()
