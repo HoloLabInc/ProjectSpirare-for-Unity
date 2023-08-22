@@ -10,12 +10,14 @@ namespace HoloLab.Spirare
 {
     public sealed class WebSocketHelper : IDisposable
     {
-        private readonly Func<string, (PomlElementComponent Component, PomlElement Element)> _finder;
-        private readonly (PomlElementComponent Component, PomlElement Element) _target;
-        private readonly bool _hasTarget;
+        // private readonly Func<string, (PomlElementComponent Component, PomlElement Element)> _finder;
+        // private readonly (PomlElementComponent Component, PomlElement Element) _target;
+        // private readonly bool _hasTarget;
+        private readonly PomlComponent pomlComponent;
 
         private NetWebSocketClient wsClient;
 
+        /*
         public WebSocketHelper(PomlElementComponent component, PomlElement element)
         {
             _target = (component, element);
@@ -28,6 +30,11 @@ namespace HoloLab.Spirare
             _target = (null, null);
             _hasTarget = false;
             _finder = finder;
+        }
+        */
+        public WebSocketHelper(PomlComponent pomlComponent)
+        {
+            this.pomlComponent = pomlComponent;
         }
 
         public void Dispose()
@@ -56,6 +63,16 @@ namespace HoloLab.Spirare
 
         private async void MessageReceived(string json)
         {
+            if (PomlPatchParser.TryParse(json, out var patches) == false)
+            {
+                return;
+            }
+
+            foreach (var patch in patches)
+            {
+                ApplyPomlPatch(patch);
+            }
+            /*
             json = json.TrimStart();
             if (json.StartsWith("["))
             {
@@ -79,6 +96,65 @@ namespace HoloLab.Spirare
                     AssignJObject(obj);
                 }
             }
+            */
+        }
+
+        private void ApplyPomlPatch(PomlPatch patch)
+        {
+            if (TryGetTargetElement(patch.Target, out var element) == false)
+            {
+                return;
+            }
+
+            switch (patch)
+            {
+                case PomlPatchAdd patchAdd:
+                    ApplyPomlPatchAdd(patchAdd);
+                    break;
+                case PomlPatchUpdate patchUpdate:
+                    ApplyPomlPatchUpdate(patchUpdate, element.Component, element.Element);
+                    break;
+                case PomlPatchRemove patchRemove:
+                    ApplyPomlPatchRemove(patchRemove);
+                    break;
+            }
+        }
+
+        private void ApplyPomlPatchAdd(PomlPatchAdd patch)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ApplyPomlPatchUpdate(PomlPatchUpdate patchUpdate, PomlElementComponent component, PomlElement element)
+        {
+            UpdateAttributes(component, element, patchUpdate.Attributes);
+        }
+
+        private void ApplyPomlPatchRemove(PomlPatchRemove patchRemove)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool TryGetTargetElement(PomlPatch.PomlPatchTarget target, out (PomlElementComponent Component, PomlElement Element) element)
+        {
+            if (target == null)
+            {
+                element = default;
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(target.Id) == false)
+            {
+                return pomlComponent.TryGetElementById(target.Id, out element);
+            }
+
+            if (string.IsNullOrEmpty(target.Tag) == false)
+            {
+                return pomlComponent.TryGetElementByTag(target.Tag, out element);
+            }
+
+            element = default;
+            return false;
         }
 
         private bool TryParseToJObject(string json, out JObject obj)
@@ -111,6 +187,7 @@ namespace HoloLab.Spirare
             }
         }
 
+        /*
         private void AssignJObject(JObject obj)
         {
             PomlElementComponent component = null;
@@ -129,11 +206,26 @@ namespace HoloLab.Spirare
                     (component, element) = _finder.Invoke(id);
                 }
             }
-            if (component == null || element == null) { return; }
+
+            if (component == null || element == null)
+            {
+                return;
+            }
+
+            UpdateAttributes(component, element, obj);
+        }
+        */
+
+        private void UpdateAttributes(PomlElementComponent component, PomlElement element, JObject attributes)
+        {
+            if (attributes == null)
+            {
+                return;
+            }
 
             var elementType = element.GetType();
             var updated = false;
-            foreach (var prop in obj.Properties())
+            foreach (var prop in attributes.Properties())
             {
                 try
                 {

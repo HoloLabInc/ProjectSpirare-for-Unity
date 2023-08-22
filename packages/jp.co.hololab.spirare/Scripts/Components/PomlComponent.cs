@@ -21,9 +21,13 @@ namespace HoloLab.Spirare
         private async void StartWebSocket()
         {
             var wsRecvUrl = _poml.Scene.WsRecvUrl;
-            if (string.IsNullOrEmpty(wsRecvUrl)) { return; }
+            if (string.IsNullOrEmpty(wsRecvUrl))
+            {
+                return;
+            }
             var ct = this.GetCancellationTokenOnDestroy();
-            _webSocket = new WebSocketHelper(id => GetElementById(id));
+            // _webSocket = new WebSocketHelper(id => GetElementById(id));
+            _webSocket = new WebSocketHelper(this);
             await _webSocket.Connect(wsRecvUrl, ct);
         }
 
@@ -68,6 +72,11 @@ namespace HoloLab.Spirare
         internal bool TryGetElementById(string id, out PomlElementComponent component, out int elemDescr)
         {
             return _elementStore.TryGetElementById(id, out component, out elemDescr);
+        }
+
+        internal bool TryGetElementByTag(string tag, out (PomlElementComponent Component, PomlElement Element) element)
+        {
+            throw new NotImplementedException();
         }
 
         internal bool TryGetElementByDescriptor(int elemDescr, out PomlElementComponent elemComp)

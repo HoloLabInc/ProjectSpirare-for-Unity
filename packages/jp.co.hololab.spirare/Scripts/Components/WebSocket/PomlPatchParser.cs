@@ -58,6 +58,11 @@ namespace HoloLab.Spirare
         public PomlPatchUpdate() : base(PomlPatchOperation.Update) { }
     }
 
+    internal class PomlPatchRemove : PomlPatch
+    {
+        public PomlPatchRemove() : base(PomlPatchOperation.Remove) { }
+    }
+
     internal static class PomlPatchParser
     {
         public static bool TryParse(string json, out PomlPatch[] patches)
@@ -139,7 +144,11 @@ namespace HoloLab.Spirare
                     };
                     return true;
                 case PomlPatch.PomlPatchOperation.Remove:
-                    throw new NotImplementedException();
+                    patch = new PomlPatchRemove()
+                    {
+                        Target = target
+                    };
+                    return true;
                 default:
                     return false;
             }
@@ -162,6 +171,7 @@ namespace HoloLab.Spirare
             {
                 target = null;
                 return false;
+
             }
 
             targetJObject.TryGetString("id", out var id);

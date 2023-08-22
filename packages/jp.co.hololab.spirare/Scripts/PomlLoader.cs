@@ -145,6 +145,9 @@ namespace HoloLab.Spirare
                 pomlObjectElementComponent = go.AddComponent<PomlObjectElementComponent>();
                 pomlObjectElementComponent.Initialize(element);
             }
+
+            // TODO: pass pomlComponent when initialization
+            pomlObjectElementComponent.PomlComponent = pomlComponent;
             pomlComponent.RegisterComponent(pomlObjectElementComponent);
 
             // Load child elements
