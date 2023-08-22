@@ -8,67 +8,16 @@ using Cysharp.Threading.Tasks;
 
 namespace HoloLab.Spirare
 {
-    public sealed class WebSocketHelper : IDisposable
+    public sealed class PomlPatchApplier
     {
-        // private readonly Func<string, (PomlElementComponent Component, PomlElement Element)> _finder;
-        // private readonly (PomlElementComponent Component, PomlElement Element) _target;
-        // private readonly bool _hasTarget;
-        // private readonly PomlComponent pomlComponent;
-        private readonly PomlPatchApplier patchApplier;
+        private readonly PomlComponent pomlComponent;
 
-        private NetWebSocketClient wsClient;
-
-        /*
-        public WebSocketHelper(PomlElementComponent component, PomlElement element)
+        public PomlPatchApplier(PomlComponent pomlComponent)
         {
-            _target = (component, element);
-            _hasTarget = true;
-            _finder = null;
+            this.pomlComponent = pomlComponent;
         }
 
-        public WebSocketHelper(Func<string, (PomlElementComponent Component, PomlElement Element)> finder)
-        {
-            _target = (null, null);
-            _hasTarget = false;
-            _finder = finder;
-        }
-        */
-        public WebSocketHelper(PomlPatchApplier patchApplier)
-        {
-            this.patchApplier = patchApplier;
-        }
-
-        public void Dispose()
-        {
-            wsClient?.Dispose();
-        }
-
-        /// <summary>Connects to the specified URL using WebSocket</summary>
-        /// <param name="url">The URL of the target host (e.g. "ws://localhost:8000")</param>
-        /// <returns></returns>
-        public async Task<bool> Connect(string url, CancellationToken ct = default)
-        {
-            if (ct.IsCancellationRequested)
-            {
-                return false;
-            }
-
-            Dispose();
-
-            wsClient = new NetWebSocketClient(url);
-            wsClient.OnMessageReceived += MessageReceived;
-            var result = await wsClient.OpenAsync(ct);
-
-            return result;
-        }
-
-        private void MessageReceived(string message)
-        {
-            patchApplier.ApplyPomlPatch(message);
-        }
-
-#if FALSE
-        private void MessageReceived(string json)
+        internal void ApplyPomlPatch(string json)
         {
             if (PomlPatchParser.TryParse(json, out var patches) == false)
             {
@@ -79,34 +28,9 @@ namespace HoloLab.Spirare
             {
                 ApplyPomlPatch(patch);
             }
-            /*
-            json = json.TrimStart();
-            if (json.StartsWith("["))
-            {
-
-                var result = TryParseToJArray(json, out var array);
-                if (result)
-                {
-                    await UniTask.Yield();
-                    foreach (JObject obj in array)
-                    {
-                        AssignJObject(obj);
-                    }
-                }
-            }
-            else if (json.StartsWith("{"))
-            {
-                var result = TryParseToJObject(json, out var obj);
-                if (result)
-                {
-                    await UniTask.Yield();
-                    AssignJObject(obj);
-                }
-            }
-            */
         }
 
-        private void ApplyPomlPatch(PomlPatch patch)
+        internal void ApplyPomlPatch(PomlPatch patch)
         {
             if (TryGetTargetElementComponent(patch.Target, out var elementComponent) == false)
             {
@@ -168,65 +92,6 @@ namespace HoloLab.Spirare
             return false;
         }
 
-        private bool TryParseToJObject(string json, out JObject obj)
-        {
-            try
-            {
-                obj = JObject.Parse(json);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
-                obj = null;
-                return false;
-            }
-        }
-
-        private bool TryParseToJArray(string json, out JArray array)
-        {
-            try
-            {
-                array = JArray.Parse(json);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
-                array = null;
-                return false;
-            }
-        }
-
-        /*
-        private void AssignJObject(JObject obj)
-        {
-            PomlElementComponent component = null;
-            PomlElement element = null;
-
-            if (_hasTarget)
-            {
-                component = _target.Component;
-                element = _target.Element;
-            }
-            else
-            {
-                if (obj.TryGetValue("id", out var idValue) && idValue.Type == JTokenType.String)
-                {
-                    var id = idValue.ToString();
-                    (component, element) = _finder.Invoke(id);
-                }
-            }
-
-            if (component == null || element == null)
-            {
-                return;
-            }
-
-            UpdateAttributes(component, element, obj);
-        }
-        */
-
         private void UpdateAttributes(UnityEngine.Object component, JObject attributes)
         {
             if (attributes == null)
@@ -285,6 +150,5 @@ namespace HoloLab.Spirare
                 elementComponent.InvokeElementUpdated();
             }
         }
-#endif
     }
 }
