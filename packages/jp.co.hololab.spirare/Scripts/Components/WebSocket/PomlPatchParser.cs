@@ -60,54 +60,88 @@ namespace HoloLab.Spirare
 
     internal static class PomlPatchParser
     {
-        public static bool TryParse(string json, out PomlPatch patch)
+        public static bool TryParse(string json, out PomlPatch[] patches)
+        {
+            json = json.TrimStart();
+            if (json.StartsWith("["))
+            {
+                try
+                {
+                    var patchList = new List<PomlPatch>();
+
+                    var jArray = JArray.Parse(json);
+                    foreach (JObject jObj in jArray)
+                    {
+                        if (TryParse(jObj, out var patch))
+                        {
+                            patchList.Add(patch);
+                        }
+                    }
+
+                    patches = patchList.ToArray();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e);
+                }
+            }
+            else
+            {
+                try
+                {
+                    var jObj = JObject.Parse(json);
+                    if (TryParse(jObj, out var patch))
+                    {
+                        patches = new PomlPatch[] { patch };
+                        return true;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e);
+                }
+            }
+
+            patches = Array.Empty<PomlPatch>();
+            return false;
+        }
+
+        private static bool TryParse(JObject jObj, out PomlPatch patch)
         {
             patch = null;
 
-            try
+            if (TryGetOperation(jObj, out var operation) == false)
             {
-                var jObj = JObject.Parse(json);
-
-                if (TryGetOperation(jObj, out var operation) == false)
-                {
-                    return false;
-                }
-
-                TryGetTarget(jObj, out var target);
-
-                switch (operation)
-                {
-                    case PomlPatch.PomlPatchOperation.Add:
-                        if (TryGetPomlPatchAddElement(jObj, out var addElement) == false)
-                        {
-                            return false;
-                        }
-                        patch = new PomlPatchAdd()
-                        {
-                            Target = target,
-                            Element = addElement
-                        };
-                        break;
-                    case PomlPatch.PomlPatchOperation.Update:
-                        patch = new PomlPatchUpdate()
-                        {
-                            Target = target,
-                            Attributes = GetAttributes(jObj)
-                        };
-                        break;
-                    case PomlPatch.PomlPatchOperation.Remove:
-                        throw new NotImplementedException();
-                    default:
-                        return false;
-                }
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
-                patch = null;
                 return false;
+            }
+
+            TryGetTarget(jObj, out var target);
+
+            switch (operation)
+            {
+                case PomlPatch.PomlPatchOperation.Add:
+                    if (TryGetPomlPatchAddElement(jObj, out var addElement) == false)
+                    {
+                        return false;
+                    }
+                    patch = new PomlPatchAdd()
+                    {
+                        Target = target,
+                        Element = addElement
+                    };
+                    return true;
+                case PomlPatch.PomlPatchOperation.Update:
+                    patch = new PomlPatchUpdate()
+                    {
+                        Target = target,
+                        Attributes = GetAttributes(jObj)
+                    };
+                    return true;
+                case PomlPatch.PomlPatchOperation.Remove:
+                    throw new NotImplementedException();
+                default:
+                    return false;
             }
         }
 
