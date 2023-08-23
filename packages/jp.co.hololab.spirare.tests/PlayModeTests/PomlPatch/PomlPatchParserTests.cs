@@ -9,6 +9,15 @@ using UnityEngine.TestTools;
 public class PomlPatchParserTests
 {
     [Test]
+    public void TryParse_ReturnFalseWhenJsonIsInvalid()
+    {
+        var json = @"{";
+
+        var result = PomlPatchParser.TryParse(json, out var patches);
+        Assert.That(result, Is.False);
+    }
+
+    [Test]
     public void TryParse_PatchAdd()
     {
         var json = @"
@@ -93,5 +102,24 @@ public class PomlPatchParserTests
         Assert.That(patches.Length, Is.EqualTo(2));
         Assert.That(patches[0].Operation, Is.EqualTo(PomlPatch.PomlPatchOperation.Add));
         Assert.That(patches[1].Operation, Is.EqualTo(PomlPatch.PomlPatchOperation.Update));
+    }
+
+    [Test]
+    public void TryParse_TargetIsNullWhenTargetIsUndefinedInJson()
+    {
+        var json = @"
+{
+    ""operation"": ""add"",
+    ""tag"": ""model"",
+    ""attributes"": {
+        ""src"": ""http://example.com/test""
+    }
+}";
+
+        var result = PomlPatchParser.TryParse(json, out var patches);
+        Assert.That(result, Is.True);
+
+        Assert.That(patches.Length, Is.EqualTo(1));
+        Assert.That(patches[0].Target, Is.Null);
     }
 }
