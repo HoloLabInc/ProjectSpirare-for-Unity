@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
-using System.Collections.Specialized;
 
 namespace HoloLab.Spirare
 {
@@ -20,7 +18,6 @@ namespace HoloLab.Spirare
 
     public sealed class PomlScene
     {
-        // public IEnumerable<PomlElement> Elements { get; }
         public IList<PomlElement> Elements { get; }
 
         public string WsRecvUrl { get; set; }
@@ -33,9 +30,9 @@ namespace HoloLab.Spirare
 
     public sealed class PomlResource
     {
-        public IEnumerable<PomlElement> Elements { get; }
+        public IList<PomlElement> Elements { get; }
 
-        public PomlResource(IEnumerable<PomlElement> elements)
+        public PomlResource(IList<PomlElement> elements)
         {
             Elements = elements;
         }
