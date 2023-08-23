@@ -18,18 +18,6 @@ namespace HoloLab.Spirare
         public event Action OnSelect;
 
         private PomlComponent pomlComponent;
-        internal PomlComponent PomlComponent
-        {
-            get
-            {
-                return pomlComponent;
-            }
-            set
-            {
-                pomlComponent = value;
-                ConnectWebSocketAsync().Forget();
-            }
-        }
 
         public bool Equipable
         {
@@ -41,7 +29,6 @@ namespace HoloLab.Spirare
             }
         }
 
-
         public override void Initialize(PomlElement element)
         {
             base.Initialize(element);
@@ -51,7 +38,11 @@ namespace HoloLab.Spirare
             UpdateGameObject(PomlElement);
 
             OnElementUpdated += UpdateGameObject;
+        }
 
+        public void SetPomlComponent(PomlComponent pomlComponent)
+        {
+            this.pomlComponent = pomlComponent;
             ConnectWebSocketAsync().Forget();
         }
 
@@ -82,7 +73,7 @@ namespace HoloLab.Spirare
                 return;
             }
 
-            if (PomlComponent == null)
+            if (pomlComponent == null)
             {
                 return;
             }
@@ -91,7 +82,7 @@ namespace HoloLab.Spirare
 
             if (string.IsNullOrEmpty(wsRecvUrl) == false)
             {
-                var patchApplier = new PomlPatchApplier(PomlComponent, PomlElement, this, pomlComponent.Url);
+                var patchApplier = new PomlPatchApplier(pomlComponent, PomlElement, this, pomlComponent.Url);
                 webSocket = new WebSocketHelper(patchApplier);
                 var ct = this.GetCancellationTokenOnDestroy();
                 await webSocket.Connect(wsRecvUrl, ct);
