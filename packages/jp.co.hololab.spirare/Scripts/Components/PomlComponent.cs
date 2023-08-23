@@ -32,7 +32,7 @@ namespace HoloLab.Spirare
             _pomlLoader = pomlLoader ?? throw new ArgumentNullException(nameof(pomlLoader));
             _url = url;
 
-            _patchApplier = new PomlPatchApplier(this, defaultTarget: this, url);
+            _patchApplier = new PomlPatchApplier(this, _poml.Scene, this, url);
 
             mainThreadContext = SynchronizationContext.Current;
             mainThreadId = Thread.CurrentThread.ManagedThreadId;
@@ -83,34 +83,18 @@ namespace HoloLab.Spirare
             return default;
         }
 
-        internal void AppendElementToScene(PomlElement pomlElement)
+        internal async Task AppendElementToSceneAsync(PomlElement pomlElement)
         {
+            await UniTask.SwitchToMainThread();
+
             _poml.Scene.Elements.Add(pomlElement);
-
-            RunInMainThread(async () =>
-            {
-                await _pomlLoader.LoadElement(pomlElement, transform, null, this);
-            });
+            await _pomlLoader.LoadElement(pomlElement, transform, null, this);
         }
 
-        private void RunInMainThread(Action action)
+        internal async Task AppendElementAsync(PomlElement pomlElement, PomlElement parentElement)
         {
-            var threadId = Thread.CurrentThread.ManagedThreadId;
-            if (threadId == mainThreadId)
-            {
-                action.Invoke();
-            }
-            else
-            {
-                mainThreadContext.Send(_ =>
-                {
-                    action.Invoke();
-                }, null);
-            }
-        }
+            await UniTask.SwitchToMainThread();
 
-        internal void AppendElement(PomlElement pomlElement, PomlElement parentElement)
-        {
             if (TryGetElementComponent(parentElement, out var parentElementComponent) == false)
             {
                 Debug.LogWarning("parentElement not found");
@@ -121,11 +105,12 @@ namespace HoloLab.Spirare
             parentElement.Children.Add(pomlElement);
 
             var parentObjectElementComponent = parentElementComponent as PomlObjectElementComponent;
+            await _pomlLoader.LoadElement(pomlElement, parentElementComponent.transform, parentObjectElementComponent, this);
+        }
 
-            RunInMainThread(async () =>
-            {
-                await _pomlLoader.LoadElement(pomlElement, parentElementComponent.transform, parentObjectElementComponent, this);
-            });
+        internal async Task RemoveElementAsync(PomlElement pomlElement)
+        {
+
         }
 
         private bool TryGetElementComponent(PomlElement pomlElement, out PomlElementComponent pomlElementComponent)
@@ -136,7 +121,7 @@ namespace HoloLab.Spirare
             return pomlElementComponent != null;
         }
 
-        internal bool TryGetElementByTag(string tag, out UnityEngine.Object pomlComponentOrPomlElementComponent)
+        internal bool TryGetElementComponentByTag(string tag, out Component pomlComponentOrPomlElementComponent)
         {
             // TODO: the type of pomlComponentOrPomlElementComponent should be PomlElementComponent
 
@@ -150,14 +135,34 @@ namespace HoloLab.Spirare
             {
                 if (TryGetElementByTagRecursively(tag, element, out var pomlElement))
                 {
-                    var allElements = _elementStore.GetAllElements();
-                    pomlComponentOrPomlElementComponent = allElements.FirstOrDefault(x => x.PomlElement == pomlElement);
-                    return pomlComponentOrPomlElementComponent != null;
+                    var result = TryGetElementComponent(pomlElement, out var pomlElementComponent);
+                    pomlComponentOrPomlElementComponent = pomlElementComponent;
+                    return result;
                 }
             }
 
             // not found
             pomlComponentOrPomlElementComponent = null;
+            return false;
+        }
+
+        internal bool TryGetPomlElementByTag(string tag, out object pomlElement)
+        {
+            if (tag == "scene")
+            {
+                pomlElement = _poml.Scene;
+                return true;
+            }
+
+            foreach (var element in _poml.Scene.Elements)
+            {
+                if (TryGetElementByTagRecursively(tag, element, out var foundPomlElement))
+                {
+                    pomlElement = foundPomlElement;
+                    return true;
+                }
+            }
+            pomlElement = null;
             return false;
         }
 
@@ -205,6 +210,22 @@ namespace HoloLab.Spirare
 
             elementComponent.OnDestroyed += PomlElementComponentBase_OnDestroyed;
             _elementStore.RegisterElement(elementComponent);
+        }
+
+        private void RunInMainThread(Action action)
+        {
+            var threadId = Thread.CurrentThread.ManagedThreadId;
+            if (threadId == mainThreadId)
+            {
+                action.Invoke();
+            }
+            else
+            {
+                mainThreadContext.Send(_ =>
+                {
+                    action.Invoke();
+                }, null);
+            }
         }
 
         private void PomlElementComponentBase_OnDestroyed(PomlElementComponent elementComponent)

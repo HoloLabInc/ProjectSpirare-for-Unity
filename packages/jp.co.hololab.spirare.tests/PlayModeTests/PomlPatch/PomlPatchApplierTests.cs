@@ -40,8 +40,8 @@ public class PomlPatchApplierTests
     }
 }";
 
-        var applier = new PomlPatchApplier(pomlComponent, null, "");
-        applier.ApplyPomlPatch(pomlPatch);
+        var applier = new PomlPatchApplier(pomlComponent, null, null, "");
+        await applier.ApplyPomlPatchAsync(pomlPatch);
 
         pomlComponent.TryGetElementById("text1", out var element);
         var pomlElement = element.Element as PomlTextElement;
@@ -82,8 +82,8 @@ public class PomlPatchApplierTests
     }
 }";
 
-        var applier = new PomlPatchApplier(pomlComponent, null, "");
-        applier.ApplyPomlPatch(pomlPatch);
+        var applier = new PomlPatchApplier(pomlComponent, null, null, "");
+        await applier.ApplyPomlPatchAsync(pomlPatch);
 
         pomlComponent.TryGetElementById("model0", out var element);
         var pomlModelElement = element.Element as PomlModelElement;
@@ -132,8 +132,8 @@ public class PomlPatchApplierTests
     ]   
 }";
 
-        var applier = new PomlPatchApplier(pomlComponent, null, "");
-        applier.ApplyPomlPatch(pomlPatch);
+        var applier = new PomlPatchApplier(pomlComponent, null, null, "");
+        await applier.ApplyPomlPatchAsync(pomlPatch);
 
         pomlComponent.TryGetElementById("model0", out var element);
         var pomlModelElement = element.Element as PomlModelElement;
@@ -176,8 +176,8 @@ public class PomlPatchApplierTests
     }
 }";
 
-        var applier = new PomlPatchApplier(pomlComponent, null, "");
-        applier.ApplyPomlPatch(pomlPatch);
+        var applier = new PomlPatchApplier(pomlComponent, null, null, "");
+        await applier.ApplyPomlPatchAsync(pomlPatch);
 
         pomlComponent.TryGetElementById("model0", out var element);
         var pomlModelElement = element.Element as PomlModelElement;

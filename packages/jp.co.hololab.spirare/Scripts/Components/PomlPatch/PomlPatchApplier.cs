@@ -12,65 +12,80 @@ namespace HoloLab.Spirare
     public sealed class PomlPatchApplier
     {
         private readonly PomlComponent pomlComponent;
-        private readonly UnityEngine.Object defaultTarget;
+        private readonly object defaultTargetPomlElement;
+        private readonly Component defaultTargetPomlElementComponent;
         private readonly string basePath;
 
-        public PomlPatchApplier(PomlComponent pomlComponent, UnityEngine.Object defaultTarget, string basePath)
+        public PomlPatchApplier(PomlComponent pomlComponent, object defaultTargetPomlElement, Component defaultTargetPomlElementComponent, string basePath)
         {
             this.pomlComponent = pomlComponent;
-            this.defaultTarget = defaultTarget;
+            this.defaultTargetPomlElement = defaultTargetPomlElement;
+            this.defaultTargetPomlElementComponent = defaultTargetPomlElementComponent;
             this.basePath = basePath;
         }
 
-        internal void ApplyPomlPatch(string json)
+        internal async UniTask ApplyPomlPatchAsync(string json)
         {
             if (PomlPatchParser.TryParse(json, out var patches) == false)
             {
                 return;
             }
 
-            foreach (var patch in patches)
-            {
-                ApplyPomlPatch(patch);
-            }
+            await UniTask.WhenAll(patches.Select(patch => ApplyPomlPatchAsync(patch)));
         }
 
-        internal void ApplyPomlPatch(PomlPatch patch)
+        internal async UniTask ApplyPomlPatchAsync(PomlPatch patch)
         {
-            UnityEngine.Object targetComponent;
-
-            if (patch.Target == null)
-            {
-                targetComponent = defaultTarget;
-            }
-            else
-            {
-                if (TryGetTargetElementComponent(patch.Target, out targetComponent) == false)
-                {
-                    return;
-                }
-            }
-
             switch (patch)
             {
                 case PomlPatchAdd patchAdd:
-                    ApplyPomlPatchAdd(patchAdd, basePath, pomlComponent, targetComponent);
+                    await ApplyPomlPatchAdd(patchAdd);
                     break;
                 case PomlPatchUpdate patchUpdate:
-                    ApplyPomlPatchUpdate(patchUpdate, basePath, targetComponent);
+                    ApplyPomlPatchUpdate(patchUpdate);
                     break;
                 case PomlPatchRemove patchRemove:
-                    ApplyPomlPatchRemove(patchRemove);
+                    await ApplyPomlPatchRemove(patchRemove);
                     break;
             }
         }
 
-        private bool TryGetTargetElementComponent(PomlPatch.PomlPatchTarget target, out UnityEngine.Object elementComponent)
+        private bool TryGetTargetPomlElement(PomlPatch.PomlPatchTarget target, out object pomlElement)
         {
             if (target == null)
             {
-                elementComponent = null;
-                return false;
+                pomlElement = defaultTargetPomlElement;
+                return true;
+            }
+
+            if (string.IsNullOrEmpty(target.Id) == false)
+            {
+                if (pomlComponent.TryGetElementById(target.Id, out var element))
+                {
+                    pomlElement = element.Element;
+                    return true;
+                }
+            }
+
+            if (string.IsNullOrEmpty(target.Tag) == false)
+            {
+                if (pomlComponent.TryGetPomlElementByTag(target.Tag, out var element))
+                {
+                    pomlElement = element;
+                    return true;
+                }
+            }
+
+            pomlElement = null;
+            return false;
+        }
+
+        private bool TryGetTargetPomlElementComponent(PomlPatch.PomlPatchTarget target, out Component elementComponent)
+        {
+            if (target == null)
+            {
+                elementComponent = defaultTargetPomlElementComponent;
+                return true;
             }
 
             if (string.IsNullOrEmpty(target.Id) == false)
@@ -84,24 +99,52 @@ namespace HoloLab.Spirare
 
             if (string.IsNullOrEmpty(target.Tag) == false)
             {
-                return pomlComponent.TryGetElementByTag(target.Tag, out elementComponent);
+                return pomlComponent.TryGetElementComponentByTag(target.Tag, out elementComponent);
             }
 
             elementComponent = null;
             return false;
         }
 
-        private static void ApplyPomlPatchAdd(PomlPatchAdd patch, string basePath, PomlComponent pomlComponent, UnityEngine.Object targetComponent)
+        private async UniTask ApplyPomlPatchAdd(PomlPatchAdd patch)
         {
+            if (TryGetTargetPomlElement(patch.Target, out var targetPomlElementObject) == false)
+            {
+                return;
+            }
+
             var pomlElement = ConvertPomlPatchAddElementToPomlElement(patch.Element, parentElement: null, basePath);
 
-            if (targetComponent == pomlComponent)
+            if (targetPomlElementObject is PomlScene)
             {
-                pomlComponent.AppendElementToScene(pomlElement);
+                await pomlComponent.AppendElementToSceneAsync(pomlElement);
             }
-            else if (targetComponent is PomlElementComponent pomlElementComponent)
+            else if (targetPomlElementObject is PomlElement targetPomlElement)
             {
-                pomlComponent.AppendElement(pomlElement, parentElement: pomlElementComponent.PomlElement);
+                await pomlComponent.AppendElementAsync(pomlElement, parentElement: targetPomlElement);
+            }
+        }
+
+        private void ApplyPomlPatchUpdate(PomlPatchUpdate patch)
+        {
+            if (TryGetTargetPomlElementComponent(patch.Target, out var targetElementComponent) == false)
+            {
+                return;
+            }
+
+            UpdateAttributes(targetElementComponent, patch.Attributes, basePath);
+        }
+
+        private async UniTask ApplyPomlPatchRemove(PomlPatchRemove patch)
+        {
+            if (TryGetTargetPomlElement(patch.Target, out var targetPomlElementObject) == false)
+            {
+                return;
+            }
+
+            if (targetPomlElementObject is PomlElement targetPomlElement)
+            {
+                await pomlComponent.RemoveElementAsync(targetPomlElement);
             }
         }
 
@@ -157,16 +200,6 @@ namespace HoloLab.Spirare
             }
         }
 
-        private static void ApplyPomlPatchUpdate(PomlPatchUpdate patchUpdate, string basePath, UnityEngine.Object component)
-        {
-            UpdateAttributes(component, patchUpdate.Attributes, basePath);
-        }
-
-        private static void ApplyPomlPatchRemove(PomlPatchRemove patchRemove)
-        {
-            throw new NotImplementedException();
-        }
-
         private static void UpdateAttributes(UnityEngine.Object component, JObject attributes, string basePath)
         {
             if (attributes == null)
@@ -175,54 +208,14 @@ namespace HoloLab.Spirare
             }
 
             var elementComponent = component as PomlElementComponent;
-            if (component == null)
+            if (elementComponent == null)
             {
                 return;
             }
 
             var element = elementComponent.PomlElement;
             var updated = UpdatePomlElementAttributes(element, attributes, basePath);
-            /*
-            var elementType = element.GetType();
-            var updated = false;
-            foreach (var prop in attributes.Properties())
-            {
-                try
-                {
-                    var propName = char.ToUpper(prop.Name[0]) + prop.Name.Substring(1);
 
-                    var propInfo = elementType.GetProperty(propName);
-                    if (propInfo != null)
-                    {
-                        var type = propInfo.PropertyType;
-                        if (type.IsAbstract == false)
-                        {
-                            var value = prop.Value.ToObject(type);
-                            propInfo.SetValue(element, value);
-                            updated = true;
-                        }
-                        continue;
-                    }
-
-                    var fieldInfo = elementType.GetField(propName);
-                    if (fieldInfo != null)
-                    {
-                        var type = fieldInfo.FieldType;
-                        if (type.IsAbstract == false)
-                        {
-                            var value = prop.Value.ToObject(type);
-                            fieldInfo.SetValue(element, value);
-                            updated = true;
-                        }
-                        continue;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogException(ex);
-                }
-            }
-            */
             if (updated)
             {
                 elementComponent.InvokeElementUpdated();
