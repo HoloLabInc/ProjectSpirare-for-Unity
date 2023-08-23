@@ -40,8 +40,8 @@ public class PomlPatchApplierTests
     }
 }";
 
-        var applier = new PomlPatchApplier(pomlComponent);
-        applier.ApplyPomlPatchAsync(pomlPatch);
+        var applier = new PomlPatchApplier(pomlComponent, null, "");
+        await applier.ApplyPomlPatchAsync(pomlPatch);
 
         pomlComponent.TryGetElementById("text1", out var element);
         var pomlElement = element.Element as PomlTextElement;
@@ -82,13 +82,15 @@ public class PomlPatchApplierTests
     }
 }";
 
-        var applier = new PomlPatchApplier(pomlComponent);
+        var applier = new PomlPatchApplier(pomlComponent, null, "");
         await applier.ApplyPomlPatchAsync(pomlPatch);
 
         pomlComponent.TryGetElementById("model0", out var element);
         var pomlModelElement = element.Element as PomlModelElement;
         Assert.That(pomlModelElement.Src, Is.EqualTo("http://example.com/test.glb"));
         Assert.That(pomlModelElement.Position, Is.EqualTo(new Vector3(1, 2, 3)));
+
+        Assert.That(element.Component.gameObject, Is.Not.Null);
 
         Object.Destroy(pomlComponent.gameObject);
     }

@@ -91,7 +91,7 @@ namespace HoloLab.Spirare
 
             if (string.IsNullOrEmpty(wsRecvUrl) == false)
             {
-                var patchApplier = new PomlPatchApplier(PomlComponent, defaultTarget: this);
+                var patchApplier = new PomlPatchApplier(PomlComponent, defaultTarget: this, pomlComponent.Url);
                 webSocket = new WebSocketHelper(patchApplier);
                 var ct = this.GetCancellationTokenOnDestroy();
                 await webSocket.Connect(wsRecvUrl, ct);

@@ -13,6 +13,7 @@ namespace HoloLab.Spirare
         private ElementStore _elementStore;
         private Poml _poml;
         private PomlLoader _pomlLoader;
+        private string _url;
 
         private PomlPatchApplier _patchApplier;
         private WebSocketHelper _webSocket;
@@ -22,13 +23,16 @@ namespace HoloLab.Spirare
 
         public int ElementCount => _elementStore.ElementCount;
 
-        internal PomlComponent Initialize(ElementStore contents, Poml poml, PomlLoader pomlLoader)
+        public string Url => _url;
+
+        internal PomlComponent Initialize(ElementStore contents, Poml poml, PomlLoader pomlLoader, string url)
         {
             _elementStore = contents ?? throw new ArgumentNullException(nameof(contents));
             _poml = poml ?? throw new ArgumentNullException(nameof(poml));
             _pomlLoader = pomlLoader ?? throw new ArgumentNullException(nameof(pomlLoader));
+            _url = url;
 
-            _patchApplier = new PomlPatchApplier(this, defaultTarget: this);
+            _patchApplier = new PomlPatchApplier(this, defaultTarget: this, url);
 
             mainThreadContext = SynchronizationContext.Current;
             mainThreadId = Thread.CurrentThread.ManagedThreadId;
@@ -107,6 +111,7 @@ namespace HoloLab.Spirare
 
         internal async Task AppendElementAsync(PomlElement pomlElement, PomlElement parentElement)
         {
+            pomlElement.Parent = parentElement;
             throw new NotImplementedException();
         }
 

@@ -13,15 +13,13 @@ namespace HoloLab.Spirare
     {
         private readonly PomlComponent pomlComponent;
         private readonly UnityEngine.Object defaultTarget;
+        private readonly string basePath;
 
-        public PomlPatchApplier(PomlComponent pomlComponent)
+        public PomlPatchApplier(PomlComponent pomlComponent, UnityEngine.Object defaultTarget, string basePath)
         {
             this.pomlComponent = pomlComponent;
-        }
-
-        public PomlPatchApplier(PomlComponent pomlComponent, UnityEngine.Object defaultTarget) : this(pomlComponent)
-        {
             this.defaultTarget = defaultTarget;
+            this.basePath = basePath;
         }
 
         internal async UniTask ApplyPomlPatchAsync(string json)
@@ -56,10 +54,10 @@ namespace HoloLab.Spirare
             switch (patch)
             {
                 case PomlPatchAdd patchAdd:
-                    await ApplyPomlPatchAddAsync(patchAdd, pomlComponent, targetComponent);
+                    await ApplyPomlPatchAddAsync(patchAdd, basePath, pomlComponent, targetComponent);
                     break;
                 case PomlPatchUpdate patchUpdate:
-                    ApplyPomlPatchUpdate(patchUpdate, targetComponent);
+                    ApplyPomlPatchUpdate(patchUpdate, basePath, targetComponent);
                     break;
                 case PomlPatchRemove patchRemove:
                     ApplyPomlPatchRemove(patchRemove);
@@ -93,9 +91,9 @@ namespace HoloLab.Spirare
             return false;
         }
 
-        private static async UniTask ApplyPomlPatchAddAsync(PomlPatchAdd patch, PomlComponent pomlComponent, UnityEngine.Object targetComponent)
+        private static async UniTask ApplyPomlPatchAddAsync(PomlPatchAdd patch, string basePath, PomlComponent pomlComponent, UnityEngine.Object targetComponent)
         {
-            var pomlElement = ConvertPomlPatchAddElementToPomlElement(patch.Element);
+            var pomlElement = ConvertPomlPatchAddElementToPomlElement(patch.Element, parentElement: null, basePath);
 
             if (targetComponent == pomlComponent)
             {
@@ -107,14 +105,18 @@ namespace HoloLab.Spirare
             }
         }
 
-        private static PomlElement ConvertPomlPatchAddElementToPomlElement(PomlPatchAddElement addElement)
+        private static PomlElement ConvertPomlPatchAddElementToPomlElement(PomlPatchAddElement addElement, PomlElement parentElement, string basePath)
         {
             var pomlElement = CreatePomlElement(addElement.ElementType);
+            if (parentElement != null)
+            {
+                pomlElement.Parent = parentElement;
+            }
 
             // Set attributes to pomlElement
-            UpdatePomlElementAttributes(pomlElement, addElement.Attributes);
+            UpdatePomlElementAttributes(pomlElement, addElement.Attributes, basePath);
 
-            var children = addElement.Children.Select(x => ConvertPomlPatchAddElementToPomlElement(x));
+            var children = addElement.Children.Select(x => ConvertPomlPatchAddElementToPomlElement(x, pomlElement, basePath));
             pomlElement.Children = children;
 
             return pomlElement;
@@ -153,9 +155,9 @@ namespace HoloLab.Spirare
             }
         }
 
-        private static void ApplyPomlPatchUpdate(PomlPatchUpdate patchUpdate, UnityEngine.Object component)
+        private static void ApplyPomlPatchUpdate(PomlPatchUpdate patchUpdate, string basePath, UnityEngine.Object component)
         {
-            UpdateAttributes(component, patchUpdate.Attributes);
+            UpdateAttributes(component, patchUpdate.Attributes, basePath);
         }
 
         private static void ApplyPomlPatchRemove(PomlPatchRemove patchRemove)
@@ -163,8 +165,7 @@ namespace HoloLab.Spirare
             throw new NotImplementedException();
         }
 
-
-        private static void UpdateAttributes(UnityEngine.Object component, JObject attributes)
+        private static void UpdateAttributes(UnityEngine.Object component, JObject attributes, string basePath)
         {
             if (attributes == null)
             {
@@ -178,7 +179,7 @@ namespace HoloLab.Spirare
             }
 
             var element = elementComponent.PomlElement;
-            var updated = UpdatePomlElementAttributes(element, attributes);
+            var updated = UpdatePomlElementAttributes(element, attributes, basePath);
             /*
             var elementType = element.GetType();
             var updated = false;
@@ -226,12 +227,19 @@ namespace HoloLab.Spirare
             }
         }
 
-        private static bool UpdatePomlElementAttributes(PomlElement element, JObject attributes)
+        private static bool UpdatePomlElementAttributes(PomlElement element, JObject attributes, string basePath)
         {
             var elementType = element.GetType();
             var updated = false;
             foreach (var prop in attributes.Properties())
             {
+                var propValue = prop.Value;
+                if (prop.Name.ToLower() == "src")
+                {
+                    var absolutePath = FilePathUtility.GetAbsolutePath(propValue.ToString(), basePath);
+                    propValue = JToken.FromObject(absolutePath);
+                }
+
                 try
                 {
                     var propName = char.ToUpper(prop.Name[0]) + prop.Name.Substring(1);
@@ -242,7 +250,7 @@ namespace HoloLab.Spirare
                         var type = propInfo.PropertyType;
                         if (type.IsAbstract == false)
                         {
-                            var value = prop.Value.ToObject(type);
+                            var value = propValue.ToObject(type);
                             propInfo.SetValue(element, value);
                             updated = true;
                         }
@@ -255,7 +263,7 @@ namespace HoloLab.Spirare
                         var type = fieldInfo.FieldType;
                         if (type.IsAbstract == false)
                         {
-                            var value = prop.Value.ToObject(type);
+                            var value = propValue.ToObject(type);
                             fieldInfo.SetValue(element, value);
                             updated = true;
                         }
