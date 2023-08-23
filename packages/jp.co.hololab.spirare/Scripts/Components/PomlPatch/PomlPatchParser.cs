@@ -32,7 +32,7 @@ namespace HoloLab.Spirare
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError(e);
+                    Debug.LogWarning(e);
                 }
             }
             else
@@ -48,7 +48,7 @@ namespace HoloLab.Spirare
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError(e);
+                    Debug.LogWarning(e);
                 }
             }
 

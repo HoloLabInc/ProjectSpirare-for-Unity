@@ -32,7 +32,7 @@ public class PomlPatchApplierTests
         ""id"": ""text1""
     },
     ""attributes"": {
-        ""text"": ""updated_text""
+        ""text"": ""updated_text"",
         ""positions"": {
             ""x"": 1,
             ""y"": 2,
