@@ -18,9 +18,6 @@ namespace HoloLab.Spirare
         private PomlPatchApplier _patchApplier;
         private WebSocketHelper _webSocket;
 
-        private SynchronizationContext mainThreadContext;
-        private int mainThreadId = -1;
-
         public int ElementCount => _elementStore.ElementCount;
 
         public string Url => _url;
@@ -33,9 +30,6 @@ namespace HoloLab.Spirare
             _url = url;
 
             _patchApplier = new PomlPatchApplier(this, _poml.Scene, this, url);
-
-            mainThreadContext = SynchronizationContext.Current;
-            mainThreadId = Thread.CurrentThread.ManagedThreadId;
 
             return this;
         }
