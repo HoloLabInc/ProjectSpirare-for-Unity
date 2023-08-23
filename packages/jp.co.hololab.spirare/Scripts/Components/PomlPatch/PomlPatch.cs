@@ -33,7 +33,7 @@ namespace HoloLab.Spirare
 
     internal class PomlPatchAddElement
     {
-        public string Tag { set; get; }
+        public PomlElementType ElementType { set; get; }
         public JObject Attributes { set; get; }
 
         public PomlPatchAddElement[] Children { set; get; }

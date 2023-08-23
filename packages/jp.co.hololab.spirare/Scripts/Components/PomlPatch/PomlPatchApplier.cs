@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using System.Linq;
 
 namespace HoloLab.Spirare
 {
@@ -23,7 +24,7 @@ namespace HoloLab.Spirare
             this.defaultTarget = defaultTarget;
         }
 
-        internal void ApplyPomlPatch(string json)
+        internal async UniTask ApplyPomlPatchAsync(string json)
         {
             if (PomlPatchParser.TryParse(json, out var patches) == false)
             {
@@ -32,11 +33,11 @@ namespace HoloLab.Spirare
 
             foreach (var patch in patches)
             {
-                ApplyPomlPatch(patch);
+                await ApplyPomlPatchAsync(patch);
             }
         }
 
-        internal void ApplyPomlPatch(PomlPatch patch)
+        internal async UniTask ApplyPomlPatchAsync(PomlPatch patch)
         {
             UnityEngine.Object targetComponent;
 
@@ -55,7 +56,7 @@ namespace HoloLab.Spirare
             switch (patch)
             {
                 case PomlPatchAdd patchAdd:
-                    ApplyPomlPatchAdd(patchAdd);
+                    await ApplyPomlPatchAddAsync(patchAdd, pomlComponent, targetComponent);
                     break;
                 case PomlPatchUpdate patchUpdate:
                     ApplyPomlPatchUpdate(patchUpdate, targetComponent);
@@ -64,21 +65,6 @@ namespace HoloLab.Spirare
                     ApplyPomlPatchRemove(patchRemove);
                     break;
             }
-        }
-
-        private void ApplyPomlPatchAdd(PomlPatchAdd patch)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void ApplyPomlPatchUpdate(PomlPatchUpdate patchUpdate, UnityEngine.Object component)
-        {
-            UpdateAttributes(component, patchUpdate.Attributes);
-        }
-
-        private void ApplyPomlPatchRemove(PomlPatchRemove patchRemove)
-        {
-            throw new NotImplementedException();
         }
 
         private bool TryGetTargetElementComponent(PomlPatch.PomlPatchTarget target, out UnityEngine.Object elementComponent)
@@ -107,7 +93,78 @@ namespace HoloLab.Spirare
             return false;
         }
 
-        private void UpdateAttributes(UnityEngine.Object component, JObject attributes)
+        private static async UniTask ApplyPomlPatchAddAsync(PomlPatchAdd patch, PomlComponent pomlComponent, UnityEngine.Object targetComponent)
+        {
+            var pomlElement = ConvertPomlPatchAddElementToPomlElement(patch.Element);
+
+            if (targetComponent == pomlComponent)
+            {
+                pomlComponent.AppendElementToScene(pomlElement);
+            }
+            else if (targetComponent is PomlElementComponent pomlElementComponent)
+            {
+                await pomlComponent.AppendElementAsync(pomlElement, parentElement: pomlElementComponent.PomlElement);
+            }
+        }
+
+        private static PomlElement ConvertPomlPatchAddElementToPomlElement(PomlPatchAddElement addElement)
+        {
+            var pomlElement = CreatePomlElement(addElement.ElementType);
+
+            // Set attributes to pomlElement
+            UpdatePomlElementAttributes(pomlElement, addElement.Attributes);
+
+            var children = addElement.Children.Select(x => ConvertPomlPatchAddElementToPomlElement(x));
+            pomlElement.Children = children;
+
+            return pomlElement;
+        }
+
+        private static PomlElement CreatePomlElement(PomlElementType pomlElementType)
+        {
+            switch (pomlElementType)
+            {
+                case PomlElementType.Element:
+                    return new PomlEmptyElement();
+                case PomlElementType.Model:
+                    return new PomlModelElement();
+                case PomlElementType.Text:
+                    return new PomlTextElement("");
+                case PomlElementType.Image:
+                    return new PomlImageElement();
+                case PomlElementType.Video:
+                    return new PomlVideoElement();
+                case PomlElementType.Audio:
+                    return new PomlAudioElement();
+                case PomlElementType.Geometry:
+                    return new PomlGeometryElement();
+                case PomlElementType.Cesium3dTiles:
+                    return new PomlCesium3dTilesElement();
+                case PomlElementType.Script:
+                    return new PomlScriptElement();
+                case PomlElementType.SpaceReference:
+                    return new PomlSpaceReferenceElement();
+                case PomlElementType.GeoReference:
+                    return new PomlGeoReferenceElement();
+                case PomlElementType.ScreenSpace:
+                    return new PomlScreenSpaceElement();
+                default:
+                    return null;
+            }
+        }
+
+        private static void ApplyPomlPatchUpdate(PomlPatchUpdate patchUpdate, UnityEngine.Object component)
+        {
+            UpdateAttributes(component, patchUpdate.Attributes);
+        }
+
+        private static void ApplyPomlPatchRemove(PomlPatchRemove patchRemove)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        private static void UpdateAttributes(UnityEngine.Object component, JObject attributes)
         {
             if (attributes == null)
             {
@@ -121,6 +178,8 @@ namespace HoloLab.Spirare
             }
 
             var element = elementComponent.PomlElement;
+            var updated = UpdatePomlElementAttributes(element, attributes);
+            /*
             var elementType = element.GetType();
             var updated = false;
             foreach (var prop in attributes.Properties())
@@ -160,10 +219,55 @@ namespace HoloLab.Spirare
                     Debug.LogException(ex);
                 }
             }
+            */
             if (updated)
             {
                 elementComponent.InvokeElementUpdated();
             }
+        }
+
+        private static bool UpdatePomlElementAttributes(PomlElement element, JObject attributes)
+        {
+            var elementType = element.GetType();
+            var updated = false;
+            foreach (var prop in attributes.Properties())
+            {
+                try
+                {
+                    var propName = char.ToUpper(prop.Name[0]) + prop.Name.Substring(1);
+
+                    var propInfo = elementType.GetProperty(propName);
+                    if (propInfo != null)
+                    {
+                        var type = propInfo.PropertyType;
+                        if (type.IsAbstract == false)
+                        {
+                            var value = prop.Value.ToObject(type);
+                            propInfo.SetValue(element, value);
+                            updated = true;
+                        }
+                        continue;
+                    }
+
+                    var fieldInfo = elementType.GetField(propName);
+                    if (fieldInfo != null)
+                    {
+                        var type = fieldInfo.FieldType;
+                        if (type.IsAbstract == false)
+                        {
+                            var value = prop.Value.ToObject(type);
+                            fieldInfo.SetValue(element, value);
+                            updated = true;
+                        }
+                        continue;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex);
+                }
+            }
+            return updated;
         }
     }
 }

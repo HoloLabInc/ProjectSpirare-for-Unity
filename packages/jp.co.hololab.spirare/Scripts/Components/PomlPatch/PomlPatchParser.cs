@@ -169,12 +169,18 @@ namespace HoloLab.Spirare
                 return false;
             }
 
+            if (EnumLabel.TryGetValue(tag, out PomlElementType elementType) == false)
+            {
+                // If the tag is not supported, it is treated as an element tag.
+                elementType = PomlElementType.Element;
+            }
+
             var attributes = GetAttributes(jObj);
             var children = GetChildren(jObj);
 
             element = new PomlPatchAddElement()
             {
-                Tag = tag,
+                ElementType = elementType,
                 Attributes = attributes,
                 Children = children
             };

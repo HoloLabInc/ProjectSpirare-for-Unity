@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace HoloLab.Spirare
@@ -10,18 +12,26 @@ namespace HoloLab.Spirare
     {
         private ElementStore _elementStore;
         private Poml _poml;
+        private PomlLoader _pomlLoader;
 
         private PomlPatchApplier _patchApplier;
         private WebSocketHelper _webSocket;
 
+        private SynchronizationContext mainThreadContext;
+        private int mainThreadId = -1;
+
         public int ElementCount => _elementStore.ElementCount;
 
-        internal PomlComponent Initialize(ElementStore contents, Poml poml)
+        internal PomlComponent Initialize(ElementStore contents, Poml poml, PomlLoader pomlLoader)
         {
             _elementStore = contents ?? throw new ArgumentNullException(nameof(contents));
             _poml = poml ?? throw new ArgumentNullException(nameof(poml));
+            _pomlLoader = pomlLoader ?? throw new ArgumentNullException(nameof(pomlLoader));
 
             _patchApplier = new PomlPatchApplier(this, defaultTarget: this);
+
+            mainThreadContext = SynchronizationContext.Current;
+            mainThreadId = Thread.CurrentThread.ManagedThreadId;
 
             return this;
         }
@@ -67,6 +77,37 @@ namespace HoloLab.Spirare
                 return element;
             }
             return default;
+        }
+
+        internal void AppendElementToScene(PomlElement pomlElement)
+        {
+            _poml.Scene.Elements.Add(pomlElement);
+
+            RunInMainThread(async () =>
+            {
+                await _pomlLoader.LoadElement(pomlElement, transform, null, this);
+            });
+        }
+
+        private void RunInMainThread(Action action)
+        {
+            var threadId = Thread.CurrentThread.ManagedThreadId;
+            if (threadId == mainThreadId)
+            {
+                action.Invoke();
+            }
+            else
+            {
+                mainThreadContext.Send(_ =>
+                {
+                    action.Invoke();
+                }, null);
+            }
+        }
+
+        internal async Task AppendElementAsync(PomlElement pomlElement, PomlElement parentElement)
+        {
+            throw new NotImplementedException();
         }
 
         internal bool TryGetElementByTag(string tag, out UnityEngine.Object pomlComponentOrPomlElementComponent)

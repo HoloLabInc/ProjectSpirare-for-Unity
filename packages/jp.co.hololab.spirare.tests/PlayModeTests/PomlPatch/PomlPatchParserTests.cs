@@ -44,7 +44,7 @@ public class PomlPatchParserTests
         Assert.That(patchAdd.Target.Id, Is.EqualTo("test"));
 
         Assert.That(patchAdd.Element, Is.Not.Null);
-        Assert.That(patchAdd.Element.Tag, Is.EqualTo("model"));
+        Assert.That(patchAdd.Element.ElementType, Is.EqualTo(PomlElementType.Model));
     }
 
     [Test]

@@ -12,7 +12,7 @@ public class PomlPatchApplierTests
     private PomlLoaderSettings loaderSettings => SpirareTestUtils.DefaultLoaderSettings;
 
     [Test]
-    public async Task TryParse_PatchUpdate()
+    public async Task ApplyPomlPatch_UpdateTextElement()
     {
         var poml = @"
 <poml>
@@ -22,8 +22,7 @@ public class PomlPatchApplierTests
     </scene>
 </poml> ";
 
-        var pomlLoader = new PomlLoader(loaderSettings, PomlLoadOptions.DisplayModeType.Normal);
-        var pomlComponent = await pomlLoader.LoadXmlAsync(poml, "");
+        var pomlComponent = await LoadPomlAsync(poml);
 
         var pomlPatch = @"
 {
@@ -42,7 +41,7 @@ public class PomlPatchApplierTests
 }";
 
         var applier = new PomlPatchApplier(pomlComponent);
-        applier.ApplyPomlPatch(pomlPatch);
+        applier.ApplyPomlPatchAsync(pomlPatch);
 
         pomlComponent.TryGetElementById("text1", out var element);
         var pomlElement = element.Element as PomlTextElement;
@@ -51,4 +50,54 @@ public class PomlPatchApplierTests
 
         Object.Destroy(pomlComponent.gameObject);
     }
+
+    [Test]
+    public async Task ApplyPomlPatch_AddElementToScene()
+    {
+        var poml = @"
+<poml>
+    <scene>
+        <text id=""text0"" text=""text0"" />
+        <text id=""text1"" text=""text1"" />
+    </scene>
+</poml> ";
+
+        var pomlComponent = await LoadPomlAsync(poml);
+
+        var pomlPatch = @"
+{
+    ""operation"": ""add"",
+    ""target"": {
+        ""tag"": ""scene""
+    },
+    ""tag"": ""model"",
+    ""attributes"": {
+        ""id"": ""model0"",
+        ""src"": ""http://example.com/test.glb"",
+        ""position"": {
+            ""x"": 1,
+            ""y"": 2,
+            ""z"": 3
+        }
+    }
+}";
+
+        var applier = new PomlPatchApplier(pomlComponent);
+        await applier.ApplyPomlPatchAsync(pomlPatch);
+
+        pomlComponent.TryGetElementById("model0", out var element);
+        var pomlModelElement = element.Element as PomlModelElement;
+        Assert.That(pomlModelElement.Src, Is.EqualTo("http://example.com/test.glb"));
+        Assert.That(pomlModelElement.Position, Is.EqualTo(new Vector3(1, 2, 3)));
+
+        Object.Destroy(pomlComponent.gameObject);
+    }
+
+
+    private async Task<PomlComponent> LoadPomlAsync(string poml)
+    {
+        var pomlLoader = new PomlLoader(loaderSettings, PomlLoadOptions.DisplayModeType.Normal);
+        return await pomlLoader.LoadXmlAsync(poml, "");
+    }
 }
+
