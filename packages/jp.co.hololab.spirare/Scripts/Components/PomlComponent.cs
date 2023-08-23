@@ -126,14 +126,6 @@ namespace HoloLab.Spirare
             Destroy(pomlElementComponent.gameObject);
         }
 
-        private bool TryGetElementComponent(PomlElement pomlElement, out PomlElementComponent pomlElementComponent)
-        {
-            // TODO: implement this method in _elementStore
-            var allElements = _elementStore.GetAllElements();
-            pomlElementComponent = allElements.FirstOrDefault(x => x.PomlElement == pomlElement);
-            return pomlElementComponent != null;
-        }
-
         internal bool TryGetElementComponentByTag(string tag, out Component pomlComponentOrPomlElementComponent)
         {
             // TODO: the type of pomlComponentOrPomlElementComponent should be PomlElementComponent
@@ -144,13 +136,16 @@ namespace HoloLab.Spirare
                 return true;
             }
 
-            foreach (var element in _poml.Scene.Elements)
+            if (EnumLabel.TryGetValue(tag, out PomlElementType elementType))
             {
-                if (TryGetElementByTagRecursively(tag, element, out var pomlElement))
+                foreach (var element in _poml.Scene.Elements)
                 {
-                    var result = TryGetElementComponent(pomlElement, out var pomlElementComponent);
-                    pomlComponentOrPomlElementComponent = pomlElementComponent;
-                    return result;
+                    if (TryGetElementByElementTypeRecursively(elementType, element, out var pomlElement))
+                    {
+                        var result = TryGetElementComponent(pomlElement, out var pomlElementComponent);
+                        pomlComponentOrPomlElementComponent = pomlElementComponent;
+                        return result;
+                    }
                 }
             }
 
@@ -167,14 +162,18 @@ namespace HoloLab.Spirare
                 return true;
             }
 
-            foreach (var element in _poml.Scene.Elements)
+            if (EnumLabel.TryGetValue(tag, out PomlElementType elementType))
             {
-                if (TryGetElementByTagRecursively(tag, element, out var foundPomlElement))
+                foreach (var element in _poml.Scene.Elements)
                 {
-                    pomlElement = foundPomlElement;
-                    return true;
+                    if (TryGetElementByElementTypeRecursively(elementType, element, out var foundPomlElement))
+                    {
+                        pomlElement = foundPomlElement;
+                        return true;
+                    }
                 }
             }
+
             pomlElement = null;
             return false;
         }
@@ -210,9 +209,17 @@ namespace HoloLab.Spirare
             _elementStore.RemoveElement(elementComponent);
         }
 
-        private static bool TryGetElementByTagRecursively(string tag, PomlElement targetElement, out PomlElement pomlElement)
+        private bool TryGetElementComponent(PomlElement pomlElement, out PomlElementComponent pomlElementComponent)
         {
-            if (EnumLabel.TryGetLabel(targetElement.ElementType, out var targetElementTag) && targetElementTag == tag)
+            // TODO: implement this method in _elementStore
+            var allElements = _elementStore.GetAllElements();
+            pomlElementComponent = allElements.FirstOrDefault(x => x.PomlElement == pomlElement);
+            return pomlElementComponent != null;
+        }
+
+        private static bool TryGetElementByElementTypeRecursively(PomlElementType elementType, PomlElement targetElement, out PomlElement pomlElement)
+        {
+            if (targetElement.ElementType == elementType)
             {
                 pomlElement = targetElement;
                 return true;
@@ -220,7 +227,7 @@ namespace HoloLab.Spirare
 
             foreach (var child in targetElement.Children)
             {
-                if (TryGetElementByTagRecursively(tag, child, out pomlElement))
+                if (TryGetElementByElementTypeRecursively(elementType, child, out pomlElement))
                 {
                     return true;
                 }
