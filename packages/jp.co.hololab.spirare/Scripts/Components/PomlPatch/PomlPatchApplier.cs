@@ -99,7 +99,7 @@ namespace HoloLab.Spirare
 
             if (string.IsNullOrEmpty(target.Tag) == false)
             {
-                return pomlComponent.TryGetElementComponentByTag(target.Tag, out elementComponent);
+                return pomlComponent.TryGetPomlElementComponentByTag(target.Tag, out elementComponent);
             }
 
             elementComponent = null;

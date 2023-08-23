@@ -1,8 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -89,7 +87,7 @@ namespace HoloLab.Spirare
         {
             await UniTask.SwitchToMainThread();
 
-            if (TryGetElementComponent(parentElement, out var parentElementComponent) == false)
+            if (_elementStore.TryGetPomlElementComponentByPomlElement(parentElement, out var parentElementComponent) == false)
             {
                 Debug.LogWarning("parentElement not found");
                 return;
@@ -104,7 +102,7 @@ namespace HoloLab.Spirare
 
         internal async Task RemoveElementAsync(PomlElement pomlElement)
         {
-            if (TryGetElementComponent(pomlElement, out var pomlElementComponent) == false)
+            if (_elementStore.TryGetPomlElementComponentByPomlElement(pomlElement, out var pomlElementComponent) == false)
             {
                 Debug.LogWarning("parentElement not found");
                 return;
@@ -126,7 +124,7 @@ namespace HoloLab.Spirare
             Destroy(pomlElementComponent.gameObject);
         }
 
-        internal bool TryGetElementComponentByTag(string tag, out Component pomlComponentOrPomlElementComponent)
+        internal bool TryGetPomlElementComponentByTag(string tag, out Component pomlComponentOrPomlElementComponent)
         {
             // TODO: the type of pomlComponentOrPomlElementComponent should be PomlElementComponent
 
@@ -142,7 +140,7 @@ namespace HoloLab.Spirare
                 {
                     if (TryGetElementByElementTypeRecursively(elementType, element, out var pomlElement))
                     {
-                        var result = TryGetElementComponent(pomlElement, out var pomlElementComponent);
+                        var result = _elementStore.TryGetPomlElementComponentByPomlElement(pomlElement, out var pomlElementComponent);
                         pomlComponentOrPomlElementComponent = pomlElementComponent;
                         return result;
                     }
@@ -207,14 +205,6 @@ namespace HoloLab.Spirare
         private void PomlElementComponentBase_OnDestroyed(PomlElementComponent elementComponent)
         {
             _elementStore.RemoveElement(elementComponent);
-        }
-
-        private bool TryGetElementComponent(PomlElement pomlElement, out PomlElementComponent pomlElementComponent)
-        {
-            // TODO: implement this method in _elementStore
-            var allElements = _elementStore.GetAllElements();
-            pomlElementComponent = allElements.FirstOrDefault(x => x.PomlElement == pomlElement);
-            return pomlElementComponent != null;
         }
 
         private static bool TryGetElementByElementTypeRecursively(PomlElementType elementType, PomlElement targetElement, out PomlElement pomlElement)
