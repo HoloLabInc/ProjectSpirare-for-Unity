@@ -82,7 +82,7 @@ namespace HoloLab.Spirare
 
         public PomlElement Parent { get; set; }
 
-        public IEnumerable<PomlElement> Children { get; set; }
+        public IList<PomlElement> Children { get; set; }
 
         public string WebLink { get; set; }
 

@@ -22,7 +22,7 @@ namespace HoloLab.Spirare
             this.basePath = basePath;
         }
 
-        internal async UniTask ApplyPomlPatchAsync(string json)
+        internal void ApplyPomlPatch(string json)
         {
             if (PomlPatchParser.TryParse(json, out var patches) == false)
             {
@@ -31,11 +31,11 @@ namespace HoloLab.Spirare
 
             foreach (var patch in patches)
             {
-                await ApplyPomlPatchAsync(patch);
+                ApplyPomlPatch(patch);
             }
         }
 
-        internal async UniTask ApplyPomlPatchAsync(PomlPatch patch)
+        internal void ApplyPomlPatch(PomlPatch patch)
         {
             UnityEngine.Object targetComponent;
 
@@ -54,7 +54,7 @@ namespace HoloLab.Spirare
             switch (patch)
             {
                 case PomlPatchAdd patchAdd:
-                    await ApplyPomlPatchAddAsync(patchAdd, basePath, pomlComponent, targetComponent);
+                    ApplyPomlPatchAdd(patchAdd, basePath, pomlComponent, targetComponent);
                     break;
                 case PomlPatchUpdate patchUpdate:
                     ApplyPomlPatchUpdate(patchUpdate, basePath, targetComponent);
@@ -91,7 +91,7 @@ namespace HoloLab.Spirare
             return false;
         }
 
-        private static async UniTask ApplyPomlPatchAddAsync(PomlPatchAdd patch, string basePath, PomlComponent pomlComponent, UnityEngine.Object targetComponent)
+        private static void ApplyPomlPatchAdd(PomlPatchAdd patch, string basePath, PomlComponent pomlComponent, UnityEngine.Object targetComponent)
         {
             var pomlElement = ConvertPomlPatchAddElementToPomlElement(patch.Element, parentElement: null, basePath);
 
@@ -101,7 +101,7 @@ namespace HoloLab.Spirare
             }
             else if (targetComponent is PomlElementComponent pomlElementComponent)
             {
-                await pomlComponent.AppendElementAsync(pomlElement, parentElement: pomlElementComponent.PomlElement);
+                pomlComponent.AppendElement(pomlElement, parentElement: pomlElementComponent.PomlElement);
             }
         }
 
@@ -116,7 +116,9 @@ namespace HoloLab.Spirare
             // Set attributes to pomlElement
             UpdatePomlElementAttributes(pomlElement, addElement.Attributes, basePath);
 
-            var children = addElement.Children.Select(x => ConvertPomlPatchAddElementToPomlElement(x, pomlElement, basePath));
+            var children = addElement.Children
+                .Select(x => ConvertPomlPatchAddElementToPomlElement(x, pomlElement, basePath))
+                .ToList();
             pomlElement.Children = children;
 
             return pomlElement;
@@ -229,6 +231,11 @@ namespace HoloLab.Spirare
 
         private static bool UpdatePomlElementAttributes(PomlElement element, JObject attributes, string basePath)
         {
+            if (attributes == null)
+            {
+                return false;
+            }
+
             var elementType = element.GetType();
             var updated = false;
             foreach (var prop in attributes.Properties())

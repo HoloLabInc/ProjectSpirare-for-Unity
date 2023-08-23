@@ -41,7 +41,7 @@ public class PomlPatchApplierTests
 }";
 
         var applier = new PomlPatchApplier(pomlComponent, null, "");
-        await applier.ApplyPomlPatchAsync(pomlPatch);
+        applier.ApplyPomlPatch(pomlPatch);
 
         pomlComponent.TryGetElementById("text1", out var element);
         var pomlElement = element.Element as PomlTextElement;
@@ -83,7 +83,7 @@ public class PomlPatchApplierTests
 }";
 
         var applier = new PomlPatchApplier(pomlComponent, null, "");
-        await applier.ApplyPomlPatchAsync(pomlPatch);
+        applier.ApplyPomlPatch(pomlPatch);
 
         pomlComponent.TryGetElementById("model0", out var element);
         var pomlModelElement = element.Element as PomlModelElement;
@@ -94,6 +94,105 @@ public class PomlPatchApplierTests
 
         Object.Destroy(pomlComponent.gameObject);
     }
+
+    [Test]
+    public async Task ApplyPomlPatch_AddNestedElementToScene()
+    {
+        var poml = @"
+<poml>
+    <scene>
+        <text id=""text0"" text=""text0"" />
+        <text id=""text1"" text=""text1"" />
+    </scene>
+</poml> ";
+
+        var pomlComponent = await LoadPomlAsync(poml);
+
+        var pomlPatch = @"
+{
+    ""operation"": ""add"",
+    ""target"": {
+        ""tag"": ""scene""
+    },
+    ""tag"": ""element"",
+    ""children"": [
+        {
+        ""tag"" : ""model"",
+        ""attributes"":
+            {
+                ""id"": ""model0"",
+                ""src"": ""http://example.com/test.glb"",
+                ""position"": {
+                    ""x"": 1,
+                    ""y"": 2,
+                    ""z"": 3
+                }
+            }
+        }       
+    ]   
+}";
+
+        var applier = new PomlPatchApplier(pomlComponent, null, "");
+        applier.ApplyPomlPatch(pomlPatch);
+
+        pomlComponent.TryGetElementById("model0", out var element);
+        var pomlModelElement = element.Element as PomlModelElement;
+        Assert.That(pomlModelElement.Src, Is.EqualTo("http://example.com/test.glb"));
+        Assert.That(pomlModelElement.Position, Is.EqualTo(new Vector3(1, 2, 3)));
+
+        Assert.That(element.Component.gameObject, Is.Not.Null);
+
+        Object.Destroy(pomlComponent.gameObject);
+    }
+
+    [Test]
+    public async Task ApplyPomlPatch_AddElementToElement()
+    {
+        var poml = @"
+<poml>
+    <scene>
+        <text id=""text0"" text=""text0"" />
+        <text id=""text1"" text=""text1"" />
+    </scene>
+</poml> ";
+
+        var pomlComponent = await LoadPomlAsync(poml);
+
+        var pomlPatch = @"
+{
+    ""operation"": ""add"",
+    ""target"": {
+        ""id"": ""text1""
+    },
+    ""tag"": ""model"",
+    ""attributes"": {
+        ""id"": ""model0"",
+        ""src"": ""http://example.com/test.glb"",
+        ""position"": {
+            ""x"": 1,
+            ""y"": 2,
+            ""z"": 3
+        }
+    }
+}";
+
+        var applier = new PomlPatchApplier(pomlComponent, null, "");
+        applier.ApplyPomlPatch(pomlPatch);
+
+        pomlComponent.TryGetElementById("model0", out var element);
+        var pomlModelElement = element.Element as PomlModelElement;
+        Assert.That(pomlModelElement.Src, Is.EqualTo("http://example.com/test.glb"));
+        Assert.That(pomlModelElement.Position, Is.EqualTo(new Vector3(1, 2, 3)));
+
+        Assert.That(element.Component.gameObject, Is.Not.Null);
+
+        var parentTransform = element.Component.transform.parent;
+        var parentComponent = parentTransform.GetComponentInParent<PomlElementComponent>();
+        Assert.That(parentComponent.PomlElement.Id, Is.EqualTo("text1"));
+
+        Object.Destroy(pomlComponent.gameObject);
+    }
+
 
 
     private async Task<PomlComponent> LoadPomlAsync(string poml)

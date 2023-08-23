@@ -109,10 +109,31 @@ namespace HoloLab.Spirare
             }
         }
 
-        internal async Task AppendElementAsync(PomlElement pomlElement, PomlElement parentElement)
+        internal void AppendElement(PomlElement pomlElement, PomlElement parentElement)
         {
+            if (TryGetElementComponent(parentElement, out var parentElementComponent) == false)
+            {
+                Debug.LogWarning("parentElement not found");
+                return;
+            }
+
             pomlElement.Parent = parentElement;
-            throw new NotImplementedException();
+            parentElement.Children.Add(pomlElement);
+
+            var parentObjectElementComponent = parentElementComponent as PomlObjectElementComponent;
+
+            RunInMainThread(async () =>
+            {
+                await _pomlLoader.LoadElement(pomlElement, parentElementComponent.transform, parentObjectElementComponent, this);
+            });
+        }
+
+        private bool TryGetElementComponent(PomlElement pomlElement, out PomlElementComponent pomlElementComponent)
+        {
+            // TODO: implement this method in _elementStore
+            var allElements = _elementStore.GetAllElements();
+            pomlElementComponent = allElements.FirstOrDefault(x => x.PomlElement == pomlElement);
+            return pomlElementComponent != null;
         }
 
         internal bool TryGetElementByTag(string tag, out UnityEngine.Object pomlComponentOrPomlElementComponent)
