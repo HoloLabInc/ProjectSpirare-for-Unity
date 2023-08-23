@@ -200,7 +200,7 @@ namespace HoloLab.Spirare
             }
         }
 
-        private static void UpdateAttributes(UnityEngine.Object component, JObject attributes, string basePath)
+        private static void UpdateAttributes(Component component, JObject attributes, string basePath)
         {
             if (attributes == null)
             {

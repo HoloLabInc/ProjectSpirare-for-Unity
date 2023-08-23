@@ -110,7 +110,26 @@ namespace HoloLab.Spirare
 
         internal async Task RemoveElementAsync(PomlElement pomlElement)
         {
+            if (TryGetElementComponent(pomlElement, out var pomlElementComponent) == false)
+            {
+                Debug.LogWarning("parentElement not found");
+                return;
+            }
 
+            var parent = pomlElement.Parent;
+            if (parent == null)
+            {
+                _poml.Scene.Elements.Remove(pomlElement);
+            }
+            else
+            {
+                parent.Children.Remove(pomlElement);
+            }
+
+            _elementStore.RemoveElement(pomlElementComponent);
+
+            await UniTask.SwitchToMainThread();
+            Destroy(pomlElementComponent.gameObject);
         }
 
         private bool TryGetElementComponent(PomlElement pomlElement, out PomlElementComponent pomlElementComponent)
@@ -166,26 +185,6 @@ namespace HoloLab.Spirare
             return false;
         }
 
-        private static bool TryGetElementByTagRecursively(string tag, PomlElement targetElement, out PomlElement pomlElement)
-        {
-            if (EnumLabel.TryGetLabel(targetElement.ElementType, out var targetElementTag) && targetElementTag == tag)
-            {
-                pomlElement = targetElement;
-                return true;
-            }
-
-            foreach (var child in targetElement.Children)
-            {
-                if (TryGetElementByTagRecursively(tag, child, out pomlElement))
-                {
-                    return true;
-                }
-            }
-
-            pomlElement = null;
-            return false;
-        }
-
         internal (int ElementDescriptor, PomlElementComponent Component)[] GetAllElementsWithDescriptor()
         {
             return _elementStore.GetAllElementsWithDescriptor();
@@ -212,25 +211,29 @@ namespace HoloLab.Spirare
             _elementStore.RegisterElement(elementComponent);
         }
 
-        private void RunInMainThread(Action action)
-        {
-            var threadId = Thread.CurrentThread.ManagedThreadId;
-            if (threadId == mainThreadId)
-            {
-                action.Invoke();
-            }
-            else
-            {
-                mainThreadContext.Send(_ =>
-                {
-                    action.Invoke();
-                }, null);
-            }
-        }
-
         private void PomlElementComponentBase_OnDestroyed(PomlElementComponent elementComponent)
         {
             _elementStore.RemoveElement(elementComponent);
+        }
+
+        private static bool TryGetElementByTagRecursively(string tag, PomlElement targetElement, out PomlElement pomlElement)
+        {
+            if (EnumLabel.TryGetLabel(targetElement.ElementType, out var targetElementTag) && targetElementTag == tag)
+            {
+                pomlElement = targetElement;
+                return true;
+            }
+
+            foreach (var child in targetElement.Children)
+            {
+                if (TryGetElementByTagRecursively(tag, child, out pomlElement))
+                {
+                    return true;
+                }
+            }
+
+            pomlElement = null;
+            return false;
         }
     }
 }

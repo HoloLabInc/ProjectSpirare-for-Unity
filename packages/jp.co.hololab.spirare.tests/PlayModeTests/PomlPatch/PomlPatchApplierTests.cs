@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using HoloLab.Spirare;
 using NUnit.Framework;
 using UnityEngine;
@@ -189,6 +190,81 @@ public class PomlPatchApplierTests
         var parentTransform = element.Component.transform.parent;
         var parentComponent = parentTransform.GetComponentInParent<PomlElementComponent>();
         Assert.That(parentComponent.PomlElement.Id, Is.EqualTo("text1"));
+
+        Object.Destroy(pomlComponent.gameObject);
+    }
+
+    [Test]
+    public async Task ApplyPomlPatch_RemoveElement()
+    {
+        var poml = @"
+<poml>
+    <scene>
+        <text id=""text0"" text=""text0"" />
+        <text id=""text1"" text=""text1"" />
+    </scene>
+</poml> ";
+
+        var pomlComponent = await LoadPomlAsync(poml);
+        Assert.That(pomlComponent.transform.childCount, Is.EqualTo(2));
+
+        var pomlPatch = @"
+{
+    ""operation"": ""remove"",
+    ""target"": {
+        ""id"": ""text1""
+    }
+}";
+
+        var applier = new PomlPatchApplier(pomlComponent, null, null, "");
+        await applier.ApplyPomlPatchAsync(pomlPatch);
+
+        // Wait until destroy completed
+        await UniTask.DelayFrame(1);
+
+        Assert.That(pomlComponent.transform.childCount, Is.EqualTo(1));
+        var result = pomlComponent.TryGetElementById("text1", out _);
+        Assert.That(result, Is.False);
+
+        Object.Destroy(pomlComponent.gameObject);
+    }
+
+    [Test]
+    public async Task ApplyPomlPatch_RemoveElementMultipleTimes()
+    {
+        var poml = @"
+<poml>
+    <scene>
+        <text id=""text0"" text=""text0"" />
+        <text id=""text1"" text=""text1"" />
+    </scene>
+</poml> ";
+
+        var pomlComponent = await LoadPomlAsync(poml);
+        Assert.That(pomlComponent.transform.childCount, Is.EqualTo(2));
+
+        var pomlPatch = @"
+{
+    ""operation"": ""remove"",
+    ""target"": {
+        ""tag"": ""text""
+    }
+}";
+
+        var applier = new PomlPatchApplier(pomlComponent, null, null, "");
+        await applier.ApplyPomlPatchAsync(pomlPatch);
+        await applier.ApplyPomlPatchAsync(pomlPatch);
+
+        // Wait until destroy completed
+        await UniTask.DelayFrame(1);
+
+        Assert.That(pomlComponent.transform.childCount, Is.EqualTo(0));
+
+        var result0 = pomlComponent.TryGetElementById("text0", out _);
+        Assert.That(result0, Is.False);
+
+        var result1 = pomlComponent.TryGetElementById("text1", out _);
+        Assert.That(result1, Is.False);
 
         Object.Destroy(pomlComponent.gameObject);
     }
