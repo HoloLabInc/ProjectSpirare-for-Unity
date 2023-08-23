@@ -1,6 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace HoloLab.Spirare
@@ -9,16 +10,28 @@ namespace HoloLab.Spirare
     {
         private ElementStore _elementStore;
         private Poml _poml;
+
+        private PomlPatchApplier _patchApplier;
         private WebSocketHelper _webSocket;
 
         public int ElementCount => _elementStore.ElementCount;
 
-        private void Start()
+        internal PomlComponent Initialize(ElementStore contents, Poml poml)
         {
-            StartWebSocket();
+            _elementStore = contents ?? throw new ArgumentNullException(nameof(contents));
+            _poml = poml ?? throw new ArgumentNullException(nameof(poml));
+
+            _patchApplier = new PomlPatchApplier(this, defaultTarget: this);
+
+            return this;
         }
 
-        private async void StartWebSocket()
+        private void Start()
+        {
+            StartWebSocket().Forget();
+        }
+
+        private async UniTask StartWebSocket()
         {
             var wsRecvUrl = _poml.Scene.WsRecvUrl;
             if (string.IsNullOrEmpty(wsRecvUrl))
@@ -26,16 +39,8 @@ namespace HoloLab.Spirare
                 return;
             }
             var ct = this.GetCancellationTokenOnDestroy();
-            // _webSocket = new WebSocketHelper(id => GetElementById(id));
-            _webSocket = new WebSocketHelper(this);
+            _webSocket = new WebSocketHelper(_patchApplier);
             await _webSocket.Connect(wsRecvUrl, ct);
-        }
-
-        internal PomlComponent Initialize(ElementStore contents, Poml poml)
-        {
-            _elementStore = contents ?? throw new ArgumentNullException(nameof(contents));
-            _poml = poml ?? throw new ArgumentNullException(nameof(poml));
-            return this;
         }
 
         public IEnumerable<PomlElementComponent> GetAllElements()
@@ -64,6 +69,51 @@ namespace HoloLab.Spirare
             return default;
         }
 
+        internal bool TryGetElementByTag(string tag, out UnityEngine.Object pomlComponentOrPomlElementComponent)
+        {
+            // TODO: the type of pomlComponentOrPomlElementComponent should be PomlElementComponent
+
+            if (tag == "scene")
+            {
+                pomlComponentOrPomlElementComponent = this;
+                return true;
+            }
+
+            foreach (var element in _poml.Scene.Elements)
+            {
+                if (TryGetElementByTagRecursively(tag, element, out var pomlElement))
+                {
+                    var allElements = _elementStore.GetAllElements();
+                    pomlComponentOrPomlElementComponent = allElements.FirstOrDefault(x => x.PomlElement == pomlElement);
+                    return pomlComponentOrPomlElementComponent != null;
+                }
+            }
+
+            // not found
+            pomlComponentOrPomlElementComponent = null;
+            return false;
+        }
+
+        private static bool TryGetElementByTagRecursively(string tag, PomlElement targetElement, out PomlElement pomlElement)
+        {
+            if (EnumLabel.TryGetLabel(targetElement.ElementType, out var targetElementTag) && targetElementTag == tag)
+            {
+                pomlElement = targetElement;
+                return true;
+            }
+
+            foreach (var child in targetElement.Children)
+            {
+                if (TryGetElementByTagRecursively(tag, child, out pomlElement))
+                {
+                    return true;
+                }
+            }
+
+            pomlElement = null;
+            return false;
+        }
+
         internal (int ElementDescriptor, PomlElementComponent Component)[] GetAllElementsWithDescriptor()
         {
             return _elementStore.GetAllElementsWithDescriptor();
@@ -72,11 +122,6 @@ namespace HoloLab.Spirare
         internal bool TryGetElementById(string id, out PomlElementComponent component, out int elemDescr)
         {
             return _elementStore.TryGetElementById(id, out component, out elemDescr);
-        }
-
-        internal bool TryGetElementByTag(string tag, out (PomlElementComponent Component, PomlElement Element) element)
-        {
-            throw new NotImplementedException();
         }
 
         internal bool TryGetElementByDescriptor(int elemDescr, out PomlElementComponent elemComp)

@@ -11,10 +11,16 @@ namespace HoloLab.Spirare
     public sealed class PomlPatchApplier
     {
         private readonly PomlComponent pomlComponent;
+        private readonly UnityEngine.Object defaultTarget;
 
         public PomlPatchApplier(PomlComponent pomlComponent)
         {
             this.pomlComponent = pomlComponent;
+        }
+
+        public PomlPatchApplier(PomlComponent pomlComponent, UnityEngine.Object defaultTarget) : this(pomlComponent)
+        {
+            this.defaultTarget = defaultTarget;
         }
 
         internal void ApplyPomlPatch(string json)
@@ -32,9 +38,18 @@ namespace HoloLab.Spirare
 
         internal void ApplyPomlPatch(PomlPatch patch)
         {
-            if (TryGetTargetElementComponent(patch.Target, out var elementComponent) == false)
+            UnityEngine.Object targetComponent;
+
+            if (patch.Target == null)
             {
-                return;
+                targetComponent = defaultTarget;
+            }
+            else
+            {
+                if (TryGetTargetElementComponent(patch.Target, out targetComponent) == false)
+                {
+                    return;
+                }
             }
 
             switch (patch)
@@ -43,7 +58,7 @@ namespace HoloLab.Spirare
                     ApplyPomlPatchAdd(patchAdd);
                     break;
                 case PomlPatchUpdate patchUpdate:
-                    ApplyPomlPatchUpdate(patchUpdate, elementComponent);
+                    ApplyPomlPatchUpdate(patchUpdate, targetComponent);
                     break;
                 case PomlPatchRemove patchRemove:
                     ApplyPomlPatchRemove(patchRemove);
