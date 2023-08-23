@@ -64,7 +64,7 @@ namespace HoloLab.Spirare
 
         private void MessageReceived(string message)
         {
-            patchApplier.ApplyPomlPatchAsync(message);
+            patchApplier.ApplyPomlPatchAsync(message).Forget();
         }
 
 #if FALSE

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Collections.Specialized;
 
 namespace HoloLab.Spirare
 {
@@ -50,8 +51,8 @@ namespace HoloLab.Spirare
         public string Id { get; set; }
         public string WsRecvUrl { get; set; }
         public Vector3 Position { get; set; }
-        public Quaternion Rotation { get; set; }
-        public Vector3 Scale { get; set; }
+        public Quaternion Rotation { get; set; } = Quaternion.identity;
+        public Vector3 Scale { get; set; } = Vector3.one;
 
         // TODO: Refactor.
         public string Src { get; set; }

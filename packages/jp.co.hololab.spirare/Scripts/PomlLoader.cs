@@ -82,7 +82,7 @@ namespace HoloLab.Spirare
                 throw new FormatException("Parsing poml is failed.");
             }
             var contentsStore = new ElementStore();
-            var pomlComponent = targetGameObject.AddComponent<PomlComponent>().Initialize(contentsStore, poml, this);
+            var pomlComponent = targetGameObject.AddComponent<PomlComponent>().Initialize(contentsStore, poml, this, uri);
             await LoadScene(poml.Scene, pomlComponent);
             // await LoadResource(poml.Resource, pomlComponent);
             return pomlComponent;
