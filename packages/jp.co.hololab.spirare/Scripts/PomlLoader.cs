@@ -82,7 +82,7 @@ namespace HoloLab.Spirare
                 throw new FormatException("Parsing poml is failed.");
             }
             var contentsStore = new ElementStore();
-            var pomlComponent = targetGameObject.AddComponent<PomlComponent>().Initialize(contentsStore, poml);
+            var pomlComponent = targetGameObject.AddComponent<PomlComponent>().Initialize(contentsStore, poml, this);
             await LoadScene(poml.Scene, pomlComponent);
             // await LoadResource(poml.Resource, pomlComponent);
             return pomlComponent;
@@ -124,7 +124,7 @@ namespace HoloLab.Spirare
         }
         */
 
-        private async Task<Transform> LoadElement(PomlElement element, Transform parentTransform, PomlObjectElementComponent parentElementComponent, PomlComponent pomlComponent)
+        internal async Task<Transform> LoadElement(PomlElement element, Transform parentTransform, PomlObjectElementComponent parentElementComponent, PomlComponent pomlComponent)
         {
             var elementComponent = GenerateElementComponent(element, parentTransform, parentElementComponent, pomlComponent);
             if (elementComponent != null)

@@ -19,11 +19,12 @@ namespace HoloLab.Spirare
 
     public sealed class PomlScene
     {
-        public IEnumerable<PomlElement> Elements { get; }
+        // public IEnumerable<PomlElement> Elements { get; }
+        public IList<PomlElement> Elements { get; }
 
         public string WsRecvUrl { get; set; }
 
-        public PomlScene(IEnumerable<PomlElement> elements)
+        public PomlScene(IList<PomlElement> elements)
         {
             Elements = elements;
         }
