@@ -318,7 +318,7 @@ namespace HoloLab.Spirare
         public double Latitude;
         public double Longitude;
         public double EllipsoidalHeight;
-        public Quaternion EnuRotation;
+        public Quaternion EnuRotation = Quaternion.identity;
 
         public PomlGeoReferenceElement() : base(PomlElementType.GeoReference)
         {

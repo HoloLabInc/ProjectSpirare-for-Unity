@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Linq;
+using System.Text;
 
 namespace HoloLab.Spirare
 {
@@ -242,8 +243,7 @@ namespace HoloLab.Spirare
 
                 try
                 {
-                    var propName = char.ToUpper(prop.Name[0]) + prop.Name.Substring(1);
-
+                    var propName = KebabToPascal(prop.Name);
                     var propInfo = elementType.GetProperty(propName);
                     if (propInfo != null)
                     {
@@ -276,6 +276,30 @@ namespace HoloLab.Spirare
                 }
             }
             return updated;
+        }
+
+        private static string KebabToPascal(string kebabString)
+        {
+            var sb = new StringBuilder();
+            var nextCharToUpper = true;
+            foreach (var c in kebabString)
+            {
+                if (c == '-')
+                {
+                    nextCharToUpper = true;
+                    continue;
+                }
+                if (nextCharToUpper)
+                {
+                    sb.Append(char.ToUpper(c));
+                    nextCharToUpper = false;
+                }
+                else
+                {
+                    sb.Append(c);
+                }
+            }
+            return sb.ToString();
         }
     }
 }
