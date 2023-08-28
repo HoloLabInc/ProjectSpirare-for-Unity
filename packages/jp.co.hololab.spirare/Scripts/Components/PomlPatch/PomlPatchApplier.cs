@@ -61,9 +61,9 @@ namespace HoloLab.Spirare
 
             if (string.IsNullOrEmpty(target.Id) == false)
             {
-                if (pomlComponent.TryGetElementById(target.Id, out var element))
+                if (pomlComponent.TryGetPomlElementComponentById(target.Id, out var elementComponent))
                 {
-                    pomlElement = element.Element;
+                    pomlElement = elementComponent.PomlElement;
                     return true;
                 }
             }
@@ -91,9 +91,9 @@ namespace HoloLab.Spirare
 
             if (string.IsNullOrEmpty(target.Id) == false)
             {
-                if (pomlComponent.TryGetElementById(target.Id, out var element))
+                if (pomlComponent.TryGetPomlElementComponentById(target.Id, out var pomlElementComponent))
                 {
-                    elementComponent = element.Component;
+                    elementComponent = pomlElementComponent;
                     return true;
                 }
             }

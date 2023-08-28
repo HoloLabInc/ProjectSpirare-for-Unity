@@ -173,7 +173,7 @@ public class SpecificElementImplementationTests
 
         var pomlComponent = await LoadPomlAsync(poml);
 
-        pomlComponent.TryGetElementById("text0", out var element);
+        pomlComponent.TryGetPomlElementComponentById("text0", out var elementComponent);
         var api = CreateApiImpl(pomlComponent, "text0");
 
         {
@@ -185,7 +185,7 @@ public class SpecificElementImplementationTests
             var errorCode = api.set_text(memoryPtr, memoryLength, selfObjectDescriptor, textPtr, text.Length);
             Assert.That(errorCode, Is.EqualTo((int)Errno.Success));
 
-            var textElement = element.Element as PomlTextElement;
+            var textElement = elementComponent.PomlElement as PomlTextElement;
             Assert.That(textElement.Text, Is.EqualTo(text));
         }
     }
@@ -206,7 +206,6 @@ public class SpecificElementImplementationTests
 
         var pomlComponent = await LoadPomlAsync(poml);
 
-        pomlComponent.TryGetElementById("element0", out var element);
         var api = CreateApiImpl(pomlComponent, "element0");
 
         {
@@ -222,11 +221,11 @@ public class SpecificElementImplementationTests
 
     private SpirareApiImpl CreateApiImpl(PomlComponent pomlComponent, string id)
     {
-        var result = pomlComponent.TryGetElementById(id, out var element);
+        var result = pomlComponent.TryGetPomlElementComponentById(id, out var elementComponent);
         Assert.That(result, Is.True);
-        Assert.That(element.Component is PomlObjectElementComponent, Is.True);
+        Assert.That(elementComponent is PomlObjectElementComponent, Is.True);
 
-        var elementDescriptorHelper = new ElementDescriptorHelper(element.Component as PomlObjectElementComponent, null, pomlComponent);
+        var elementDescriptorHelper = new ElementDescriptorHelper(elementComponent as PomlObjectElementComponent, null, pomlComponent);
         var api = new SpirareApiImpl(elementDescriptorHelper);
 
         return api;

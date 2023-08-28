@@ -72,25 +72,25 @@ public class ElementAttributeImplementationTests
 
         var pomlComponent = await LoadPomlAsync(poml);
 
-        pomlComponent.TryGetElementById("element0", out var element);
-        Assert.That(element.Element.Display, Is.EqualTo(PomlDisplayType.None));
+        pomlComponent.TryGetPomlElementComponentById("element0", out var elementComponent);
+        Assert.That(elementComponent.PomlElement.Display, Is.EqualTo(PomlDisplayType.None));
 
         var api = CreateApiImpl(pomlComponent, "element0");
 
         {
             var display = (int)PomlDisplayType.Visible;
             api.set_display(memoryPtr, memoryLength, selfObjectDescriptor, display);
-            Assert.That(element.Element.Display, Is.EqualTo(PomlDisplayType.Visible));
+            Assert.That(elementComponent.PomlElement.Display, Is.EqualTo(PomlDisplayType.Visible));
         }
         {
             var display = (int)PomlDisplayType.None;
             api.set_display(memoryPtr, memoryLength, selfObjectDescriptor, display);
-            Assert.That(element.Element.Display, Is.EqualTo(PomlDisplayType.None));
+            Assert.That(elementComponent.PomlElement.Display, Is.EqualTo(PomlDisplayType.None));
         }
         {
             var display = (int)PomlDisplayType.Occlusion;
             api.set_display(memoryPtr, memoryLength, selfObjectDescriptor, display);
-            Assert.That(element.Element.Display, Is.EqualTo(PomlDisplayType.Occlusion));
+            Assert.That(elementComponent.PomlElement.Display, Is.EqualTo(PomlDisplayType.Occlusion));
         }
     }
 
@@ -136,7 +136,7 @@ public class ElementAttributeImplementationTests
 
         var pomlComponent = await LoadPomlAsync(poml);
 
-        pomlComponent.TryGetElementById("element0", out var element);
+        pomlComponent.TryGetPomlElementComponentById("element0", out var elementComponent);
         var elementAttributeImplementation = CreateApiImpl(pomlComponent, "element0");
 
         {
@@ -147,7 +147,7 @@ public class ElementAttributeImplementationTests
             MemoryHelper.TryWriteArray(memoryPtr, memoryLength, positionPtr + 8, BitConverter.GetBytes(-3f));
 
             elementAttributeImplementation.set_position(memoryPtr, memoryLength, selfObjectDescriptor, positionPtr);
-            Assert.That(element.Element.Position, Is.EqualTo(new UnityEngine.Vector3(1, 2, -3)));
+            Assert.That(elementComponent.PomlElement.Position, Is.EqualTo(new UnityEngine.Vector3(1, 2, -3)));
         }
     }
 
@@ -167,11 +167,11 @@ public class ElementAttributeImplementationTests
 
     private SpirareApiImpl CreateApiImpl(PomlComponent pomlComponent, string id)
     {
-        var result = pomlComponent.TryGetElementById(id, out var element);
+        var result = pomlComponent.TryGetPomlElementComponentById(id, out var elementComponent);
         Assert.That(result, Is.True);
-        Assert.That(element.Component is PomlObjectElementComponent, Is.True);
+        Assert.That(elementComponent is PomlObjectElementComponent, Is.True);
 
-        var elementDescriptorHelper = new ElementDescriptorHelper(element.Component as PomlObjectElementComponent, null, pomlComponent);
+        var elementDescriptorHelper = new ElementDescriptorHelper(elementComponent as PomlObjectElementComponent, null, pomlComponent);
         var api = new SpirareApiImpl(elementDescriptorHelper);
         return api;
     }

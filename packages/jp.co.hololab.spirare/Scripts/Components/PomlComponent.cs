@@ -49,11 +49,25 @@ namespace HoloLab.Spirare
             await _webSocket.Connect(wsRecvUrl, ct);
         }
 
+        #region Public methods
+
+        public IEnumerable<PomlElementComponent> GetAllPomlElementComponents()
+        {
+            return _elementStore.GetAllElements();
+        }
+
+        public bool TryGetPomlElementComponentById(string id, out PomlElementComponent pomlElementComponent)
+        {
+            return _elementStore.TryGetElementById(id, out pomlElementComponent);
+        }
+
+        [Obsolete("Please use GetAllPomlElementComponents instead of this method.")]
         public IEnumerable<PomlElementComponent> GetAllElements()
         {
             return _elementStore.GetAllElements();
         }
 
+        [Obsolete("Please use TryGetPomlElementComponentById instead of this method.")]
         public bool TryGetElementById(string id, out (PomlElementComponent Component, PomlElement Element) element)
         {
             if (_elementStore.TryGetElementById(id, out var elementComponent) == false)
@@ -66,6 +80,7 @@ namespace HoloLab.Spirare
             return true;
         }
 
+        [Obsolete("Please use TryGetPomlElementComponentById instead of this method.")]
         public (PomlElementComponent Component, PomlElement Element) GetElementById(string id)
         {
             if (TryGetElementById(id, out var element))
@@ -74,6 +89,8 @@ namespace HoloLab.Spirare
             }
             return default;
         }
+
+        #endregion
 
         internal async Task AppendElementToSceneAsync(PomlElement pomlElement)
         {
