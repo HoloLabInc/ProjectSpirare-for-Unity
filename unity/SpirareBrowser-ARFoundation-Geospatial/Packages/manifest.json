@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "com.atteneder.gltfast": "5.0.4",
-    "com.cesium.unity": "1.5.0",
     "com.cysharp.unitask": "2.2.5",
     "com.google.ar.core.arfoundation.extensions": "https://github.com/HoloLabInc/arcore-unity-extensions.git#v1.37.0-fix-project-settings-bug",
     "com.gwaredd.mggif": "https://github.com/gwaredd/mgGif.git?path=Assets/mgGif",
@@ -27,7 +26,6 @@
     "jp.co.hololab.spirare": "file:../../../packages/jp.co.hololab.spirare",
     "jp.co.hololab.spirare.browser": "file:../../../packages/jp.co.hololab.spirare.browser",
     "jp.co.hololab.spirare.browser.arfoundation": "file:../../../packages/jp.co.hololab.spirare.browser.arfoundation",
-    "jp.co.hololab.spirare.cesium": "file:../../../packages/jp.co.hololab.spirare.cesium",
     "jp.co.hololab.spirare.wasm": "file:../../../packages/jp.co.hololab.spirare.wasm",
     "jp.co.hololab.spirare.wasm.iwasm": "file:../../../packages/jp.co.hololab.spirare.wasm.iwasm",
     "com.unity.modules.ai": "1.0.0",
