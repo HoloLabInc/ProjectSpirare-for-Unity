@@ -33,12 +33,12 @@ public class PomlComponentTests
         var pomlComponent = await pomlLoader.LoadXmlAsync(poml, "");
 
         {
-            var result = pomlComponent.TryGetElementById("element0", out var element);
+            var result = pomlComponent.TryGetPomlElementComponentById("element0", out var elementComponent);
             Assert.That(result, Is.True);
-            Assert.That(element.Element.Id, Is.EqualTo("element0"));
+            Assert.That(elementComponent.PomlElement.Id, Is.EqualTo("element0"));
         }
         {
-            var result = pomlComponent.TryGetElementById("non-match-id", out var _);
+            var result = pomlComponent.TryGetPomlElementComponentById("non-match-id", out var _);
             Assert.That(result, Is.False);
         }
     }
@@ -56,16 +56,16 @@ public class PomlComponentTests
         var pomlComponent = await pomlLoader.LoadXmlAsync(poml, "");
 
         {
-            var result = pomlComponent.TryGetElementById("element0", out var element);
+            var result = pomlComponent.TryGetPomlElementComponentById("element0", out var elementComponent);
             Assert.That(result, Is.True);
-            Assert.That(element.Element.Id, Is.EqualTo("element0"));
+            Assert.That(elementComponent.PomlElement.Id, Is.EqualTo("element0"));
 
-            Object.Destroy(element.Component.gameObject);
+            Object.Destroy(elementComponent.gameObject);
             await UniTask.Yield();
         }
 
         {
-            var result = pomlComponent.TryGetElementById("element0", out var _);
+            var result = pomlComponent.TryGetPomlElementComponentById("element0", out var _);
             Assert.That(result, Is.False);
         }
     }
@@ -88,7 +88,7 @@ public class PomlComponentTests
 
         var pomlComponent = await pomlLoader.LoadXmlAsync(poml, "");
 
-        var elements = pomlComponent.GetAllElements();
+        var elements = pomlComponent.GetAllPomlElementComponents();
 
         // TODO Should also be able to fetch the scene root?
         Assert.That(elements.Count, Is.EqualTo(4));
@@ -132,7 +132,7 @@ public class PomlComponentTests
         }
 
         {
-            var result = pomlComponent.TryGetElementById("non-match-id", out _);
+            var result = pomlComponent.TryGetPomlElementComponentById("non-match-id", out _);
             Assert.That(result, Is.False);
         }
     }
