@@ -10,6 +10,7 @@ namespace HoloLab.Spirare
         private readonly object _lockObj = new object();
         private readonly Dictionary<int, ElementInfo> _descrToInfo = new Dictionary<int, ElementInfo>();
         private readonly Dictionary<PomlElementComponent, ElementInfo> _componentToInfo = new Dictionary<PomlElementComponent, ElementInfo>();
+        private readonly Dictionary<PomlElement, PomlElementComponent> _elementToComponent = new Dictionary<PomlElement, PomlElementComponent>();
 
         // Reserve 0-9 values for special use.
         private const int initialElementDescriptor = 10;
@@ -25,6 +26,7 @@ namespace HoloLab.Spirare
             {
                 _descrToInfo.Add(descr, info);
                 _componentToInfo.Add(elementComponent, info);
+                _elementToComponent.Add(elementComponent.PomlElement, elementComponent);
             }
         }
 
@@ -36,6 +38,7 @@ namespace HoloLab.Spirare
                 {
                     _componentToInfo.Remove(elementComponent);
                     _descrToInfo.Remove(info.ElementDescriptor);
+                    _elementToComponent.Remove(elementComponent.PomlElement);
                     return true;
                 }
                 else
@@ -53,6 +56,7 @@ namespace HoloLab.Spirare
                 {
                     _descrToInfo.Remove(elementDescriptor);
                     _componentToInfo.Remove(info.ElementComponent);
+                    _elementToComponent.Remove(info.ElementComponent.PomlElement);
                     return true;
                 }
                 else
@@ -118,6 +122,14 @@ namespace HoloLab.Spirare
                 }
                 elementComponent = null;
                 return false;
+            }
+        }
+
+        public bool TryGetPomlElementComponentByPomlElement(PomlElement pomlElement, out PomlElementComponent pomlElementComponent)
+        {
+            lock (_lockObj)
+            {
+                return _elementToComponent.TryGetValue(pomlElement, out pomlElementComponent);
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace HoloLab.Spirare
@@ -9,29 +10,43 @@ namespace HoloLab.Spirare
     {
         private ElementStore _elementStore;
         private Poml _poml;
+        private PomlLoader _pomlLoader;
+        private string _url;
+
+        private PomlPatchApplier _patchApplier;
         private WebSocketHelper _webSocket;
 
         public int ElementCount => _elementStore.ElementCount;
 
-        private void Start()
-        {
-            StartWebSocket();
-        }
+        public string Url => _url;
 
-        private async void StartWebSocket()
-        {
-            var wsRecvUrl = _poml.Scene.WsRecvUrl;
-            if (string.IsNullOrEmpty(wsRecvUrl)) { return; }
-            var ct = this.GetCancellationTokenOnDestroy();
-            _webSocket = new WebSocketHelper(id => GetElementById(id));
-            await _webSocket.Connect(wsRecvUrl, ct);
-        }
-
-        internal PomlComponent Initialize(ElementStore contents, Poml poml)
+        internal PomlComponent Initialize(ElementStore contents, Poml poml, PomlLoader pomlLoader, string url)
         {
             _elementStore = contents ?? throw new ArgumentNullException(nameof(contents));
             _poml = poml ?? throw new ArgumentNullException(nameof(poml));
+            _pomlLoader = pomlLoader ?? throw new ArgumentNullException(nameof(pomlLoader));
+            _url = url;
+
+            _patchApplier = new PomlPatchApplier(this, _poml.Scene, this, url);
+
             return this;
+        }
+
+        private void Start()
+        {
+            StartWebSocket().Forget();
+        }
+
+        private async UniTask StartWebSocket()
+        {
+            var wsRecvUrl = _poml.Scene.WsRecvUrl;
+            if (string.IsNullOrEmpty(wsRecvUrl))
+            {
+                return;
+            }
+            var ct = this.GetCancellationTokenOnDestroy();
+            _webSocket = new WebSocketHelper(_patchApplier);
+            await _webSocket.Connect(wsRecvUrl, ct);
         }
 
         public IEnumerable<PomlElementComponent> GetAllElements()
@@ -58,6 +73,107 @@ namespace HoloLab.Spirare
                 return element;
             }
             return default;
+        }
+
+        internal async Task AppendElementToSceneAsync(PomlElement pomlElement)
+        {
+            await UniTask.SwitchToMainThread();
+
+            _poml.Scene.Elements.Add(pomlElement);
+            await _pomlLoader.LoadElement(pomlElement, transform, null, this);
+        }
+
+        internal async Task AppendElementAsync(PomlElement pomlElement, PomlElement parentElement)
+        {
+            await UniTask.SwitchToMainThread();
+
+            if (_elementStore.TryGetPomlElementComponentByPomlElement(parentElement, out var parentElementComponent) == false)
+            {
+                Debug.LogWarning("parentElement not found");
+                return;
+            }
+
+            pomlElement.Parent = parentElement;
+            parentElement.Children.Add(pomlElement);
+
+            var parentObjectElementComponent = parentElementComponent as PomlObjectElementComponent;
+            await _pomlLoader.LoadElement(pomlElement, parentElementComponent.transform, parentObjectElementComponent, this);
+        }
+
+        internal async Task RemoveElementAsync(PomlElement pomlElement)
+        {
+            if (_elementStore.TryGetPomlElementComponentByPomlElement(pomlElement, out var pomlElementComponent) == false)
+            {
+                Debug.LogWarning("parentElement not found");
+                return;
+            }
+
+            var parent = pomlElement.Parent;
+            if (parent == null)
+            {
+                _poml.Scene.Elements.Remove(pomlElement);
+            }
+            else
+            {
+                parent.Children.Remove(pomlElement);
+            }
+
+            _elementStore.RemoveElement(pomlElementComponent);
+
+            await UniTask.SwitchToMainThread();
+            Destroy(pomlElementComponent.gameObject);
+        }
+
+        internal bool TryGetPomlElementComponentByTag(string tag, out Component pomlComponentOrPomlElementComponent)
+        {
+            // TODO: the type of pomlComponentOrPomlElementComponent should be PomlElementComponent
+
+            if (tag == "scene")
+            {
+                pomlComponentOrPomlElementComponent = this;
+                return true;
+            }
+
+            if (EnumLabel.TryGetValue(tag, out PomlElementType elementType))
+            {
+                foreach (var element in _poml.Scene.Elements)
+                {
+                    if (TryGetElementByElementTypeRecursively(elementType, element, out var pomlElement))
+                    {
+                        var result = _elementStore.TryGetPomlElementComponentByPomlElement(pomlElement, out var pomlElementComponent);
+                        pomlComponentOrPomlElementComponent = pomlElementComponent;
+                        return result;
+                    }
+                }
+            }
+
+            // not found
+            pomlComponentOrPomlElementComponent = null;
+            return false;
+        }
+
+        internal bool TryGetPomlElementByTag(string tag, out object pomlElement)
+        {
+            if (tag == "scene")
+            {
+                pomlElement = _poml.Scene;
+                return true;
+            }
+
+            if (EnumLabel.TryGetValue(tag, out PomlElementType elementType))
+            {
+                foreach (var element in _poml.Scene.Elements)
+                {
+                    if (TryGetElementByElementTypeRecursively(elementType, element, out var foundPomlElement))
+                    {
+                        pomlElement = foundPomlElement;
+                        return true;
+                    }
+                }
+            }
+
+            pomlElement = null;
+            return false;
         }
 
         internal (int ElementDescriptor, PomlElementComponent Component)[] GetAllElementsWithDescriptor()
@@ -89,6 +205,26 @@ namespace HoloLab.Spirare
         private void PomlElementComponentBase_OnDestroyed(PomlElementComponent elementComponent)
         {
             _elementStore.RemoveElement(elementComponent);
+        }
+
+        private static bool TryGetElementByElementTypeRecursively(PomlElementType elementType, PomlElement targetElement, out PomlElement pomlElement)
+        {
+            if (targetElement.ElementType == elementType)
+            {
+                pomlElement = targetElement;
+                return true;
+            }
+
+            foreach (var child in targetElement.Children)
+            {
+                if (TryGetElementByElementTypeRecursively(elementType, child, out pomlElement))
+                {
+                    return true;
+                }
+            }
+
+            pomlElement = null;
+            return false;
         }
     }
 }

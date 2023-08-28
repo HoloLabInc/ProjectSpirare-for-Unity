@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 
 namespace HoloLab.Spirare
 {
@@ -19,11 +18,11 @@ namespace HoloLab.Spirare
 
     public sealed class PomlScene
     {
-        public IEnumerable<PomlElement> Elements { get; }
+        public IList<PomlElement> Elements { get; }
 
         public string WsRecvUrl { get; set; }
 
-        public PomlScene(IEnumerable<PomlElement> elements)
+        public PomlScene(IList<PomlElement> elements)
         {
             Elements = elements;
         }
@@ -31,9 +30,9 @@ namespace HoloLab.Spirare
 
     public sealed class PomlResource
     {
-        public IEnumerable<PomlElement> Elements { get; }
+        public IList<PomlElement> Elements { get; }
 
-        public PomlResource(IEnumerable<PomlElement> elements)
+        public PomlResource(IList<PomlElement> elements)
         {
             Elements = elements;
         }
@@ -49,8 +48,8 @@ namespace HoloLab.Spirare
         public string Id { get; set; }
         public string WsRecvUrl { get; set; }
         public Vector3 Position { get; set; }
-        public Quaternion Rotation { get; set; }
-        public Vector3 Scale { get; set; }
+        public Quaternion Rotation { get; set; } = Quaternion.identity;
+        public Vector3 Scale { get; set; } = Vector3.one;
 
         // TODO: Refactor.
         public string Src { get; set; }
@@ -80,7 +79,7 @@ namespace HoloLab.Spirare
 
         public PomlElement Parent { get; set; }
 
-        public IEnumerable<PomlElement> Children { get; set; }
+        public IList<PomlElement> Children { get; set; }
 
         public string WebLink { get; set; }
 
@@ -319,7 +318,7 @@ namespace HoloLab.Spirare
         public double Latitude;
         public double Longitude;
         public double EllipsoidalHeight;
-        public Quaternion EnuRotation;
+        public Quaternion EnuRotation = Quaternion.identity;
 
         public PomlGeoReferenceElement() : base(PomlElementType.GeoReference)
         {
