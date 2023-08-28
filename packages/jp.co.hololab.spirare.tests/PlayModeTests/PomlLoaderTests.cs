@@ -48,49 +48,50 @@ public class PomlLoaderTests
         var pomlFullPath = Path.GetFullPath(pomlPath);
         var pomlComponent = await pomlLoader.LoadXmlAsync(poml, pomlFullPath);
 
-        pomlComponent.TryGetElementById("root", out var rootElement);
+        var rootResult = pomlComponent.TryGetPomlElementComponentById("root", out var rootElementComponent);
+        Assert.That(rootResult, Is.True);
 
         {
-            var result = pomlComponent.TryGetElementById("model0", out var element);
+            var result = pomlComponent.TryGetPomlElementComponentById("model0", out var elementComponent);
             Assert.That(result, Is.True);
 
-            AssertThatParentEquals(element.Component, rootElement.Component);
+            AssertThatParentEquals(elementComponent, rootElementComponent);
         }
         {
-            var result = pomlComponent.TryGetElementById("element0", out var element);
+            var result = pomlComponent.TryGetPomlElementComponentById("element0", out var elementComponent);
             Assert.That(result, Is.True);
 
-            AssertThatParentEquals(element.Component, rootElement.Component);
+            AssertThatParentEquals(elementComponent, rootElementComponent);
         }
         {
-            var result = pomlComponent.TryGetElementById("text0", out var element);
+            var result = pomlComponent.TryGetPomlElementComponentById("text0", out var elementComponent);
             Assert.That(result, Is.True);
 
-            AssertThatParentEquals(element.Component, rootElement.Component);
+            AssertThatParentEquals(elementComponent, rootElementComponent);
         }
         {
-            var result = pomlComponent.TryGetElementById("audio0", out var element);
+            var result = pomlComponent.TryGetPomlElementComponentById("audio0", out var elementComponent);
             Assert.That(result, Is.True);
 
-            AssertThatParentEquals(element.Component, rootElement.Component);
+            AssertThatParentEquals(elementComponent, rootElementComponent);
         }
         {
-            var result = pomlComponent.TryGetElementById("image0", out var element);
+            var result = pomlComponent.TryGetPomlElementComponentById("image0", out var elementComponent);
             Assert.That(result, Is.True);
 
-            AssertThatParentEquals(element.Component, rootElement.Component);
+            AssertThatParentEquals(elementComponent, rootElementComponent);
         }
         {
-            var result = pomlComponent.TryGetElementById("video0", out var element);
+            var result = pomlComponent.TryGetPomlElementComponentById("video0", out var elementComponent);
             Assert.That(result, Is.True);
 
-            AssertThatParentEquals(element.Component, rootElement.Component);
+            AssertThatParentEquals(elementComponent, rootElementComponent);
         }
         {
-            var result = pomlComponent.TryGetElementById("geometry0", out var element);
+            var result = pomlComponent.TryGetPomlElementComponentById("geometry0", out var elementComponent);
             Assert.That(result, Is.True);
 
-            AssertThatParentEquals(element.Component, rootElement.Component);
+            AssertThatParentEquals(elementComponent, rootElementComponent);
         }
     }
 
@@ -119,19 +120,19 @@ public class PomlLoaderTests
         await Task.Delay(100);
 
         {
-            var result = pomlComponent.TryGetElementById("model0", out var element);
+            var result = pomlComponent.TryGetPomlElementComponentById("model0", out var elementComponent);
             Assert.That(result, Is.True);
-            SpirareTestUtils.AssertThatMeshIsVisible(element.Component.gameObject, loaderSettings.occlusionMaterial);
+            SpirareTestUtils.AssertThatMeshIsVisible(elementComponent.gameObject, loaderSettings.occlusionMaterial);
         }
         {
-            var result = pomlComponent.TryGetElementById("model1", out var element);
+            var result = pomlComponent.TryGetPomlElementComponentById("model1", out var elementComponent);
             Assert.That(result, Is.True);
-            SpirareTestUtils.AssertThatMeshIsInvisible(element.Component.gameObject);
+            SpirareTestUtils.AssertThatMeshIsInvisible(elementComponent.gameObject);
         }
         {
-            var result = pomlComponent.TryGetElementById("model2", out var element);
+            var result = pomlComponent.TryGetPomlElementComponentById("model2", out var elementComponent);
             Assert.That(result, Is.True);
-            SpirareTestUtils.AssertThatMeshIsOcclusion(element.Component.gameObject, loaderSettings.occlusionMaterial);
+            SpirareTestUtils.AssertThatMeshIsOcclusion(elementComponent.gameObject, loaderSettings.occlusionMaterial);
         }
     }
 
@@ -155,19 +156,19 @@ public class PomlLoaderTests
         await Task.Delay(100);
 
         {
-            var result = pomlComponent.TryGetElementById("model0", out var element);
+            var result = pomlComponent.TryGetPomlElementComponentById("model0", out var elementComponent);
             Assert.That(result, Is.True);
-            SpirareTestUtils.AssertThatMeshIsVisible(element.Component.gameObject, loaderSettings.occlusionMaterial);
+            SpirareTestUtils.AssertThatMeshIsVisible(elementComponent.gameObject, loaderSettings.occlusionMaterial);
         }
         {
-            var result = pomlComponent.TryGetElementById("model1", out var element);
+            var result = pomlComponent.TryGetPomlElementComponentById("model1", out var elementComponent);
             Assert.That(result, Is.True);
-            SpirareTestUtils.AssertThatMeshIsInvisible(element.Component.gameObject);
+            SpirareTestUtils.AssertThatMeshIsInvisible(elementComponent.gameObject);
         }
         {
-            var result = pomlComponent.TryGetElementById("model2", out var element);
+            var result = pomlComponent.TryGetPomlElementComponentById("model2", out var elementComponent);
             Assert.That(result, Is.True);
-            SpirareTestUtils.AssertThatMeshIsOcclusion(element.Component.gameObject, loaderSettings.occlusionMaterial);
+            SpirareTestUtils.AssertThatMeshIsOcclusion(elementComponent.gameObject, loaderSettings.occlusionMaterial);
         }
     }
 
