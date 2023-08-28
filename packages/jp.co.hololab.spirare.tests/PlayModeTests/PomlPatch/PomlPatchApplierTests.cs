@@ -44,8 +44,8 @@ public class PomlPatchApplierTests
         var applier = new PomlPatchApplier(pomlComponent, null, null, "");
         await applier.ApplyPomlPatchAsync(pomlPatch);
 
-        pomlComponent.TryGetElementById("text1", out var element);
-        var pomlElement = element.Element as PomlTextElement;
+        pomlComponent.TryGetPomlElementComponentById("text1", out var elementComponent);
+        var pomlElement = elementComponent.PomlElement as PomlTextElement;
         Assert.That(pomlElement.Text, Is.EqualTo("updated_text"));
         Assert.That(pomlElement.Position, Is.EqualTo(new Vector3(1, 2, 3)));
 
@@ -86,12 +86,12 @@ public class PomlPatchApplierTests
         var applier = new PomlPatchApplier(pomlComponent, null, null, "");
         await applier.ApplyPomlPatchAsync(pomlPatch);
 
-        pomlComponent.TryGetElementById("model0", out var element);
-        var pomlModelElement = element.Element as PomlModelElement;
+        pomlComponent.TryGetPomlElementComponentById("model0", out var elementComponent);
+        var pomlModelElement = elementComponent.PomlElement as PomlModelElement;
         Assert.That(pomlModelElement.Src, Is.EqualTo("http://example.com/test.glb"));
         Assert.That(pomlModelElement.Position, Is.EqualTo(new Vector3(1, 2, 3)));
 
-        Assert.That(element.Component.gameObject, Is.Not.Null);
+        Assert.That(elementComponent.gameObject, Is.Not.Null);
 
         Object.Destroy(pomlComponent.gameObject);
     }
@@ -136,12 +136,12 @@ public class PomlPatchApplierTests
         var applier = new PomlPatchApplier(pomlComponent, null, null, "");
         await applier.ApplyPomlPatchAsync(pomlPatch);
 
-        pomlComponent.TryGetElementById("model0", out var element);
-        var pomlModelElement = element.Element as PomlModelElement;
+        pomlComponent.TryGetPomlElementComponentById("model0", out var elementComponent);
+        var pomlModelElement = elementComponent.PomlElement as PomlModelElement;
         Assert.That(pomlModelElement.Src, Is.EqualTo("http://example.com/test.glb"));
         Assert.That(pomlModelElement.Position, Is.EqualTo(new Vector3(1, 2, 3)));
 
-        Assert.That(element.Component.gameObject, Is.Not.Null);
+        Assert.That(elementComponent.gameObject, Is.Not.Null);
 
         Object.Destroy(pomlComponent.gameObject);
     }
@@ -180,14 +180,14 @@ public class PomlPatchApplierTests
         var applier = new PomlPatchApplier(pomlComponent, null, null, "");
         await applier.ApplyPomlPatchAsync(pomlPatch);
 
-        pomlComponent.TryGetElementById("model0", out var element);
-        var pomlModelElement = element.Element as PomlModelElement;
+        pomlComponent.TryGetPomlElementComponentById("model0", out var elementComponent);
+        var pomlModelElement = elementComponent.PomlElement as PomlModelElement;
         Assert.That(pomlModelElement.Src, Is.EqualTo("http://example.com/test.glb"));
         Assert.That(pomlModelElement.Position, Is.EqualTo(new Vector3(1, 2, 3)));
 
-        Assert.That(element.Component.gameObject, Is.Not.Null);
+        Assert.That(elementComponent.gameObject, Is.Not.Null);
 
-        var parentTransform = element.Component.transform.parent;
+        var parentTransform = elementComponent.transform.parent;
         var parentComponent = parentTransform.GetComponentInParent<PomlElementComponent>();
         Assert.That(parentComponent.PomlElement.Id, Is.EqualTo("text1"));
 
@@ -223,7 +223,7 @@ public class PomlPatchApplierTests
         await UniTask.DelayFrame(1);
 
         Assert.That(pomlComponent.transform.childCount, Is.EqualTo(1));
-        var result = pomlComponent.TryGetElementById("text1", out _);
+        var result = pomlComponent.TryGetPomlElementComponentById("text1", out _);
         Assert.That(result, Is.False);
 
         Object.Destroy(pomlComponent.gameObject);
@@ -260,10 +260,10 @@ public class PomlPatchApplierTests
 
         Assert.That(pomlComponent.transform.childCount, Is.EqualTo(0));
 
-        var result0 = pomlComponent.TryGetElementById("text0", out _);
+        var result0 = pomlComponent.TryGetPomlElementComponentById("text0", out _);
         Assert.That(result0, Is.False);
 
-        var result1 = pomlComponent.TryGetElementById("text1", out _);
+        var result1 = pomlComponent.TryGetPomlElementComponentById("text1", out _);
         Assert.That(result1, Is.False);
 
         Object.Destroy(pomlComponent.gameObject);

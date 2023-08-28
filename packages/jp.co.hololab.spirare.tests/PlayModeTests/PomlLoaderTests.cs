@@ -193,10 +193,10 @@ public class PomlLoaderTests
         var pomlComponent = await pomlLoader.LoadXmlAsync(poml, pomlFullPath);
 
         {
-            var result = pomlComponent.TryGetElementById("element0", out var element);
+            var result = pomlComponent.TryGetPomlElementComponentById("element0", out var elementComponent);
             Assert.That(result, Is.True);
 
-            var transform = element.Component.transform;
+            var transform = elementComponent.transform;
             Assert.That(transform.localPosition, Is.EqualTo(CoordinateUtility.ToUnityCoordinate(1, 2, 3)));
             Assert.That(Quaternion.Angle(transform.localRotation, rotation), Is.LessThan(0.001));
             Assert.That(transform.localScale, Is.EqualTo(CoordinateUtility.ToUnityCoordinate(4, 5, 6, false)));
