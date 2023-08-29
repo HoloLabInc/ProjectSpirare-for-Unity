@@ -117,7 +117,7 @@ namespace HoloLab.Spirare
         private static GameObject CreateLine(LineGeometry line, GeoReferenceElementComponentFactory geoReferenceElementComponentFactory, Transform parent, RenderType renderType, Material baseMaterial)
         {
             var lineObj = new GameObject("line");
-            lineObj.transform.SetParent(parent);
+            lineObj.transform.SetParent(parent, worldPositionStays: false);
 
             var points = ConvertLineGeometryToPoints(line);
             if (line.PositionType == PositionType.GeoLocation)
@@ -178,7 +178,7 @@ namespace HoloLab.Spirare
         private static GameObject CreatePolygon(PolygonGeometry polygon, GeoReferenceElementComponentFactory geoReferenceElementComponentFactory, Transform parent, Material baseMaterial)
         {
             var polygonObj = new GameObject("polygon");
-            polygonObj.transform.SetParent(parent);
+            polygonObj.transform.SetParent(parent, worldPositionStays: false);
 
             if (polygon.PositionType == PositionType.GeoLocation)
             {
