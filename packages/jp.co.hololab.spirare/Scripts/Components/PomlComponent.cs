@@ -92,14 +92,6 @@ namespace HoloLab.Spirare
 
         #endregion
 
-        internal async Task AppendElementToSceneAsync(PomlElement pomlElement)
-        {
-            await UniTask.SwitchToMainThread();
-
-            _poml.Scene.Children.Add(pomlElement);
-            await _pomlLoader.LoadElement(pomlElement, transform, null, this);
-        }
-
         internal async Task AppendElementAsync(PomlElement pomlElement, PomlElement parentElement)
         {
             await UniTask.SwitchToMainThread();
@@ -140,6 +132,18 @@ namespace HoloLab.Spirare
 
             await UniTask.SwitchToMainThread();
             Destroy(pomlElementComponent.gameObject);
+        }
+
+        internal bool TryGetPomlElementById(string id, out PomlElement pomlElement)
+        {
+            if (_elementStore.TryGetElementById(id, out var pomlElementComponent))
+            {
+                pomlElement = pomlElementComponent.PomlElement;
+                return true;
+            }
+
+            pomlElement = null;
+            return false;
         }
 
         internal bool TryGetPomlElementComponentByTag(string tag, out PomlElementComponent pomlElementComponent)

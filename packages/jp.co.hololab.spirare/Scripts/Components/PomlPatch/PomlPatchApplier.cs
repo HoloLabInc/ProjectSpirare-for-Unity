@@ -13,11 +13,11 @@ namespace HoloLab.Spirare
     public sealed class PomlPatchApplier
     {
         private readonly PomlComponent pomlComponent;
-        private readonly object defaultTargetPomlElement;
+        private readonly PomlElement defaultTargetPomlElement;
         private readonly PomlElementComponent defaultTargetPomlElementComponent;
         private readonly string basePath;
 
-        public PomlPatchApplier(PomlComponent pomlComponent, object defaultTargetPomlElement, PomlElementComponent defaultTargetPomlElementComponent, string basePath)
+        public PomlPatchApplier(PomlComponent pomlComponent, PomlElement defaultTargetPomlElement, PomlElementComponent defaultTargetPomlElementComponent, string basePath)
         {
             this.pomlComponent = pomlComponent;
             this.defaultTargetPomlElement = defaultTargetPomlElement;
@@ -51,7 +51,7 @@ namespace HoloLab.Spirare
             }
         }
 
-        private bool TryGetTargetPomlElement(PomlPatch.PomlPatchTarget target, out object pomlElement)
+        private bool TryGetTargetPomlElement(PomlPatch.PomlPatchTarget target, out PomlElement pomlElement)
         {
             if (target == null)
             {
@@ -61,20 +61,12 @@ namespace HoloLab.Spirare
 
             if (string.IsNullOrEmpty(target.Id) == false)
             {
-                if (pomlComponent.TryGetPomlElementComponentById(target.Id, out var elementComponent))
-                {
-                    pomlElement = elementComponent.PomlElement;
-                    return true;
-                }
+                return pomlComponent.TryGetPomlElementById(target.Id, out pomlElement);
             }
 
             if (string.IsNullOrEmpty(target.Tag) == false)
             {
-                if (pomlComponent.TryGetPomlElementByTag(target.Tag, out var element))
-                {
-                    pomlElement = element;
-                    return true;
-                }
+                return pomlComponent.TryGetPomlElementByTag(target.Tag, out pomlElement);
             }
 
             pomlElement = null;
@@ -105,21 +97,14 @@ namespace HoloLab.Spirare
 
         private async UniTask ApplyPomlPatchAdd(PomlPatchAdd patch)
         {
-            if (TryGetTargetPomlElement(patch.Target, out var targetPomlElementObject) == false)
+            if (TryGetTargetPomlElement(patch.Target, out var targetPomlElement) == false)
             {
                 return;
             }
 
             var pomlElement = ConvertPomlPatchAddElementToPomlElement(patch.Element, parentElement: null, basePath);
 
-            if (targetPomlElementObject is PomlScene)
-            {
-                await pomlComponent.AppendElementToSceneAsync(pomlElement);
-            }
-            else if (targetPomlElementObject is PomlElement targetPomlElement)
-            {
-                await pomlComponent.AppendElementAsync(pomlElement, parentElement: targetPomlElement);
-            }
+            await pomlComponent.AppendElementAsync(pomlElement, parentElement: targetPomlElement);
         }
 
         private void ApplyPomlPatchUpdate(PomlPatchUpdate patch)
