@@ -75,7 +75,7 @@ namespace HoloLab.Spirare
 
         public PomlElement Parent { get; set; }
 
-        public IList<PomlElement> Children { get; set; }
+        public IList<PomlElement> Children { get; set; } = Array.Empty<PomlElement>();
 
         public string WebLink { get; set; }
 

@@ -152,7 +152,7 @@ public class PomlParserTests
 
         var parent = elements[0];
         Assert.That(parent.Children.Count, Is.EqualTo(1));
-        Assert.That(parent.Parent, Is.Null);
+        Assert.That(parent.Parent.ElementType, Is.EqualTo(PomlElementType.Scene));
 
         var child = parent.Children.First();
         Assert.That(child.Parent, Is.EqualTo(parent));

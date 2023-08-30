@@ -7,7 +7,7 @@ using Debug = UnityEngine.Debug;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 using Color = UnityEngine.Color;
-using UnityEditor;
+using UnityEngine.Assertions;
 
 namespace HoloLab.Spirare
 {
@@ -61,6 +61,15 @@ namespace HoloLab.Spirare
 
         private static PomlScene ParseScene(XmlNode scene, string basePath)
         {
+            if (scene == null)
+            {
+                return new PomlScene();
+            }
+
+            var pomlScene = ParseElement(scene, basePath) as PomlScene;
+            Assert.IsNotNull(pomlScene);
+
+            /*
             var elements = ParseElements(scene, basePath);
             var pomlScene = new PomlScene()
             {
@@ -70,6 +79,7 @@ namespace HoloLab.Spirare
             {
                 pomlScene.WsRecvUrl = scene.GetAttribute("ws-recv-url", null);
             }
+            */
             return pomlScene;
         }
 
@@ -268,6 +278,8 @@ namespace HoloLab.Spirare
             var elementType = GetElementType(node);
             switch (elementType)
             {
+                case PomlElementType.Scene:
+                    return InitSceneElement(node);
                 case PomlElementType.Script:
                     return InitScriptElement(node, basePath);
                 case PomlElementType.Text:
@@ -295,6 +307,11 @@ namespace HoloLab.Spirare
                 default:
                     return null;
             }
+        }
+
+        private static PomlElement InitSceneElement(XmlNode node)
+        {
+            return new PomlScene();
         }
 
         private static PomlElement InitTextElement(XmlNode node)

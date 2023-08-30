@@ -128,7 +128,8 @@ namespace HoloLab.Spirare
             var parent = pomlElement.Parent;
             if (parent == null)
             {
-                _poml.Scene.Children.Remove(pomlElement);
+                Debug.LogWarning("scene root cannot be removed");
+                return;
             }
             else
             {
@@ -143,35 +144,6 @@ namespace HoloLab.Spirare
 
         internal bool TryGetPomlElementComponentByTag(string tag, out PomlElementComponent pomlElementComponent)
         {
-            // TODO: the type of pomlComponentOrPomlElementComponent should be PomlElementComponent
-
-            /*
-            if (tag == "scene")
-            {
-                pomlComponentOrPomlElementComponent = this;
-                return true;
-            }
-            */
-
-            /*
-            if (EnumLabel.TryGetValue(tag, out PomlElementType elementType))
-            {
-                foreach (var element in _poml.Scene.Children)
-                {
-                    if (TryGetElementByElementTypeRecursively(elementType, element, out var pomlElement))
-                    {
-                        var result = _elementStore.TryGetPomlElementComponentByPomlElement(pomlElement, out var pomlElementComponent);
-                        pomlComponentOrPomlElementComponent = pomlElementComponent;
-                        return result;
-                    }
-                }
-            }
-
-            // not found
-            pomlComponentOrPomlElementComponent = null;
-            return false;
-            */
-
             if (TryGetPomlElementByTag(tag, out var pomlElement) == false)
             {
                 pomlElementComponent = null;
@@ -183,30 +155,13 @@ namespace HoloLab.Spirare
 
         internal bool TryGetPomlElementByTag(string tag, out PomlElement pomlElement)
         {
-            /*
-            if (tag == "scene")
-            {
-                pomlElement = _poml.Scene;
-                return true;
-            }
-            */
-
             if (EnumLabel.TryGetValue(tag, out PomlElementType elementType) == false)
             {
                 pomlElement = null;
                 return false;
             }
+
             return TryGetElementByElementTypeRecursively(elementType, _poml.Scene, out pomlElement);
-            /*
-            foreach (var element in _poml.Scene.Children)
-            {
-                if (TryGetElementByElementTypeRecursively(elementType, element, out var foundPomlElement))
-                {
-                    pomlElement = foundPomlElement;
-                    return true;
-                }
-            }
-            */
         }
 
         internal (int ElementDescriptor, PomlElementComponent Component)[] GetAllElementsWithDescriptor()
