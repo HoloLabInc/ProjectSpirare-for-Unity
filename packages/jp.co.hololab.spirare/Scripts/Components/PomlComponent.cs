@@ -20,7 +20,7 @@ namespace HoloLab.Spirare
 
         public string Url => _url;
 
-        internal PomlComponent Initialize(ElementStore contents, Poml poml, PomlLoader pomlLoader, string url)
+        internal void Initialize(ElementStore contents, Poml poml, PomlLoader pomlLoader, string url)
         {
             _elementStore = contents ?? throw new ArgumentNullException(nameof(contents));
             _poml = poml ?? throw new ArgumentNullException(nameof(poml));
@@ -28,8 +28,6 @@ namespace HoloLab.Spirare
             _url = url;
 
             _patchApplier = new PomlPatchApplier(this, _poml.Scene, this, url);
-
-            return this;
         }
 
         private void Start()

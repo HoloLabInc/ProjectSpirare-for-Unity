@@ -71,7 +71,7 @@ public class PomlComponentTests
     }
 
     [Test]
-    public async Task GetAllElements()
+    public async Task GetAllPomlElementComponents()
     {
         var poml = @"
 <poml>
@@ -90,8 +90,8 @@ public class PomlComponentTests
 
         var elements = pomlComponent.GetAllPomlElementComponents();
 
-        // TODO Should also be able to fetch the scene root?
-        Assert.That(elements.Count, Is.EqualTo(4));
+        Assert.That(elements.Count, Is.EqualTo(5));
+        Assert.That(elements.Count(x => x.PomlElement.ElementType == PomlElementType.Scene), Is.EqualTo(1));
         Assert.That(elements.Count(x => x.PomlElement.ElementType == PomlElementType.Element), Is.EqualTo(3));
     }
 
