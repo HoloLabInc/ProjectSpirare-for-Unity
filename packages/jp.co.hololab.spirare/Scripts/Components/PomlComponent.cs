@@ -96,7 +96,7 @@ namespace HoloLab.Spirare
         {
             await UniTask.SwitchToMainThread();
 
-            _poml.Scene.Elements.Add(pomlElement);
+            _poml.Scene.Children.Add(pomlElement);
             await _pomlLoader.LoadElement(pomlElement, transform, null, this);
         }
 
@@ -128,7 +128,7 @@ namespace HoloLab.Spirare
             var parent = pomlElement.Parent;
             if (parent == null)
             {
-                _poml.Scene.Elements.Remove(pomlElement);
+                _poml.Scene.Children.Remove(pomlElement);
             }
             else
             {
@@ -153,7 +153,7 @@ namespace HoloLab.Spirare
 
             if (EnumLabel.TryGetValue(tag, out PomlElementType elementType))
             {
-                foreach (var element in _poml.Scene.Elements)
+                foreach (var element in _poml.Scene.Children)
                 {
                     if (TryGetElementByElementTypeRecursively(elementType, element, out var pomlElement))
                     {
@@ -179,7 +179,7 @@ namespace HoloLab.Spirare
 
             if (EnumLabel.TryGetValue(tag, out PomlElementType elementType))
             {
-                foreach (var element in _poml.Scene.Elements)
+                foreach (var element in _poml.Scene.Children)
                 {
                     if (TryGetElementByElementTypeRecursively(elementType, element, out var foundPomlElement))
                     {

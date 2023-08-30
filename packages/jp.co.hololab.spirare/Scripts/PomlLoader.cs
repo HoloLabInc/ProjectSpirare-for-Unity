@@ -91,7 +91,7 @@ namespace HoloLab.Spirare
         private async Task LoadScene(PomlScene scene, PomlComponent pomlComponent)
         {
             var sceneOrigin = pomlComponent.transform;
-            foreach (var element in scene.Elements)
+            foreach (var element in scene.Children)
             {
                 await LoadElement(element, sceneOrigin, null, pomlComponent);
             }

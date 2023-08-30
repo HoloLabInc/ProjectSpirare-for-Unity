@@ -637,7 +637,7 @@ public class PomlParserTests
         var result = PomlParser.TryParse(xml, basePath, out var poml);
 
         Assert.That(result, Is.True);
-        var elements = poml.Scene.Elements.ToArray();
+        var elements = poml.Scene.Children.ToArray();
 
         return elements;
     }

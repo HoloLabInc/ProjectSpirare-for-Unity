@@ -16,16 +16,12 @@ namespace HoloLab.Spirare
         }
     }
 
-    public sealed class PomlScene
+    public sealed class PomlScene : PomlElement
     {
-        public IList<PomlElement> Elements { get; }
+        public PomlScene() : base(PomlElementType.Scene) { }
 
-        public string WsRecvUrl { get; set; }
-
-        public PomlScene(IList<PomlElement> elements)
-        {
-            Elements = elements;
-        }
+        [Obsolete("Please use Children instead of Elements.")]
+        public IList<PomlElement> Elements => Children;
     }
 
     public sealed class PomlResource
@@ -366,32 +362,34 @@ namespace HoloLab.Spirare
     {
         [EnumLabel("#comment")]
         None = 0,
+        [EnumLabel("scene")]
+        Scene,
         [EnumLabel("element")]
-        Element = 1,
+        Element,
         [EnumLabel("model")]
-        Model = 2,
+        Model,
         [EnumLabel("text")]
-        Text = 3,
+        Text,
         [EnumLabel("image")]
-        Image = 4,
+        Image,
         [EnumLabel("video")]
-        Video = 5,
+        Video,
         [EnumLabel("audio")]
-        Audio = 6,
+        Audio,
         [EnumLabel("geometry")]
-        Geometry = 7,
+        Geometry,
         [EnumLabel("cesium3dtiles")]
-        Cesium3dTiles = 8,
+        Cesium3dTiles,
         [EnumLabel("script")]
-        Script = 9,
+        Script,
         [EnumLabel("space-reference")]
         [EnumLabel("space-placement")] // space-placement is deprecated
-        SpaceReference = 10,
+        SpaceReference,
         [EnumLabel("geo-reference")]
         [EnumLabel("geo-placement")] // geo-placement is deprecated
-        GeoReference = 11,
+        GeoReference,
         [EnumLabel("screen-space")]
-        ScreenSpace = 12,
+        ScreenSpace,
     }
 
     public enum PomlPrimitiveElementType

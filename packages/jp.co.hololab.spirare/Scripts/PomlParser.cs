@@ -62,7 +62,10 @@ namespace HoloLab.Spirare
         private static PomlScene ParseScene(XmlNode scene, string basePath)
         {
             var elements = ParseElements(scene, basePath);
-            var pomlScene = new PomlScene(elements);
+            var pomlScene = new PomlScene()
+            {
+                Children = elements
+            };
             if (scene != null)
             {
                 pomlScene.WsRecvUrl = scene.GetAttribute("ws-recv-url", null);
