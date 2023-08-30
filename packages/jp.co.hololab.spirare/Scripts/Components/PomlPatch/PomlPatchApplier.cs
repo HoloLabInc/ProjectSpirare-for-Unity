@@ -14,10 +14,10 @@ namespace HoloLab.Spirare
     {
         private readonly PomlComponent pomlComponent;
         private readonly object defaultTargetPomlElement;
-        private readonly Component defaultTargetPomlElementComponent;
+        private readonly PomlElementComponent defaultTargetPomlElementComponent;
         private readonly string basePath;
 
-        public PomlPatchApplier(PomlComponent pomlComponent, object defaultTargetPomlElement, Component defaultTargetPomlElementComponent, string basePath)
+        public PomlPatchApplier(PomlComponent pomlComponent, object defaultTargetPomlElement, PomlElementComponent defaultTargetPomlElementComponent, string basePath)
         {
             this.pomlComponent = pomlComponent;
             this.defaultTargetPomlElement = defaultTargetPomlElement;
@@ -81,7 +81,7 @@ namespace HoloLab.Spirare
             return false;
         }
 
-        private bool TryGetTargetPomlElementComponent(PomlPatch.PomlPatchTarget target, out Component elementComponent)
+        private bool TryGetTargetPomlElementComponent(PomlPatch.PomlPatchTarget target, out PomlElementComponent elementComponent)
         {
             if (target == null)
             {
@@ -91,11 +91,7 @@ namespace HoloLab.Spirare
 
             if (string.IsNullOrEmpty(target.Id) == false)
             {
-                if (pomlComponent.TryGetPomlElementComponentById(target.Id, out var pomlElementComponent))
-                {
-                    elementComponent = pomlElementComponent;
-                    return true;
-                }
+                return pomlComponent.TryGetPomlElementComponentById(target.Id, out elementComponent);
             }
 
             if (string.IsNullOrEmpty(target.Tag) == false)

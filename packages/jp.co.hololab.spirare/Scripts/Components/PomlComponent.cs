@@ -13,8 +13,8 @@ namespace HoloLab.Spirare
         private PomlLoader _pomlLoader;
         private string _url;
 
-        private PomlPatchApplier _patchApplier;
-        private WebSocketHelper _webSocket;
+        // private PomlPatchApplier _patchApplier;
+        // private WebSocketHelper _webSocket;
 
         public int ElementCount => _elementStore.ElementCount;
 
@@ -27,9 +27,10 @@ namespace HoloLab.Spirare
             _pomlLoader = pomlLoader ?? throw new ArgumentNullException(nameof(pomlLoader));
             _url = url;
 
-            _patchApplier = new PomlPatchApplier(this, _poml.Scene, this, url);
+            // _patchApplier = new PomlPatchApplier(this, _poml.Scene, this, url);
         }
 
+        /*
         private void Start()
         {
             StartWebSocket().Forget();
@@ -46,6 +47,7 @@ namespace HoloLab.Spirare
             _webSocket = new WebSocketHelper(_patchApplier);
             await _webSocket.Connect(wsRecvUrl, ct);
         }
+        */
 
         #region Public methods
 
@@ -139,16 +141,19 @@ namespace HoloLab.Spirare
             Destroy(pomlElementComponent.gameObject);
         }
 
-        internal bool TryGetPomlElementComponentByTag(string tag, out Component pomlComponentOrPomlElementComponent)
+        internal bool TryGetPomlElementComponentByTag(string tag, out PomlElementComponent pomlElementComponent)
         {
             // TODO: the type of pomlComponentOrPomlElementComponent should be PomlElementComponent
 
+            /*
             if (tag == "scene")
             {
                 pomlComponentOrPomlElementComponent = this;
                 return true;
             }
+            */
 
+            /*
             if (EnumLabel.TryGetValue(tag, out PomlElementType elementType))
             {
                 foreach (var element in _poml.Scene.Children)
@@ -165,30 +170,43 @@ namespace HoloLab.Spirare
             // not found
             pomlComponentOrPomlElementComponent = null;
             return false;
+            */
+
+            if (TryGetPomlElementByTag(tag, out var pomlElement) == false)
+            {
+                pomlElementComponent = null;
+                return false;
+            }
+
+            return _elementStore.TryGetPomlElementComponentByPomlElement(pomlElement, out pomlElementComponent);
         }
 
-        internal bool TryGetPomlElementByTag(string tag, out object pomlElement)
+        internal bool TryGetPomlElementByTag(string tag, out PomlElement pomlElement)
         {
+            /*
             if (tag == "scene")
             {
                 pomlElement = _poml.Scene;
                 return true;
             }
+            */
 
-            if (EnumLabel.TryGetValue(tag, out PomlElementType elementType))
+            if (EnumLabel.TryGetValue(tag, out PomlElementType elementType) == false)
             {
-                foreach (var element in _poml.Scene.Children)
+                pomlElement = null;
+                return false;
+            }
+            return TryGetElementByElementTypeRecursively(elementType, _poml.Scene, out pomlElement);
+            /*
+            foreach (var element in _poml.Scene.Children)
+            {
+                if (TryGetElementByElementTypeRecursively(elementType, element, out var foundPomlElement))
                 {
-                    if (TryGetElementByElementTypeRecursively(elementType, element, out var foundPomlElement))
-                    {
-                        pomlElement = foundPomlElement;
-                        return true;
-                    }
+                    pomlElement = foundPomlElement;
+                    return true;
                 }
             }
-
-            pomlElement = null;
-            return false;
+            */
         }
 
         internal (int ElementDescriptor, PomlElementComponent Component)[] GetAllElementsWithDescriptor()
