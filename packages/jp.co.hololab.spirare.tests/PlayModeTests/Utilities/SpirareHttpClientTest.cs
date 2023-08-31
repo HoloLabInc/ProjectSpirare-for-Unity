@@ -48,7 +48,12 @@ public class SpirareHttpClientTest
         var request1 = spirareHttpClient.GetByteArrayAsync(url, enableCache: true);
         var request2 = spirareHttpClient.GetByteArrayAsync(url, enableCache: true);
         var request3 = spirareHttpClient.GetByteArrayAsync(url, enableCache: true);
-        await UniTask.WhenAll(request1, request2, request3);
+        var data = await UniTask.WhenAll(request1, request2, request3);
+
+        var expectedData = Encoding.UTF8.GetBytes("test.txt");
+        Assert.That(data.Item1.Data, Is.EqualTo(expectedData));
+        Assert.That(data.Item2.Data, Is.EqualTo(expectedData));
+        Assert.That(data.Item3.Data, Is.EqualTo(expectedData));
 
         Assert.That(resourceControllerForTest.RequestCountDictionary["/resources/test.txt"], Is.EqualTo(1));
     }
@@ -62,7 +67,12 @@ public class SpirareHttpClientTest
         var request1 = spirareHttpClient.GetByteArrayAsync(url, enableCache: false);
         var request2 = spirareHttpClient.GetByteArrayAsync(url, enableCache: false);
         var request3 = spirareHttpClient.GetByteArrayAsync(url, enableCache: false);
-        await UniTask.WhenAll(request1, request2, request3);
+        var data = await UniTask.WhenAll(request1, request2, request3);
+
+        var expectedData = Encoding.UTF8.GetBytes("test.txt");
+        Assert.That(data.Item1.Data, Is.EqualTo(expectedData));
+        Assert.That(data.Item2.Data, Is.EqualTo(expectedData));
+        Assert.That(data.Item3.Data, Is.EqualTo(expectedData));
 
         Assert.That(resourceControllerForTest.RequestCountDictionary["/resources/test.txt"], Is.EqualTo(3));
     }
