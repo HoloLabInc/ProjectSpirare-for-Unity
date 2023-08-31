@@ -123,10 +123,11 @@ namespace HoloLab.Spirare
 
         private async UniTask<SpirareHttpClientResult<UnityWebRequest>> SendGetRequestAsync(string url, DownloadHandler downloadHandler)
         {
+            var request = UnityWebRequest.Get(url);
+            request.downloadHandler = downloadHandler;
+
             try
             {
-                var request = UnityWebRequest.Get(url);
-                request.downloadHandler = downloadHandler;
                 var webRequest = await request.SendWebRequest();
 
                 if (webRequest.result == UnityWebRequest.Result.Success)
@@ -136,11 +137,13 @@ namespace HoloLab.Spirare
                 else
                 {
                     var ex = new Exception(webRequest.error);
+                    request.Dispose();
                     return CreateErrroResult<UnityWebRequest>(ex);
                 }
             }
             catch (Exception ex)
             {
+                request.Dispose();
                 return CreateErrroResult<UnityWebRequest>(ex);
             }
         }
