@@ -21,7 +21,7 @@ public class SpirareHttpClientTest
     private ResourceControllerForTest resourceControllerForTest;
 
     [SetUp]
-    public void SetUp()
+    public async Task SetUp()
     {
         resourceControllerForTest = new ResourceControllerForTest()
         {
@@ -31,6 +31,9 @@ public class SpirareHttpClientTest
         httpServerForTest = new HttpServerForTest();
         httpServerForTest.AddController(resourceControllerForTest);
         httpServerForTest.StartServer();
+
+        // Wait for server start
+        await Task.Delay(100);
     }
 
     [TearDown]
