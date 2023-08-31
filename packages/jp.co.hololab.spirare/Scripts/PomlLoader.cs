@@ -82,19 +82,17 @@ namespace HoloLab.Spirare
                 throw new FormatException("Parsing poml is failed.");
             }
             var contentsStore = new ElementStore();
-            var pomlComponent = targetGameObject.AddComponent<PomlComponent>().Initialize(contentsStore, poml, this, uri);
-            await LoadScene(poml.Scene, pomlComponent);
+            var pomlComponent = targetGameObject.AddComponent<PomlComponent>();
+            pomlComponent.Initialize(contentsStore, poml, this, uri);
+
+            await LoadScene(poml.Scene, targetGameObject.transform, pomlComponent);
             // await LoadResource(poml.Resource, pomlComponent);
             return pomlComponent;
         }
 
-        private async Task LoadScene(PomlScene scene, PomlComponent pomlComponent)
+        private async Task LoadScene(PomlScene scene, Transform parentTransform, PomlComponent pomlComponent)
         {
-            var sceneOrigin = pomlComponent.transform;
-            foreach (var element in scene.Elements)
-            {
-                await LoadElement(element, sceneOrigin, null, pomlComponent);
-            }
+            await LoadElement(scene, parentTransform, null, pomlComponent);
         }
 
         /*
@@ -163,6 +161,8 @@ namespace HoloLab.Spirare
         {
             switch (element.ElementType)
             {
+                case PomlElementType.Scene:
+                    return InstantiateSceneElement(element, parentTransform);
                 case PomlElementType.Element:
                     return InstantiateEmptyElement(element, parentTransform);
                 case PomlElementType.Model:
@@ -300,6 +300,13 @@ namespace HoloLab.Spirare
                     break;
             }
             return null;
+        }
+
+        private static GameObject InstantiateSceneElement(PomlElement element, Transform parentTransform)
+        {
+            var go = new GameObject("scene");
+            go.transform.SetParent(parentTransform, false);
+            return go;
         }
 
         private static GameObject InstantiateEmptyElement(PomlElement element, Transform parentTransform)

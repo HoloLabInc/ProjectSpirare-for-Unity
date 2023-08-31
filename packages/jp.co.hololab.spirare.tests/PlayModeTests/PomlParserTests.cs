@@ -20,6 +20,26 @@ public class PomlParserTests
     }
 
     [Test]
+    public void SceneTag()
+    {
+        var xml = @"
+<poml>
+    <scene id=""test-id""
+           ws-recv-url=""wss://example.com:8000"">
+    </scene>
+</poml>";
+
+        var result = PomlParser.TryParse(xml, "", out var poml);
+        Assert.That(result, Is.True);
+
+        var scene = poml.Scene;
+        Assert.That(scene.Children.Count, Is.EqualTo(0));
+
+        Assert.That(scene.ElementType, Is.EqualTo(PomlElementType.Scene));
+        Assert.That(scene.WsRecvUrl, Is.EqualTo("wss://example.com:8000"));
+    }
+
+    [Test]
     public void ElementTag()
     {
         var xml = @"
@@ -152,7 +172,7 @@ public class PomlParserTests
 
         var parent = elements[0];
         Assert.That(parent.Children.Count, Is.EqualTo(1));
-        Assert.That(parent.Parent, Is.Null);
+        Assert.That(parent.Parent.ElementType, Is.EqualTo(PomlElementType.Scene));
 
         var child = parent.Children.First();
         Assert.That(child.Parent, Is.EqualTo(parent));
@@ -637,7 +657,7 @@ public class PomlParserTests
         var result = PomlParser.TryParse(xml, basePath, out var poml);
 
         Assert.That(result, Is.True);
-        var elements = poml.Scene.Elements.ToArray();
+        var elements = poml.Scene.Children.ToArray();
 
         return elements;
     }

@@ -206,7 +206,8 @@ public class PomlPatchApplierTests
 </poml> ";
 
         var pomlComponent = await LoadPomlAsync(poml);
-        Assert.That(pomlComponent.transform.childCount, Is.EqualTo(2));
+        pomlComponent.TryGetPomlElementComponentByTag("scene", out var sceneComponent);
+        Assert.That(sceneComponent.transform.childCount, Is.EqualTo(2));
 
         var pomlPatch = @"
 {
@@ -222,7 +223,7 @@ public class PomlPatchApplierTests
         // Wait until destroy completed
         await UniTask.DelayFrame(1);
 
-        Assert.That(pomlComponent.transform.childCount, Is.EqualTo(1));
+        Assert.That(sceneComponent.transform.childCount, Is.EqualTo(1));
         var result = pomlComponent.TryGetPomlElementComponentById("text1", out _);
         Assert.That(result, Is.False);
 
@@ -241,7 +242,8 @@ public class PomlPatchApplierTests
 </poml> ";
 
         var pomlComponent = await LoadPomlAsync(poml);
-        Assert.That(pomlComponent.transform.childCount, Is.EqualTo(2));
+        pomlComponent.TryGetPomlElementComponentByTag("scene", out var sceneComponent);
+        Assert.That(sceneComponent.transform.childCount, Is.EqualTo(2));
 
         var pomlPatch = @"
 {
@@ -258,7 +260,7 @@ public class PomlPatchApplierTests
         // Wait until destroy completed
         await UniTask.DelayFrame(1);
 
-        Assert.That(pomlComponent.transform.childCount, Is.EqualTo(0));
+        Assert.That(sceneComponent.transform.childCount, Is.EqualTo(0));
 
         var result0 = pomlComponent.TryGetPomlElementComponentById("text0", out _);
         Assert.That(result0, Is.False);
@@ -268,8 +270,6 @@ public class PomlPatchApplierTests
 
         Object.Destroy(pomlComponent.gameObject);
     }
-
-
 
     private async Task<PomlComponent> LoadPomlAsync(string poml)
     {

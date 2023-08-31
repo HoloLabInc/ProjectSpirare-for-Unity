@@ -30,7 +30,10 @@ namespace HoloLab.Spirare
             var coordinateReferenceElements = BuildCoordinateReferenceElements(gameObject.transform);
             elements.AddRange(coordinateReferenceElements);
 
-            var scene = new PomlScene(elements);
+            var scene = new PomlScene()
+            {
+                Children = elements
+            };
             var resource = new PomlResource(Array.Empty<PomlElement>());
             return new Poml(scene, resource);
         }
