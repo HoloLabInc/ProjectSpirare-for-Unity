@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -95,6 +96,52 @@ public class SpirareHttpClientTest
 
         Assert.IsTrue(data.Item3.Success);
         Assert.That(data.Item3.Data, Is.EqualTo(expectedData));
+
+        Assert.That(resourceControllerForTest.RequestCountDictionary["/resources/test.txt"], Is.EqualTo(3));
+    }
+
+    [Test]
+    public async Task DownloadToFileAsync_RequestIsSentOnceWhenCacheEnabled()
+    {
+        var spirareHttpClient = SpirareHttpClient.Instance;
+
+        var url = $"http://localhost:{httpServerForTest.Port}/resources/test.txt";
+        var request1 = spirareHttpClient.DownloadToFileAsync(url, enableCache: true);
+        var request2 = spirareHttpClient.DownloadToFileAsync(url, enableCache: true);
+        var request3 = spirareHttpClient.DownloadToFileAsync(url, enableCache: true);
+        var data = await UniTask.WhenAll(request1, request2, request3);
+
+        Assert.IsTrue(data.Item1.Success);
+        Assert.That(File.ReadAllText(data.Item1.Data), Is.EqualTo("test.txt"));
+
+        Assert.IsTrue(data.Item2.Success);
+        Assert.That(File.ReadAllText(data.Item2.Data), Is.EqualTo("test.txt"));
+
+        Assert.IsTrue(data.Item3.Success);
+        Assert.That(File.ReadAllText(data.Item3.Data), Is.EqualTo("test.txt"));
+
+        Assert.That(resourceControllerForTest.RequestCountDictionary["/resources/test.txt"], Is.EqualTo(1));
+    }
+
+    [Test]
+    public async Task DownloadToFileAsync_RequestIsSentMultipleTimesWhenCacheDisabled()
+    {
+        var spirareHttpClient = SpirareHttpClient.Instance;
+
+        var url = $"http://localhost:{httpServerForTest.Port}/resources/test.txt";
+        var request1 = spirareHttpClient.DownloadToFileAsync(url, enableCache: false);
+        var request2 = spirareHttpClient.DownloadToFileAsync(url, enableCache: false);
+        var request3 = spirareHttpClient.DownloadToFileAsync(url, enableCache: false);
+        var data = await UniTask.WhenAll(request1, request2, request3);
+
+        Assert.IsTrue(data.Item1.Success);
+        Assert.That(File.ReadAllText(data.Item1.Data), Is.EqualTo("test.txt"));
+
+        Assert.IsTrue(data.Item2.Success);
+        Assert.That(File.ReadAllText(data.Item2.Data), Is.EqualTo("test.txt"));
+
+        Assert.IsTrue(data.Item3.Success);
+        Assert.That(File.ReadAllText(data.Item3.Data), Is.EqualTo("test.txt"));
 
         Assert.That(resourceControllerForTest.RequestCountDictionary["/resources/test.txt"], Is.EqualTo(3));
     }
