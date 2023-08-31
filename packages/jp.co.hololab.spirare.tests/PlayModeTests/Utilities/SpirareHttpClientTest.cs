@@ -40,6 +40,16 @@ public class SpirareHttpClientTest
     }
 
     [Test]
+    public async Task GetByteArrayAsync_ReturnErrorWhenNotFoundPage()
+    {
+        var spirareHttpClient = SpirareHttpClient.Instance;
+
+        var url = $"http://localhost:{httpServerForTest.Port}/invalid";
+        var request = await spirareHttpClient.GetByteArrayAsync(url, enableCache: false);
+        Assert.IsFalse(request.Success);
+    }
+
+    [Test]
     public async Task GetByteArrayAsync_RequestIsSentOnceWhenCacheEnabled()
     {
         var spirareHttpClient = SpirareHttpClient.Instance;
@@ -51,8 +61,14 @@ public class SpirareHttpClientTest
         var data = await UniTask.WhenAll(request1, request2, request3);
 
         var expectedData = Encoding.UTF8.GetBytes("test.txt");
+
+        Assert.IsTrue(data.Item1.Success);
         Assert.That(data.Item1.Data, Is.EqualTo(expectedData));
+
+        Assert.IsTrue(data.Item2.Success);
         Assert.That(data.Item2.Data, Is.EqualTo(expectedData));
+
+        Assert.IsTrue(data.Item3.Success);
         Assert.That(data.Item3.Data, Is.EqualTo(expectedData));
 
         Assert.That(resourceControllerForTest.RequestCountDictionary["/resources/test.txt"], Is.EqualTo(1));
@@ -70,8 +86,14 @@ public class SpirareHttpClientTest
         var data = await UniTask.WhenAll(request1, request2, request3);
 
         var expectedData = Encoding.UTF8.GetBytes("test.txt");
+
+        Assert.IsTrue(data.Item1.Success);
         Assert.That(data.Item1.Data, Is.EqualTo(expectedData));
+
+        Assert.IsTrue(data.Item2.Success);
         Assert.That(data.Item2.Data, Is.EqualTo(expectedData));
+
+        Assert.IsTrue(data.Item3.Success);
         Assert.That(data.Item3.Data, Is.EqualTo(expectedData));
 
         Assert.That(resourceControllerForTest.RequestCountDictionary["/resources/test.txt"], Is.EqualTo(3));
@@ -142,7 +164,14 @@ internal class HttpServerForTest : IDisposable
 
     public void Dispose()
     {
-        httpServer.Stop();
+        try
+        {
+            httpServer.Stop();
+        }
+        catch (Exception ex)
+        {
+            Debug.Log(ex);
+        }
     }
 
     private async void HttpServer_OnRequest(HttpListenerContext context)
