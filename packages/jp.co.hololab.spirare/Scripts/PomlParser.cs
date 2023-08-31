@@ -69,17 +69,6 @@ namespace HoloLab.Spirare
             var pomlScene = ParseElement(scene, basePath) as PomlScene;
             Assert.IsNotNull(pomlScene);
 
-            /*
-            var elements = ParseElements(scene, basePath);
-            var pomlScene = new PomlScene()
-            {
-                Children = elements
-            };
-            if (scene != null)
-            {
-                pomlScene.WsRecvUrl = scene.GetAttribute("ws-recv-url", null);
-            }
-            */
             return pomlScene;
         }
 
