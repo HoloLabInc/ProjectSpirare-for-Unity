@@ -13,40 +13,16 @@ namespace HoloLab.Spirare
         private PomlLoader _pomlLoader;
         private string _url;
 
-        private PomlPatchApplier _patchApplier;
-        private WebSocketHelper _webSocket;
-
         public int ElementCount => _elementStore.ElementCount;
 
         public string Url => _url;
 
-        internal PomlComponent Initialize(ElementStore contents, Poml poml, PomlLoader pomlLoader, string url)
+        internal void Initialize(ElementStore contents, Poml poml, PomlLoader pomlLoader, string url)
         {
             _elementStore = contents ?? throw new ArgumentNullException(nameof(contents));
             _poml = poml ?? throw new ArgumentNullException(nameof(poml));
             _pomlLoader = pomlLoader ?? throw new ArgumentNullException(nameof(pomlLoader));
             _url = url;
-
-            _patchApplier = new PomlPatchApplier(this, _poml.Scene, this, url);
-
-            return this;
-        }
-
-        private void Start()
-        {
-            StartWebSocket().Forget();
-        }
-
-        private async UniTask StartWebSocket()
-        {
-            var wsRecvUrl = _poml.Scene.WsRecvUrl;
-            if (string.IsNullOrEmpty(wsRecvUrl))
-            {
-                return;
-            }
-            var ct = this.GetCancellationTokenOnDestroy();
-            _webSocket = new WebSocketHelper(_patchApplier);
-            await _webSocket.Connect(wsRecvUrl, ct);
         }
 
         #region Public methods
@@ -92,14 +68,6 @@ namespace HoloLab.Spirare
 
         #endregion
 
-        internal async Task AppendElementToSceneAsync(PomlElement pomlElement)
-        {
-            await UniTask.SwitchToMainThread();
-
-            _poml.Scene.Elements.Add(pomlElement);
-            await _pomlLoader.LoadElement(pomlElement, transform, null, this);
-        }
-
         internal async Task AppendElementAsync(PomlElement pomlElement, PomlElement parentElement)
         {
             await UniTask.SwitchToMainThread();
@@ -128,7 +96,8 @@ namespace HoloLab.Spirare
             var parent = pomlElement.Parent;
             if (parent == null)
             {
-                _poml.Scene.Elements.Remove(pomlElement);
+                Debug.LogWarning("scene root cannot be removed");
+                return;
             }
             else
             {
@@ -141,56 +110,38 @@ namespace HoloLab.Spirare
             Destroy(pomlElementComponent.gameObject);
         }
 
-        internal bool TryGetPomlElementComponentByTag(string tag, out Component pomlComponentOrPomlElementComponent)
+        internal bool TryGetPomlElementById(string id, out PomlElement pomlElement)
         {
-            // TODO: the type of pomlComponentOrPomlElementComponent should be PomlElementComponent
-
-            if (tag == "scene")
+            if (_elementStore.TryGetElementById(id, out var pomlElementComponent))
             {
-                pomlComponentOrPomlElementComponent = this;
+                pomlElement = pomlElementComponent.PomlElement;
                 return true;
-            }
-
-            if (EnumLabel.TryGetValue(tag, out PomlElementType elementType))
-            {
-                foreach (var element in _poml.Scene.Elements)
-                {
-                    if (TryGetElementByElementTypeRecursively(elementType, element, out var pomlElement))
-                    {
-                        var result = _elementStore.TryGetPomlElementComponentByPomlElement(pomlElement, out var pomlElementComponent);
-                        pomlComponentOrPomlElementComponent = pomlElementComponent;
-                        return result;
-                    }
-                }
-            }
-
-            // not found
-            pomlComponentOrPomlElementComponent = null;
-            return false;
-        }
-
-        internal bool TryGetPomlElementByTag(string tag, out object pomlElement)
-        {
-            if (tag == "scene")
-            {
-                pomlElement = _poml.Scene;
-                return true;
-            }
-
-            if (EnumLabel.TryGetValue(tag, out PomlElementType elementType))
-            {
-                foreach (var element in _poml.Scene.Elements)
-                {
-                    if (TryGetElementByElementTypeRecursively(elementType, element, out var foundPomlElement))
-                    {
-                        pomlElement = foundPomlElement;
-                        return true;
-                    }
-                }
             }
 
             pomlElement = null;
             return false;
+        }
+
+        internal bool TryGetPomlElementComponentByTag(string tag, out PomlElementComponent pomlElementComponent)
+        {
+            if (TryGetPomlElementByTag(tag, out var pomlElement) == false)
+            {
+                pomlElementComponent = null;
+                return false;
+            }
+
+            return _elementStore.TryGetPomlElementComponentByPomlElement(pomlElement, out pomlElementComponent);
+        }
+
+        internal bool TryGetPomlElementByTag(string tag, out PomlElement pomlElement)
+        {
+            if (EnumLabel.TryGetValue(tag, out PomlElementType elementType) == false)
+            {
+                pomlElement = null;
+                return false;
+            }
+
+            return TryGetElementByElementTypeRecursively(elementType, _poml.Scene, out pomlElement);
         }
 
         internal (int ElementDescriptor, PomlElementComponent Component)[] GetAllElementsWithDescriptor()

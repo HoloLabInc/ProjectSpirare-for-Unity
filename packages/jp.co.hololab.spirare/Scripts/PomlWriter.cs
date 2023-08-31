@@ -61,7 +61,7 @@ namespace HoloLab.Spirare
         private static XElement BuildScene(PomlScene scene)
         {
             var sceneNode = new XElement("scene",
-                scene.Elements.Select(BuildElement));
+                scene.Children.Select(BuildElement));
             return sceneNode;
         }
 
