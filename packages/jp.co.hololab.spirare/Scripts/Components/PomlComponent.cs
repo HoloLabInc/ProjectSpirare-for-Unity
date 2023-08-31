@@ -13,9 +13,6 @@ namespace HoloLab.Spirare
         private PomlLoader _pomlLoader;
         private string _url;
 
-        // private PomlPatchApplier _patchApplier;
-        // private WebSocketHelper _webSocket;
-
         public int ElementCount => _elementStore.ElementCount;
 
         public string Url => _url;
@@ -26,28 +23,7 @@ namespace HoloLab.Spirare
             _poml = poml ?? throw new ArgumentNullException(nameof(poml));
             _pomlLoader = pomlLoader ?? throw new ArgumentNullException(nameof(pomlLoader));
             _url = url;
-
-            // _patchApplier = new PomlPatchApplier(this, _poml.Scene, this, url);
         }
-
-        /*
-        private void Start()
-        {
-            StartWebSocket().Forget();
-        }
-
-        private async UniTask StartWebSocket()
-        {
-            var wsRecvUrl = _poml.Scene.WsRecvUrl;
-            if (string.IsNullOrEmpty(wsRecvUrl))
-            {
-                return;
-            }
-            var ct = this.GetCancellationTokenOnDestroy();
-            _webSocket = new WebSocketHelper(_patchApplier);
-            await _webSocket.Connect(wsRecvUrl, ct);
-        }
-        */
 
         #region Public methods
 
