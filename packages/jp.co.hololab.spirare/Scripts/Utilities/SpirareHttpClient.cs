@@ -42,6 +42,7 @@ namespace HoloLab.Spirare
         private readonly string cacheFolderPath;
         private readonly ConcurrentDictionary<string, string> cacheFileDictionary = new ConcurrentDictionary<string, string>();
 
+        private readonly ConcurrentDictionary<string, UniTask<string>> cacheDownloadTaskDictionary = new ConcurrentDictionary<string, UniTask<string>>();
 
         private SpirareHttpClient(string cacheFolderPath)
         {
@@ -77,6 +78,13 @@ namespace HoloLab.Spirare
                 }
             }
 
+            UniTaskCompletionSource<string> downloadTaskSource = null;
+            if (enableCache)
+            {
+                downloadTaskSource = new UniTaskCompletionSource<string>();
+                cacheDownloadTaskDictionary[url] = downloadTaskSource.Task;
+            }
+
             try
             {
                 using (var request = UnityWebRequest.Get(url))
@@ -89,7 +97,12 @@ namespace HoloLab.Spirare
 
                         if (enableCache)
                         {
-                            await SaveCacheAsync(url, data);
+                            var savedCachePath = await SaveCacheAsync(url, data);
+                            if (savedCachePath != null)
+                            {
+                                downloadTaskSource?.TrySetResult(savedCachePath);
+                            }
+
                         }
                         return CreateSuccessResult(data);
                     }
@@ -103,6 +116,10 @@ namespace HoloLab.Spirare
             catch (Exception ex)
             {
                 return CreateErrroResult<byte[]>(ex);
+            }
+            finally
+            {
+                downloadTaskSource?.TrySetResult(null);
             }
         }
 
@@ -197,7 +214,7 @@ namespace HoloLab.Spirare
             }
         }
 
-        private async UniTask SaveCacheAsync(string url, byte[] data)
+        private async UniTask<string> SaveCacheAsync(string url, byte[] data)
         {
             try
             {
@@ -206,7 +223,7 @@ namespace HoloLab.Spirare
             catch (Exception ex)
             {
                 Debug.LogException(ex);
-                return;
+                return null;
             }
 
             var randomFileName = Path.GetRandomFileName();
@@ -219,24 +236,56 @@ namespace HoloLab.Spirare
                     await fs.WriteAsync(data, 0, data.Length);
                     cacheFileDictionary.TryAdd(url, cacheFilePath);
                 }
+                return cacheFilePath;
             }
             catch (Exception ex)
             {
                 Debug.LogException(ex);
-                return;
+                return null;
             }
         }
 
         private async UniTask<(bool Success, byte[] Data)> GetCacheAsync(string url)
         {
-            if (cacheFileDictionary.TryGetValue(url, out var cachePath) == false)
+            if (cacheFileDictionary.TryGetValue(url, out var cachePath))
             {
-                return ((false, default));
+                return await ReadFileAsync(cachePath);
             }
 
+            if (cacheDownloadTaskDictionary.TryGetValue(url, out var downloadTask))
+            {
+                // Wait for download task
+                var downloadedCachePath = await downloadTask;
+                if (string.IsNullOrEmpty(downloadedCachePath) == false)
+                {
+                    return await ReadFileAsync(downloadedCachePath);
+                }
+            }
+
+            return ((false, default));
+
+            /*
             try
             {
                 using (var fs = File.OpenRead(cachePath))
+                {
+                    var data = new byte[fs.Length];
+                    await fs.ReadAsync(data, 0, data.Length);
+                    return ((true, data));
+                }
+            }
+            catch (Exception)
+            {
+                return ((false, default));
+            }
+            */
+        }
+
+        private static async UniTask<(bool Success, byte[] Data)> ReadFileAsync(string filepath)
+        {
+            try
+            {
+                using (var fs = File.OpenRead(filepath))
                 {
                     var data = new byte[fs.Length];
                     await fs.ReadAsync(data, 0, data.Length);
