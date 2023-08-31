@@ -30,7 +30,6 @@ namespace HoloLab.Spirare
         }
     }
 
-
     public class SpirareHttpClient
     {
         private static readonly string singletonCacheFolderPath = Path.Combine(Application.temporaryCachePath, "SpirareHttpClientCache");
@@ -85,43 +84,64 @@ namespace HoloLab.Spirare
                 cacheDownloadTaskDictionary[url] = downloadTaskSource.Task;
             }
 
+
+            var downloadHandler = new DownloadHandlerBuffer();
             try
             {
-                using (var request = UnityWebRequest.Get(url))
+                var result = await SendGetRequestAsync(url, downloadHandler);
+                if (result.Success)
                 {
-                    var webRequest = await request.SendWebRequest();
+                    var data = downloadHandler.data;
+                    result.Data.Dispose();
 
-                    if (webRequest.result == UnityWebRequest.Result.Success)
+                    if (enableCache)
                     {
-                        var data = webRequest.downloadHandler.data;
-
-                        if (enableCache)
+                        var savedCachePath = await SaveCacheAsync(url, data);
+                        if (savedCachePath != null)
                         {
-                            var savedCachePath = await SaveCacheAsync(url, data);
-                            if (savedCachePath != null)
-                            {
-                                downloadTaskSource?.TrySetResult(savedCachePath);
-                            }
-
+                            downloadTaskSource?.TrySetResult(savedCachePath);
                         }
-                        return CreateSuccessResult(data);
                     }
-                    else
-                    {
-                        var exception = new Exception(webRequest.error);
-                        return CreateErrroResult<byte[]>(exception);
-                    }
+                    return CreateSuccessResult(data);
+                }
+                else
+                {
+                    return CreateErrroResult<byte[]>(result.Error);
+                }
+            }
+            finally
+            {
+                if (enableCache)
+                {
+                    cacheDownloadTaskDictionary.TryRemove(url, out _);
+                    downloadTaskSource?.TrySetResult(null);
+                }
+
+                downloadHandler.Dispose();
+            }
+        }
+
+        private async UniTask<SpirareHttpClientResult<UnityWebRequest>> SendGetRequestAsync(string url, DownloadHandler downloadHandler)
+        {
+            try
+            {
+                var request = UnityWebRequest.Get(url);
+                request.downloadHandler = downloadHandler;
+                var webRequest = await request.SendWebRequest();
+
+                if (webRequest.result == UnityWebRequest.Result.Success)
+                {
+                    return CreateSuccessResult(request);
+                }
+                else
+                {
+                    var ex = new Exception(webRequest.error);
+                    return CreateErrroResult<UnityWebRequest>(ex);
                 }
             }
             catch (Exception ex)
             {
-                return CreateErrroResult<byte[]>(ex);
-            }
-            finally
-            {
-                // remove download task
-                // cacheDownloadTaskDictionary[url] = downloadTaskSource.Task;
-                downloadTaskSource?.TrySetResult(null);
+                return CreateErrroResult<UnityWebRequest>(ex);
             }
         }
 
@@ -159,9 +179,11 @@ namespace HoloLab.Spirare
                 var randomFileName = $"{Path.GetRandomFileName()}{extension}";
                 var filepath = Path.Combine(cacheFolderPath, randomFileName);
 
+                var downloadhandler = new DownloadHandlerFile(filepath);
+
                 using (var request = UnityWebRequest.Get(url))
                 {
-                    request.downloadHandler = new DownloadHandlerFile(filepath);
+                    request.downloadHandler = downloadhandler;
                     var webRequest = await request.SendWebRequest();
 
                     if (webRequest.result == UnityWebRequest.Result.Success)
