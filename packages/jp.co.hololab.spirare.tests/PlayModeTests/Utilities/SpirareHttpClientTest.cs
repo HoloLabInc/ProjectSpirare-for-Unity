@@ -196,8 +196,6 @@ internal class HttpServerForTest : IDisposable
             Context = SynchronizationContext.Current
         };
 
-        // router.AddController(this);
-
         httpServer.OnRequest += HttpServer_OnRequest;
     }
 
