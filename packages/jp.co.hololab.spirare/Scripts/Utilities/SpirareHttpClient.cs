@@ -119,6 +119,8 @@ namespace HoloLab.Spirare
             }
             finally
             {
+                // remove download task
+                // cacheDownloadTaskDictionary[url] = downloadTaskSource.Task;
                 downloadTaskSource?.TrySetResult(null);
             }
         }
