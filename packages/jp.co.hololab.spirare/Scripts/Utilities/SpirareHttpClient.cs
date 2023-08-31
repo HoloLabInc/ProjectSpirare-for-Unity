@@ -77,76 +77,58 @@ namespace HoloLab.Spirare
                 }
             }
 
+            /*
             UniTaskCompletionSource<string> downloadTaskSource = null;
             if (enableCache)
             {
                 downloadTaskSource = new UniTaskCompletionSource<string>();
                 cacheDownloadTaskDictionary[url] = downloadTaskSource.Task;
             }
-
+            */
+            var downloadTaskSource = enableCache ? SetCacheDownloadTaskSource(url) : null;
 
             var downloadHandler = new DownloadHandlerBuffer();
-            try
+            var result = await SendGetRequestAsync(url, downloadHandler);
+            if (result.Success)
             {
-                var result = await SendGetRequestAsync(url, downloadHandler);
-                if (result.Success)
-                {
-                    var data = downloadHandler.data;
-                    result.Data.Dispose();
+                var data = downloadHandler.data;
+                result.Data.Dispose();
 
-                    if (enableCache)
-                    {
-                        var savedCachePath = await SaveCacheAsync(url, data);
-                        if (savedCachePath != null)
-                        {
-                            downloadTaskSource?.TrySetResult(savedCachePath);
-                        }
-                    }
-                    return CreateSuccessResult(data);
-                }
-                else
+                if (enableCache)
                 {
-                    return CreateErrroResult<byte[]>(result.Error);
+                    var savedCachePath = await SaveCacheAsync(url, data);
+
+                    CompleteCacheDownloadTaskSouce(url, downloadTaskSource, savedCachePath);
+                    // downloadTaskSource?.TrySetResult(savedCachePath);
+                    // cacheDownloadTaskDictionary.TryRemove(url, out _);
                 }
+                return CreateSuccessResult(data);
             }
-            finally
+            else
             {
                 if (enableCache)
                 {
-                    cacheDownloadTaskDictionary.TryRemove(url, out _);
-                    downloadTaskSource?.TrySetResult(null);
+                    CompleteCacheDownloadTaskSouce(url, downloadTaskSource, result: null);
+                    //downloadTaskSource?.TrySetResult(null);
+                    //cacheDownloadTaskDictionary.TryRemove(url, out _);
                 }
-
-                downloadHandler.Dispose();
+                return CreateErrroResult<byte[]>(result.Error);
             }
         }
 
-        private async UniTask<SpirareHttpClientResult<UnityWebRequest>> SendGetRequestAsync(string url, DownloadHandler downloadHandler)
+        private UniTaskCompletionSource<string> SetCacheDownloadTaskSource(string url)
         {
-            var request = UnityWebRequest.Get(url);
-            request.downloadHandler = downloadHandler;
-
-            try
-            {
-                var webRequest = await request.SendWebRequest();
-
-                if (webRequest.result == UnityWebRequest.Result.Success)
-                {
-                    return CreateSuccessResult(request);
-                }
-                else
-                {
-                    var ex = new Exception(webRequest.error);
-                    request.Dispose();
-                    return CreateErrroResult<UnityWebRequest>(ex);
-                }
-            }
-            catch (Exception ex)
-            {
-                request.Dispose();
-                return CreateErrroResult<UnityWebRequest>(ex);
-            }
+            var downloadTaskSource = new UniTaskCompletionSource<string>();
+            cacheDownloadTaskDictionary[url] = downloadTaskSource.Task;
+            return downloadTaskSource;
         }
+
+        private void CompleteCacheDownloadTaskSouce(string url, UniTaskCompletionSource<string> downloadTaskSource, string result)
+        {
+            downloadTaskSource?.TrySetResult(result);
+            cacheDownloadTaskDictionary.TryRemove(url, out _);
+        }
+
 
         /// <summary>
         /// Download file to local cache folder.
@@ -177,13 +159,31 @@ namespace HoloLab.Spirare
                 }
             }
 
+            var randomFileName = $"{Path.GetRandomFileName()}{extension}";
+            var filepath = Path.Combine(cacheFolderPath, randomFileName);
+
+            var downloadHandler = new DownloadHandlerFile(filepath);
+
+            var result = await SendGetRequestAsync(url, downloadHandler);
+            if (result.Success)
+            {
+                // var data = downloadHandler.data;
+                result.Data.Dispose();
+
+                if (enableCache)
+                {
+                    cacheFileDictionary.TryAdd(url, filepath);
+                }
+
+                return CreateSuccessResult(filepath);
+            }
+            else
+            {
+                return CreateErrroResult<string>(result.Error);
+            }
+            /*
             try
             {
-                var randomFileName = $"{Path.GetRandomFileName()}{extension}";
-                var filepath = Path.Combine(cacheFolderPath, randomFileName);
-
-                var downloadhandler = new DownloadHandlerFile(filepath);
-
                 using (var request = UnityWebRequest.Get(url))
                 {
                     request.downloadHandler = downloadhandler;
@@ -208,6 +208,34 @@ namespace HoloLab.Spirare
             catch (Exception ex)
             {
                 return CreateErrroResult<string>(ex);
+            }
+            */
+        }
+
+        private static async UniTask<SpirareHttpClientResult<UnityWebRequest>> SendGetRequestAsync(string url, DownloadHandler downloadHandler)
+        {
+            var request = UnityWebRequest.Get(url);
+            request.downloadHandler = downloadHandler;
+
+            try
+            {
+                var webRequest = await request.SendWebRequest();
+
+                if (webRequest.result == UnityWebRequest.Result.Success)
+                {
+                    return CreateSuccessResult(request);
+                }
+                else
+                {
+                    var ex = new Exception(webRequest.error);
+                    request.Dispose();
+                    return CreateErrroResult<UnityWebRequest>(ex);
+                }
+            }
+            catch (Exception ex)
+            {
+                request.Dispose();
+                return CreateErrroResult<UnityWebRequest>(ex);
             }
         }
 
