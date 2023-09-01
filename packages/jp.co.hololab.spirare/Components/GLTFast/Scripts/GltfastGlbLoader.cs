@@ -69,10 +69,7 @@ namespace HoloLab.Spirare
             }
 
             // Model instantiating
-            if (loadResult.Success)
-            {
-                await InstantiateModel(go, gltfImport, onLoadingStatusChanged);
-            }
+            await InstantiateModel(go, gltfImport, onLoadingStatusChanged);
         }
 
         public void ClearGltfImportCache()
