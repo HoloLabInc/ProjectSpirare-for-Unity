@@ -185,21 +185,64 @@ namespace HoloLab.Spirare
             var creationTaskGenerated = gltfImportCacheManager.GenerateCreationTask(src, material);
 
             // Data fetching
-            InvokeLoadingStatusChanged(LoadingStatus.DataFetching, onLoadingStatusChanged);
+            var fetchResult = await FetchData(src, onLoadingStatusChanged);
 
-            var result = await SpirareHttpClient.Instance.GetByteArrayAsync(src, enableCache: true);
-            if (result.Success == false)
+            if (fetchResult.Success == false)
             {
                 if (creationTaskGenerated)
                 {
                     gltfImportCacheManager.CancelCreationTask(src, material);
                 }
-                InvokeLoadingStatusChanged(LoadingStatus.DataFetchError, onLoadingStatusChanged);
-                Debug.LogWarning($"Failed to get model data: {src}");
                 return;
             }
 
             // Model loading
+            var loadResult = await LoadModel(fetchResult.Data, material, onLoadingStatusChanged);
+
+            if (creationTaskGenerated)
+            {
+                if (loadResult.Success)
+                {
+                    gltfImportCacheManager.CompleteCreationTask(src, material, loadResult.gltfImport);
+                }
+                else
+                {
+                    gltfImportCacheManager.CancelCreationTask(src, material);
+                }
+            }
+
+            // Model instantiating
+            if (loadResult.Success)
+            {
+                await InstantiateModel(go, loadResult.gltfImport, onLoadingStatusChanged);
+            }
+        }
+
+        public void ClearGltfImportCache()
+        {
+            gltfImportCacheManager.ClearCache();
+        }
+
+        private static async UniTask<(bool Success, byte[] Data)> FetchData(string src, Action<LoadingStatus> onLoadingStatusChanged)
+        {
+            InvokeLoadingStatusChanged(LoadingStatus.DataFetching, onLoadingStatusChanged);
+
+            var result = await SpirareHttpClient.Instance.GetByteArrayAsync(src, enableCache: true);
+            if (result.Success)
+            {
+                return (true, result.Data);
+            }
+            else
+            {
+                InvokeLoadingStatusChanged(LoadingStatus.DataFetchError, onLoadingStatusChanged);
+                Debug.LogWarning($"Failed to get model data: {src}");
+
+                return (false, null);
+            }
+        }
+
+        private static async UniTask<(bool Success, GltfImport gltfImport)> LoadModel(byte[] data, Material material, Action<LoadingStatus> onLoadingStatusChanged)
+        {
             InvokeLoadingStatusChanged(LoadingStatus.ModelLoading, onLoadingStatusChanged);
 
             IMaterialGenerator materialGenerator = null;
@@ -209,29 +252,16 @@ namespace HoloLab.Spirare
             }
 
             var gltfImport = new GltfImport(materialGenerator: materialGenerator);
-            var loadResult = await gltfImport.LoadGltfBinary(result.Data);
+            var loadResult = await gltfImport.LoadGltfBinary(data);
             if (loadResult == false)
             {
-                if (creationTaskGenerated)
-                {
-                    gltfImportCacheManager.CancelCreationTask(src, material);
-                }
+                gltfImport.Dispose();
+                gltfImport = null;
+
                 InvokeLoadingStatusChanged(LoadingStatus.ModelLoadError, onLoadingStatusChanged);
-                return;
             }
 
-            // Save cache
-            if (creationTaskGenerated)
-            {
-                gltfImportCacheManager.CompleteCreationTask(src, material, gltfImport);
-            }
-
-            await InstantiateModel(go, gltfImport, onLoadingStatusChanged);
-        }
-
-        public void ClearGltfImportCache()
-        {
-            gltfImportCacheManager.ClearCache();
+            return (loadResult, gltfImport);
         }
 
         private static async UniTask InstantiateModel(GameObject go, GltfImport gltfImport, Action<LoadingStatus> onLoadingStatusChanged = null)
