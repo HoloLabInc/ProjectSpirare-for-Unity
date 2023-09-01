@@ -5,157 +5,10 @@ using GLTFast.Materials;
 using UnityEngine;
 using System.Threading;
 using System;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using System.Collections.Concurrent;
 
 namespace HoloLab.Spirare
 {
-    internal class CacheManager<T>
-    {
-        private readonly ConcurrentDictionary<string, T> cacheDictionary
-            = new ConcurrentDictionary<string, T>();
-
-        private readonly ConcurrentDictionary<string, UniTaskCompletionSource<T>> cacheCompletionSourceDictionary
-            = new ConcurrentDictionary<string, UniTaskCompletionSource<T>>();
-
-        public async UniTask<(bool Success, T Value)> GetValueAsync(string key)
-        {
-            if (cacheDictionary.TryGetValue(key, out var value))
-            {
-                return (true, value);
-            };
-
-            if (cacheCompletionSourceDictionary.TryGetValue(key, out var completionSource))
-            {
-                try
-                {
-                    var result = await completionSource.Task;
-                    return (true, result);
-                }
-                catch (Exception) { }
-            }
-
-            return (false, default);
-        }
-
-        public bool GenerateCreationTask(string key)
-        {
-            var taskCompletionSource = new UniTaskCompletionSource<T>();
-
-            try
-            {
-                if (cacheCompletionSourceDictionary.TryAdd(key, taskCompletionSource))
-                {
-                    return true;
-                }
-            }
-            catch (Exception) { }
-
-            return false;
-        }
-
-        public void CompleteCreationTask(string key, T value)
-        {
-            if (cacheCompletionSourceDictionary.TryGetValue(key, out var completionSource))
-            {
-                completionSource.TrySetResult(value);
-                cacheCompletionSourceDictionary.TryRemove(key, out _);
-            }
-        }
-
-        public void CancelCreationTask(string key)
-        {
-            if (cacheCompletionSourceDictionary.TryGetValue(key, out var completionSource))
-            {
-                completionSource.TrySetCanceled();
-                cacheCompletionSourceDictionary.TryRemove(key, out _);
-            }
-        }
-
-        public void ClearCache()
-        {
-            cacheDictionary.Clear();
-
-            foreach (var completionPair in cacheCompletionSourceDictionary)
-            {
-                completionPair.Value.TrySetCanceled();
-            }
-            cacheCompletionSourceDictionary.Clear();
-        }
-    }
-
-    internal class GltfImportCacheManager
-    {
-        private readonly CacheManager<GltfImport> cacheManagerForDefaultMaterial = new CacheManager<GltfImport>();
-
-        private readonly Dictionary<Material, CacheManager<GltfImport>> cacheManagerDictionaryForCustomMaterials
-            = new Dictionary<Material, CacheManager<GltfImport>>();
-
-        public async UniTask<(bool Success, GltfImport GltfImport)> GetGltfImportAsync(string url, Material material)
-        {
-            if (material == null)
-            {
-                return await cacheManagerForDefaultMaterial.GetValueAsync(url);
-            }
-            else if (cacheManagerDictionaryForCustomMaterials.TryGetValue(material, out var cacheManager))
-            {
-                return await cacheManager.GetValueAsync(url);
-            }
-            return (false, null);
-        }
-
-        public bool GenerateCreationTask(string url, Material material)
-        {
-            if (material == null)
-            {
-                return cacheManagerForDefaultMaterial.GenerateCreationTask(url);
-            }
-
-            if (cacheManagerDictionaryForCustomMaterials.TryGetValue(material, out var cacheManager) == false)
-            {
-                cacheManager = new CacheManager<GltfImport>();
-                cacheManagerDictionaryForCustomMaterials[material] = cacheManager;
-            }
-            return cacheManager.GenerateCreationTask(url);
-        }
-
-        public void CompleteCreationTask(string url, Material material, GltfImport gltfImport)
-        {
-            if (material == null)
-            {
-                cacheManagerForDefaultMaterial.CompleteCreationTask(url, gltfImport);
-            }
-            else if (cacheManagerDictionaryForCustomMaterials.TryGetValue(material, out var cacheManager))
-            {
-                cacheManager.CompleteCreationTask(url, gltfImport);
-            }
-        }
-
-        public void CancelCreationTask(string url, Material material)
-        {
-            if (material == null)
-            {
-                cacheManagerForDefaultMaterial.CancelCreationTask(url);
-            }
-            else if (cacheManagerDictionaryForCustomMaterials.TryGetValue(material, out var cacheManager))
-            {
-                cacheManager.CancelCreationTask(url);
-            }
-        }
-
-        public void ClearCache()
-        {
-            cacheManagerForDefaultMaterial.ClearCache();
-
-            foreach (var cacheManagerPair in cacheManagerDictionaryForCustomMaterials)
-            {
-                cacheManagerPair.Value.ClearCache();
-            }
-            cacheManagerDictionaryForCustomMaterials.Clear();
-        }
-    }
-
     internal class GltfastGlbLoader
     {
         public enum LoadingStatus
@@ -199,22 +52,26 @@ namespace HoloLab.Spirare
             // Model loading
             var loadResult = await LoadModel(fetchResult.Data, material, onLoadingStatusChanged);
 
-            if (creationTaskGenerated)
+            if (loadResult.Success == false)
             {
-                if (loadResult.Success)
-                {
-                    gltfImportCacheManager.CompleteCreationTask(src, material, loadResult.gltfImport);
-                }
-                else
+                if (creationTaskGenerated)
                 {
                     gltfImportCacheManager.CancelCreationTask(src, material);
                 }
+                return;
+            }
+
+            var gltfImport = loadResult.gltfImport;
+
+            if (creationTaskGenerated)
+            {
+                gltfImportCacheManager.CompleteCreationTask(src, material, gltfImport);
             }
 
             // Model instantiating
             if (loadResult.Success)
             {
-                await InstantiateModel(go, loadResult.gltfImport, onLoadingStatusChanged);
+                await InstantiateModel(go, gltfImport, onLoadingStatusChanged);
             }
         }
 
