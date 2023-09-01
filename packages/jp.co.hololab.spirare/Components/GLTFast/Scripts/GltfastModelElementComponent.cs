@@ -22,7 +22,14 @@ namespace HoloLab.Spirare
 
         private CameraVisibleHelper[] _cameraVisibleHelpers;
 
+        #region static properties and methods
         private static GltfastGlbLoader glbLoader = new GltfastGlbLoader();
+
+        public static void ClearGltfImportCache()
+        {
+            glbLoader.ClearGltfImportCache();
+        }
+        #endregion
 
         public override WrapMode WrapMode
         {

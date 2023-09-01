@@ -6,9 +6,58 @@ using UnityEngine;
 using System.Threading;
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 namespace HoloLab.Spirare
 {
+    internal class GltfImportCacheManager
+    {
+        private readonly Dictionary<string, GltfImport> cacheDictionaryForDefaultMaterial
+            = new Dictionary<string, GltfImport>();
+
+        private readonly Dictionary<Material, Dictionary<string, GltfImport>> cacheDictionaryForCustomMaterial
+            = new Dictionary<Material, Dictionary<string, GltfImport>>();
+
+        public bool TryGetValue(string url, Material material, out GltfImport gltfImport)
+        {
+            if (material == null)
+            {
+                return cacheDictionaryForDefaultMaterial.TryGetValue(url, out gltfImport);
+            }
+
+            if (cacheDictionaryForCustomMaterial.TryGetValue(material, out var customMaterialDictionary))
+            {
+                return customMaterialDictionary.TryGetValue(url, out gltfImport);
+            }
+
+            gltfImport = null;
+            return false;
+        }
+
+        public void AddValue(string url, Material material, GltfImport gltfImport)
+        {
+            if (material == null)
+            {
+                cacheDictionaryForDefaultMaterial[url] = gltfImport;
+                return;
+            }
+
+            if (cacheDictionaryForCustomMaterial.TryGetValue(material, out var customMaterialDictionary) == false)
+            {
+                customMaterialDictionary = new Dictionary<string, GltfImport>();
+                cacheDictionaryForCustomMaterial.Add(material, customMaterialDictionary);
+            }
+
+            customMaterialDictionary[url] = gltfImport;
+        }
+
+        public void ClearCache()
+        {
+            cacheDictionaryForDefaultMaterial.Clear();
+            cacheDictionaryForCustomMaterial.Clear();
+        }
+    }
+
     internal class GltfastGlbLoader
     {
         public enum LoadingStatus
@@ -23,24 +72,14 @@ namespace HoloLab.Spirare
             ModelInstantiateError
         }
 
-        public Dictionary<string, GltfImport> gltfImportCacheDictionary = new Dictionary<string, GltfImport>();
+        private readonly GltfImportCacheManager gltfImportCacheManager = new GltfImportCacheManager();
 
         public async Task LoadAsync(GameObject go, string src, Material material = null, Action<LoadingStatus> onLoadingStatusChanged = null)
         {
             // Search cache
-            if (gltfImportCacheDictionary.TryGetValue(src, out var gltfImportCache))
+            if (gltfImportCacheManager.TryGetValue(src, material, out var gltfImportCache))
             {
-                // Instantiation
-                InvokeLoadingStatusChanged(LoadingStatus.ModelInstantiating, onLoadingStatusChanged);
-                var instantiationResult2 = await gltfImportCache.InstantiateMainSceneAsync(go.transform, CancellationToken.None);
-                if (instantiationResult2)
-                {
-                    InvokeLoadingStatusChanged(LoadingStatus.Loaded, onLoadingStatusChanged);
-                }
-                else
-                {
-                    InvokeLoadingStatusChanged(LoadingStatus.ModelInstantiateError, onLoadingStatusChanged);
-                }
+                await InstantiateModel(go, gltfImportCache, onLoadingStatusChanged);
                 return;
             }
 
@@ -73,9 +112,18 @@ namespace HoloLab.Spirare
             }
 
             // Save cache
-            gltfImportCacheDictionary[src] = gltfImport;
+            gltfImportCacheManager.AddValue(src, material, gltfImport);
 
-            // Model instantiating
+            await InstantiateModel(go, gltfImport, onLoadingStatusChanged);
+        }
+
+        public void ClearGltfImportCache()
+        {
+            gltfImportCacheManager.ClearCache();
+        }
+
+        private static async UniTask InstantiateModel(GameObject go, GltfImport gltfImport, Action<LoadingStatus> onLoadingStatusChanged = null)
+        {
             if (go == null)
             {
                 InvokeLoadingStatusChanged(LoadingStatus.ModelInstantiateError, onLoadingStatusChanged);
