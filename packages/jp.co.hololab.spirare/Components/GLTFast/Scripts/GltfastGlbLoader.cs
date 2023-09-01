@@ -39,18 +39,20 @@ namespace HoloLab.Spirare
             return (false, default);
         }
 
-        public UniTaskCompletionSource<T> GenerateCreationTask(string key)
+        public bool GenerateCreationTask(string key)
         {
             var taskCompletionSource = new UniTaskCompletionSource<T>();
 
             try
             {
-                cacheCompletionSourceDictionary.TryAdd(key, taskCompletionSource);
-                return taskCompletionSource;
+                if (cacheCompletionSourceDictionary.TryAdd(key, taskCompletionSource))
+                {
+                    return true;
+                }
             }
             catch (Exception) { }
 
-            return null;
+            return false;
         }
 
         public void CompleteCreationTask(string key, T value)
@@ -86,98 +88,36 @@ namespace HoloLab.Spirare
     internal class GltfImportCacheManager
     {
         private readonly CacheManager<GltfImport> cacheManagerForDefaultMaterial = new CacheManager<GltfImport>();
-        /*
-        private readonly Dictionary<string, GltfImport> cacheDictionaryForDefaultMaterial
-            = new Dictionary<string, GltfImport>();
-        */
 
-        private readonly Dictionary<Material, Dictionary<string, GltfImport>> cacheDictionaryForCustomMaterial
-            = new Dictionary<Material, Dictionary<string, GltfImport>>();
-
-        /*
-        private readonly Dictionary<string, UniTask<GltfImport>> creationTaskDictionaryForDefaultMaterial
-            = new Dictionary<string, UniTask<GltfImport>>();
-        */
-
-        private readonly Dictionary<Material, Dictionary<string, UniTask<GltfImport>>> creationTaskDictionaryForCustomMaterial
-            = new Dictionary<Material, Dictionary<string, UniTask<GltfImport>>>();
+        private readonly Dictionary<Material, CacheManager<GltfImport>> cacheManagerDictionaryForCustomMaterials
+            = new Dictionary<Material, CacheManager<GltfImport>>();
 
         public async UniTask<(bool Success, GltfImport GltfImport)> GetGltfImportAsync(string url, Material material)
         {
-            // Find cache
             if (material == null)
             {
-                /*
-                if (cacheDictionaryForDefaultMaterial.TryGetValue(url, out var gltfImport))
-                {
-                    return (true, gltfImport);
-                };
-                */
                 return await cacheManagerForDefaultMaterial.GetValueAsync(url);
             }
-            else if (cacheDictionaryForCustomMaterial.TryGetValue(material, out var customMaterialDictionary))
+            else if (cacheManagerDictionaryForCustomMaterials.TryGetValue(material, out var cacheManager))
             {
-                if (customMaterialDictionary.TryGetValue(url, out var gltfImport))
-                {
-                    return (true, gltfImport);
-                }
+                return await cacheManager.GetValueAsync(url);
             }
-
-            // Find GltfImport creation task
-            if (material == null)
-            {
-                /*
-                if (creationTaskDictionaryForDefaultMaterial.TryGetValue(url, out var creationTask))
-                {
-                    var gltfImport = await creationTask;
-                    if (gltfImport != null)
-                    {
-                        return (true, gltfImport);
-                    }
-                }
-                */
-            }
-            else if (creationTaskDictionaryForCustomMaterial.TryGetValue(material, out var customMaterialDictionary))
-            {
-                if (customMaterialDictionary.TryGetValue(url, out var creationTask))
-                {
-                    var gltfImport = await creationTask;
-                    if (gltfImport != null)
-                    {
-                        return (true, gltfImport);
-                    }
-                }
-            }
-
             return (false, null);
         }
 
-        /*
-        public void AddValue(string url, Material material, GltfImport gltfImport)
-        {
-            if (material == null)
-            {
-                cacheDictionaryForDefaultMaterial[url] = gltfImport;
-                return;
-            }
-
-            if (cacheDictionaryForCustomMaterial.TryGetValue(material, out var customMaterialDictionary) == false)
-            {
-                customMaterialDictionary = new Dictionary<string, GltfImport>();
-                cacheDictionaryForCustomMaterial.Add(material, customMaterialDictionary);
-            }
-
-            customMaterialDictionary[url] = gltfImport;
-        }
-        */
-
-        public UniTaskCompletionSource<GltfImport> GenerateCreationTask(string url, Material material)
+        public bool GenerateCreationTask(string url, Material material)
         {
             if (material == null)
             {
                 return cacheManagerForDefaultMaterial.GenerateCreationTask(url);
             }
-            return null;
+
+            if (cacheManagerDictionaryForCustomMaterials.TryGetValue(material, out var cacheManager) == false)
+            {
+                cacheManager = new CacheManager<GltfImport>();
+                cacheManagerDictionaryForCustomMaterials[material] = cacheManager;
+            }
+            return cacheManager.GenerateCreationTask(url);
         }
 
         public void CompleteCreationTask(string url, Material material, GltfImport gltfImport)
@@ -185,7 +125,10 @@ namespace HoloLab.Spirare
             if (material == null)
             {
                 cacheManagerForDefaultMaterial.CompleteCreationTask(url, gltfImport);
-                return;
+            }
+            else if (cacheManagerDictionaryForCustomMaterials.TryGetValue(material, out var cacheManager))
+            {
+                cacheManager.CompleteCreationTask(url, gltfImport);
             }
         }
 
@@ -194,59 +137,23 @@ namespace HoloLab.Spirare
             if (material == null)
             {
                 cacheManagerForDefaultMaterial.CancelCreationTask(url);
-                return;
+            }
+            else if (cacheManagerDictionaryForCustomMaterials.TryGetValue(material, out var cacheManager))
+            {
+                cacheManager.CancelCreationTask(url);
             }
         }
-
-        /*
-        public UniTaskCompletionSource<GltfImport> SetCreationTask(string url, Material material)
-        {
-            var downloadTaskSource = new UniTaskCompletionSource<GltfImport>();
-
-            if (material == null)
-            {
-                try
-                {
-                    creationTaskDictionaryForDefaultMaterial.Add(url, downloadTaskSource.Task);
-                    return downloadTaskSource;
-                }
-                catch (Exception)
-                {
-                    return null;
-                }
-            }
-            else
-            {
-                // TODO
-            }
-            return null;
-        }
-        */
 
         public void ClearCache()
         {
             cacheManagerForDefaultMaterial.ClearCache();
-            //cacheDictionaryForDefaultMaterial.Clear();
-            //cacheDictionaryForCustomMaterial.Clear();
-            // TODO clear task
-        }
 
-        /*
-        public void CompleteCreationTask(string url, Material material, UniTaskCompletionSource<GltfImport> creationTaskSource, GltfImport gltfImport)
-        {
-            creationTaskSource?.TrySetResult(gltfImport);
-
-            if (material == null)
+            foreach (var cacheManagerPair in cacheManagerDictionaryForCustomMaterials)
             {
-                creationTaskDictionaryForDefaultMaterial.Remove(url);
+                cacheManagerPair.Value.ClearCache();
             }
-            else
-            {
-                // TODO
-
-            }
+            cacheManagerDictionaryForCustomMaterials.Clear();
         }
-        */
     }
 
     internal class GltfastGlbLoader
@@ -275,7 +182,7 @@ namespace HoloLab.Spirare
                 return;
             }
 
-            var creationTaskSource = gltfImportCacheManager.GenerateCreationTask(src, material);
+            var creationTaskGenerated = gltfImportCacheManager.GenerateCreationTask(src, material);
 
             // Data fetching
             InvokeLoadingStatusChanged(LoadingStatus.DataFetching, onLoadingStatusChanged);
@@ -283,8 +190,10 @@ namespace HoloLab.Spirare
             var result = await SpirareHttpClient.Instance.GetByteArrayAsync(src, enableCache: true);
             if (result.Success == false)
             {
-                //gltfImportCacheManager.CompleteCreationTask(src, material, creationTaskSource, null);
-                gltfImportCacheManager.CancelCreationTask(src, material);
+                if (creationTaskGenerated)
+                {
+                    gltfImportCacheManager.CancelCreationTask(src, material);
+                }
                 InvokeLoadingStatusChanged(LoadingStatus.DataFetchError, onLoadingStatusChanged);
                 Debug.LogWarning($"Failed to get model data: {src}");
                 return;
@@ -303,15 +212,19 @@ namespace HoloLab.Spirare
             var loadResult = await gltfImport.LoadGltfBinary(result.Data);
             if (loadResult == false)
             {
-                //gltfImportCacheManager.CompleteCreationTask(src, material, creationTaskSource, null);
-                gltfImportCacheManager.CancelCreationTask(src, material);
+                if (creationTaskGenerated)
+                {
+                    gltfImportCacheManager.CancelCreationTask(src, material);
+                }
                 InvokeLoadingStatusChanged(LoadingStatus.ModelLoadError, onLoadingStatusChanged);
                 return;
             }
 
             // Save cache
-            gltfImportCacheManager.CompleteCreationTask(src, material, gltfImport);
-            // gltfImportCacheManager.AddValue(src, material, gltfImport);
+            if (creationTaskGenerated)
+            {
+                gltfImportCacheManager.CompleteCreationTask(src, material, gltfImport);
+            }
 
             await InstantiateModel(go, gltfImport, onLoadingStatusChanged);
         }
