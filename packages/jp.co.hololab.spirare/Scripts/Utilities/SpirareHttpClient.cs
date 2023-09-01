@@ -30,7 +30,6 @@ namespace HoloLab.Spirare
         }
     }
 
-
     public class SpirareHttpClient
     {
         private static readonly string singletonCacheFolderPath = Path.Combine(Application.temporaryCachePath, "SpirareHttpClientCache");
@@ -42,6 +41,7 @@ namespace HoloLab.Spirare
         private readonly string cacheFolderPath;
         private readonly ConcurrentDictionary<string, string> cacheFileDictionary = new ConcurrentDictionary<string, string>();
 
+        private readonly ConcurrentDictionary<string, UniTask<string>> cacheDownloadTaskDictionary = new ConcurrentDictionary<string, UniTask<string>>();
 
         private SpirareHttpClient(string cacheFolderPath)
         {
@@ -70,39 +70,36 @@ namespace HoloLab.Spirare
 
             if (enableCache)
             {
-                var cacheResult = await GetCacheAsync(url);
+                var cacheResult = await GetCacheDataAsync(url);
                 if (cacheResult.Success)
                 {
                     return CreateSuccessResult(cacheResult.Data);
                 }
             }
 
-            try
+            var downloadTaskSource = enableCache ? SetCacheDownloadTaskSource(url) : null;
+
+            var downloadHandler = new DownloadHandlerBuffer();
+            var result = await SendGetRequestAsync(url, downloadHandler);
+            if (result.Success)
             {
-                using (var request = UnityWebRequest.Get(url))
+                var data = downloadHandler.data;
+                result.Data.Dispose();
+
+                if (enableCache)
                 {
-                    var webRequest = await request.SendWebRequest();
-
-                    if (webRequest.result == UnityWebRequest.Result.Success)
-                    {
-                        var data = webRequest.downloadHandler.data;
-
-                        if (enableCache)
-                        {
-                            await SaveCacheAsync(url, data);
-                        }
-                        return CreateSuccessResult(data);
-                    }
-                    else
-                    {
-                        var exception = new Exception(webRequest.error);
-                        return CreateErrroResult<byte[]>(exception);
-                    }
+                    var savedCachePath = await SaveCacheAsync(url, data);
+                    CompleteCacheDownloadTaskSouce(url, downloadTaskSource, savedCachePath);
                 }
+                return CreateSuccessResult(data);
             }
-            catch (Exception ex)
+            else
             {
-                return CreateErrroResult<byte[]>(ex);
+                if (enableCache)
+                {
+                    CompleteCacheDownloadTaskSouce(url, downloadTaskSource, result: null);
+                }
+                return CreateErrroResult<byte[]>(result.Error);
             }
         }
 
@@ -129,41 +126,78 @@ namespace HoloLab.Spirare
 
             if (enableCache)
             {
-                if (cacheFileDictionary.TryGetValue(url, out var cachePath))
+                var cacheResult = await GetCacheFileAsync(url);
+                if (cacheResult.Success)
                 {
-                    return CreateSuccessResult(cachePath);
+                    return CreateSuccessResult(cacheResult.Filename);
                 }
             }
 
+            var downloadTaskSource = enableCache ? SetCacheDownloadTaskSource(url) : null;
+
+            var randomFileName = $"{Path.GetRandomFileName()}{extension}";
+            var filepath = Path.Combine(cacheFolderPath, randomFileName);
+            var downloadHandler = new DownloadHandlerFile(filepath);
+
+            var result = await SendGetRequestAsync(url, downloadHandler);
+            if (result.Success)
+            {
+                result.Data.Dispose();
+
+                if (enableCache)
+                {
+                    cacheFileDictionary.TryAdd(url, filepath);
+                    CompleteCacheDownloadTaskSouce(url, downloadTaskSource, filepath);
+                }
+                return CreateSuccessResult(filepath);
+            }
+            else
+            {
+                if (enableCache)
+                {
+                    CompleteCacheDownloadTaskSouce(url, downloadTaskSource, result: null);
+                }
+                return CreateErrroResult<string>(result.Error);
+            }
+        }
+
+        private UniTaskCompletionSource<string> SetCacheDownloadTaskSource(string url)
+        {
+            var downloadTaskSource = new UniTaskCompletionSource<string>();
+            cacheDownloadTaskDictionary[url] = downloadTaskSource.Task;
+            return downloadTaskSource;
+        }
+
+        private void CompleteCacheDownloadTaskSouce(string url, UniTaskCompletionSource<string> downloadTaskSource, string result)
+        {
+            downloadTaskSource?.TrySetResult(result);
+            cacheDownloadTaskDictionary.TryRemove(url, out _);
+        }
+
+        private static async UniTask<SpirareHttpClientResult<UnityWebRequest>> SendGetRequestAsync(string url, DownloadHandler downloadHandler)
+        {
+            var request = UnityWebRequest.Get(url);
+            request.downloadHandler = downloadHandler;
+
             try
             {
-                var randomFileName = $"{Path.GetRandomFileName()}{extension}";
-                var filepath = Path.Combine(cacheFolderPath, randomFileName);
+                var webRequest = await request.SendWebRequest();
 
-                using (var request = UnityWebRequest.Get(url))
+                if (webRequest.result == UnityWebRequest.Result.Success)
                 {
-                    request.downloadHandler = new DownloadHandlerFile(filepath);
-                    var webRequest = await request.SendWebRequest();
-
-                    if (webRequest.result == UnityWebRequest.Result.Success)
-                    {
-                        if (enableCache)
-                        {
-                            cacheFileDictionary.TryAdd(url, filepath);
-                        }
-
-                        return CreateSuccessResult(filepath);
-                    }
-                    else
-                    {
-                        var exception = new Exception(webRequest.error);
-                        return CreateErrroResult<string>(exception);
-                    }
+                    return CreateSuccessResult(request);
+                }
+                else
+                {
+                    var ex = new Exception(webRequest.error);
+                    request.Dispose();
+                    return CreateErrroResult<UnityWebRequest>(ex);
                 }
             }
             catch (Exception ex)
             {
-                return CreateErrroResult<string>(ex);
+                request.Dispose();
+                return CreateErrroResult<UnityWebRequest>(ex);
             }
         }
 
@@ -197,7 +231,7 @@ namespace HoloLab.Spirare
             }
         }
 
-        private async UniTask SaveCacheAsync(string url, byte[] data)
+        private async UniTask<string> SaveCacheAsync(string url, byte[] data)
         {
             try
             {
@@ -206,7 +240,7 @@ namespace HoloLab.Spirare
             catch (Exception ex)
             {
                 Debug.LogException(ex);
-                return;
+                return null;
             }
 
             var randomFileName = Path.GetRandomFileName();
@@ -219,24 +253,53 @@ namespace HoloLab.Spirare
                     await fs.WriteAsync(data, 0, data.Length);
                     cacheFileDictionary.TryAdd(url, cacheFilePath);
                 }
+                return cacheFilePath;
             }
             catch (Exception ex)
             {
                 Debug.LogException(ex);
-                return;
+                return null;
             }
         }
 
-        private async UniTask<(bool Success, byte[] Data)> GetCacheAsync(string url)
+        private async UniTask<(bool Success, string Filename)> GetCacheFileAsync(string url)
         {
-            if (cacheFileDictionary.TryGetValue(url, out var cachePath) == false)
+            if (cacheFileDictionary.TryGetValue(url, out var cachePath))
             {
-                return ((false, default));
+                return (true, cachePath);
             }
 
+            if (cacheDownloadTaskDictionary.TryGetValue(url, out var downloadTask))
+            {
+                // Wait for download task
+                var downloadedCachePath = await downloadTask;
+                if (string.IsNullOrEmpty(downloadedCachePath) == false)
+                {
+                    return (true, downloadedCachePath);
+                }
+            }
+
+            return (false, null);
+        }
+
+        private async UniTask<(bool Success, byte[] Data)> GetCacheDataAsync(string url)
+        {
+            var (success, filename) = await GetCacheFileAsync(url);
+            if (success)
+            {
+                return await ReadFileAsync(filename);
+            }
+            else
+            {
+                return (false, Array.Empty<byte>());
+            }
+        }
+
+        private static async UniTask<(bool Success, byte[] Data)> ReadFileAsync(string filepath)
+        {
             try
             {
-                using (var fs = File.OpenRead(cachePath))
+                using (var fs = File.OpenRead(filepath))
                 {
                     var data = new byte[fs.Length];
                     await fs.ReadAsync(data, 0, data.Length);

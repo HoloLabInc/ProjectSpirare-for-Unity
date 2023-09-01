@@ -6,7 +6,8 @@
         "UnityEditor.TestRunner",
         "HoloLab.Spirare",
         "UniTask",
-        "Unity.TextMeshPro"
+        "Unity.TextMeshPro",
+        "UniWebServer"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
