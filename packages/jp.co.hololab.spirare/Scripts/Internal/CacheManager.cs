@@ -50,6 +50,8 @@ namespace HoloLab.Spirare
 
         public void CompleteCreationTask(string key, T value)
         {
+            cacheDictionary.TryAdd(key, value);
+
             if (cacheCompletionSourceDictionary.TryGetValue(key, out var completionSource))
             {
                 completionSource.TrySetResult(value);
