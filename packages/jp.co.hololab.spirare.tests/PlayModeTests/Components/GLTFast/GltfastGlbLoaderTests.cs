@@ -28,7 +28,8 @@ public class GltfastGlbLoaderTests
         var go = new GameObject("modelParent");
 
         var loadingStatusList = new List<GltfastGlbLoader.LoadingStatus>();
-        await GltfastGlbLoader.LoadAsync(go, modelDataPath, onLoadingStatusChanged: status =>
+        var gltfastGlbLoader = new GltfastGlbLoader();
+        await gltfastGlbLoader.LoadAsync(go, modelDataPath, onLoadingStatusChanged: status =>
         {
             loadingStatusList.Add(status);
         });
@@ -53,7 +54,8 @@ public class GltfastGlbLoaderTests
 
         var loadingStatusList = new List<GltfastGlbLoader.LoadingStatus>();
 
-        await GltfastGlbLoader.LoadAsync(go, invalidSrc, onLoadingStatusChanged: status =>
+        var gltfastGlbLoader = new GltfastGlbLoader();
+        await gltfastGlbLoader.LoadAsync(go, invalidSrc, onLoadingStatusChanged: status =>
         {
             loadingStatusList.Add(status);
         });
@@ -75,7 +77,8 @@ public class GltfastGlbLoaderTests
 
         var loadingStatusList = new List<GltfastGlbLoader.LoadingStatus>();
 
-        await GltfastGlbLoader.LoadAsync(go, invalidModelDataPath, onLoadingStatusChanged: status =>
+        var gltfastGlbLoader = new GltfastGlbLoader();
+        await gltfastGlbLoader.LoadAsync(go, invalidModelDataPath, onLoadingStatusChanged: status =>
         {
             loadingStatusList.Add(status);
         });
@@ -89,5 +92,26 @@ public class GltfastGlbLoaderTests
         Assert.That(loadingStatusList, Is.EquivalentTo(expectedStatusList));
 
         GameObject.DestroyImmediate(go);
+    }
+
+    [Test]
+    public async Task LoadAsync_MeshIsSharedWithSameUrlObjects()
+    {
+        var gltfastGlbLoader = new GltfastGlbLoader();
+
+        var go1 = new GameObject("model1");
+        var loadTask1 = gltfastGlbLoader.LoadAsync(go1, modelDataPath);
+
+        var go2 = new GameObject("model2");
+        var loadTask2 = gltfastGlbLoader.LoadAsync(go2, modelDataPath);
+
+        await Task.WhenAll(loadTask1, loadTask2);
+
+        var meshFilter1 = go1.GetComponentInChildren<MeshFilter>();
+        var meshFilter2 = go2.GetComponentInChildren<MeshFilter>();
+        Assert.That(meshFilter1.sharedMesh, Is.EqualTo(meshFilter2.sharedMesh));
+
+        GameObject.DestroyImmediate(go1);
+        GameObject.DestroyImmediate(go2);
     }
 }
