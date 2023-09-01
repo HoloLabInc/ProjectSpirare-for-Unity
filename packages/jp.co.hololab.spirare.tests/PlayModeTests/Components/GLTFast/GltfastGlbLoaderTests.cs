@@ -114,4 +114,26 @@ public class GltfastGlbLoaderTests
         GameObject.DestroyImmediate(go1);
         GameObject.DestroyImmediate(go2);
     }
+
+    [Test]
+    public async Task LoadAsync_MeshIsSharedWithSameUrlAndMaterialObjects()
+    {
+        var gltfastGlbLoader = new GltfastGlbLoader();
+
+        var material = new Material(Shader.Find("Standard"));
+        var go1 = new GameObject("model1");
+        var loadTask1 = gltfastGlbLoader.LoadAsync(go1, modelDataPath, material);
+
+        var go2 = new GameObject("model2");
+        var loadTask2 = gltfastGlbLoader.LoadAsync(go2, modelDataPath, material);
+
+        await Task.WhenAll(loadTask1, loadTask2);
+
+        var meshFilter1 = go1.GetComponentInChildren<MeshFilter>();
+        var meshFilter2 = go2.GetComponentInChildren<MeshFilter>();
+        Assert.That(meshFilter1.sharedMesh, Is.EqualTo(meshFilter2.sharedMesh));
+
+        GameObject.DestroyImmediate(go1);
+        GameObject.DestroyImmediate(go2);
+    }
 }
