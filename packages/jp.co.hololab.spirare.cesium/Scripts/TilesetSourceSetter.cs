@@ -8,7 +8,7 @@ using System.IO;
 using UnityEditor;
 #endif
 
-namespace HoloLab.Spirare.Cesium.Cesium
+namespace HoloLab.Spirare.Cesium
 {
     [ExecuteAlways]
     [RequireComponent(typeof(Cesium3DTileset))]
