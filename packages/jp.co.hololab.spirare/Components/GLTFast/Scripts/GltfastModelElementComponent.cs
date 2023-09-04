@@ -22,6 +22,15 @@ namespace HoloLab.Spirare
 
         private CameraVisibleHelper[] _cameraVisibleHelpers;
 
+        #region static properties and methods
+        private static GltfastGlbLoader glbLoader = new GltfastGlbLoader();
+
+        public static void ClearGltfImportCache()
+        {
+            glbLoader.ClearGltfImportCache();
+        }
+        #endregion
+
         public override WrapMode WrapMode
         {
             get
@@ -96,7 +105,7 @@ namespace HoloLab.Spirare
                 material = loadOptions.OcclusionMaterial;
             }
 
-            await GltfastGlbLoader.LoadAsync(currentModelObject, element.Src, material,
+            await glbLoader.LoadAsync(currentModelObject, element.Src, material,
                 onLoadingStatusChanged: OnLoadingStatusChanged);
 
             _currentModelSource = element.Src;

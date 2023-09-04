@@ -43,6 +43,7 @@ public class GltfastModelElementComponentTests
     public void SetUp()
     {
         SpirareTestUtils.CreateMainCamera();
+        GltfastModelElementComponent.ClearGltfImportCache();
     }
 
     [Test]
