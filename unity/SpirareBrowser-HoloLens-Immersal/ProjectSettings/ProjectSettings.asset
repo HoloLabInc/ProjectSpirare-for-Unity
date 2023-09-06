@@ -643,76 +643,76 @@ PlayerSettings:
   metroCertificateNotAfter: 80b45a5b2492da01
   metroApplicationDescription: Spirare Browser Immersal
   wsaImages:
-    65552: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_16x16.png
-    65560: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_24x24.png
-    65568: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_32x32.png
-    65584: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_48x48.png
-    65636: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_50x50.png
-    65661: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_63x63.png
-    65686: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_75x75.png
-    65736: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_100x100.png
-    65792: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_256x256.png
-    65936: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_200x200.png
-    131088: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_16x16.png
-    131096: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_24x24.png
-    131104: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_32x32.png
-    131120: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_48x48.png
-    131172: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_620x300.png
-    131197: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_775x375.png
-    131222: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_930x450.png
-    131272: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_1240x600.png
-    131328: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_256x256.png
-    131472: Assets/TileGenerator/BaseWindowImage_2480x1200.png
-    2031632: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_16x16.png
-    2031640: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_24x24.png
-    2031648: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_32x32.png
-    2031664: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_48x48.png
-    2031716: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_44x44.png
-    2031741: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_55x55.png
-    2031766: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_66x66.png
-    2031816: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_88x88.png
-    2031872: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_256x256.png
-    2032016: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_176x176.png
-    2097168: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_16x16.png
-    2097176: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_24x24.png
-    2097184: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_32x32.png
-    2097200: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_48x48.png
-    2097252: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_71x71.png
-    2097277: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_89x89.png
-    2097302: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_107x107.png
-    2097352: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_142x142.png
-    2097408: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_256x256.png
-    2097552: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_284x284.png
-    2162704: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_16x16.png
-    2162712: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_24x24.png
-    2162720: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_32x32.png
-    2162736: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_48x48.png
-    2162788: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_150x150.png
-    2162813: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_188x188.png
-    2162838: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_225x225.png
-    2162888: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_300x300.png
-    2162944: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_256x256.png
-    2163088: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_600x600.png
-    2228240: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_16x16.png
-    2228248: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_24x24.png
-    2228256: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_32x32.png
-    2228272: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_48x48.png
-    2228324: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_310x310.png
-    2228349: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_388x388.png
-    2228374: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_465x465.png
-    2228424: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_620x620.png
-    2228480: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_256x256.png
-    2228624: Assets/TileGenerator/BaseIcon_1240x1240.png
-    2293776: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_16x16.png
-    2293784: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_24x24.png
-    2293792: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_32x32.png
-    2293808: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_48x48.png
-    2293860: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_310x150.png
-    2293885: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_388x188.png
-    2293910: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_465x225.png
-    2293960: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_620x300.png
-    2294016: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_256x256.png
-    2294160: Assets/TileGenerator/Spirare Browser Immersal_AppIcon_1240x600.png
+    65552: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_16x16.png
+    65560: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_24x24.png
+    65568: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_32x32.png
+    65584: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_48x48.png
+    65636: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_50x50.png
+    65661: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_63x63.png
+    65686: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_75x75.png
+    65736: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_100x100.png
+    65792: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_256x256.png
+    65936: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_200x200.png
+    131088: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_16x16.png
+    131096: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_24x24.png
+    131104: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_32x32.png
+    131120: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_48x48.png
+    131172: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_620x300.png
+    131197: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_775x375.png
+    131222: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_930x450.png
+    131272: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_1240x600.png
+    131328: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_256x256.png
+    131472: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/BaseWindowImage_2480x1200.png
+    2031632: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_16x16.png
+    2031640: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_24x24.png
+    2031648: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_32x32.png
+    2031664: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_48x48.png
+    2031716: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_44x44.png
+    2031741: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_55x55.png
+    2031766: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_66x66.png
+    2031816: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_88x88.png
+    2031872: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_256x256.png
+    2032016: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_176x176.png
+    2097168: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_16x16.png
+    2097176: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_24x24.png
+    2097184: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_32x32.png
+    2097200: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_48x48.png
+    2097252: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_71x71.png
+    2097277: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_89x89.png
+    2097302: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_107x107.png
+    2097352: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_142x142.png
+    2097408: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_256x256.png
+    2097552: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_284x284.png
+    2162704: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_16x16.png
+    2162712: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_24x24.png
+    2162720: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_32x32.png
+    2162736: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_48x48.png
+    2162788: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_150x150.png
+    2162813: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_188x188.png
+    2162838: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_225x225.png
+    2162888: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_300x300.png
+    2162944: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_256x256.png
+    2163088: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_600x600.png
+    2228240: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_16x16.png
+    2228248: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_24x24.png
+    2228256: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_32x32.png
+    2228272: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_48x48.png
+    2228324: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_310x310.png
+    2228349: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_388x388.png
+    2228374: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_465x465.png
+    2228424: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_620x620.png
+    2228480: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_256x256.png
+    2228624: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/BaseIcon_1240x1240.png
+    2293776: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_16x16.png
+    2293784: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_24x24.png
+    2293792: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_32x32.png
+    2293808: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_48x48.png
+    2293860: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_310x150.png
+    2293885: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_388x188.png
+    2293910: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_465x225.png
+    2293960: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_620x300.png
+    2294016: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_256x256.png
+    2294160: Packages/jp.co.hololab.spirare.browser.hololens/GeneratedIcons/SpirareBrowser_AppIcon_1240x600.png
   metroTileShortName: SB Immersal
   metroTileShowName: 0
   metroMediumTileShowName: 1
