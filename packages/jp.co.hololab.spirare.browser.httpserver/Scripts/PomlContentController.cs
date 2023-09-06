@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace HoloLab.Spirare.Browser.HttpServer
 {
@@ -42,9 +41,9 @@ namespace HoloLab.Spirare.Browser.HttpServer
 
             var args = new string[]
             {
-             loadFormHtml.text,
-             contentListHtml,
-             rootPageScriptHtml.text,
+                loadFormHtml.text,
+                contentListHtml,
+                rootPageScriptHtml.text,
             };
             var html = string.Format(rootPageHtml.text, args);
             return html;
@@ -58,13 +57,12 @@ namespace HoloLab.Spirare.Browser.HttpServer
                 var reader = new StreamReader(request.InputStream);
                 var body = await reader.ReadToEndAsync();
 
-                var queries = ParseQueryString(body);
+                var queries = HttpQueryParser.ParseQueryString(body);
 
-                var queryPair = queries.FirstOrDefault(x => x.Key == "url");
-                if (queryPair != null)
+                if (queries.TryGetValue("url", out var url))
                 {
-                    _ = pomlContentManager.LoadContentsAsync(queryPair.Value);
-                    Debug.Log(queryPair.Value);
+                    _ = pomlContentManager.LoadContentsAsync(url);
+                    Debug.Log($"Load POML: {url}");
                 }
             }
 
@@ -97,11 +95,10 @@ namespace HoloLab.Spirare.Browser.HttpServer
                 var reader = new StreamReader(request.InputStream);
                 var body = await reader.ReadToEndAsync();
 
-                var queries = ParseQueryString(body);
-                var queryPair = queries.FirstOrDefault(x => x.Key == "enabled");
-                if (queryPair != null)
+                var queries = HttpQueryParser.ParseQueryString(body);
+                if (queries.TryGetValue("enabled", out var enabledString))
                 {
-                    if (bool.TryParse(queryPair.Value, out var enabled))
+                    if (bool.TryParse(enabledString, out var enabled))
                     {
                         Debug.Log(enabled);
                         pomlContentManager.SetAutoReload(id, enabled, autoReloadInterval);
@@ -123,40 +120,6 @@ namespace HoloLab.Spirare.Browser.HttpServer
             };
             var html = string.Format(contentHtml.text, args);
             return html;
-        }
-
-        private class QueryPair
-        {
-            public string Key;
-            public string Value;
-        }
-
-        private static List<QueryPair> ParseQueryString(string queryString)
-        {
-            var queryList = new List<QueryPair>();
-
-            var queries = queryString.Split('&');
-            foreach (var query in queries)
-            {
-                var tokens = query.Split('=');
-                if (tokens.Length != 2)
-                {
-                    continue;
-                }
-
-                var key = tokens[0];
-                var value = tokens[1];
-
-                var queryPair = new QueryPair()
-                {
-                    Key = UnityWebRequest.UnEscapeURL(key),
-                    Value = UnityWebRequest.UnEscapeURL(value)
-                };
-
-                queryList.Add(queryPair);
-            }
-
-            return queryList;
         }
     }
 }
