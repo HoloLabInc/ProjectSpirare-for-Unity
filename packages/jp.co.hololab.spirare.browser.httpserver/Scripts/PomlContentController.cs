@@ -57,7 +57,7 @@ namespace HoloLab.Spirare.Browser.HttpServer
                 var reader = new StreamReader(request.InputStream);
                 var body = await reader.ReadToEndAsync();
 
-                var queries = HttpUtility.ParseQueryString(body);
+                var queries = HttpQueryParser.ParseQueryString(body);
 
                 if (queries.TryGetValue("url", out var url))
                 {
@@ -95,7 +95,7 @@ namespace HoloLab.Spirare.Browser.HttpServer
                 var reader = new StreamReader(request.InputStream);
                 var body = await reader.ReadToEndAsync();
 
-                var queries = HttpUtility.ParseQueryString(body);
+                var queries = HttpQueryParser.ParseQueryString(body);
                 if (queries.TryGetValue("enabled", out var enabledString))
                 {
                     if (bool.TryParse(enabledString, out var enabled))

@@ -37,7 +37,7 @@ namespace HoloLab.Spirare.Browser.HttpServer
         }
     }
 
-    public static class HttpUtility
+    public static class HttpQueryParser
     {
         private class QueryPair
         {
