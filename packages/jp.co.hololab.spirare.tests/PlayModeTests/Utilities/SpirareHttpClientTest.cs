@@ -182,19 +182,6 @@ public class SpirareHttpClientTest
 
         await UniTask.WhenAll(request1, request2, request3);
     }
-
-    [Test]
-    public async Task DynamicSemaphore()
-    {
-        var semaphore = new DynamicSemaphore(5, 20);
-        Assert.That(semaphore.CurrentCount, Is.EqualTo(5));
-
-        await semaphore.WaitAsync();
-        Assert.That(semaphore.CurrentCount, Is.EqualTo(4));
-
-        semaphore.Release();
-        Assert.That(semaphore.CurrentCount, Is.EqualTo(5));
-    }
 }
 
 internal class ResourceControllerForTest : IHttpController

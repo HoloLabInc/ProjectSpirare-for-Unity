@@ -23,6 +23,25 @@ public class DynamicSemaphoreTest
     }
 
     [Test]
+    public void SetMaxCount_CurrentCountIsChanged()
+    {
+        var semaphore = new DynamicSemaphore(0, 20);
+        Assert.That(semaphore.CurrentCount, Is.EqualTo(0));
+
+        semaphore.SetMaxCount(4);
+        Assert.That(semaphore.CurrentCount, Is.EqualTo(4));
+
+        semaphore.SetMaxCount(2);
+        Assert.That(semaphore.CurrentCount, Is.EqualTo(2));
+
+        semaphore.SetMaxCount(10);
+        Assert.That(semaphore.CurrentCount, Is.EqualTo(10));
+
+        semaphore.SetMaxCount(0);
+        Assert.That(semaphore.CurrentCount, Is.EqualTo(0));
+    }
+
+    [Test]
     public async Task SetMaxCount_WaitAsyncCompleted()
     {
         var semaphore = new DynamicSemaphore(0, 20);
