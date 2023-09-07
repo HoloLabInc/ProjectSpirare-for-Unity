@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -30,8 +32,82 @@ namespace HoloLab.Spirare
         }
     }
 
+    internal class DynamicSemaphore
+    {
+        private readonly SemaphoreSlim semaphoreSlim;
+
+        private int maxCount;
+        private readonly int maxCountLimit;
+
+        private readonly object lockObject = new object();
+
+        public int CurrentCount => semaphoreSlim.CurrentCount;
+
+        public DynamicSemaphore(int maxCount, int maxCountLimit)
+        {
+            this.maxCountLimit = maxCountLimit;
+            this.maxCount = Mathf.Clamp(maxCount, 0, maxCountLimit);
+
+            semaphoreSlim = new SemaphoreSlim(maxCount, maxCountLimit);
+        }
+
+        public void SetMaxCount(int maxCount)
+        {
+            int diffCount;
+
+            lock (lockObject)
+            {
+                var newMaxCount = Mathf.Clamp(maxCount, 0, maxCountLimit);
+                diffCount = newMaxCount - this.maxCount;
+                this.maxCount = newMaxCount;
+            }
+
+            if (diffCount > 0)
+            {
+                semaphoreSlim.Release(diffCount);
+            }
+            else if (diffCount < 0)
+            {
+                for (var i = 0; i < -diffCount; i++)
+                {
+                    semaphoreSlim.WaitAsync();
+                }
+            }
+        }
+
+        public async Task WaitAsync()
+        {
+            await semaphoreSlim.WaitAsync();
+        }
+
+        public void Release()
+        {
+            semaphoreSlim.Release();
+        }
+    }
+
+
     public class SpirareHttpClient
     {
+        private readonly int maxConnectionsLimit = 100;
+
+        private int maxConnections = 6;
+
+        public int MaxConnections
+        {
+            set
+            {
+                maxConnections = Mathf.Clamp(value, 0, maxConnectionsLimit);
+                semaphore.SetMaxCount(maxConnections);
+            }
+            get
+            {
+                return maxConnections;
+            }
+        }
+
+        private readonly DynamicSemaphore semaphore;
+
         private static readonly string singletonCacheFolderPath = Path.Combine(Application.temporaryCachePath, "SpirareHttpClientCache");
 
         private static readonly SpirareHttpClient instance = new SpirareHttpClient(singletonCacheFolderPath);
@@ -45,6 +121,8 @@ namespace HoloLab.Spirare
 
         private SpirareHttpClient(string cacheFolderPath)
         {
+            semaphore = new DynamicSemaphore(maxConnections, maxConnectionsLimit);
+
             this.cacheFolderPath = cacheFolderPath;
             ClearFolder(cacheFolderPath);
         }
@@ -174,13 +252,15 @@ namespace HoloLab.Spirare
             cacheDownloadTaskDictionary.TryRemove(url, out _);
         }
 
-        private static async UniTask<SpirareHttpClientResult<UnityWebRequest>> SendGetRequestAsync(string url, DownloadHandler downloadHandler)
+        private async UniTask<SpirareHttpClientResult<UnityWebRequest>> SendGetRequestAsync(string url, DownloadHandler downloadHandler)
         {
-            var request = UnityWebRequest.Get(url);
-            request.downloadHandler = downloadHandler;
+            await semaphore.WaitAsync();
 
+            UnityWebRequest request = null;
             try
             {
+                request = UnityWebRequest.Get(url);
+                request.downloadHandler = downloadHandler;
                 var webRequest = await request.SendWebRequest();
 
                 if (webRequest.result == UnityWebRequest.Result.Success)
@@ -196,8 +276,12 @@ namespace HoloLab.Spirare
             }
             catch (Exception ex)
             {
-                request.Dispose();
+                request?.Dispose();
                 return CreateErrroResult<UnityWebRequest>(ex);
+            }
+            finally
+            {
+                semaphore.Release();
             }
         }
 
