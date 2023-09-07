@@ -148,6 +148,40 @@ public class SpirareHttpClientTest
 
         Assert.That(resourceControllerForTest.RequestCountDictionary["/resources/test.txt"], Is.EqualTo(3));
     }
+
+    [Test]
+    public async Task GetByteArrayAsync_MaxConnectionsNumberIsLimited()
+    {
+        var spirareHttpClient = SpirareHttpClient.Instance;
+        spirareHttpClient.MaxConnections = 2;
+
+        var url = $"http://localhost:{httpServerForTest.Port}/delay/50";
+        var request1 = spirareHttpClient.GetByteArrayAsync(url, enableCache: false);
+        var request2 = spirareHttpClient.GetByteArrayAsync(url, enableCache: false);
+        var request3 = spirareHttpClient.GetByteArrayAsync(url, enableCache: false);
+        await Task.Delay(30);
+
+        Assert.That(resourceControllerForTest.RequestCountDictionary["/delay/50"], Is.EqualTo(2));
+
+        await UniTask.WhenAll(request1, request2, request3);
+    }
+
+    [Test]
+    public async Task GetByteArrayAsync_MaxConnectionsNumberIsEnough()
+    {
+        var spirareHttpClient = SpirareHttpClient.Instance;
+        spirareHttpClient.MaxConnections = 3;
+
+        var url = $"http://localhost:{httpServerForTest.Port}/delay/50";
+        var request1 = spirareHttpClient.GetByteArrayAsync(url, enableCache: false);
+        var request2 = spirareHttpClient.GetByteArrayAsync(url, enableCache: false);
+        var request3 = spirareHttpClient.GetByteArrayAsync(url, enableCache: false);
+        await Task.Delay(30);
+
+        Assert.That(resourceControllerForTest.RequestCountDictionary["/delay/50"], Is.EqualTo(3));
+
+        await UniTask.WhenAll(request1, request2, request3);
+    }
 }
 
 internal class ResourceControllerForTest : IHttpController
@@ -163,6 +197,15 @@ internal class ResourceControllerForTest : IHttpController
 
         await Task.Delay(DelayMilliseconds);
         return Encoding.UTF8.GetBytes(filename);
+    }
+
+    [Route("/delay/:milliseconds")]
+    public async Task<string> Delay(HttpListenerRequest request, int milliseconds)
+    {
+        UpdateRequestCount(request);
+
+        await Task.Delay(milliseconds);
+        return "ok";
     }
 
     private void UpdateRequestCount(HttpListenerRequest request)
