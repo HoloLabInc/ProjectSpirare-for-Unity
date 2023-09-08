@@ -451,7 +451,7 @@ public class PomlParserTests
             // Assert.That(polygon.PositionType, Is.EqualTo(PositionType.Relative));
             Assert.That(polygon.Color, Is.EqualTo(Color.white));
 
-            Assert.That(polygon.Vertices, Is.EqualTo("0 1 2 3 4 5 6 7 8 9"));
+            Assert.That(polygon.Vertices, Is.EqualTo("0 1 2 3 4 5 6 7 8"));
             /*
             Assert.That(polygon.Vertices.Count, Is.EqualTo(3));
             Assert.That(polygon.Vertices[0], Is.EqualTo(new Vector3(0, 1, 2)));
