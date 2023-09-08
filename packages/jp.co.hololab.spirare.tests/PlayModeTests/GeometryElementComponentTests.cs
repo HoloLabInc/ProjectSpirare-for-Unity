@@ -52,6 +52,19 @@ public class GeometryElementComponentTests
         }
     }
 
+    private static IList<PomlGeometry> TestGeometries = new List<PomlGeometry>()
+    {
+        new LineGeometry()
+        {
+            Vertices = "0 0 0 1 1 1"
+        },
+        new PolygonGeometry()
+        {
+            Vertices = "0 0 0 0 0 1 0 1 0",
+            Indices = new int[] { 0, 1, 2 }
+        },
+    };
+
     [SetUp]
     public void SetUp()
     {
@@ -64,28 +77,28 @@ public class GeometryElementComponentTests
         SpirareTestUtils.ClearScene();
     }
 
-    [Test]
-    public async Task GeometryObject_IsVisible()
+    [TestCaseSource(nameof(TestGeometries))]
+    public async Task GeometryObject_IsVisible(PomlGeometry pomlGeometry)
     {
         var element = new PomlGeometryElement()
         {
             Display = PomlDisplayType.Visible,
         };
-        element.Geometries.Add(simpleLineGeometry);
+        element.Geometries.Add(pomlGeometry);
 
         var go = await CreateObjectAsync(element, normalLoadOptions);
 
         SpirareTestUtils.AssertThatMeshIsVisible(go, loaderSettings.occlusionMaterial);
     }
 
-    [Test]
-    public async Task GeometryObject_IsInvisible()
+    [TestCaseSource(nameof(TestGeometries))]
+    public async Task GeometryObject_IsInvisible(PomlGeometry pomlGeometry)
     {
         var element = new PomlGeometryElement()
         {
             Display = PomlDisplayType.None,
         };
-        element.Geometries.Add(simpleLineGeometry);
+        element.Geometries.Add(pomlGeometry);
 
         var go = await CreateObjectAsync(element, normalLoadOptions);
 
@@ -94,7 +107,7 @@ public class GeometryElementComponentTests
 
     [TestCase(PomlDisplayType.None)]
     // [TestCase(PomlDisplayType.Occlusion)]
-    public async Task GeometryObject_ToVisible(PomlDisplayType initialDisplayType)
+    public async Task LineGeometryObject_ToVisible(PomlDisplayType initialDisplayType)
     {
         var element = new PomlGeometryElement()
         {
@@ -118,7 +131,7 @@ public class GeometryElementComponentTests
 
     [TestCase(PomlDisplayType.Visible)]
     // [TestCase(PomlDisplayType.Occlusion)]
-    public async Task GeometryObject_ToInvisible(PomlDisplayType initialDisplayType)
+    public async Task LineGeometryObject_ToInvisible(PomlDisplayType initialDisplayType)
     {
         var element = new PomlGeometryElement()
         {
