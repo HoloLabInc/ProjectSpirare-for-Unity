@@ -118,8 +118,9 @@ namespace HoloLab.Spirare
                         var meshFilter = lineObj.AddComponent<MeshFilter>();
                         var mesh = meshFilter.mesh;
                         mesh.vertices = points;
-                        // TODO
-                        mesh.SetIndices(new int[] { 0, 1 }, MeshTopology.Lines, 0);
+
+                        var indices = Enumerable.Range(0, points.Length).ToArray();
+                        mesh.SetIndices(indices, MeshTopology.LineStrip, 0);
                     }
                     break;
                 case RenderType.LineRenderer:
@@ -140,6 +141,7 @@ namespace HoloLab.Spirare
                         };
                         lineRenderer.material = material;
 
+                        lineRenderer.positionCount = points.Length;
                         lineRenderer.SetPositions(points);
                     }
                     break;
