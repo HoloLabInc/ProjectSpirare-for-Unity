@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using HoloLab.Spirare;
@@ -36,23 +37,7 @@ public class GeometryElementComponentTests
         }
     }
 
-    private PomlGeometry simpleLineGeometry
-    {
-        get
-        {
-            return new LineGeometry()
-            {
-                Vertices = "0 0 0 1 1 1"
-                /*
-                PositionType = PositionType.Relative,
-                Start = Vector3.zero,
-                End = Vector3.one,
-                */
-            };
-        }
-    }
-
-    private static IList<PomlGeometry> TestGeometries = new List<PomlGeometry>()
+    private static readonly IList<PomlGeometry> TestGeometries = new List<PomlGeometry>()
     {
         new LineGeometry()
         {
@@ -105,15 +90,28 @@ public class GeometryElementComponentTests
         SpirareTestUtils.AssertThatMeshIsInvisible(go);
     }
 
-    [TestCase(PomlDisplayType.None)]
+    private static IEnumerable<object[]> ToVisibleTestCases()
+    {
+        var initialDisplayType = new PomlDisplayType[]
+        {
+            PomlDisplayType.None
+        };
+
+        return initialDisplayType.SelectMany(
+            displayType => TestGeometries,
+            (displayType, geometry) => new object[] { displayType, geometry });
+    }
+
+    [TestCaseSource(nameof(ToVisibleTestCases))]
+    //PomlDisplayType.None)]
     // [TestCase(PomlDisplayType.Occlusion)]
-    public async Task LineGeometryObject_ToVisible(PomlDisplayType initialDisplayType)
+    public async Task LineGeometryObject_ToVisible(PomlDisplayType initialDisplayType, PomlGeometry pomlGeometry)
     {
         var element = new PomlGeometryElement()
         {
             Display = initialDisplayType,
         };
-        element.Geometries.Add(simpleLineGeometry);
+        element.Geometries.Add(pomlGeometry);
 
         var go = await CreateObjectAsync(element, normalLoadOptions);
         var objectElementComponent = go.GetComponent<PomlObjectElementComponent>();
@@ -129,15 +127,28 @@ public class GeometryElementComponentTests
         SpirareTestUtils.AssertThatMeshIsVisible(go, loaderSettings.occlusionMaterial);
     }
 
-    [TestCase(PomlDisplayType.Visible)]
+    private static IEnumerable<object[]> ToInvisibleTestCases()
+    {
+        var initialDisplayType = new PomlDisplayType[]
+        {
+            PomlDisplayType.Visible
+        };
+
+        return initialDisplayType.SelectMany(
+            displayType => TestGeometries,
+            (displayType, geometry) => new object[] { displayType, geometry });
+    }
+
+    // [TestCase(PomlDisplayType.Visible)]
     // [TestCase(PomlDisplayType.Occlusion)]
-    public async Task LineGeometryObject_ToInvisible(PomlDisplayType initialDisplayType)
+    [TestCaseSource(nameof(ToInvisibleTestCases))]
+    public async Task LineGeometryObject_ToInvisible(PomlDisplayType initialDisplayType, PomlGeometry pomlGeometry)
     {
         var element = new PomlGeometryElement()
         {
             Display = initialDisplayType,
         };
-        element.Geometries.Add(simpleLineGeometry);
+        element.Geometries.Add(pomlGeometry);
 
         var go = await CreateObjectAsync(element, normalLoadOptions);
         var objectElementComponent = go.GetComponent<PomlObjectElementComponent>();

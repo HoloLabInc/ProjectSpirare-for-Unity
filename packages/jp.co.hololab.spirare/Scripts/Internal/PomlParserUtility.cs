@@ -30,6 +30,22 @@ namespace HoloLab.Spirare
             return values;
         }
 
+        private static List<double> ParseAsDoubleArray(string text)
+        {
+            var tokens = SplitArrayString(text);
+            var values = new List<double>(tokens.Length);
+
+            foreach (var token in tokens)
+            {
+                if (!double.TryParse(token, out var value))
+                {
+                    break;
+                }
+                values.Add(value);
+            }
+            return values;
+        }
+
         public static Vector3[] ParseAsVector3Array(string text)
         {
             var values = ParseAsFloatArray(text);
@@ -43,6 +59,21 @@ namespace HoloLab.Spirare
                 result[i] = new Vector3(x, y, z);
             }
 
+            return result;
+        }
+
+        public static PomlGeodeticPosition[] ParseAsGeodeticPositionArray(string text)
+        {
+            var values = ParseAsDoubleArray(text);
+
+            var result = new PomlGeodeticPosition[values.Count / 3];
+            for (int i = 0; i < result.Length; i++)
+            {
+                var longitude = values[i * 3];
+                var latitude = values[i * 3 + 1];
+                var ellipsoidalHeight = values[i * 3 + 2];
+                result[i] = new PomlGeodeticPosition(longitude, latitude, ellipsoidalHeight);
+            }
             return result;
         }
     }

@@ -530,29 +530,6 @@ namespace HoloLab.Spirare
             return new Vector3(x, y, z);
         }
 
-        /*
-        private static Vector3[] ReadVector3ArrayAttribute(XmlNode node, string key)
-        {
-            if (!node.TryGetAttribute(key, out var attribute))
-            {
-                return Array.Empty<Vector3>();
-            }
-
-            var values = PomlParserUtility.ParseAsFloatArray(attribute);
-
-            var result = new Vector3[values.Count / 3];
-            for (int i = 0; i < result.Length; i++)
-            {
-                var x = values[i * 3];
-                var y = values[i * 3 + 1];
-                var z = values[i * 3 + 2];
-                result[i] = new Vector3(x, y, z);
-            }
-
-            return result;
-        }
-        */
-
         private static Vector3 ReadScaleAttribute(XmlNode node, string key, float defaultValue)
         {
             if (!node.TryGetAttribute(key, out var attribute))
@@ -567,46 +544,6 @@ namespace HoloLab.Spirare
                 3 => new Vector3(values[0], values[1], values[2]),
                 _ => new Vector3(defaultValue, defaultValue, defaultValue),
             };
-        }
-
-        private static PomlGeodeticPosition ReadPomlGeodeticPositionAttribute(XmlNode node, string key, double defaultValue)
-        {
-            if (!node.TryGetAttribute(key, out var attribute))
-            {
-                return new PomlGeodeticPosition(defaultValue, defaultValue, defaultValue);
-            }
-
-            var split = attribute.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            return new PomlGeodeticPosition(
-                ExtractDouble(split, 1, defaultValue),
-                ExtractDouble(split, 0, defaultValue),
-                ExtractDouble(split, 2, defaultValue)
-            );
-
-            static double ExtractDouble(string[] values, int index, double defaultValue)
-            {
-                return (values.Length > index) && double.TryParse(values[index], out var a) ? a : defaultValue;
-            }
-        }
-
-        private static PomlGeodeticPosition[] ReadPomlGeodeticPositionArrayAttribute(XmlNode node, string key)
-        {
-            if (!node.TryGetAttribute(key, out var attribute))
-            {
-                return Array.Empty<PomlGeodeticPosition>();
-            }
-
-            var values = ReadDoubleArray(attribute);
-
-            var result = new PomlGeodeticPosition[values.Count / 3];
-            for (int i = 0; i < result.Length; i++)
-            {
-                var longitude = values[i * 3];
-                var latitude = values[i * 3 + 1];
-                var ellipsoidalHeight = values[i * 3 + 2];
-                result[i] = new PomlGeodeticPosition(longitude, latitude, ellipsoidalHeight);
-            }
-            return result;
         }
 
         private static Vector3? ReadMinMaxScaleAttribute(XmlNode node, string key)
@@ -653,49 +590,6 @@ namespace HoloLab.Spirare
             }
             return values;
         }
-
-        /*
-        private static List<float> ReadFloatArray(string text)
-        {
-            var tokens = PomlParserUtility.SplitArrayString(text);
-            var values = new List<float>(tokens.Length);
-
-            foreach (var token in tokens)
-            {
-                if (!float.TryParse(token, out var value))
-                {
-                    break;
-                }
-                values.Add(value);
-            }
-            return values;
-        }
-        */
-
-        private static List<double> ReadDoubleArray(string text)
-        {
-            var tokens = PomlParserUtility.SplitArrayString(text);
-            var values = new List<double>(tokens.Length);
-
-            foreach (var token in tokens)
-            {
-                if (!double.TryParse(token, out var value))
-                {
-                    break;
-                }
-                values.Add(value);
-            }
-            return values;
-        }
-
-        /*
-        private static string[] SplitArrayString(string text)
-        {
-            var separator = new char[] { ',', ' ' };
-            var tokens = text.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-            return tokens;
-        }
-        */
 
         private static T GetValueByIndex<T>(List<T> list, int index, T defaultValue)
         {
