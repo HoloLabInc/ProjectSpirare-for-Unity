@@ -218,6 +218,7 @@ namespace HoloLab.Spirare
         }
     }
 
+    /*
     public enum PositionType
     {
         [EnumLabel("relative")]
@@ -225,6 +226,7 @@ namespace HoloLab.Spirare
         [EnumLabel("geo-location")]
         GeoLocation
     }
+    */
 
     public enum PomlGeometryType
     {
@@ -265,12 +267,14 @@ namespace HoloLab.Spirare
         {
         }
 
-        public PositionType PositionType { get; set; }
-        public Vector3 Start { get; set; }
-        public Vector3 End { get; set; }
+        // public PositionType PositionType { get; set; }
+        // public Vector3 Start { get; set; }
+        // public Vector3 End { get; set; }
 
-        public PomlGeodeticPosition StartGeoLocation { get; set; }
-        public PomlGeodeticPosition EndGeoLocation { get; set; }
+        // public PomlGeodeticPosition StartGeoLocation { get; set; }
+        // public PomlGeodeticPosition EndGeoLocation { get; set; }
+
+        public string Vertices { set; get; }
 
         public Color Color { get; set; }
         public float Width { get; set; }
@@ -282,10 +286,12 @@ namespace HoloLab.Spirare
         {
         }
 
-        public PositionType PositionType { get; set; }
+        // public PositionType PositionType { get; set; }
 
-        public Vector3[] Vertices { get; set; }
-        public PomlGeodeticPosition[] GeodeticVertices { get; set; }
+        public string Vertices { set; get; }
+
+        // public Vector3[] Vertices { get; set; }
+        // public PomlGeodeticPosition[] GeodeticVertices { get; set; }
 
         public int[] Indices { get; set; }
 

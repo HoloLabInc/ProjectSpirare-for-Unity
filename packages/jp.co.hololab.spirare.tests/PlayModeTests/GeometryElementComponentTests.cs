@@ -42,9 +42,12 @@ public class GeometryElementComponentTests
         {
             return new LineGeometry()
             {
+                Vertices = "0 0 0 1 1 1"
+                /*
                 PositionType = PositionType.Relative,
                 Start = Vector3.zero,
                 End = Vector3.one,
+                */
             };
         }
     }

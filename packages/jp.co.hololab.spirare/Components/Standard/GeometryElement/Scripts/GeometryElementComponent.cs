@@ -87,6 +87,7 @@ namespace HoloLab.Spirare
             geometryObjects.Clear();
         }
 
+        /*
         private static Vector3[] ConvertLineGeometryToPoints(LineGeometry line)
         {
             switch (line.PositionType)
@@ -113,13 +114,102 @@ namespace HoloLab.Spirare
                     return Array.Empty<Vector3>();
             }
         }
+        */
+
+        private static Vector3[] ConvertPomlGeometryVerticesAttributeToUnityVertices(PomlGeometryVerticesAttribute vertices)
+        {
+            switch (vertices.CoordinateSystem)
+            {
+                case PomlGeometryVerticesAttribute.CoordinateSystemType.Relative:
+                    return vertices.RelativePositions.Select(x => CoordinateUtility.ToUnityCoordinate(x)).ToArray();
+                /*
+                return new Vector3[2]
+                {
+                    CoordinateUtility.ToUnityCoordinate(line.Start),
+                    CoordinateUtility.ToUnityCoordinate(line.End),
+                };
+                */
+                case PomlGeometryVerticesAttribute.CoordinateSystemType.Geodetic:
+                    var firstVertex = vertices.GeodeticPositions.FirstOrDefault();
+                    return vertices.GeodeticPositions.Select(x => GeodeticToRelative(x, firstVertex)).ToArray();
+
+                /*
+                var gStart = line.StartGeoLocation;
+                var gEnd = line.EndGeoLocation;
+
+                var endPosEnu = GeographicCoordinateConversion.GeodeticToEnu(
+                    gEnd.Latitude, gEnd.Longitude, gEnd.EllipsoidalHeight,
+                    gStart.Latitude, gStart.Longitude, gStart.EllipsoidalHeight);
+                return new Vector3[2]
+                {
+                    Vector3.zero,
+                    endPosEnu.ToUnityVector(),
+                };
+                */
+                default:
+                    return Array.Empty<Vector3>();
+            }
+        }
+
+        private static Vector3 GeodeticToRelative(PomlGeodeticPosition target, PomlGeodeticPosition origin)
+        {
+            return GeographicCoordinateConversion.GeodeticToEnu(
+                target.Latitude, target.Longitude, target.EllipsoidalHeight,
+                origin.Latitude, origin.Longitude, origin.EllipsoidalHeight)
+                .ToUnityVector();
+        }
+
+        private static void AddGeoreferenceElementComponentWhenGeodetic(GameObject targetObject, PomlGeometryVerticesAttribute geometryVertices,
+            GeoReferenceElementComponentFactory geoReferenceElementComponentFactory)
+        {
+            if (geometryVertices.CoordinateSystem == PomlGeometryVerticesAttribute.CoordinateSystemType.Geodetic)
+            {
+                if (geometryVertices.GeodeticPositions.Length > 0)
+                {
+                    var firstVertex = geometryVertices.GeodeticPositions[0];
+                    var geoReference = new PomlGeoReferenceElement()
+                    {
+                        Latitude = firstVertex.Latitude,
+                        Longitude = firstVertex.Longitude,
+                        EllipsoidalHeight = firstVertex.EllipsoidalHeight
+                    };
+                    geoReferenceElementComponentFactory.AddComponent(targetObject, geoReference);
+                }
+            }
+        }
 
         private static GameObject CreateLine(LineGeometry line, GeoReferenceElementComponentFactory geoReferenceElementComponentFactory, Transform parent, RenderType renderType, Material baseMaterial)
         {
             var lineObj = new GameObject("line");
             lineObj.transform.SetParent(parent, worldPositionStays: false);
 
-            var points = ConvertLineGeometryToPoints(line);
+            if (TryParserGeometryVertices(line.Vertices, out var geometryVertices) == false)
+            {
+                return lineObj;
+            }
+
+            AddGeoreferenceElementComponentWhenGeodetic(lineObj, geometryVertices, geoReferenceElementComponentFactory);
+            var points = ConvertPomlGeometryVerticesAttributeToUnityVertices(geometryVertices);
+
+            /*
+
+            if (geometryVertices.CoordinateSystem == PomlGeometryVerticesAttribute.CoordinateSystemType.Geodetic)
+            {
+                if (geometryVertices.GeodeticPositions.Length > 0)
+                {
+                    var firstVertex = geometryVertices.GeodeticPositions[0];
+                    var geoReference = new PomlGeoReferenceElement()
+                    {
+                        Latitude = firstVertex.Latitude,
+                        Longitude = firstVertex.Longitude,
+                        EllipsoidalHeight = firstVertex.EllipsoidalHeight
+                    };
+                    geoReferenceElementComponentFactory.AddComponent(lineObj, geoReference);
+                }
+            }
+            */
+
+            /*
             if (line.PositionType == PositionType.GeoLocation)
             {
                 var gStart = line.StartGeoLocation;
@@ -131,6 +221,7 @@ namespace HoloLab.Spirare
                 };
                 geoReferenceElementComponentFactory.AddComponent(lineObj, geoReference);
             }
+            */
 
             switch (renderType)
             {
@@ -180,6 +271,13 @@ namespace HoloLab.Spirare
             var polygonObj = new GameObject("polygon");
             polygonObj.transform.SetParent(parent, worldPositionStays: false);
 
+            if (TryParserGeometryVertices(polygon.Vertices, out var geometryVertices) == false)
+            {
+                return polygonObj;
+            }
+
+            AddGeoreferenceElementComponentWhenGeodetic(polygonObj, geometryVertices, geoReferenceElementComponentFactory);
+            /*
             if (polygon.PositionType == PositionType.GeoLocation)
             {
                 if (polygon.GeodeticVertices.Length > 0)
@@ -194,9 +292,10 @@ namespace HoloLab.Spirare
                     geoReferenceElementComponentFactory.AddComponent(polygonObj, geoReference);
                 }
             }
+            */
 
             var meshFilter = polygonObj.AddComponent<MeshFilter>();
-            meshFilter.sharedMesh = ConvertPolygonGeometryToMesh(polygon);
+            meshFilter.sharedMesh = ConvertPolygonGeometryToMesh(polygon, geometryVertices);
 
             var material = new Material(baseMaterial)
             {
@@ -209,31 +308,35 @@ namespace HoloLab.Spirare
             return polygonObj;
         }
 
-        private static Mesh ConvertPolygonGeometryToMesh(PolygonGeometry polygon)
+        private static Mesh ConvertPolygonGeometryToMesh(PolygonGeometry polygon, PomlGeometryVerticesAttribute geometryVertices)
         {
-            Vector3[] vertices;
-            switch (polygon.PositionType)
-            {
-                case PositionType.Relative:
-                    vertices = polygon.Vertices.Select(x => CoordinateUtility.ToUnityCoordinate(x)).ToArray();
-                    break;
-                case PositionType.GeoLocation:
-                    if (polygon.GeodeticVertices.Length == 0)
-                    {
-                        return new Mesh();
-                    }
+            var vertices = ConvertPomlGeometryVerticesAttributeToUnityVertices(geometryVertices);
 
-                    var firstVertex = polygon.GeodeticVertices[0];
-                    vertices = polygon.GeodeticVertices.Select(x =>
-                        GeographicCoordinateConversion.GeodeticToEnu(
-                            x.Latitude, x.Longitude, x.EllipsoidalHeight,
-                            firstVertex.Latitude, firstVertex.Longitude, firstVertex.EllipsoidalHeight)
-                        .ToUnityVector()
-                    ).ToArray();
-                    break;
-                default:
+            /*
+        Vector3[] vertices;
+        switch (polygon.PositionType)
+        {
+            case PositionType.Relative:
+                vertices = polygon.Vertices.Select(x => CoordinateUtility.ToUnityCoordinate(x)).ToArray();
+                break;
+            case PositionType.GeoLocation:
+                if (polygon.GeodeticVertices.Length == 0)
+                {
                     return new Mesh();
-            }
+                }
+
+                var firstVertex = polygon.GeodeticVertices[0];
+                vertices = polygon.GeodeticVertices.Select(x =>
+                    GeographicCoordinateConversion.GeodeticToEnu(
+                        x.Latitude, x.Longitude, x.EllipsoidalHeight,
+                        firstVertex.Latitude, firstVertex.Longitude, firstVertex.EllipsoidalHeight)
+                    .ToUnityVector()
+                ).ToArray();
+                break;
+            default:
+                return new Mesh();
+        }
+            */
 
             var indices = polygon.Indices;
             var triangles = new int[indices.Length];
@@ -251,6 +354,54 @@ namespace HoloLab.Spirare
                 triangles = triangles
             };
             return mesh;
+        }
+
+        private static bool TryParserGeometryVertices(string attribute, out PomlGeometryVerticesAttribute geometryVertices)
+        {
+            attribute = attribute.Trim();
+            if (attribute.StartsWith("geodetic:"))
+            {
+
+            }
+
+            geometryVertices = PomlGeometryVerticesAttribute.CreateUnkown();
+            return true;
+        }
+    }
+
+    public class PomlGeometryVerticesAttribute
+    {
+        public enum CoordinateSystemType
+        {
+            Unknown = 0,
+            Relative,
+            Geodetic
+        }
+
+        public CoordinateSystemType CoordinateSystem { get; }
+
+        public Vector3[] RelativePositions { get; }
+
+        public PomlGeodeticPosition[] GeodeticPositions { get; }
+
+        protected PomlGeometryVerticesAttribute(
+            CoordinateSystemType coordinateSystem,
+            Vector3[] relativePositions,
+            PomlGeodeticPosition[] geodeticPositions)
+        {
+            CoordinateSystem = coordinateSystem;
+            RelativePositions = relativePositions;
+            GeodeticPositions = geodeticPositions;
+        }
+
+        public static PomlGeometryVerticesAttribute CreateUnkown()
+        {
+            return new PomlGeometryVerticesAttribute(CoordinateSystemType.Unknown, null, null);
+        }
+
+        public static PomlGeometryVerticesAttribute CreateRelative(Vector3[] positions)
+        {
+            return new PomlGeometryVerticesAttribute(CoordinateSystemType.Relative, positions, null);
         }
     }
 }
