@@ -9,6 +9,26 @@ using UnityEngine.TestTools;
 [TestFixture]
 public class PomlParserUtilityTests
 {
+    private static IEnumerable<object[]> SplitArayStringTestCases()
+    {
+        return new List<object[]>
+                    {
+                        new object[]{"1,2,3", new string[] { "1" } },
+                        new object[]{"1 2 -3", new string[] { "1", "2", "-3" } },
+                        new object[]{" 1.25 2.5 -3 ", new string[] { "1.25", "2.5", "-3" } },
+                        new object[]{" 1, 2,-3   4 ", new string[] { "1", "2", "-3", "4" } },
+                        new object[]{" ,   ,  -1,,,,2,3,", new string[] { "-1", "2", "3" } },
+                        new object[]{"  ,  -1,2,a,3", new string[] { "-1", "2", "a", "3" } },
+                    };
+    }
+
+    [TestCaseSource(nameof(SplitArayStringTestCases))]
+    public void SplitArrayString(string text, string[] expected)
+    {
+        var tokens = PomlParserUtility.SplitArrayString(text);
+        Assert.That(tokens, Is.EquivalentTo(expected));
+    }
+
     private static IEnumerable<object[]> ParseAsFloatArrayTestCases()
     {
         return new List<object[]>
