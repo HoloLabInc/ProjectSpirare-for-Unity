@@ -103,9 +103,7 @@ public class GeometryElementComponentTests
     }
 
     [TestCaseSource(nameof(ToVisibleTestCases))]
-    //PomlDisplayType.None)]
-    // [TestCase(PomlDisplayType.Occlusion)]
-    public async Task LineGeometryObject_ToVisible(PomlDisplayType initialDisplayType, PomlGeometry pomlGeometry)
+    public async Task GeometryObject_ToVisible(PomlDisplayType initialDisplayType, PomlGeometry pomlGeometry)
     {
         var element = new PomlGeometryElement()
         {
@@ -139,10 +137,8 @@ public class GeometryElementComponentTests
             (displayType, geometry) => new object[] { displayType, geometry });
     }
 
-    // [TestCase(PomlDisplayType.Visible)]
-    // [TestCase(PomlDisplayType.Occlusion)]
     [TestCaseSource(nameof(ToInvisibleTestCases))]
-    public async Task LineGeometryObject_ToInvisible(PomlDisplayType initialDisplayType, PomlGeometry pomlGeometry)
+    public async Task GeometryObject_ToInvisible(PomlDisplayType initialDisplayType, PomlGeometry pomlGeometry)
     {
         var element = new PomlGeometryElement()
         {
