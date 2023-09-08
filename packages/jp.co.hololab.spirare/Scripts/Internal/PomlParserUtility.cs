@@ -30,7 +30,7 @@ namespace HoloLab.Spirare
             return values;
         }
 
-        private static List<double> ParseAsDoubleArray(string text)
+        public static List<double> ParseAsDoubleArray(string text)
         {
             var tokens = SplitArrayString(text);
             var values = new List<double>(tokens.Length);
