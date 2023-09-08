@@ -2,9 +2,9 @@ using HoloLab.PositioningTools.GeographicCoordinate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace HoloLab.Spirare
 {
@@ -88,63 +88,20 @@ namespace HoloLab.Spirare
             geometryObjects.Clear();
         }
 
-        private static Vector3[] ConvertPomlGeometryVerticesAttributeToUnityVertices(PomlGeometryVerticesAttribute vertices)
-        {
-            switch (vertices.CoordinateSystem)
-            {
-                case PomlGeometryVerticesAttribute.CoordinateSystemType.Relative:
-                    return vertices.RelativePositions.Select(x => CoordinateUtility.ToUnityCoordinate(x)).ToArray();
-
-                case PomlGeometryVerticesAttribute.CoordinateSystemType.Geodetic:
-                    var firstVertex = vertices.GeodeticPositions.FirstOrDefault();
-                    return vertices.GeodeticPositions.Select(x => GeodeticToRelative(x, firstVertex)).ToArray();
-
-                default:
-                    return Array.Empty<Vector3>();
-            }
-        }
-
-        private static Vector3 GeodeticToRelative(PomlGeodeticPosition target, PomlGeodeticPosition origin)
-        {
-            return GeographicCoordinateConversion.GeodeticToEnu(
-                target.Latitude, target.Longitude, target.EllipsoidalHeight,
-                origin.Latitude, origin.Longitude, origin.EllipsoidalHeight)
-                .ToUnityVector();
-        }
-
-        private static void AddGeoreferenceElementComponentWhenGeodetic(GameObject targetObject, PomlGeometryVerticesAttribute geometryVertices,
-            GeoReferenceElementComponentFactory geoReferenceElementComponentFactory)
-        {
-            if (geometryVertices.CoordinateSystem == PomlGeometryVerticesAttribute.CoordinateSystemType.Geodetic)
-            {
-                if (geometryVertices.GeodeticPositions.Length > 0)
-                {
-                    var firstVertex = geometryVertices.GeodeticPositions[0];
-                    var geoReference = new PomlGeoReferenceElement()
-                    {
-                        Latitude = firstVertex.Latitude,
-                        Longitude = firstVertex.Longitude,
-                        EllipsoidalHeight = firstVertex.EllipsoidalHeight
-                    };
-                    geoReferenceElementComponentFactory.AddComponent(targetObject, geoReference);
-                }
-            }
-        }
-
         private static GameObject CreateLine(LineGeometry line, GeoReferenceElementComponentFactory geoReferenceElementComponentFactory, Transform parent, RenderType renderType, Material baseMaterial)
         {
             var lineObj = new GameObject("line");
             lineObj.transform.SetParent(parent, worldPositionStays: false);
 
-            var geometryVertices = ParseGeometryVertices(line.Vertices);
+            var geometryVertices = PomlGeometryParserUtility.ParseAsGeometryPositionsAttribute(line.Vertices);
 
-            if (geometryVertices.CoordinateSystem == PomlGeometryVerticesAttribute.CoordinateSystemType.Unknown)
+            if (geometryVertices.CoordinateSystem == PomlGeometryPositionsAttribute.CoordinateSystemType.Unknown)
             {
                 return lineObj;
             }
 
             AddGeoreferenceElementComponentWhenGeodetic(lineObj, geometryVertices, geoReferenceElementComponentFactory);
-            var points = ConvertPomlGeometryVerticesAttributeToUnityVertices(geometryVertices);
+            var points = ConvertPomlGeometryPositionsAttributeToUnityPositions(geometryVertices);
 
             switch (renderType)
             {
@@ -195,9 +152,9 @@ namespace HoloLab.Spirare
             var polygonObj = new GameObject("polygon");
             polygonObj.transform.SetParent(parent, worldPositionStays: false);
 
-            var geometryVertices = ParseGeometryVertices(polygon.Vertices);
+            var geometryVertices = PomlGeometryParserUtility.ParseAsGeometryPositionsAttribute(polygon.Vertices);
 
-            if (geometryVertices.CoordinateSystem == PomlGeometryVerticesAttribute.CoordinateSystemType.Unknown)
+            if (geometryVertices.CoordinateSystem == PomlGeometryPositionsAttribute.CoordinateSystemType.Unknown)
             {
                 return polygonObj;
             }
@@ -218,9 +175,44 @@ namespace HoloLab.Spirare
             return polygonObj;
         }
 
-        private static Mesh ConvertPolygonGeometryToMesh(PolygonGeometry polygon, PomlGeometryVerticesAttribute geometryVertices)
+        private static void AddGeoreferenceElementComponentWhenGeodetic(GameObject targetObject, PomlGeometryPositionsAttribute geometryVertices,
+            GeoReferenceElementComponentFactory geoReferenceElementComponentFactory)
         {
-            var vertices = ConvertPomlGeometryVerticesAttributeToUnityVertices(geometryVertices);
+            if (geometryVertices.CoordinateSystem == PomlGeometryPositionsAttribute.CoordinateSystemType.Geodetic)
+            {
+                if (geometryVertices.GeodeticPositions.Length > 0)
+                {
+                    var firstVertex = geometryVertices.GeodeticPositions[0];
+                    var geoReference = new PomlGeoReferenceElement()
+                    {
+                        Latitude = firstVertex.Latitude,
+                        Longitude = firstVertex.Longitude,
+                        EllipsoidalHeight = firstVertex.EllipsoidalHeight
+                    };
+                    geoReferenceElementComponentFactory.AddComponent(targetObject, geoReference);
+                }
+            }
+        }
+
+        private static Vector3[] ConvertPomlGeometryPositionsAttributeToUnityPositions(PomlGeometryPositionsAttribute geometryPositions)
+        {
+            switch (geometryPositions.CoordinateSystem)
+            {
+                case PomlGeometryPositionsAttribute.CoordinateSystemType.Relative:
+                    return geometryPositions.RelativePositions.Select(x => CoordinateUtility.ToUnityCoordinate(x)).ToArray();
+
+                case PomlGeometryPositionsAttribute.CoordinateSystemType.Geodetic:
+                    var firstVertex = geometryPositions.GeodeticPositions.FirstOrDefault();
+                    return geometryPositions.GeodeticPositions.Select(x => GeodeticToRelative(x, firstVertex)).ToArray();
+
+                default:
+                    return Array.Empty<Vector3>();
+            }
+        }
+
+        private static Mesh ConvertPolygonGeometryToMesh(PolygonGeometry polygon, PomlGeometryPositionsAttribute geometryVertices)
+        {
+            var vertices = ConvertPomlGeometryPositionsAttributeToUnityPositions(geometryVertices);
 
             var indices = polygon.Indices;
             var triangles = new int[indices.Length];
@@ -232,85 +224,23 @@ namespace HoloLab.Spirare
                 triangles[i * 3 + 2] = indices[i * 3 + 1];
             }
 
+            var indexFormat = vertices.Length <= 65535 ? IndexFormat.UInt16 : IndexFormat.UInt32;
+
             var mesh = new Mesh()
             {
                 vertices = vertices,
-                triangles = triangles
+                triangles = triangles,
+                indexFormat = indexFormat
             };
             return mesh;
         }
 
-        private static readonly Regex geometryAttributesKeyRegex = new Regex(@"^(.*?):", RegexOptions.Compiled);
-
-        private static PomlGeometryVerticesAttribute ParseGeometryVertices(string attribute)
+        private static Vector3 GeodeticToRelative(PomlGeodeticPosition target, PomlGeodeticPosition origin)
         {
-            var coordinateSystemType = PomlGeometryVerticesAttribute.CoordinateSystemType.Relative;
-
-            string numberString;
-            var match = geometryAttributesKeyRegex.Match(attribute);
-            if (match.Success)
-            {
-                var key = match.Groups[1].Value.Trim();
-                coordinateSystemType = key switch
-                {
-                    "geodetic" => PomlGeometryVerticesAttribute.CoordinateSystemType.Geodetic,
-                    "relative" => PomlGeometryVerticesAttribute.CoordinateSystemType.Relative,
-                    _ => PomlGeometryVerticesAttribute.CoordinateSystemType.Unknown,
-                };
-                numberString = attribute.Substring(match.Groups[1].Length);
-            }
-            else
-            {
-                numberString = attribute;
-            }
-
-            switch (coordinateSystemType)
-            {
-                case PomlGeometryVerticesAttribute.CoordinateSystemType.Relative:
-                    var relativePositions = PomlParserUtility.ParseAsVector3Array(numberString);
-                    return PomlGeometryVerticesAttribute.CreateRelative(relativePositions);
-                case PomlGeometryVerticesAttribute.CoordinateSystemType.Geodetic:
-                    return PomlGeometryVerticesAttribute.CreateUnkown();
-                case PomlGeometryVerticesAttribute.CoordinateSystemType.Unknown:
-                default:
-                    return PomlGeometryVerticesAttribute.CreateUnkown();
-            }
-        }
-    }
-
-    public class PomlGeometryVerticesAttribute
-    {
-        public enum CoordinateSystemType
-        {
-            Unknown = 0,
-            Relative,
-            Geodetic
-        }
-
-        public CoordinateSystemType CoordinateSystem { get; }
-
-        public Vector3[] RelativePositions { get; }
-
-        public PomlGeodeticPosition[] GeodeticPositions { get; }
-
-        protected PomlGeometryVerticesAttribute(
-            CoordinateSystemType coordinateSystem,
-            Vector3[] relativePositions,
-            PomlGeodeticPosition[] geodeticPositions)
-        {
-            CoordinateSystem = coordinateSystem;
-            RelativePositions = relativePositions;
-            GeodeticPositions = geodeticPositions;
-        }
-
-        public static PomlGeometryVerticesAttribute CreateUnkown()
-        {
-            return new PomlGeometryVerticesAttribute(CoordinateSystemType.Unknown, null, null);
-        }
-
-        public static PomlGeometryVerticesAttribute CreateRelative(Vector3[] positions)
-        {
-            return new PomlGeometryVerticesAttribute(CoordinateSystemType.Relative, positions, null);
+            return GeographicCoordinateConversion.GeodeticToEnu(
+                target.Latitude, target.Longitude, target.EllipsoidalHeight,
+                origin.Latitude, origin.Longitude, origin.EllipsoidalHeight)
+                .ToUnityVector();
         }
     }
 }
