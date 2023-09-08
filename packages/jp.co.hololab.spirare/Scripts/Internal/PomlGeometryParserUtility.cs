@@ -36,14 +36,14 @@ namespace HoloLab.Spirare
             var match = geometryAttributesKeyRegex.Match(text);
             if (match.Success)
             {
-                var key = match.Groups[1].Value.Trim();
+                var key = match.Groups[1].Value.Trim().ToLower();
                 var coordinateSystemType = key switch
                 {
                     "geodetic" => CoordinateSystemType.Geodetic,
                     "relative" => CoordinateSystemType.Relative,
                     _ => CoordinateSystemType.Unknown,
                 };
-                var numberArrayString = text.Substring(match.Groups[1].Length);
+                var numberArrayString = text.Substring(match.Groups[0].Length);
                 return (coordinateSystemType, numberArrayString);
             }
             else

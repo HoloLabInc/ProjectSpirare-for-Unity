@@ -13,7 +13,7 @@ public class PomlParserUtilityTests
     {
         return new List<object[]>
                     {
-                        new object[]{"1,2,3", new string[] { "1" } },
+                        new object[]{"1,2,3", new string[] { "1", "2", "3" } },
                         new object[]{"1 2 -3", new string[] { "1", "2", "-3" } },
                         new object[]{" 1.25 2.5 -3 ", new string[] { "1.25", "2.5", "-3" } },
                         new object[]{" 1, 2,-3   4 ", new string[] { "1", "2", "-3", "4" } },
