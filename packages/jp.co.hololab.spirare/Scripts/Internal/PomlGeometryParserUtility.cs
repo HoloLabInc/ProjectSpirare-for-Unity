@@ -6,7 +6,6 @@ using static HoloLab.Spirare.PomlGeometryPositionsAttribute;
 
 namespace HoloLab.Spirare
 {
-
     internal static class PomlGeometryParserUtility
     {
         private static readonly Regex geometryAttributesKeyRegex = new Regex(@"^(.*?):", RegexOptions.Compiled);
