@@ -244,7 +244,7 @@ namespace HoloLab.Spirare
         {
             if (node.TryGetAttribute(attributeName, out var attribute))
             {
-                var values = ReadFloatArray(attribute);
+                var values = PomlParserUtility.ParseAsFloatArray(attribute);
                 if (values.Count < 4)
                 {
                     return Quaternion.identity;
@@ -362,16 +362,11 @@ namespace HoloLab.Spirare
 
         private static PomlGeometryElement InitGeometryElement(XmlNode node)
         {
-            // <geometry position-type="relative">
-            //   <line start="1,2,3" end="4,5,6"/>
+            // <geometry>
+            //   <line vertices="1,2,3,4,5,6" color="red"/>
             // </geometry>
 
             var element = new PomlGeometryElement();
-            var positionTypeStr = node.GetAttribute("position-type");
-            if (EnumLabel.TryGetValue<PositionType>(positionTypeStr, out var positionType) == false)
-            {
-                positionType = PositionType.Relative;
-            }
             foreach (XmlNode gNode in node.ChildNodes)
             {
                 var typeName = gNode.Name.ToLower();
@@ -382,8 +377,8 @@ namespace HoloLab.Spirare
                 }
                 PomlGeometry geometry = type switch
                 {
-                    PomlGeometryType.Line => CreateLine(gNode, positionType),
-                    PomlGeometryType.Polygon => CreatePolygon(gNode, positionType),
+                    PomlGeometryType.Line => CreateLine(gNode),
+                    PomlGeometryType.Polygon => CreatePolygon(gNode),
                     _ => null,
                 };
                 if (geometry != null)
@@ -393,53 +388,30 @@ namespace HoloLab.Spirare
             }
             return element;
 
-            static LineGeometry CreateLine(XmlNode lineNode, PositionType positionType)
+            static LineGeometry CreateLine(XmlNode lineNode)
             {
-                // <line start="1,2,3" end="4,5,6" color="red"/>
+                // <line vertices="1,2,3,4,5,6" color="red"/>
+                // <line vertices="geodetic: 1,2,3,4,5,6" color="red"/>
 
                 var line = new LineGeometry
                 {
-                    PositionType = positionType,
+                    Vertices = lineNode.GetAttribute("vertices"),
                     Color = lineNode.GetColorAttribute("color", Color.white),
                     Width = lineNode.GetFloatAttribute("width", 0f),
                 };
-                switch (positionType)
-                {
-                    case PositionType.Relative:
-                        line.Start = ReadVector3Attribute(lineNode, "start", 0);
-                        line.End = ReadVector3Attribute(lineNode, "end", 0);
-                        break;
-                    case PositionType.GeoLocation:
-                        line.StartGeoLocation = ReadPomlGeodeticPositionAttribute(lineNode, "start", 0);
-                        line.EndGeoLocation = ReadPomlGeodeticPositionAttribute(lineNode, "end", 0);
-                        break;
-                    default:
-                        break;
-                }
                 return line;
             }
 
-            static PolygonGeometry CreatePolygon(XmlNode polygonNode, PositionType positionType)
+            static PolygonGeometry CreatePolygon(XmlNode polygonNode)
             {
                 // <polygon vertices="0,1,2,3,4,5,6,7,8" indices="0,1,2" color="red"/>
 
                 var polygon = new PolygonGeometry
                 {
-                    PositionType = positionType,
+                    Vertices = polygonNode.GetAttribute("vertices"),
                     Color = polygonNode.GetColorAttribute("color", Color.white),
                     Indices = ReadIntArrayAttribute(polygonNode, "indices"),
                 };
-                switch (positionType)
-                {
-                    case PositionType.Relative:
-                        polygon.Vertices = ReadVector3ArrayAttribute(polygonNode, "vertices");
-                        break;
-                    case PositionType.GeoLocation:
-                        polygon.GeodeticVertices = ReadPomlGeodeticPositionArrayAttribute(polygonNode, "vertices");
-                        break;
-                    default:
-                        break;
-                }
                 return polygon;
             }
         }
@@ -551,32 +523,11 @@ namespace HoloLab.Spirare
                 return new Vector3(defaultValue, defaultValue, defaultValue);
             }
 
-            var values = ReadFloatArray(attribute);
+            var values = PomlParserUtility.ParseAsFloatArray(attribute);
             var x = GetValueByIndex(values, 0, defaultValue);
             var y = GetValueByIndex(values, 1, defaultValue);
             var z = GetValueByIndex(values, 2, defaultValue);
             return new Vector3(x, y, z);
-        }
-
-        private static Vector3[] ReadVector3ArrayAttribute(XmlNode node, string key)
-        {
-            if (!node.TryGetAttribute(key, out var attribute))
-            {
-                return Array.Empty<Vector3>();
-            }
-
-            var values = ReadFloatArray(attribute);
-
-            var result = new Vector3[values.Count / 3];
-            for (int i = 0; i < result.Length; i++)
-            {
-                var x = values[i * 3];
-                var y = values[i * 3 + 1];
-                var z = values[i * 3 + 2];
-                result[i] = new Vector3(x, y, z);
-            }
-
-            return result;
         }
 
         private static Vector3 ReadScaleAttribute(XmlNode node, string key, float defaultValue)
@@ -586,53 +537,13 @@ namespace HoloLab.Spirare
                 return new Vector3(defaultValue, defaultValue, defaultValue);
             }
 
-            var values = ReadFloatArray(attribute);
+            var values = PomlParserUtility.ParseAsFloatArray(attribute);
             return values.Count switch
             {
                 1 => new Vector3(values[0], values[0], values[0]),
                 3 => new Vector3(values[0], values[1], values[2]),
                 _ => new Vector3(defaultValue, defaultValue, defaultValue),
             };
-        }
-
-        private static PomlGeodeticPosition ReadPomlGeodeticPositionAttribute(XmlNode node, string key, double defaultValue)
-        {
-            if (!node.TryGetAttribute(key, out var attribute))
-            {
-                return new PomlGeodeticPosition(defaultValue, defaultValue, defaultValue);
-            }
-
-            var split = attribute.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            return new PomlGeodeticPosition(
-                ExtractDouble(split, 1, defaultValue),
-                ExtractDouble(split, 0, defaultValue),
-                ExtractDouble(split, 2, defaultValue)
-            );
-
-            static double ExtractDouble(string[] values, int index, double defaultValue)
-            {
-                return (values.Length > index) && double.TryParse(values[index], out var a) ? a : defaultValue;
-            }
-        }
-
-        private static PomlGeodeticPosition[] ReadPomlGeodeticPositionArrayAttribute(XmlNode node, string key)
-        {
-            if (!node.TryGetAttribute(key, out var attribute))
-            {
-                return Array.Empty<PomlGeodeticPosition>();
-            }
-
-            var values = ReadDoubleArray(attribute);
-
-            var result = new PomlGeodeticPosition[values.Count / 3];
-            for (int i = 0; i < result.Length; i++)
-            {
-                var longitude = values[i * 3];
-                var latitude = values[i * 3 + 1];
-                var ellipsoidalHeight = values[i * 3 + 2];
-                result[i] = new PomlGeodeticPosition(longitude, latitude, ellipsoidalHeight);
-            }
-            return result;
         }
 
         private static Vector3? ReadMinMaxScaleAttribute(XmlNode node, string key)
@@ -642,7 +553,7 @@ namespace HoloLab.Spirare
                 return null;
             }
 
-            var values = ReadFloatArray(attribute);
+            var values = PomlParserUtility.ParseAsFloatArray(attribute);
             if (values.Count == 0)
             {
                 return null;
@@ -666,7 +577,7 @@ namespace HoloLab.Spirare
 
         private static List<int> ReadIntArray(string text)
         {
-            var tokens = SplitArrayString(text);
+            var tokens = PomlParserUtility.SplitArrayString(text);
             var values = new List<int>(tokens.Length);
 
             foreach (var token in tokens)
@@ -678,45 +589,6 @@ namespace HoloLab.Spirare
                 values.Add(value);
             }
             return values;
-        }
-
-        private static List<float> ReadFloatArray(string text)
-        {
-            var tokens = SplitArrayString(text);
-            var values = new List<float>(tokens.Length);
-
-            foreach (var token in tokens)
-            {
-                if (!float.TryParse(token, out var value))
-                {
-                    break;
-                }
-                values.Add(value);
-            }
-            return values;
-        }
-
-        private static List<double> ReadDoubleArray(string text)
-        {
-            var tokens = SplitArrayString(text);
-            var values = new List<double>(tokens.Length);
-
-            foreach (var token in tokens)
-            {
-                if (!double.TryParse(token, out var value))
-                {
-                    break;
-                }
-                values.Add(value);
-            }
-            return values;
-        }
-
-        private static string[] SplitArrayString(string text)
-        {
-            var separator = new char[] { ',', ' ' };
-            var tokens = text.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-            return tokens;
         }
 
         private static T GetValueByIndex<T>(List<T> list, int index, T defaultValue)
