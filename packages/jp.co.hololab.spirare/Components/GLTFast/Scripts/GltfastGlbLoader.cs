@@ -96,7 +96,7 @@ namespace HoloLab.Spirare
 
         internal void ClearGltfImportCache()
         {
-            gltfImportCacheManager.ClearCache();
+            gltfImportCacheManager.ClearAll();
         }
 
         private static GltfastGlbInstance CreateGlbInstance(GltfastGlbLoader glbLoader, string src, Material material)

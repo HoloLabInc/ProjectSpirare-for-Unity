@@ -76,13 +76,13 @@ namespace HoloLab.Spirare
             }
         }
 
-        public void ClearCache()
+        public void ClearAll()
         {
-            cacheManagerForDefaultMaterial.ClearCache();
+            cacheManagerForDefaultMaterial.ClearAll();
 
             foreach (var cacheManagerPair in cacheManagerDictionaryForCustomMaterials)
             {
-                cacheManagerPair.Value.ClearCache();
+                cacheManagerPair.Value.ClearAll();
             }
             cacheManagerDictionaryForCustomMaterials.Clear();
         }

@@ -73,7 +73,7 @@ namespace HoloLab.Spirare
             cacheDictionary.TryRemove(key, out _);
         }
 
-        public void ClearCache()
+        public void ClearAll()
         {
             cacheDictionary.Clear();
 
