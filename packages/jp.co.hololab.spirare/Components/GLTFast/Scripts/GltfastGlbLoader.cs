@@ -6,7 +6,6 @@ using UnityEngine;
 using System.Threading;
 using System;
 using Cysharp.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace HoloLab.Spirare
 {

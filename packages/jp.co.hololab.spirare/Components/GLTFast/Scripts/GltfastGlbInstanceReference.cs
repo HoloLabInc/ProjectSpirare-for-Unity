@@ -37,9 +37,9 @@ namespace HoloLab.Spirare
             }
             else
             {
-                if (referenceDictionary.TryGetValue(material, out var referece))
+                if (referenceDictionary.TryGetValue(material, out var reference))
                 {
-                    referece.RemoveInstance(src, instance);
+                    reference.RemoveInstance(src, instance);
                 }
             }
         }
@@ -50,9 +50,9 @@ namespace HoloLab.Spirare
             {
                 return defaultMaterialReference.GetInstanceCount(src);
             }
-            else if (referenceDictionary.TryGetValue(material, out var referece))
+            else if (referenceDictionary.TryGetValue(material, out var reference))
             {
-                return referece.GetInstanceCount(src);
+                return reference.GetInstanceCount(src);
             }
             else
             {
