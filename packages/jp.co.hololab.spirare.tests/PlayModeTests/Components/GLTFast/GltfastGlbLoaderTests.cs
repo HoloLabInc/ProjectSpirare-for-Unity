@@ -29,7 +29,7 @@ public class GltfastGlbLoaderTests
 
         var loadingStatusList = new List<GltfastGlbLoader.LoadingStatus>();
         var gltfastGlbLoader = new GltfastGlbLoader();
-        await gltfastGlbLoader.LoadAsync(go, modelDataPath, onLoadingStatusChanged: status =>
+        await gltfastGlbLoader.LoadAsync(go.transform, modelDataPath, onLoadingStatusChanged: status =>
         {
             loadingStatusList.Add(status);
         });
@@ -55,7 +55,7 @@ public class GltfastGlbLoaderTests
         var loadingStatusList = new List<GltfastGlbLoader.LoadingStatus>();
 
         var gltfastGlbLoader = new GltfastGlbLoader();
-        await gltfastGlbLoader.LoadAsync(go, invalidSrc, onLoadingStatusChanged: status =>
+        await gltfastGlbLoader.LoadAsync(go.transform, invalidSrc, onLoadingStatusChanged: status =>
         {
             loadingStatusList.Add(status);
         });
@@ -78,7 +78,7 @@ public class GltfastGlbLoaderTests
         var loadingStatusList = new List<GltfastGlbLoader.LoadingStatus>();
 
         var gltfastGlbLoader = new GltfastGlbLoader();
-        await gltfastGlbLoader.LoadAsync(go, invalidModelDataPath, onLoadingStatusChanged: status =>
+        await gltfastGlbLoader.LoadAsync(go.transform, invalidModelDataPath, onLoadingStatusChanged: status =>
         {
             loadingStatusList.Add(status);
         });
@@ -100,10 +100,10 @@ public class GltfastGlbLoaderTests
         var gltfastGlbLoader = new GltfastGlbLoader();
 
         var go1 = new GameObject("model1");
-        var loadTask1 = gltfastGlbLoader.LoadAsync(go1, modelDataPath);
+        var loadTask1 = gltfastGlbLoader.LoadAsync(go1.transform, modelDataPath);
 
         var go2 = new GameObject("model2");
-        var loadTask2 = gltfastGlbLoader.LoadAsync(go2, modelDataPath);
+        var loadTask2 = gltfastGlbLoader.LoadAsync(go2.transform, modelDataPath);
 
         await Task.WhenAll(loadTask1, loadTask2);
 
@@ -122,10 +122,10 @@ public class GltfastGlbLoaderTests
 
         var material = new Material(Shader.Find("Standard"));
         var go1 = new GameObject("model1");
-        var loadTask1 = gltfastGlbLoader.LoadAsync(go1, modelDataPath, material);
+        var loadTask1 = gltfastGlbLoader.LoadAsync(go1.transform, modelDataPath, material);
 
         var go2 = new GameObject("model2");
-        var loadTask2 = gltfastGlbLoader.LoadAsync(go2, modelDataPath, material);
+        var loadTask2 = gltfastGlbLoader.LoadAsync(go2.transform, modelDataPath, material);
 
         await Task.WhenAll(loadTask1, loadTask2);
 
