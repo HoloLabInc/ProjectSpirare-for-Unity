@@ -29,7 +29,7 @@ public class GltfastGlbLoaderTests
 
         var loadingStatusList = new List<GltfastGlbLoader.LoadingStatus>();
         var gltfastGlbLoader = new GltfastGlbLoader();
-        await gltfastGlbLoader.LoadAsync(go, modelDataPath, onLoadingStatusChanged: status =>
+        await gltfastGlbLoader.LoadAsync(go.transform, modelDataPath, onLoadingStatusChanged: status =>
         {
             loadingStatusList.Add(status);
         });
@@ -55,7 +55,7 @@ public class GltfastGlbLoaderTests
         var loadingStatusList = new List<GltfastGlbLoader.LoadingStatus>();
 
         var gltfastGlbLoader = new GltfastGlbLoader();
-        await gltfastGlbLoader.LoadAsync(go, invalidSrc, onLoadingStatusChanged: status =>
+        await gltfastGlbLoader.LoadAsync(go.transform, invalidSrc, onLoadingStatusChanged: status =>
         {
             loadingStatusList.Add(status);
         });
@@ -78,7 +78,7 @@ public class GltfastGlbLoaderTests
         var loadingStatusList = new List<GltfastGlbLoader.LoadingStatus>();
 
         var gltfastGlbLoader = new GltfastGlbLoader();
-        await gltfastGlbLoader.LoadAsync(go, invalidModelDataPath, onLoadingStatusChanged: status =>
+        await gltfastGlbLoader.LoadAsync(go.transform, invalidModelDataPath, onLoadingStatusChanged: status =>
         {
             loadingStatusList.Add(status);
         });
@@ -94,16 +94,25 @@ public class GltfastGlbLoaderTests
         GameObject.DestroyImmediate(go);
     }
 
-    [Test]
-    public async Task LoadAsync_MeshIsSharedWithSameUrlObjects()
+    private static IEnumerable<object[]> TestMaterials
+    {
+        get
+        {
+            yield return new object[] { null };
+            yield return new object[] { new Material(Shader.Find("Standard")) };
+        }
+    }
+
+    [TestCaseSource(nameof(TestMaterials))]
+    public async Task LoadAsync_MeshIsSharedWithSameUrlObjects(Material material)
     {
         var gltfastGlbLoader = new GltfastGlbLoader();
 
         var go1 = new GameObject("model1");
-        var loadTask1 = gltfastGlbLoader.LoadAsync(go1, modelDataPath);
+        var loadTask1 = gltfastGlbLoader.LoadAsync(go1.transform, modelDataPath, material);
 
         var go2 = new GameObject("model2");
-        var loadTask2 = gltfastGlbLoader.LoadAsync(go2, modelDataPath);
+        var loadTask2 = gltfastGlbLoader.LoadAsync(go2.transform, modelDataPath, material);
 
         await Task.WhenAll(loadTask1, loadTask2);
 
@@ -115,25 +124,34 @@ public class GltfastGlbLoaderTests
         GameObject.DestroyImmediate(go2);
     }
 
-    [Test]
-    public async Task LoadAsync_MeshIsSharedWithSameUrlAndMaterialObjects()
+    [TestCaseSource(nameof(TestMaterials))]
+    public async Task LoadAsync_GltfImportIsDisposedWhenAllRelatedObjectsAreDestroyed(Material material)
     {
+        var initialMeshCount = GetMeshCount();
+
         var gltfastGlbLoader = new GltfastGlbLoader();
 
-        var material = new Material(Shader.Find("Standard"));
         var go1 = new GameObject("model1");
-        var loadTask1 = gltfastGlbLoader.LoadAsync(go1, modelDataPath, material);
+        var loadTask1 = gltfastGlbLoader.LoadAsync(go1.transform, modelDataPath, material);
 
         var go2 = new GameObject("model2");
-        var loadTask2 = gltfastGlbLoader.LoadAsync(go2, modelDataPath, material);
+        var loadTask2 = gltfastGlbLoader.LoadAsync(go2.transform, modelDataPath, material);
 
         await Task.WhenAll(loadTask1, loadTask2);
 
-        var meshFilter1 = go1.GetComponentInChildren<MeshFilter>();
-        var meshFilter2 = go2.GetComponentInChildren<MeshFilter>();
-        Assert.That(meshFilter1.sharedMesh, Is.EqualTo(meshFilter2.sharedMesh));
+        Assert.That(GetMeshCount(), Is.GreaterThan(initialMeshCount));
 
         GameObject.DestroyImmediate(go1);
+        await UniTask.NextFrame();
+        Assert.That(GetMeshCount(), Is.GreaterThan(initialMeshCount));
+
         GameObject.DestroyImmediate(go2);
+        await UniTask.NextFrame();
+        Assert.That(GetMeshCount(), Is.EqualTo(initialMeshCount));
+    }
+
+    private int GetMeshCount()
+    {
+        return Resources.FindObjectsOfTypeAll<Mesh>().Length;
     }
 }

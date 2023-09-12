@@ -72,10 +72,23 @@ public class CacheManagerTests
         _ = Task.Run(async () =>
         {
             await Task.Delay(10);
-            manager.ClearCache();
+            manager.ClearAll();
         });
 
         var (Success, Value) = await manager.GetValueAsync("key1");
         Assert.That(Success, Is.False);
+    }
+
+    [Test]
+    public async Task RemoveCache_GetValueAsyncFails()
+    {
+        var manager = new CacheManager<string>();
+        manager.GenerateCreationTask("key1");
+        manager.CompleteCreationTask("key1", "value1");
+
+        manager.RemoveCache("key1");
+
+        var (success, _) = await manager.GetValueAsync("key1");
+        Assert.That(success, Is.False);
     }
 }

@@ -64,13 +64,25 @@ namespace HoloLab.Spirare
             }
         }
 
-        public void ClearCache()
+        public void RemoveCache(string url, Material material)
         {
-            cacheManagerForDefaultMaterial.ClearCache();
+            if (material == null)
+            {
+                cacheManagerForDefaultMaterial.RemoveCache(url);
+            }
+            else if (cacheManagerDictionaryForCustomMaterials.TryGetValue(material, out var cacheManager))
+            {
+                cacheManager.RemoveCache(url);
+            }
+        }
+
+        public void ClearAll()
+        {
+            cacheManagerForDefaultMaterial.ClearAll();
 
             foreach (var cacheManagerPair in cacheManagerDictionaryForCustomMaterials)
             {
-                cacheManagerPair.Value.ClearCache();
+                cacheManagerPair.Value.ClearAll();
             }
             cacheManagerDictionaryForCustomMaterials.Clear();
         }
