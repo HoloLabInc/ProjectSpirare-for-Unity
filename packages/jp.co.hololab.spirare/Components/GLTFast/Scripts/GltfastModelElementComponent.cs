@@ -105,7 +105,7 @@ namespace HoloLab.Spirare
 
             var loadResult = await glbLoader.LoadAsync(transform, element.Src, material,
                 onLoadingStatusChanged: OnLoadingStatusChanged);
-            currentModelObject = loadResult.glbObject;
+            currentModelObject = loadResult.GlbObject;
 
             _currentModelSource = element.Src;
 

@@ -26,7 +26,7 @@ namespace HoloLab.Spirare
         private readonly GltfImportCacheManager gltfImportCacheManager = new GltfImportCacheManager();
         private readonly GltfastGlbInstanceReference instanceReference = new GltfastGlbInstanceReference();
 
-        public async Task<(bool Success, GameObject glbObject)> LoadAsync(Transform parent, string src, Material material = null, Action<LoadingStatus> onLoadingStatusChanged = null)
+        public async Task<(bool Success, GameObject GlbObject)> LoadAsync(Transform parent, string src, Material material = null, Action<LoadingStatus> onLoadingStatusChanged = null)
         {
             // Create GameObject
             var glbInstance = CreateGlbInstance(this, src, material);
@@ -84,8 +84,8 @@ namespace HoloLab.Spirare
             var material = glbInstance.Material;
 
             instanceReference.RemoveInstance(src, material, glbInstance.gameObject);
-            var referenceCount = instanceReference.GetInstanceCount(src, material);
 
+            var referenceCount = instanceReference.GetInstanceCount(src, material);
             if (referenceCount == 0)
             {
                 gltfImportCacheManager.RemoveCache(src, material);
@@ -148,7 +148,7 @@ namespace HoloLab.Spirare
             return (loadResult, gltfImport);
         }
 
-        private static async UniTask<(bool Success, GameObject gltfObject)> InstantiateModel(GltfastGlbInstance glbInstance, Transform parent, GltfImport gltfImport, Action<LoadingStatus> onLoadingStatusChanged = null)
+        private static async UniTask<(bool Success, GameObject GltfObject)> InstantiateModel(GltfastGlbInstance glbInstance, Transform parent, GltfImport gltfImport, Action<LoadingStatus> onLoadingStatusChanged = null)
         {
             if (glbInstance == null)
             {
