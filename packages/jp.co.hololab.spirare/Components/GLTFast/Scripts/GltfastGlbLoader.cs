@@ -25,14 +25,13 @@ namespace HoloLab.Spirare
 
         private readonly GltfImportCacheManager gltfImportCacheManager = new GltfImportCacheManager();
 
-        public async Task LoadAsync(GameObject go, string src, Material material = null, Action<LoadingStatus> onLoadingStatusChanged = null)
+        public async Task<(bool Success, GameObject gltfObject)> LoadAsync(Transform parent, string src, Material material = null, Action<LoadingStatus> onLoadingStatusChanged = null)
         {
             // Search cache
             var cacheResult = await gltfImportCacheManager.GetGltfImportAsync(src, material);
             if (cacheResult.Success)
             {
-                await InstantiateModel(go, cacheResult.GltfImport, onLoadingStatusChanged);
-                return;
+                return await InstantiateModel(parent, cacheResult.GltfImport, onLoadingStatusChanged);
             }
 
             var creationTaskGenerated = gltfImportCacheManager.GenerateCreationTask(src, material);
@@ -46,7 +45,7 @@ namespace HoloLab.Spirare
                 {
                     gltfImportCacheManager.CancelCreationTask(src, material);
                 }
-                return;
+                return (false, null);
             }
 
             // Model loading
@@ -58,7 +57,7 @@ namespace HoloLab.Spirare
                 {
                     gltfImportCacheManager.CancelCreationTask(src, material);
                 }
-                return;
+                return (false, null);
             }
 
             var gltfImport = loadResult.gltfImport;
@@ -69,7 +68,7 @@ namespace HoloLab.Spirare
             }
 
             // Model instantiating
-            await InstantiateModel(go, gltfImport, onLoadingStatusChanged);
+            return await InstantiateModel(parent, gltfImport, onLoadingStatusChanged);
         }
 
         public void ClearGltfImportCache()
@@ -118,23 +117,29 @@ namespace HoloLab.Spirare
             return (loadResult, gltfImport);
         }
 
-        private static async UniTask InstantiateModel(GameObject go, GltfImport gltfImport, Action<LoadingStatus> onLoadingStatusChanged = null)
+        private static async UniTask<(bool Success, GameObject gltfObject)> InstantiateModel(Transform parent, GltfImport gltfImport, Action<LoadingStatus> onLoadingStatusChanged = null)
         {
-            if (go == null)
+            if (parent == null)
             {
                 InvokeLoadingStatusChanged(LoadingStatus.ModelInstantiateError, onLoadingStatusChanged);
-                return;
+                return (false, null);
             }
 
+            var gltfObject = new GameObject("glTF Instance");
+            gltfObject.transform.SetParent(parent, false);
+
             InvokeLoadingStatusChanged(LoadingStatus.ModelInstantiating, onLoadingStatusChanged);
-            var instantiationResult = await gltfImport.InstantiateMainSceneAsync(go.transform, CancellationToken.None);
+            var instantiationResult = await gltfImport.InstantiateMainSceneAsync(gltfObject.transform, CancellationToken.None);
             if (instantiationResult)
             {
                 InvokeLoadingStatusChanged(LoadingStatus.Loaded, onLoadingStatusChanged);
+                return (true, gltfObject);
             }
             else
             {
                 InvokeLoadingStatusChanged(LoadingStatus.ModelInstantiateError, onLoadingStatusChanged);
+                UnityEngine.Object.Destroy(gltfObject);
+                return (false, null);
             }
         }
 
