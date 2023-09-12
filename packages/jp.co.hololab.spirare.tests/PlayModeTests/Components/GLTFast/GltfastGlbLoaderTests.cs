@@ -94,33 +94,20 @@ public class GltfastGlbLoaderTests
         GameObject.DestroyImmediate(go);
     }
 
-    [Test]
-    public async Task LoadAsync_MeshIsSharedWithSameUrlObjects()
+    private static IEnumerable<object[]> TestMaterials
     {
-        var gltfastGlbLoader = new GltfastGlbLoader();
-
-        var go1 = new GameObject("model1");
-        var loadTask1 = gltfastGlbLoader.LoadAsync(go1.transform, modelDataPath);
-
-        var go2 = new GameObject("model2");
-        var loadTask2 = gltfastGlbLoader.LoadAsync(go2.transform, modelDataPath);
-
-        await Task.WhenAll(loadTask1, loadTask2);
-
-        var meshFilter1 = go1.GetComponentInChildren<MeshFilter>();
-        var meshFilter2 = go2.GetComponentInChildren<MeshFilter>();
-        Assert.That(meshFilter1.sharedMesh, Is.EqualTo(meshFilter2.sharedMesh));
-
-        GameObject.DestroyImmediate(go1);
-        GameObject.DestroyImmediate(go2);
+        get
+        {
+            yield return new object[] { null };
+            yield return new object[] { new Material(Shader.Find("Standard")) };
+        }
     }
 
-    [Test]
-    public async Task LoadAsync_MeshIsSharedWithSameUrlAndMaterialObjects()
+    [TestCaseSource(nameof(TestMaterials))]
+    public async Task LoadAsync_MeshIsSharedWithSameUrlObjects(Material material)
     {
         var gltfastGlbLoader = new GltfastGlbLoader();
 
-        var material = new Material(Shader.Find("Standard"));
         var go1 = new GameObject("model1");
         var loadTask1 = gltfastGlbLoader.LoadAsync(go1.transform, modelDataPath, material);
 
@@ -135,5 +122,36 @@ public class GltfastGlbLoaderTests
 
         GameObject.DestroyImmediate(go1);
         GameObject.DestroyImmediate(go2);
+    }
+
+    [TestCaseSource(nameof(TestMaterials))]
+    public async Task LoadAsync_GltfImportIsDisposedWhenAllRelatedObjectsAreDestroyed(Material material)
+    {
+        var initialMeshCount = GetMeshCount();
+
+        var gltfastGlbLoader = new GltfastGlbLoader();
+
+        var go1 = new GameObject("model1");
+        var loadTask1 = gltfastGlbLoader.LoadAsync(go1.transform, modelDataPath, material);
+
+        var go2 = new GameObject("model2");
+        var loadTask2 = gltfastGlbLoader.LoadAsync(go2.transform, modelDataPath, material);
+
+        await Task.WhenAll(loadTask1, loadTask2);
+
+        Assert.That(GetMeshCount(), Is.GreaterThan(initialMeshCount));
+
+        GameObject.DestroyImmediate(go1);
+        await UniTask.NextFrame();
+        Assert.That(GetMeshCount(), Is.GreaterThan(initialMeshCount));
+
+        GameObject.DestroyImmediate(go2);
+        await UniTask.NextFrame();
+        Assert.That(GetMeshCount(), Is.EqualTo(initialMeshCount));
+    }
+
+    private int GetMeshCount()
+    {
+        return Resources.FindObjectsOfTypeAll<Mesh>().Length;
     }
 }
