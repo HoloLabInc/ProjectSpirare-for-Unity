@@ -25,7 +25,7 @@ namespace HoloLab.Spirare
         #region static properties and methods
         private static readonly GltfastGlbLoader glbLoader = new GltfastGlbLoader();
 
-        public static void ClearGltfImportCache()
+        internal static void ClearGltfImportCache()
         {
             glbLoader.ClearGltfImportCache();
         }
@@ -105,7 +105,7 @@ namespace HoloLab.Spirare
 
             var loadResult = await glbLoader.LoadAsync(transform, element.Src, material,
                 onLoadingStatusChanged: OnLoadingStatusChanged);
-            currentModelObject = loadResult.gltfObject;
+            currentModelObject = loadResult.glbObject;
 
             _currentModelSource = element.Src;
 

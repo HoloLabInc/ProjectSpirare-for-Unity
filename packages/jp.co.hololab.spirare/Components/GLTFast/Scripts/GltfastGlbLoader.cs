@@ -6,9 +6,55 @@ using UnityEngine;
 using System.Threading;
 using System;
 using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace HoloLab.Spirare
 {
+    internal class GltfastGlbLoaderInstanceReference
+    {
+        private readonly Dictionary<string, HashSet<GameObject>> defaultMaterialInstances
+            = new Dictionary<string, HashSet<GameObject>>();
+
+        public void AddInstance(string src, Material material, GameObject instance)
+        {
+            if (material == null)
+            {
+                if (defaultMaterialInstances.TryGetValue(src, out var instances) == false)
+                {
+                    instances = new HashSet<GameObject>();
+                    defaultMaterialInstances[src] = instances;
+                }
+
+                instances.Add(instance);
+            }
+        }
+
+        public void RemoveInstance(string src, Material material, GameObject instance)
+        {
+            if (material == null)
+            {
+                if (defaultMaterialInstances.TryGetValue(src, out var instances))
+                {
+                    instances.Remove(instance);
+                }
+            }
+        }
+
+        public int GetInstanceCount(string src, Material material)
+        {
+            if (material == null)
+            {
+                if (defaultMaterialInstances.TryGetValue(src, out var instances) == false)
+                {
+                    return 0;
+                }
+                return instances.Count;
+            }
+
+            return 0;
+        }
+    }
+
     internal class GltfastGlbLoader
     {
         public enum LoadingStatus
@@ -24,14 +70,20 @@ namespace HoloLab.Spirare
         }
 
         private readonly GltfImportCacheManager gltfImportCacheManager = new GltfImportCacheManager();
+        private readonly GltfastGlbLoaderInstanceReference instanceReference = new GltfastGlbLoaderInstanceReference();
 
-        public async Task<(bool Success, GameObject gltfObject)> LoadAsync(Transform parent, string src, Material material = null, Action<LoadingStatus> onLoadingStatusChanged = null)
+        public async Task<(bool Success, GameObject glbObject)> LoadAsync(Transform parent, string src, Material material = null, Action<LoadingStatus> onLoadingStatusChanged = null)
         {
+            var glbObject = new GameObject("Glb Instance");
+            var glbInstance = glbObject.AddComponent<GltfastGlbInstance>();
+            glbInstance.Initialize(this, src, material);
+            instanceReference.AddInstance(src, material, glbObject);
+
             // Search cache
             var cacheResult = await gltfImportCacheManager.GetGltfImportAsync(src, material);
             if (cacheResult.Success)
             {
-                return await InstantiateModel(parent, cacheResult.GltfImport, onLoadingStatusChanged);
+                return await InstantiateModel(glbInstance, parent, cacheResult.GltfImport, onLoadingStatusChanged);
             }
 
             var creationTaskGenerated = gltfImportCacheManager.GenerateCreationTask(src, material);
@@ -45,6 +97,7 @@ namespace HoloLab.Spirare
                 {
                     gltfImportCacheManager.CancelCreationTask(src, material);
                 }
+                UnityEngine.Object.Destroy(glbObject);
                 return (false, null);
             }
 
@@ -57,6 +110,7 @@ namespace HoloLab.Spirare
                 {
                     gltfImportCacheManager.CancelCreationTask(src, material);
                 }
+                UnityEngine.Object.Destroy(glbObject);
                 return (false, null);
             }
 
@@ -68,10 +122,27 @@ namespace HoloLab.Spirare
             }
 
             // Model instantiating
-            return await InstantiateModel(parent, gltfImport, onLoadingStatusChanged);
+            return await InstantiateModel(glbInstance, parent, gltfImport, onLoadingStatusChanged);
         }
 
-        public void ClearGltfImportCache()
+        internal void RemoveInstanceReference(GltfastGlbInstance glbInstance)
+        {
+            var src = glbInstance.Src;
+            var material = glbInstance.Material;
+
+            instanceReference.RemoveInstance(src, material, glbInstance.gameObject);
+            var referenceCount = instanceReference.GetInstanceCount(src, material);
+
+            if (referenceCount == 0)
+            {
+                // Dispose GltfImport and remove cache
+                var gltfImport = glbInstance.GltfImport;
+                gltfImportCacheManager.RemoveCache(src, material);
+                gltfImport.Dispose();
+            }
+        }
+
+        internal void ClearGltfImportCache()
         {
             gltfImportCacheManager.ClearCache();
         }
@@ -117,28 +188,35 @@ namespace HoloLab.Spirare
             return (loadResult, gltfImport);
         }
 
-        private static async UniTask<(bool Success, GameObject gltfObject)> InstantiateModel(Transform parent, GltfImport gltfImport, Action<LoadingStatus> onLoadingStatusChanged = null)
+        private static async UniTask<(bool Success, GameObject gltfObject)> InstantiateModel(GltfastGlbInstance glbInstance, Transform parent, GltfImport gltfImport, Action<LoadingStatus> onLoadingStatusChanged = null)
         {
-            if (parent == null)
+            if (glbInstance == null)
             {
                 InvokeLoadingStatusChanged(LoadingStatus.ModelInstantiateError, onLoadingStatusChanged);
                 return (false, null);
             }
 
-            var gltfObject = new GameObject("glTF Instance");
-            gltfObject.transform.SetParent(parent, false);
+            glbInstance.transform.SetParent(parent, false);
+            glbInstance.SetGltfImport(gltfImport);
+
+            if (parent == null)
+            {
+                InvokeLoadingStatusChanged(LoadingStatus.ModelInstantiateError, onLoadingStatusChanged);
+                UnityEngine.Object.Destroy(glbInstance.gameObject);
+                return (false, null);
+            }
 
             InvokeLoadingStatusChanged(LoadingStatus.ModelInstantiating, onLoadingStatusChanged);
-            var instantiationResult = await gltfImport.InstantiateMainSceneAsync(gltfObject.transform, CancellationToken.None);
+            var instantiationResult = await gltfImport.InstantiateMainSceneAsync(glbInstance.transform, CancellationToken.None);
             if (instantiationResult)
             {
                 InvokeLoadingStatusChanged(LoadingStatus.Loaded, onLoadingStatusChanged);
-                return (true, gltfObject);
+                return (true, glbInstance.gameObject);
             }
             else
             {
                 InvokeLoadingStatusChanged(LoadingStatus.ModelInstantiateError, onLoadingStatusChanged);
-                UnityEngine.Object.Destroy(gltfObject);
+                UnityEngine.Object.Destroy(glbInstance.gameObject);
                 return (false, null);
             }
         }
