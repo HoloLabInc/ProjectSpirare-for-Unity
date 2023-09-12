@@ -10,51 +10,6 @@ using System.Collections.Generic;
 
 namespace HoloLab.Spirare
 {
-    internal class GltfastGlbLoaderInstanceReference
-    {
-        private readonly Dictionary<string, HashSet<GameObject>> defaultMaterialInstances
-            = new Dictionary<string, HashSet<GameObject>>();
-
-        public void AddInstance(string src, Material material, GameObject instance)
-        {
-            if (material == null)
-            {
-                if (defaultMaterialInstances.TryGetValue(src, out var instances) == false)
-                {
-                    instances = new HashSet<GameObject>();
-                    defaultMaterialInstances[src] = instances;
-                }
-
-                instances.Add(instance);
-            }
-        }
-
-        public void RemoveInstance(string src, Material material, GameObject instance)
-        {
-            if (material == null)
-            {
-                if (defaultMaterialInstances.TryGetValue(src, out var instances))
-                {
-                    instances.Remove(instance);
-                }
-            }
-        }
-
-        public int GetInstanceCount(string src, Material material)
-        {
-            if (material == null)
-            {
-                if (defaultMaterialInstances.TryGetValue(src, out var instances) == false)
-                {
-                    return 0;
-                }
-                return instances.Count;
-            }
-
-            return 0;
-        }
-    }
-
     internal class GltfastGlbLoader
     {
         public enum LoadingStatus
@@ -70,14 +25,13 @@ namespace HoloLab.Spirare
         }
 
         private readonly GltfImportCacheManager gltfImportCacheManager = new GltfImportCacheManager();
-        private readonly GltfastGlbLoaderInstanceReference instanceReference = new GltfastGlbLoaderInstanceReference();
+        private readonly GltfastGlbInstanceReference instanceReference = new GltfastGlbInstanceReference();
 
         public async Task<(bool Success, GameObject glbObject)> LoadAsync(Transform parent, string src, Material material = null, Action<LoadingStatus> onLoadingStatusChanged = null)
         {
-            var glbObject = new GameObject("Glb Instance");
-            var glbInstance = glbObject.AddComponent<GltfastGlbInstance>();
-            glbInstance.Initialize(this, src, material);
-            instanceReference.AddInstance(src, material, glbObject);
+            // Create GameObject
+            var glbInstance = CreateGlbInstance(this, src, material);
+            instanceReference.AddInstance(src, material, glbInstance.gameObject);
 
             // Search cache
             var cacheResult = await gltfImportCacheManager.GetGltfImportAsync(src, material);
@@ -97,7 +51,7 @@ namespace HoloLab.Spirare
                 {
                     gltfImportCacheManager.CancelCreationTask(src, material);
                 }
-                UnityEngine.Object.Destroy(glbObject);
+                UnityEngine.Object.Destroy(glbInstance.gameObject);
                 return (false, null);
             }
 
@@ -110,7 +64,7 @@ namespace HoloLab.Spirare
                 {
                     gltfImportCacheManager.CancelCreationTask(src, material);
                 }
-                UnityEngine.Object.Destroy(glbObject);
+                UnityEngine.Object.Destroy(glbInstance.gameObject);
                 return (false, null);
             }
 
@@ -135,16 +89,23 @@ namespace HoloLab.Spirare
 
             if (referenceCount == 0)
             {
-                // Dispose GltfImport and remove cache
-                var gltfImport = glbInstance.GltfImport;
                 gltfImportCacheManager.RemoveCache(src, material);
-                gltfImport.Dispose();
+                glbInstance.GltfImport?.Dispose();
             }
         }
 
         internal void ClearGltfImportCache()
         {
             gltfImportCacheManager.ClearCache();
+        }
+
+        private static GltfastGlbInstance CreateGlbInstance(GltfastGlbLoader glbLoader, string src, Material material)
+        {
+            var glbObject = new GameObject("Glb Instance");
+            var glbInstance = glbObject.AddComponent<GltfastGlbInstance>();
+            glbInstance.Initialize(glbLoader, src, material);
+
+            return glbInstance;
         }
 
         private static async UniTask<(bool Success, byte[] Data)> FetchData(string src, Action<LoadingStatus> onLoadingStatusChanged)
@@ -246,12 +207,12 @@ namespace HoloLab.Spirare
 
         public Material GenerateMaterial(GLTFast.Schema.Material gltfMaterial, IGltfReadable gltf, bool pointsSupport = false)
         {
-            return occlusionMaterial;
+            return new Material(occlusionMaterial);
         }
 
         public Material GetDefaultMaterial(bool pointsSupport = false)
         {
-            return occlusionMaterial;
+            return new Material(occlusionMaterial);
         }
 
         public void SetLogger(ICodeLogger logger)
