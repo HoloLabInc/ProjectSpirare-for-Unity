@@ -49,7 +49,7 @@ namespace HoloLab.Spirare
 
         public static UnityEngine.Color GetColorAttribute(this XmlNode node, string key, UnityEngine.Color defaultValue)
         {
-            if (node.TryGetAttribute(key, out var colorString) && ColorConverter.TryParseHtmlString(colorString, out var color))
+            if (node.TryGetAttribute(key, out var colorString) && ColorParser.TryParseHtmlString(colorString, out var color))
             {
                 return color;
             }

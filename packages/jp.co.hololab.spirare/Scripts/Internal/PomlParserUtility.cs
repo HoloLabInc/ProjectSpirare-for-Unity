@@ -14,6 +14,22 @@ namespace HoloLab.Spirare
             return tokens;
         }
 
+        public static List<int> ParseAsIntArray(string text)
+        {
+            var tokens = SplitArrayString(text);
+            var values = new List<int>(tokens.Length);
+
+            foreach (var token in tokens)
+            {
+                if (!int.TryParse(token, out var value))
+                {
+                    break;
+                }
+                values.Add(value);
+            }
+            return values;
+        }
+
         public static List<float> ParseAsFloatArray(string text)
         {
             var tokens = SplitArrayString(text);

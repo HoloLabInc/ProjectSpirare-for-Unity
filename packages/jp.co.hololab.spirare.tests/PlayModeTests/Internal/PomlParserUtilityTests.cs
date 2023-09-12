@@ -29,6 +29,26 @@ public class PomlParserUtilityTests
         Assert.That(tokens, Is.EquivalentTo(expected));
     }
 
+    private static IEnumerable<object[]> ParseAsIntArrayTestCases()
+    {
+        return new List<object[]>
+                    {
+                        new object[]{"1", new int[] { 1 } },
+                        new object[]{"1 2 -3", new int[] { 1, 2, -3 } },
+                        new object[]{" 1 2.5 -3 ", new int[] { 1 } },
+                        new object[]{" 1, 2,-3   4 ", new int[] { 1, 2, -3, 4 } },
+                        new object[]{" ,   ,  -1,,,,2,3,", new int[] { -1, 2, 3 } },
+                        new object[]{"  ,  -1,2,a,3", new int[] { -1, 2 } },
+                    };
+    }
+
+    [TestCaseSource(nameof(ParseAsIntArrayTestCases))]
+    public void ParseAsIntArray(string text, int[] expected)
+    {
+        var intArray = PomlParserUtility.ParseAsIntArray(text);
+        Assert.That(intArray, Is.EquivalentTo(expected));
+    }
+
     private static IEnumerable<object[]> ParseAsFloatArrayTestCases()
     {
         return new List<object[]>
