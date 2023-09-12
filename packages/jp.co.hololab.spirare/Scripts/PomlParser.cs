@@ -505,7 +505,7 @@ namespace HoloLab.Spirare
                 return Array.Empty<int>();
             }
 
-            var values = ReadIntArray(attribute);
+            var values = PomlParserUtility.ParseAsIntArray(attribute);
             return values.ToArray();
         }
 
@@ -566,22 +566,6 @@ namespace HoloLab.Spirare
                 var vector = CoordinateUtility.ToUnityCoordinate(x, y, z, directional: false);
                 return vector;
             }
-        }
-
-        private static List<int> ReadIntArray(string text)
-        {
-            var tokens = PomlParserUtility.SplitArrayString(text);
-            var values = new List<int>(tokens.Length);
-
-            foreach (var token in tokens)
-            {
-                if (!int.TryParse(token, out var value))
-                {
-                    break;
-                }
-                values.Add(value);
-            }
-            return values;
         }
 
         private static T GetValueByIndex<T>(List<T> list, int index, T defaultValue)
