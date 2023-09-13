@@ -230,9 +230,9 @@ namespace HoloLab.Spirare
 
             var mesh = new Mesh()
             {
+                indexFormat = indexFormat,
                 vertices = vertices,
                 triangles = triangles,
-                indexFormat = indexFormat
             };
             return mesh;
         }
