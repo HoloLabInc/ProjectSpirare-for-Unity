@@ -159,6 +159,7 @@ MonoBehaviour:
   _ecefX: -3959550.026439224
   _ecefY: 3350170.8995218785
   _ecefZ: 3699555.188790008
+  _scale: 1
 --- !u!4 &92103696
 Transform:
   m_ObjectHideFlags: 0
@@ -240,11 +241,13 @@ MonoBehaviour:
   _enforceCulledScreenSpaceError: 1
   _culledScreenSpaceError: 64
   _opaqueMaterial: {fileID: 0}
+  _generateSmoothNormals: 0
   _pointCloudShading:
     _attenuation: 0
     _geometricErrorScale: 1
     _maximumAttenuation: 0
     _baseResolution: 0
+    _pointSize: 0
   _suspendUpdate: 0
   _showTilesInHierarchy: 0
   _updateInEditor: 1
@@ -296,6 +299,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 269369319764120565, guid: 91c9493ca37349d4bbfc7a62e6eb92e7, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1435251162914391018, guid: 91c9493ca37349d4bbfc7a62e6eb92e7, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1435251163600458635, guid: 91c9493ca37349d4bbfc7a62e6eb92e7, type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5744102797872207163, guid: 91c9493ca37349d4bbfc7a62e6eb92e7, type: 3}
@@ -427,6 +438,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2534013262844018656, guid: 3bd8703d0fb64cd40ac71882dd39e195, type: 3}
+      propertyPath: targetTransform
+      value: 
+      objectReference: {fileID: 7131639587780157300}
     - target: {fileID: 8893785616190830948, guid: 3bd8703d0fb64cd40ac71882dd39e195, type: 3}
       propertyPath: m_Name
       value: CesiumGeographicLocationService
@@ -723,3 +738,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f69c7ac7227312e429e6ad6e836b1615, type: 3}
+--- !u!4 &7131639587780157300 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3538007260714996756, guid: f69c7ac7227312e429e6ad6e836b1615, type: 3}
+  m_PrefabInstance: {fileID: 7131639587780157299}
+  m_PrefabAsset: {fileID: 0}
