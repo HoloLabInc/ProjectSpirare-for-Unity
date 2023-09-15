@@ -146,6 +146,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1435251162914391018, guid: 91c9493ca37349d4bbfc7a62e6eb92e7, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1435251163600458635, guid: 91c9493ca37349d4bbfc7a62e6eb92e7, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5744102797872207163, guid: 91c9493ca37349d4bbfc7a62e6eb92e7, type: 3}
       propertyPath: m_Name
       value: MenuCanvas
@@ -304,6 +312,7 @@ MonoBehaviour:
   _ecefX: -3959654.5482814065
   _ecefY: 3350089.7685134006
   _ecefZ: 3699517.0449719364
+  _scale: 1
 --- !u!4 &92103696
 Transform:
   m_ObjectHideFlags: 0
@@ -509,6 +518,67 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7131639589066999836, guid: f69c7ac7227312e429e6ad6e836b1615, type: 3}
   m_PrefabInstance: {fileID: 7131639587780157299}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1836401386
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2534013262844018656, guid: 3bd8703d0fb64cd40ac71882dd39e195, type: 3}
+      propertyPath: targetTransform
+      value: 
+      objectReference: {fileID: 7131639587780157301}
+    - target: {fileID: 8893785616190830948, guid: 3bd8703d0fb64cd40ac71882dd39e195, type: 3}
+      propertyPath: m_Name
+      value: CesiumGeographicLocationService
+      objectReference: {fileID: 0}
+    - target: {fileID: 8893785616190830951, guid: 3bd8703d0fb64cd40ac71882dd39e195, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8893785616190830951, guid: 3bd8703d0fb64cd40ac71882dd39e195, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8893785616190830951, guid: 3bd8703d0fb64cd40ac71882dd39e195, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8893785616190830951, guid: 3bd8703d0fb64cd40ac71882dd39e195, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8893785616190830951, guid: 3bd8703d0fb64cd40ac71882dd39e195, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8893785616190830951, guid: 3bd8703d0fb64cd40ac71882dd39e195, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8893785616190830951, guid: 3bd8703d0fb64cd40ac71882dd39e195, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8893785616190830951, guid: 3bd8703d0fb64cd40ac71882dd39e195, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8893785616190830951, guid: 3bd8703d0fb64cd40ac71882dd39e195, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8893785616190830951, guid: 3bd8703d0fb64cd40ac71882dd39e195, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8893785616190830951, guid: 3bd8703d0fb64cd40ac71882dd39e195, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3bd8703d0fb64cd40ac71882dd39e195, type: 3}
 --- !u!1001 &1450815045058426913
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -573,6 +643,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 92103696}
     m_Modifications:
+    - target: {fileID: 2222533731620292912, guid: f69c7ac7227312e429e6ad6e836b1615, type: 3}
+      propertyPath: near clip plane
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7131639589066999836, guid: f69c7ac7227312e429e6ad6e836b1615, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -634,3 +708,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9ba9b6483de2a9439cf315a7b5e8037, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &7131639587780157301 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3538007260714996756, guid: f69c7ac7227312e429e6ad6e836b1615, type: 3}
+  m_PrefabInstance: {fileID: 7131639587780157299}
+  m_PrefabAsset: {fileID: 0}
