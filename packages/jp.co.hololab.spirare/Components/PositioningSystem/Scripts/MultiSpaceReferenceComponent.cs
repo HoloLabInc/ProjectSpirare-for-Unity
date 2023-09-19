@@ -22,8 +22,11 @@ namespace HoloLab.Spirare
             gameObject.SetActive(false);
 
             coordinateManager = CoordinateManager.Instance;
-            coordinateManager.OnSpaceBound += OnSpaceBound;
-            coordinateManager.OnSpaceLost += OnSpaceLost;
+            if (coordinateManager != null)
+            {
+                coordinateManager.OnSpaceBound += OnSpaceBound;
+                coordinateManager.OnSpaceLost += OnSpaceLost;
+            }
         }
 
         private void Update()
@@ -36,7 +39,11 @@ namespace HoloLab.Spirare
 
         private void OnDestroy()
         {
-            coordinateManager.OnSpaceBound -= OnSpaceBound;
+            if (coordinateManager != null)
+            {
+                coordinateManager.OnSpaceBound -= OnSpaceBound;
+                coordinateManager.OnSpaceLost -= OnSpaceLost;
+            }
         }
 
         public void AddSpaceReference(PomlSpaceReferenceElement spaceReferenceElement)
@@ -105,6 +112,11 @@ namespace HoloLab.Spirare
 
         private bool BindSpaceReference(PomlSpaceReferenceElement spaceReferenceElement)
         {
+            if (coordinateManager == null)
+            {
+                return false;
+            }
+
             var spaceBindingList = coordinateManager.SpaceBindingList;
             foreach (var spaceBinding in spaceBindingList)
             {
