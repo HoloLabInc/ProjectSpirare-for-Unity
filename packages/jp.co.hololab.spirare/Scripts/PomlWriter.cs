@@ -72,7 +72,6 @@ namespace HoloLab.Spirare
             var nodeChildren = new List<XObject>
             {
                 (element.Id != null) ? new XAttribute("id", element.Id) : null,
-                BuildAttribute(element.Attribute),
                 (element.Src != null) ? new XAttribute("src", element.Src) : null, // TODO: convert to releative path.
                 (element.Filename != null) ? new XAttribute("filename", element.Filename) : null,
             };
@@ -166,22 +165,6 @@ namespace HoloLab.Spirare
         {
             list.Add(new XAttribute("text", textElement.Text));
             list.Add(new XAttribute("font-size", textElement.FontSize));
-        }
-
-        private static XAttribute BuildAttribute(ElementAttributeType elemAttr)
-        {
-            var attrStrArray = new string[]
-            {
-                GetFlagLabel(elemAttr, ElementAttributeType.Static),
-                GetFlagLabel(elemAttr, ElementAttributeType.Equipable),
-            }.Where(x => x != null);
-            var attrStr = string.Join(" ", attrStrArray);
-            return string.IsNullOrEmpty(attrStr) ? null : new XAttribute("attribute", attrStr);
-
-            string GetFlagLabel(ElementAttributeType ea, ElementAttributeType flag)
-            {
-                return ((ea & flag) == flag) ? flag.GetLabel() : null;
-            }
         }
 
         private static XAttribute BuildPosition(Vector3 position, string attributeName)

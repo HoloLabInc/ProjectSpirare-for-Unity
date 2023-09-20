@@ -37,7 +37,6 @@ namespace HoloLab.Spirare
     public abstract class PomlElement
     {
         public PomlElementType ElementType { get; }
-        public ElementAttributeType Attribute { get; set; }
 
         public Dictionary<string, string> CustomAttributes { get; } = new Dictionary<string, string>();
 
@@ -330,18 +329,6 @@ namespace HoloLab.Spirare
         }
     }
 
-
-    [Flags]
-    public enum ElementAttributeType
-    {
-        None = 0,
-        [EnumLabel("static")]
-        Static = 1,
-        [EnumLabel("equipable")]
-        [EnumLabel("equippable")]
-        Equipable = 2,
-    }
-
     public enum PomlElementType
     {
         [EnumLabel("#comment")]
@@ -374,21 +361,6 @@ namespace HoloLab.Spirare
         GeoReference,
         [EnumLabel("screen-space")]
         ScreenSpace,
-    }
-
-    public enum PomlPrimitiveElementType
-    {
-        None = 0,
-        [EnumLabel("cube")]
-        Cube,
-        [EnumLabel("sphere")]
-        Sphere,
-        [EnumLabel("cylinder")]
-        Cylinder,
-        [EnumLabel("plane")]
-        Plane,
-        [EnumLabel("capsule")]
-        Capsule,
     }
 
     public enum PomlRotationMode

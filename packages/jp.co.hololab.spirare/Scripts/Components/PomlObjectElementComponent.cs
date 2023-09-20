@@ -19,16 +19,6 @@ namespace HoloLab.Spirare
 
         private PomlComponent pomlComponent;
 
-        public bool Equipable
-        {
-            get
-            {
-                var element = PomlElement;
-                if (element == null) { return false; }
-                return (element.Attribute & ElementAttributeType.Equipable) == ElementAttributeType.Equipable;
-            }
-        }
-
         public override void Initialize(PomlElement element)
         {
             base.Initialize(element);

@@ -152,8 +152,6 @@ namespace HoloLab.Spirare
             var id = node.GetAttribute("id", null);
             var wsRecvUrl = node.GetAttribute("ws-recv-url", null);
 
-            var attribute = ReadElementAttributeAttribute(node);
-
             // transform
             var position = ReadVector3Attribute(node, "position", 0);
             var scale = ReadScaleAttribute(node, "scale", 1);
@@ -192,7 +190,6 @@ namespace HoloLab.Spirare
             pomlElement.Parent = parentElement;
             pomlElement.Children = childElements;
 
-            pomlElement.Attribute = attribute;
             pomlElement.Id = id;
             pomlElement.WsRecvUrl = wsRecvUrl;
             pomlElement.Position = position;
@@ -220,24 +217,6 @@ namespace HoloLab.Spirare
                 return value;
             }
             return PomlRotationMode.None;
-        }
-
-        private static ElementAttributeType ReadElementAttributeAttribute(XmlNode node)
-        {
-            var attributeString = node.GetAttribute("attribute");
-
-            var separator = new char[] { ' ' };
-            var attributeArray = attributeString.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-
-            var attribute = ElementAttributeType.None;
-            foreach (var attributeToken in attributeArray)
-            {
-                if (EnumLabel.TryGetValue<ElementAttributeType>(attributeToken.ToLower(), out var attr))
-                {
-                    attribute |= attr;
-                }
-            }
-            return attribute;
         }
 
         private static Quaternion ReadRotationAttribute(XmlNode node, string attributeName)
