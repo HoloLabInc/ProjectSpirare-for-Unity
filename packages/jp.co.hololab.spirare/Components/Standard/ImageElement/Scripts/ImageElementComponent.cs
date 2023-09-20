@@ -53,6 +53,12 @@ namespace HoloLab.Spirare
                 Destroy(frontfaceMaterial);
                 frontfaceMaterial = null;
             }
+
+            if (backfaceMaterial != null)
+            {
+                Destroy(backfaceMaterial);
+                backfaceMaterial = null;
+            }
         }
 
         public bool IsWithinCamera(Camera camera)

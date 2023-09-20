@@ -315,6 +315,10 @@ namespace HoloLab.Spirare
             {
                 image.Height = height;
             }
+
+            image.Backface = node.GetEnumAttribute("backface", PomlBackfaceType.None);
+            image.BackfaceColor = node.GetColorAttribute("backface-color", image.BackfaceColor);
+
             return image;
         }
 
