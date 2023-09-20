@@ -170,6 +170,9 @@ namespace HoloLab.Spirare
         /// <summary>Height [m]</summary>
         public float Height { get; set; }
 
+        public PomlBackfaceType Backface { get; set; }
+        public Color BackfaceColor { get; set; } = Color.white;
+
         public PomlImageElement() : base(PomlElementType.Image)
         {
         }
@@ -181,6 +184,9 @@ namespace HoloLab.Spirare
         public float Width { get; set; }
         /// <summary>Height [m]</summary>
         public float Height { get; set; }
+
+        public PomlBackfaceType Backface { get; set; }
+        public Color BackfaceColor { get; set; } = Color.white;
 
         public PomlVideoElement() : base(PomlElementType.Video)
         {
@@ -393,5 +399,17 @@ namespace HoloLab.Spirare
         None,
         [EnumLabel("occlusion")]
         Occlusion,
+    }
+
+    public enum PomlBackfaceType
+    {
+        [EnumLabel("none")]
+        None = 0,
+        [EnumLabel("solid")]
+        Solid,
+        [EnumLabel("visible")]
+        Visible,
+        [EnumLabel("flipped")]
+        Flipped,
     }
 }
