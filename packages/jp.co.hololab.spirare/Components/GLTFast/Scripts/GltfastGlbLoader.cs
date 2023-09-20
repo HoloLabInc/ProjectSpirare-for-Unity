@@ -101,6 +101,8 @@ namespace HoloLab.Spirare
         private static GltfastGlbInstance CreateGlbInstance(GltfastGlbLoader glbLoader, string src, Material material)
         {
             var glbObject = new GameObject("Glb Instance");
+            glbObject.hideFlags = HideFlags.HideInHierarchy;
+
             var glbInstance = glbObject.AddComponent<GltfastGlbInstance>();
             glbInstance.Initialize(glbLoader, src, material);
 
@@ -157,6 +159,7 @@ namespace HoloLab.Spirare
             }
 
             glbInstance.transform.SetParent(parent, false);
+            glbInstance.gameObject.hideFlags = HideFlags.None;
             glbInstance.SetGltfImport(gltfImport);
 
             if (parent == null)
