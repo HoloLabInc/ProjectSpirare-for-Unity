@@ -13,8 +13,22 @@ namespace HoloLab.Spirare
         [SerializeField]
         private GameObject imagePlane = null;
 
-        private new Renderer renderer;
-        private new Collider collider;
+        [SerializeField]
+        private GameObject imagePlaneBackface = null;
+
+        [SerializeField]
+        private Material backfaceSolidMaterial = null;
+
+        private Renderer frontfaceRenderer;
+        private Collider frontfaceCollider;
+        private Material frontfaceMaterial;
+
+        private Renderer backfaceRenderer;
+        private Collider backfaceCollider;
+        private Material backfaceMaterial;
+
+        private PomlBackfaceType latestBackface;
+
         private CameraVisibleHelper _cameraVisibleHelper;
 
         public override void Initialize(PomlImageElement element, PomlLoadOptions loadOptions)
@@ -22,10 +36,23 @@ namespace HoloLab.Spirare
             base.Initialize(element, loadOptions);
             _cameraVisibleHelper = imagePlane.AddComponent<CameraVisibleHelper>();
 
-            // Hide until the image is fully loaded.
-            renderer = imagePlane.GetComponent<Renderer>();
-            collider = imagePlane.GetComponent<Collider>();
-            ChangeEnabled(false, false);
+            frontfaceRenderer = imagePlane.GetComponent<Renderer>();
+            frontfaceCollider = imagePlane.GetComponent<Collider>();
+            frontfaceMaterial = frontfaceRenderer.material;
+
+            backfaceRenderer = imagePlaneBackface.GetComponent<Renderer>();
+            backfaceCollider = imagePlaneBackface.GetComponent<Collider>();
+
+            HideImagePlate();
+        }
+
+        private void OnDestroy()
+        {
+            if (frontfaceMaterial != null)
+            {
+                Destroy(frontfaceMaterial);
+                frontfaceMaterial = null;
+            }
         }
 
         public bool IsWithinCamera(Camera camera)
@@ -37,7 +64,7 @@ namespace HoloLab.Spirare
         {
             ChangeLayer(Layer);
 
-            ChangeEnabled(false, false);
+            HideImagePlate();
 
             if (DisplayType == PomlDisplayType.None)
             {
@@ -63,7 +90,7 @@ namespace HoloLab.Spirare
                     if (gameObject.TryGetComponent<ImageElementGifPlayer>(out var gifPlayer) == false)
                     {
                         gifPlayer = gameObject.AddComponent<ImageElementGifPlayer>();
-                        gifPlayer.Initialize(renderer);
+                        gifPlayer.Initialize(frontfaceRenderer);
                     }
 
                     await gifPlayer.LoadAsync(result.Data);
@@ -81,7 +108,30 @@ namespace HoloLab.Spirare
                 return;
             }
 
-            renderer.material.mainTexture = texture;
+            frontfaceMaterial.mainTexture = texture;
+
+            // backface material
+            if (element.Backface != latestBackface)
+            {
+                if (backfaceMaterial != null)
+                {
+                    Destroy(backfaceMaterial);
+                }
+
+                switch (element.Backface)
+                {
+                    case PomlBackfaceType.Solid:
+                        backfaceMaterial = new Material(backfaceSolidMaterial);
+                        backfaceMaterial.color = element.BackfaceColor;
+                        backfaceRenderer.material = backfaceMaterial;
+                        break;
+                    case PomlBackfaceType.Visible:
+                    case PomlBackfaceType.Flipped:
+                        backfaceRenderer.material = frontfaceMaterial;
+                        break;
+                }
+            }
+
             var width = element.Width;
             var height = element.Height;
             if (width == 0 && height == 0)
@@ -99,19 +149,36 @@ namespace HoloLab.Spirare
             }
             imagePlane.transform.localScale = new Vector3(width, height, 1f);
 
-            ChangeEnabled(true, true);
+            var backfaceWidth = element.Backface == PomlBackfaceType.Flipped ? -width : width;
+            imagePlaneBackface.transform.localScale = new Vector3(backfaceWidth, height, 1f);
+
+            ShowImagePlate();
         }
 
         private void ChangeLayer(int layer)
         {
             gameObject.layer = layer;
             imagePlane.layer = layer;
+            imagePlaneBackface.layer = layer;
         }
 
-        private void ChangeEnabled(bool rendererEnabled, bool colliderEnabled)
+        private void HideImagePlate()
         {
-            renderer.enabled = rendererEnabled;
-            collider.enabled = colliderEnabled;
+            frontfaceRenderer.enabled = false;
+            frontfaceCollider.enabled = false;
+
+            backfaceRenderer.enabled = false;
+            backfaceCollider.enabled = false;
+        }
+
+        private void ShowImagePlate()
+        {
+            frontfaceRenderer.enabled = true;
+            frontfaceCollider.enabled = true;
+
+            var backfaceEnabled = element.Backface != PomlBackfaceType.None;
+            backfaceRenderer.enabled = backfaceEnabled;
+            backfaceCollider.enabled = backfaceEnabled;
         }
 
         private static async UniTask<Texture2D> GetTexture(string url)
