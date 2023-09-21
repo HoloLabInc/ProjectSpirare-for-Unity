@@ -52,7 +52,7 @@ public class ImageModelElementComponentTests
     }
 
     [Test]
-    public async Task ImageObject_IsVisible()
+    public async Task ImageObject_FrontfaceIsVisible()
     {
         var element = new PomlImageElement()
         {
@@ -61,17 +61,42 @@ public class ImageModelElementComponentTests
         };
 
         var go = await CreateObjectAsync(element, normalLoadOptions);
+        var (frontfaceRenderer, backfaceRenderer) = GetFrontAndBackfaceRenderer(go);
 
-        SpirareTestUtils.AssertThatMeshIsVisible(go, loaderSettings.occlusionMaterial);
+        SpirareTestUtils.AssertThatMeshIsVisible(frontfaceRenderer, loaderSettings.occlusionMaterial);
+        SpirareTestUtils.AssertThatMeshIsInvisible(backfaceRenderer);
     }
 
-    [Test]
-    public async Task ImageObject_IsInvisible()
+    [TestCase(PomlBackfaceType.Solid)]
+    [TestCase(PomlBackfaceType.Visible)]
+    [TestCase(PomlBackfaceType.Flipped)]
+    public async Task ImageObject_FrontfaceAndBackfaceAreVisible(PomlBackfaceType backfaceType)
+    {
+        var element = new PomlImageElement()
+        {
+            Display = PomlDisplayType.Visible,
+            Src = imageDataPath,
+            Backface = backfaceType
+        };
+
+        var go = await CreateObjectAsync(element, normalLoadOptions);
+        var (frontfaceRenderer, backfaceRenderer) = GetFrontAndBackfaceRenderer(go);
+
+        SpirareTestUtils.AssertThatMeshIsVisible(frontfaceRenderer, loaderSettings.occlusionMaterial);
+        SpirareTestUtils.AssertThatMeshIsVisible(backfaceRenderer, loaderSettings.occlusionMaterial);
+    }
+
+    [TestCase(PomlBackfaceType.None)]
+    [TestCase(PomlBackfaceType.Solid)]
+    [TestCase(PomlBackfaceType.Visible)]
+    [TestCase(PomlBackfaceType.Flipped)]
+    public async Task ImageObject_FrontfaceAndBackfaceAreInvisible(PomlBackfaceType backfaceType)
     {
         var element = new PomlImageElement()
         {
             Display = PomlDisplayType.None,
-            Src = imageDataPath
+            Src = imageDataPath,
+            Backface = backfaceType
         };
 
         var go = await CreateObjectAsync(element, normalLoadOptions);
@@ -90,6 +115,8 @@ public class ImageModelElementComponentTests
         };
 
         var go = await CreateObjectAsync(element, normalLoadOptions);
+        var (frontfaceRenderer, backfaceRenderer) = GetFrontAndBackfaceRenderer(go);
+
         var objectElementComponent = go.GetComponent<PomlObjectElementComponent>();
 
         Assert.That(objectElementComponent, Is.Not.Null);
@@ -100,7 +127,8 @@ public class ImageModelElementComponentTests
         // wait until loading has completed
         await UniTask.Delay(100);
 
-        SpirareTestUtils.AssertThatMeshIsVisible(go, loaderSettings.occlusionMaterial);
+        SpirareTestUtils.AssertThatMeshIsVisible(frontfaceRenderer, loaderSettings.occlusionMaterial);
+        SpirareTestUtils.AssertThatMeshIsInvisible(backfaceRenderer);
     }
 
     [TestCase(PomlDisplayType.Visible)]
@@ -132,5 +160,14 @@ public class ImageModelElementComponentTests
         var go = factory.CreateObject(element, loadOptions, parentTransform);
         await Task.Delay(100);
         return go;
+    }
+
+    private (MeshRenderer frontfaceRenderer, MeshRenderer backfaceRenderer) GetFrontAndBackfaceRenderer(GameObject go)
+    {
+        var meshRenderers = go.GetComponentsInChildren<MeshRenderer>();
+        Assert.That(meshRenderers.Length, Is.EqualTo(2));
+        var frontfaceRenderer = meshRenderers.First(x => x.transform.GetSiblingIndex() == 0);
+        var backfaceRenderer = meshRenderers.First(x => x.transform.GetSiblingIndex() != 0);
+        return (frontfaceRenderer, backfaceRenderer);
     }
 }
