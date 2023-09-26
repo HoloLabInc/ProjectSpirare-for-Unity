@@ -67,16 +67,16 @@ public class ImageModelElementComponentTests
         SpirareTestUtils.AssertThatMeshIsInvisible(backfaceRenderer);
     }
 
-    [TestCase(PomlBackfaceType.Solid)]
-    [TestCase(PomlBackfaceType.Visible)]
-    [TestCase(PomlBackfaceType.Flipped)]
-    public async Task ImageObject_FrontfaceAndBackfaceAreVisible(PomlBackfaceType backfaceType)
+    [TestCase(PomlBackfaceModeType.Solid)]
+    [TestCase(PomlBackfaceModeType.Visible)]
+    [TestCase(PomlBackfaceModeType.Flipped)]
+    public async Task ImageObject_FrontfaceAndBackfaceAreVisible(PomlBackfaceModeType backfaceMode)
     {
         var element = new PomlImageElement()
         {
             Display = PomlDisplayType.Visible,
             Src = imageDataPath,
-            Backface = backfaceType
+            BackfaceMode = backfaceMode
         };
 
         var go = await CreateObjectAsync(element, normalLoadOptions);
@@ -86,17 +86,17 @@ public class ImageModelElementComponentTests
         SpirareTestUtils.AssertThatMeshIsVisible(backfaceRenderer, loaderSettings.occlusionMaterial);
     }
 
-    [TestCase(PomlBackfaceType.None)]
-    [TestCase(PomlBackfaceType.Solid)]
-    [TestCase(PomlBackfaceType.Visible)]
-    [TestCase(PomlBackfaceType.Flipped)]
-    public async Task ImageObject_FrontfaceAndBackfaceAreInvisible(PomlBackfaceType backfaceType)
+    [TestCase(PomlBackfaceModeType.None)]
+    [TestCase(PomlBackfaceModeType.Solid)]
+    [TestCase(PomlBackfaceModeType.Visible)]
+    [TestCase(PomlBackfaceModeType.Flipped)]
+    public async Task ImageObject_FrontfaceAndBackfaceAreInvisible(PomlBackfaceModeType backfaceMode)
     {
         var element = new PomlImageElement()
         {
             Display = PomlDisplayType.None,
             Src = imageDataPath,
-            Backface = backfaceType
+            BackfaceMode = backfaceMode
         };
 
         var go = await CreateObjectAsync(element, normalLoadOptions);
