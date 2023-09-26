@@ -170,6 +170,9 @@ namespace HoloLab.Spirare
         /// <summary>Height [m]</summary>
         public float Height { get; set; }
 
+        public PomlBackfaceModeType BackfaceMode { get; set; }
+        public Color BackfaceColor { get; set; } = Color.white;
+
         public PomlImageElement() : base(PomlElementType.Image)
         {
         }
@@ -393,5 +396,17 @@ namespace HoloLab.Spirare
         None,
         [EnumLabel("occlusion")]
         Occlusion,
+    }
+
+    public enum PomlBackfaceModeType
+    {
+        [EnumLabel("none")]
+        None = 0,
+        [EnumLabel("solid")]
+        Solid,
+        [EnumLabel("visible")]
+        Visible,
+        [EnumLabel("flipped")]
+        Flipped,
     }
 }

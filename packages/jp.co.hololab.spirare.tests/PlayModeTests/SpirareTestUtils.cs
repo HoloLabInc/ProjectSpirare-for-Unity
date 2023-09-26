@@ -50,10 +50,15 @@ public static class SpirareTestUtils
 
         foreach (var meshRenderer in meshRenderers)
         {
-            Assert.That(meshRenderer.gameObject.activeInHierarchy, Is.True);
-            Assert.That(meshRenderer.enabled, Is.True);
-            Assert.That(meshRenderer.material.shader, Is.Not.EqualTo(occlusionMaterial.shader));
+            AssertThatMeshIsVisible(meshRenderer, occlusionMaterial);
         }
+    }
+
+    public static void AssertThatMeshIsVisible(MeshRenderer meshRenderer, Material occlusionMaterial)
+    {
+        Assert.That(meshRenderer.gameObject.activeInHierarchy, Is.True);
+        Assert.That(meshRenderer.enabled, Is.True);
+        Assert.That(meshRenderer.material.shader, Is.Not.EqualTo(occlusionMaterial.shader));
     }
 
     public static void AssertThatMeshIsInvisible(GameObject gameObject)
@@ -61,8 +66,13 @@ public static class SpirareTestUtils
         var meshRenderers = gameObject.GetComponentsInChildren<MeshRenderer>(includeInactive: true);
         foreach (var meshRenderer in meshRenderers)
         {
-            Assert.That(meshRenderer.gameObject.activeInHierarchy && meshRenderer.enabled, Is.False);
+            AssertThatMeshIsInvisible(meshRenderer);
         }
+    }
+
+    public static void AssertThatMeshIsInvisible(MeshRenderer meshRenderer)
+    {
+        Assert.That(meshRenderer.gameObject.activeInHierarchy && meshRenderer.enabled, Is.False);
     }
 
     public static void AssertThatMeshIsOcclusion(GameObject gameObject, Material occlusionMaterial)
@@ -75,5 +85,4 @@ public static class SpirareTestUtils
             Assert.That(meshRenderer.material.shader, Is.EqualTo(occlusionMaterial.shader));
         }
     }
-
 }

@@ -219,28 +219,40 @@ public class PomlParserTests
     <scene>
         <image src=""https://example.com/image0"">
         </image>
-        <image src=""image1"">
+        <image src=""image1"" backface-mode=""solid"" backface-color=""red"">
         </image>
-        <image src=""./image2"">
+        <image src=""./image2"" backface-mode=""visible"">
+        </image>
+        <image src=""./image3"" backface-mode=""flipped"">
         </image>
     </scene>
 </poml>";
 
         var basePath = "https://example.net/poml";
         var elements = ParseSceneElements(xml, basePath);
-        Assert.That(elements.Length, Is.EqualTo(3));
+        Assert.That(elements.Length, Is.EqualTo(4));
 
-        var element0 = elements[0];
+        var element0 = elements[0] as PomlImageElement;
         Assert.That(element0.ElementType, Is.EqualTo(PomlElementType.Image));
         Assert.That(element0.Src, Is.EqualTo("https://example.com/image0"));
+        Assert.That(element0.BackfaceMode, Is.EqualTo(PomlBackfaceModeType.None));
+        Assert.That(element0.BackfaceColor, Is.EqualTo(Color.white));
 
-        var element1 = elements[1];
+        var element1 = elements[1] as PomlImageElement;
         Assert.That(element1.ElementType, Is.EqualTo(PomlElementType.Image));
         Assert.That(element1.Src, Is.EqualTo("https://example.net/image1"));
+        Assert.That(element1.BackfaceMode, Is.EqualTo(PomlBackfaceModeType.Solid));
+        Assert.That(element1.BackfaceColor, Is.EqualTo(Color.red));
 
-        var element2 = elements[2];
+        var element2 = elements[2] as PomlImageElement;
         Assert.That(element2.ElementType, Is.EqualTo(PomlElementType.Image));
         Assert.That(element2.Src, Is.EqualTo("https://example.net/image2"));
+        Assert.That(element2.BackfaceMode, Is.EqualTo(PomlBackfaceModeType.Visible));
+
+        var element3 = elements[3] as PomlImageElement;
+        Assert.That(element3.ElementType, Is.EqualTo(PomlElementType.Image));
+        Assert.That(element3.Src, Is.EqualTo("https://example.net/image3"));
+        Assert.That(element3.BackfaceMode, Is.EqualTo(PomlBackfaceModeType.Flipped));
     }
 
     [Test]
