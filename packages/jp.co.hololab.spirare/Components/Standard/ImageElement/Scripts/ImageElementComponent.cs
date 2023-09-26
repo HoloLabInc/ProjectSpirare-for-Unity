@@ -27,7 +27,7 @@ namespace HoloLab.Spirare
         private Collider backfaceCollider;
         private Material backfaceMaterial;
 
-        private PomlBackfaceType latestBackface;
+        private PomlBackfaceModeType latestBackfaceMode;
 
         private CameraVisibleHelper _cameraVisibleHelper;
 
@@ -117,22 +117,22 @@ namespace HoloLab.Spirare
             frontfaceMaterial.mainTexture = texture;
 
             // backface material
-            if (element.Backface != latestBackface)
+            if (element.BackfaceMode != latestBackfaceMode)
             {
                 if (backfaceMaterial != null)
                 {
                     Destroy(backfaceMaterial);
                 }
 
-                switch (element.Backface)
+                switch (element.BackfaceMode)
                 {
-                    case PomlBackfaceType.Solid:
+                    case PomlBackfaceModeType.Solid:
                         backfaceMaterial = new Material(backfaceSolidMaterial);
                         backfaceMaterial.color = element.BackfaceColor;
                         backfaceRenderer.material = backfaceMaterial;
                         break;
-                    case PomlBackfaceType.Visible:
-                    case PomlBackfaceType.Flipped:
+                    case PomlBackfaceModeType.Visible:
+                    case PomlBackfaceModeType.Flipped:
                         backfaceRenderer.material = frontfaceMaterial;
                         break;
                 }
@@ -155,7 +155,7 @@ namespace HoloLab.Spirare
             }
             imagePlane.transform.localScale = new Vector3(width, height, 1f);
 
-            var backfaceWidth = element.Backface == PomlBackfaceType.Flipped ? -width : width;
+            var backfaceWidth = element.BackfaceMode == PomlBackfaceModeType.Flipped ? -width : width;
             imagePlaneBackface.transform.localScale = new Vector3(backfaceWidth, height, 1f);
 
             ShowImagePlate();
@@ -182,7 +182,7 @@ namespace HoloLab.Spirare
             frontfaceRenderer.enabled = true;
             frontfaceCollider.enabled = true;
 
-            var backfaceEnabled = element.Backface != PomlBackfaceType.None;
+            var backfaceEnabled = element.BackfaceMode != PomlBackfaceModeType.None;
             backfaceRenderer.enabled = backfaceEnabled;
             backfaceCollider.enabled = backfaceEnabled;
         }
