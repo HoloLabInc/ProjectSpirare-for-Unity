@@ -333,6 +333,10 @@ namespace HoloLab.Spirare
             {
                 video.Height = height;
             }
+
+            video.BackfaceMode = node.GetEnumAttribute("backface-mode", PomlBackfaceModeType.None);
+            video.BackfaceColor = node.GetColorAttribute("backface-color", video.BackfaceColor);
+
             return video;
         }
 

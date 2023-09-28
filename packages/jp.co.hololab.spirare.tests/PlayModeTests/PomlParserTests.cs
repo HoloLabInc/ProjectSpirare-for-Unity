@@ -263,28 +263,40 @@ public class PomlParserTests
     <scene>
         <video src=""https://example.com/video0"">
         </video>
-        <video src=""video1"">
+        <video src=""video1"" backface-mode=""solid"" backface-color=""red"">
         </video>
-        <video src=""./video2"">
+        <video src=""./video2"" backface-mode=""visible"">
+        </video>
+        <video src=""./video3"" backface-mode=""flipped"">
         </video>
     </scene>
 </poml>";
 
         var basePath = "https://example.net/poml";
         var elements = ParseSceneElements(xml, basePath);
-        Assert.That(elements.Length, Is.EqualTo(3));
+        Assert.That(elements.Length, Is.EqualTo(4));
 
-        var element0 = elements[0];
+        var element0 = elements[0] as PomlVideoElement;
         Assert.That(element0.ElementType, Is.EqualTo(PomlElementType.Video));
         Assert.That(element0.Src, Is.EqualTo("https://example.com/video0"));
+        Assert.That(element0.BackfaceMode, Is.EqualTo(PomlBackfaceModeType.None));
+        Assert.That(element0.BackfaceColor, Is.EqualTo(Color.white));
 
-        var element1 = elements[1];
+        var element1 = elements[1] as PomlVideoElement;
         Assert.That(element1.ElementType, Is.EqualTo(PomlElementType.Video));
         Assert.That(element1.Src, Is.EqualTo("https://example.net/video1"));
+        Assert.That(element1.BackfaceMode, Is.EqualTo(PomlBackfaceModeType.Solid));
+        Assert.That(element1.BackfaceColor, Is.EqualTo(Color.red));
 
-        var element2 = elements[2];
+        var element2 = elements[2] as PomlVideoElement;
         Assert.That(element2.ElementType, Is.EqualTo(PomlElementType.Video));
         Assert.That(element2.Src, Is.EqualTo("https://example.net/video2"));
+        Assert.That(element2.BackfaceMode, Is.EqualTo(PomlBackfaceModeType.Visible));
+
+        var element3 = elements[3] as PomlVideoElement;
+        Assert.That(element3.ElementType, Is.EqualTo(PomlElementType.Video));
+        Assert.That(element3.Src, Is.EqualTo("https://example.net/video3"));
+        Assert.That(element3.BackfaceMode, Is.EqualTo(PomlBackfaceModeType.Flipped));
     }
 
     [Test]

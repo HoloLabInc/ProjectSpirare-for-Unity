@@ -185,6 +185,9 @@ namespace HoloLab.Spirare
         /// <summary>Height [m]</summary>
         public float Height { get; set; }
 
+        public PomlBackfaceModeType BackfaceMode { get; set; }
+        public Color BackfaceColor { get; set; } = Color.white;
+
         public PomlVideoElement() : base(PomlElementType.Video)
         {
         }
