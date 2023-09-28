@@ -33,12 +33,12 @@ namespace HoloLab.Spirare
         private VideoPlayer videoPlayer;
         private RenderTexture videoRenderTexture;
 
-        private Renderer videoPlaneRenderer;
-        private Collider videoPlaneCollider;
+        private Renderer frontfaceRenderer;
+        private Collider frontfaceCollider;
         private Material frontfaceMaterial;
 
         private Renderer backfaceRenderer;
-
+        private Collider backfaceCollider;
         private Material backfaceMaterial;
 
         private PomlBackfaceModeType latestBackfaceMode;
@@ -52,11 +52,12 @@ namespace HoloLab.Spirare
             base.Initialize(element, loadOptions);
             _cameraVisibleHelper = videoPlane.AddComponent<CameraVisibleHelper>();
 
-            videoPlaneRenderer = videoPlane.GetComponent<Renderer>();
-            videoPlaneCollider = videoPlane.GetComponent<Collider>();
-            frontfaceMaterial = videoPlaneRenderer.material;
+            frontfaceRenderer = videoPlane.GetComponent<Renderer>();
+            frontfaceCollider = videoPlane.GetComponent<Collider>();
+            frontfaceMaterial = frontfaceRenderer.material;
 
             backfaceRenderer = videoPlaneBackface.GetComponent<Renderer>();
+            backfaceCollider = videoPlaneBackface.GetComponent<Collider>();
 
             videoPlayer = videoPlane.GetComponent<VideoPlayer>();
 
@@ -66,8 +67,7 @@ namespace HoloLab.Spirare
             videoPlayer.errorReceived += VideoPlayer_ErrorReceived;
             videoPlayer.loopPointReached += _ =>
             {
-                SetActivePlayButton(playButton, true);
-                SetActivePlayButton(playButtonBackface, true);
+                SetPlayButtonsVisibility(true);
             };
 
             onVideoPlay += OnVideoPlay;
@@ -126,8 +126,7 @@ namespace HoloLab.Spirare
 
         public void Play()
         {
-            SetActivePlayButton(playButton, false);
-            SetActivePlayButton(playButtonBackface, false);
+            SetPlayButtonsVisibility(false);
 
             videoPlayer.Play();
             onVideoPlay?.Invoke(this);
@@ -136,11 +135,8 @@ namespace HoloLab.Spirare
         public void Pause()
         {
             videoPlayer.Pause();
-
-            SetActivePlayButton(playButton, true);
-            SetActivePlayButton(playButtonBackface, true);
+            SetPlayButtonsVisibility(true);
         }
-
 
         protected override async Task UpdateGameObjectCore()
         {
@@ -207,6 +203,7 @@ namespace HoloLab.Spirare
             }
             latestBackfaceMode = element.BackfaceMode;
 
+            SetPlayButtonsVisibility(!videoPlayer.isPlaying);
             SetVideoObjectVisibility(true);
         }
 
@@ -239,18 +236,29 @@ namespace HoloLab.Spirare
 
         private void SetVideoObjectVisibility(bool active)
         {
-            videoPlaneRenderer.enabled = active;
-            videoPlaneCollider.enabled = active;
+            frontfaceRenderer.enabled = active;
+            frontfaceCollider.enabled = active;
             uiCanvas.gameObject.SetActive(active);
-            uiCanvasBackface.gameObject.SetActive(active);
+
+            var backfaceEnabled = element.BackfaceMode != PomlBackfaceModeType.None;
+            backfaceRenderer.enabled = backfaceEnabled && active;
+            backfaceCollider.enabled = backfaceEnabled && active;
+            uiCanvasBackface.gameObject.SetActive(backfaceEnabled && active);
         }
 
-        private void SetActivePlayButton(Button button, bool active)
+        private void SetPlayButtonsVisibility(bool active)
         {
-            if (button != null)
+            playButton.gameObject.SetActive(active);
+
+            var backButtonEnabled = element.BackfaceMode switch
             {
-                button.gameObject.SetActive(active);
-            }
+                PomlBackfaceModeType.None => false,
+                PomlBackfaceModeType.Solid => false,
+                PomlBackfaceModeType.Visible => true,
+                PomlBackfaceModeType.Flipped => true,
+                _ => false
+            };
+            playButtonBackface.gameObject.SetActive(backButtonEnabled && active);
         }
 
         private void OnSelect()
