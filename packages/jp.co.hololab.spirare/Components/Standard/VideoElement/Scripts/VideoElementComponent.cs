@@ -13,15 +13,36 @@ namespace HoloLab.Spirare
         private GameObject videoPlane = null;
 
         [SerializeField]
+        private GameObject videoPlaneBackface = null;
+
+        [SerializeField]
         private Canvas uiCanvas = null;
+
+        [SerializeField]
+        private Canvas uiCanvasBackface = null;
 
         [SerializeField]
         private Button playButton = null;
 
+        [SerializeField]
+        private Button playButtonBackface = null;
+
+        [SerializeField]
+        private Material backfaceSolidMaterial = null;
+
         private VideoPlayer videoPlayer;
+        private RenderTexture videoRenderTexture;
 
         private Renderer videoPlaneRenderer;
         private Collider videoPlaneCollider;
+        private Material frontfaceMaterial;
+
+        private Renderer backfaceRenderer;
+
+        private Material backfaceMaterial;
+
+        private PomlBackfaceModeType latestBackfaceMode;
+
         private CameraVisibleHelper _cameraVisibleHelper;
 
         private static event Action<VideoElementComponent> onVideoPlay;
@@ -33,6 +54,10 @@ namespace HoloLab.Spirare
 
             videoPlaneRenderer = videoPlane.GetComponent<Renderer>();
             videoPlaneCollider = videoPlane.GetComponent<Collider>();
+            frontfaceMaterial = videoPlaneRenderer.material;
+
+            backfaceRenderer = videoPlaneBackface.GetComponent<Renderer>();
+
             videoPlayer = videoPlane.GetComponent<VideoPlayer>();
 
             // Hide until the video is loaded.
@@ -41,16 +66,35 @@ namespace HoloLab.Spirare
             videoPlayer.errorReceived += VideoPlayer_ErrorReceived;
             videoPlayer.loopPointReached += _ =>
             {
-                if (playButton != null)
-                {
-                    playButton.gameObject.SetActive(true);
-                }
+                SetActivePlayButton(playButton, true);
+                SetActivePlayButton(playButtonBackface, true);
             };
 
             onVideoPlay += OnVideoPlay;
 
             var pomlElementComponent = GetComponent<PomlObjectElementComponent>();
             pomlElementComponent.OnSelect += OnSelect;
+        }
+
+        private void OnDestroy()
+        {
+            if (frontfaceMaterial != null)
+            {
+                Destroy(frontfaceMaterial);
+                frontfaceMaterial = null;
+            }
+
+            if (backfaceMaterial != null)
+            {
+                Destroy(backfaceMaterial);
+                backfaceMaterial = null;
+            }
+
+            if (videoRenderTexture != null)
+            {
+                Destroy(videoRenderTexture);
+                videoRenderTexture = null;
+            }
         }
 
         public bool IsWithinCamera(Camera camera)
@@ -82,10 +126,9 @@ namespace HoloLab.Spirare
 
         public void Play()
         {
-            if (playButton != null)
-            {
-                playButton.gameObject.SetActive(false);
-            }
+            SetActivePlayButton(playButton, false);
+            SetActivePlayButton(playButtonBackface, false);
+
             videoPlayer.Play();
             onVideoPlay?.Invoke(this);
         }
@@ -93,11 +136,11 @@ namespace HoloLab.Spirare
         public void Pause()
         {
             videoPlayer.Pause();
-            if (playButton != null)
-            {
-                playButton.gameObject.SetActive(true);
-            }
+
+            SetActivePlayButton(playButton, true);
+            SetActivePlayButton(playButtonBackface, true);
         }
+
 
         protected override async Task UpdateGameObjectCore()
         {
@@ -123,6 +166,15 @@ namespace HoloLab.Spirare
             {
                 videoPlayer.Prepare();
                 await UniTask.WaitUntil(() => videoPlayer.isPrepared);
+
+                if (videoRenderTexture != null)
+                {
+                    Destroy(videoRenderTexture);
+                }
+
+                videoRenderTexture = new RenderTexture((int)videoPlayer.width, (int)videoPlayer.height, 0);
+                videoPlayer.targetTexture = videoRenderTexture;
+                frontfaceMaterial.mainTexture = videoRenderTexture;
             }
 
             UpdateDisplaySize();
@@ -131,6 +183,29 @@ namespace HoloLab.Spirare
             {
                 await ShowThumbnail();
             }
+
+            // backface material
+            if (element.BackfaceMode != latestBackfaceMode)
+            {
+                if (backfaceMaterial != null)
+                {
+                    Destroy(backfaceMaterial);
+                }
+
+                switch (element.BackfaceMode)
+                {
+                    case PomlBackfaceModeType.Solid:
+                        backfaceMaterial = new Material(backfaceSolidMaterial);
+                        backfaceMaterial.color = element.BackfaceColor;
+                        backfaceRenderer.material = backfaceMaterial;
+                        break;
+                    case PomlBackfaceModeType.Visible:
+                    case PomlBackfaceModeType.Flipped:
+                        backfaceRenderer.material = frontfaceMaterial;
+                        break;
+                }
+            }
+            latestBackfaceMode = element.BackfaceMode;
 
             SetVideoObjectVisibility(true);
         }
@@ -154,8 +229,12 @@ namespace HoloLab.Spirare
             }
             videoPlane.transform.localScale = new Vector3(width, height, 1f);
 
+            var backfaceWidth = element.BackfaceMode == PomlBackfaceModeType.Flipped ? -width : width;
+            videoPlaneBackface.transform.localScale = new Vector3(backfaceWidth, height, 1f);
+
             var uiSize = Mathf.Min(width, height);
             uiCanvas.transform.localScale = new Vector3(uiSize, uiSize, 1);
+            uiCanvasBackface.transform.localScale = new Vector3(uiSize, uiSize, 1);
         }
 
         private void SetVideoObjectVisibility(bool active)
@@ -163,6 +242,15 @@ namespace HoloLab.Spirare
             videoPlaneRenderer.enabled = active;
             videoPlaneCollider.enabled = active;
             uiCanvas.gameObject.SetActive(active);
+            uiCanvasBackface.gameObject.SetActive(active);
+        }
+
+        private void SetActivePlayButton(Button button, bool active)
+        {
+            if (button != null)
+            {
+                button.gameObject.SetActive(active);
+            }
         }
 
         private void OnSelect()

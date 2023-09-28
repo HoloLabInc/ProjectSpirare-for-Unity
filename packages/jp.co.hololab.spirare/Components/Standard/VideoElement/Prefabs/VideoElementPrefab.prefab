@@ -183,7 +183,9 @@ MonoBehaviour:
   videoPlane: {fileID: 1437385374035517025}
   videoPlaneBackface: {fileID: 3852879254125580988}
   uiCanvas: {fileID: 4897063498158056807}
+  uiCanvasBackface: {fileID: 391604285866125485}
   playButton: {fileID: 6158540076819709984}
+  playButtonBackface: {fileID: 1435831179314236906}
   backfaceSolidMaterial: {fileID: 2100000, guid: 86eef376a70e8dc4bb8162c1fa3cace0,
     type: 2}
 --- !u!114 &8730507528999979332
@@ -455,6 +457,24 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 4123664661451785387}
   m_PrefabAsset: {fileID: 0}
+--- !u!223 &391604285866125485 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 4347505452196064262, guid: 196f098b75de4ac4f863aabbe93b489a,
+    type: 3}
+  m_PrefabInstance: {fileID: 4123664661451785387}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1435831179314236906 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3086984383653923137, guid: 196f098b75de4ac4f863aabbe93b489a,
+    type: 3}
+  m_PrefabInstance: {fileID: 4123664661451785387}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &9196539980074600801
 PrefabInstance:
   m_ObjectHideFlags: 0
