@@ -43,7 +43,7 @@ namespace HoloLab.Spirare
             backfaceRenderer = imagePlaneBackface.GetComponent<Renderer>();
             backfaceCollider = imagePlaneBackface.GetComponent<Collider>();
 
-            HideImagePlate();
+            SetImageObjectVisibility(false);
         }
 
         private void OnDestroy()
@@ -70,7 +70,7 @@ namespace HoloLab.Spirare
         {
             ChangeLayer(Layer);
 
-            HideImagePlate();
+            SetImageObjectVisibility(false);
 
             if (DisplayType == PomlDisplayType.None)
             {
@@ -122,6 +122,7 @@ namespace HoloLab.Spirare
                 if (backfaceMaterial != null)
                 {
                     Destroy(backfaceMaterial);
+                    backfaceMaterial = null;
                 }
 
                 switch (element.BackfaceMode)
@@ -137,6 +138,7 @@ namespace HoloLab.Spirare
                         break;
                 }
             }
+            latestBackfaceMode = element.BackfaceMode;
 
             var width = element.Width;
             var height = element.Height;
@@ -158,7 +160,7 @@ namespace HoloLab.Spirare
             var backfaceWidth = element.BackfaceMode == PomlBackfaceModeType.Flipped ? -width : width;
             imagePlaneBackface.transform.localScale = new Vector3(backfaceWidth, height, 1f);
 
-            ShowImagePlate();
+            SetImageObjectVisibility(true);
         }
 
         private void ChangeLayer(int layer)
@@ -168,23 +170,14 @@ namespace HoloLab.Spirare
             imagePlaneBackface.layer = layer;
         }
 
-        private void HideImagePlate()
+        private void SetImageObjectVisibility(bool active)
         {
-            frontfaceRenderer.enabled = false;
-            frontfaceCollider.enabled = false;
-
-            backfaceRenderer.enabled = false;
-            backfaceCollider.enabled = false;
-        }
-
-        private void ShowImagePlate()
-        {
-            frontfaceRenderer.enabled = true;
-            frontfaceCollider.enabled = true;
+            frontfaceRenderer.enabled = active;
+            frontfaceCollider.enabled = active;
 
             var backfaceEnabled = element.BackfaceMode != PomlBackfaceModeType.None;
-            backfaceRenderer.enabled = backfaceEnabled;
-            backfaceCollider.enabled = backfaceEnabled;
+            backfaceRenderer.enabled = backfaceEnabled && active;
+            backfaceCollider.enabled = backfaceEnabled && active;
         }
 
         private static async UniTask<Texture2D> GetTexture(string url)
