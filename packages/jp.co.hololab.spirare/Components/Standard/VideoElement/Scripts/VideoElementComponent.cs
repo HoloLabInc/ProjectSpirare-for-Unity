@@ -13,15 +13,36 @@ namespace HoloLab.Spirare
         private GameObject videoPlane = null;
 
         [SerializeField]
+        private GameObject videoPlaneBackface = null;
+
+        [SerializeField]
         private Canvas uiCanvas = null;
+
+        [SerializeField]
+        private Canvas uiCanvasBackface = null;
 
         [SerializeField]
         private Button playButton = null;
 
-        private VideoPlayer videoPlayer;
+        [SerializeField]
+        private Button playButtonBackface = null;
 
-        private Renderer videoPlaneRenderer;
-        private Collider videoPlaneCollider;
+        [SerializeField]
+        private Material backfaceSolidMaterial = null;
+
+        private VideoPlayer videoPlayer;
+        private RenderTexture videoRenderTexture;
+
+        private Renderer frontfaceRenderer;
+        private Collider frontfaceCollider;
+        private Material frontfaceMaterial;
+
+        private Renderer backfaceRenderer;
+        private Collider backfaceCollider;
+        private Material backfaceMaterial;
+
+        private PomlBackfaceModeType latestBackfaceMode;
+
         private CameraVisibleHelper _cameraVisibleHelper;
 
         private static event Action<VideoElementComponent> onVideoPlay;
@@ -31,8 +52,13 @@ namespace HoloLab.Spirare
             base.Initialize(element, loadOptions);
             _cameraVisibleHelper = videoPlane.AddComponent<CameraVisibleHelper>();
 
-            videoPlaneRenderer = videoPlane.GetComponent<Renderer>();
-            videoPlaneCollider = videoPlane.GetComponent<Collider>();
+            frontfaceRenderer = videoPlane.GetComponent<Renderer>();
+            frontfaceCollider = videoPlane.GetComponent<Collider>();
+            frontfaceMaterial = frontfaceRenderer.material;
+
+            backfaceRenderer = videoPlaneBackface.GetComponent<Renderer>();
+            backfaceCollider = videoPlaneBackface.GetComponent<Collider>();
+
             videoPlayer = videoPlane.GetComponent<VideoPlayer>();
 
             // Hide until the video is loaded.
@@ -41,16 +67,34 @@ namespace HoloLab.Spirare
             videoPlayer.errorReceived += VideoPlayer_ErrorReceived;
             videoPlayer.loopPointReached += _ =>
             {
-                if (playButton != null)
-                {
-                    playButton.gameObject.SetActive(true);
-                }
+                SetPlayButtonsVisibility(true);
             };
 
             onVideoPlay += OnVideoPlay;
 
             var pomlElementComponent = GetComponent<PomlObjectElementComponent>();
             pomlElementComponent.OnSelect += OnSelect;
+        }
+
+        private void OnDestroy()
+        {
+            if (frontfaceMaterial != null)
+            {
+                Destroy(frontfaceMaterial);
+                frontfaceMaterial = null;
+            }
+
+            if (backfaceMaterial != null)
+            {
+                Destroy(backfaceMaterial);
+                backfaceMaterial = null;
+            }
+
+            if (videoRenderTexture != null)
+            {
+                Destroy(videoRenderTexture);
+                videoRenderTexture = null;
+            }
         }
 
         public bool IsWithinCamera(Camera camera)
@@ -82,10 +126,8 @@ namespace HoloLab.Spirare
 
         public void Play()
         {
-            if (playButton != null)
-            {
-                playButton.gameObject.SetActive(false);
-            }
+            SetPlayButtonsVisibility(false);
+
             videoPlayer.Play();
             onVideoPlay?.Invoke(this);
         }
@@ -93,10 +135,7 @@ namespace HoloLab.Spirare
         public void Pause()
         {
             videoPlayer.Pause();
-            if (playButton != null)
-            {
-                playButton.gameObject.SetActive(true);
-            }
+            SetPlayButtonsVisibility(true);
         }
 
         protected override async Task UpdateGameObjectCore()
@@ -123,6 +162,15 @@ namespace HoloLab.Spirare
             {
                 videoPlayer.Prepare();
                 await UniTask.WaitUntil(() => videoPlayer.isPrepared);
+
+                if (videoRenderTexture != null)
+                {
+                    Destroy(videoRenderTexture);
+                }
+
+                videoRenderTexture = new RenderTexture((int)videoPlayer.width, (int)videoPlayer.height, 0);
+                videoPlayer.targetTexture = videoRenderTexture;
+                frontfaceMaterial.mainTexture = videoRenderTexture;
             }
 
             UpdateDisplaySize();
@@ -132,6 +180,31 @@ namespace HoloLab.Spirare
                 await ShowThumbnail();
             }
 
+            // backface material
+            if (element.BackfaceMode != latestBackfaceMode)
+            {
+                if (backfaceMaterial != null)
+                {
+                    Destroy(backfaceMaterial);
+                    backfaceMaterial = null;
+                }
+
+                switch (element.BackfaceMode)
+                {
+                    case PomlBackfaceModeType.Solid:
+                        backfaceMaterial = new Material(backfaceSolidMaterial);
+                        backfaceMaterial.color = element.BackfaceColor;
+                        backfaceRenderer.material = backfaceMaterial;
+                        break;
+                    case PomlBackfaceModeType.Visible:
+                    case PomlBackfaceModeType.Flipped:
+                        backfaceRenderer.material = frontfaceMaterial;
+                        break;
+                }
+            }
+            latestBackfaceMode = element.BackfaceMode;
+
+            SetPlayButtonsVisibility(!videoPlayer.isPlaying);
             SetVideoObjectVisibility(true);
         }
 
@@ -154,15 +227,39 @@ namespace HoloLab.Spirare
             }
             videoPlane.transform.localScale = new Vector3(width, height, 1f);
 
+            var backfaceWidth = element.BackfaceMode == PomlBackfaceModeType.Flipped ? -width : width;
+            videoPlaneBackface.transform.localScale = new Vector3(backfaceWidth, height, 1f);
+
             var uiSize = Mathf.Min(width, height);
             uiCanvas.transform.localScale = new Vector3(uiSize, uiSize, 1);
+            uiCanvasBackface.transform.localScale = new Vector3(uiSize, uiSize, 1);
         }
 
         private void SetVideoObjectVisibility(bool active)
         {
-            videoPlaneRenderer.enabled = active;
-            videoPlaneCollider.enabled = active;
+            frontfaceRenderer.enabled = active;
+            frontfaceCollider.enabled = active;
             uiCanvas.gameObject.SetActive(active);
+
+            var backfaceEnabled = element.BackfaceMode != PomlBackfaceModeType.None;
+            backfaceRenderer.enabled = backfaceEnabled && active;
+            backfaceCollider.enabled = backfaceEnabled && active;
+            uiCanvasBackface.gameObject.SetActive(backfaceEnabled && active);
+        }
+
+        private void SetPlayButtonsVisibility(bool active)
+        {
+            playButton.gameObject.SetActive(active);
+
+            var backButtonEnabled = element.BackfaceMode switch
+            {
+                PomlBackfaceModeType.None => false,
+                PomlBackfaceModeType.Solid => false,
+                PomlBackfaceModeType.Visible => true,
+                PomlBackfaceModeType.Flipped => true,
+                _ => false
+            };
+            playButtonBackface.gameObject.SetActive(backButtonEnabled && active);
         }
 
         private void OnSelect()
