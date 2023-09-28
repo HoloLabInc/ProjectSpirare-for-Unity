@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using HoloLab.Spirare;
@@ -51,7 +52,7 @@ public class VideoElementComponentTests
     }
 
     [Test]
-    public async Task VideoObject_IsVisible()
+    public async Task VideoObject_FrontfaceIsVisible()
     {
         var element = new PomlVideoElement()
         {
@@ -60,18 +61,46 @@ public class VideoElementComponentTests
         };
 
         var go = await CreateObjectAsync(element, normalLoadOptions);
+        var (frontfaceRenderer, backfaceRenderer) = GetFrontAndBackfaceRenderer(go);
+
         await UniTask.Delay(100);
 
-        SpirareTestUtils.AssertThatMeshIsVisible(go, loaderSettings.occlusionMaterial);
+        SpirareTestUtils.AssertThatMeshIsVisible(frontfaceRenderer, loaderSettings.occlusionMaterial);
+        SpirareTestUtils.AssertThatMeshIsInvisible(backfaceRenderer);
     }
 
-    [Test]
-    public async Task VideoObject_IsInvisible()
+    [TestCase(PomlBackfaceModeType.Solid)]
+    [TestCase(PomlBackfaceModeType.Visible)]
+    [TestCase(PomlBackfaceModeType.Flipped)]
+    public async Task VideoObject_FrontfaceAndBackfaceAreVisible(PomlBackfaceModeType backfaceMode)
+    {
+        var element = new PomlVideoElement()
+        {
+            Display = PomlDisplayType.Visible,
+            Src = videoDataPath,
+            BackfaceMode = backfaceMode
+        };
+
+        var go = await CreateObjectAsync(element, normalLoadOptions);
+        var (frontfaceRenderer, backfaceRenderer) = GetFrontAndBackfaceRenderer(go);
+
+        await UniTask.Delay(100);
+
+        SpirareTestUtils.AssertThatMeshIsVisible(frontfaceRenderer, loaderSettings.occlusionMaterial);
+        SpirareTestUtils.AssertThatMeshIsVisible(backfaceRenderer, loaderSettings.occlusionMaterial);
+    }
+
+    [TestCase(PomlBackfaceModeType.None)]
+    [TestCase(PomlBackfaceModeType.Solid)]
+    [TestCase(PomlBackfaceModeType.Visible)]
+    [TestCase(PomlBackfaceModeType.Flipped)]
+    public async Task VideoObject_IsInvisible(PomlBackfaceModeType backfaceMode)
     {
         var element = new PomlVideoElement()
         {
             Display = PomlDisplayType.None,
-            Src = videoDataPath
+            Src = videoDataPath,
+            BackfaceMode = backfaceMode
         };
 
         var go = await CreateObjectAsync(element, normalLoadOptions);
@@ -91,6 +120,8 @@ public class VideoElementComponentTests
         };
 
         var go = await CreateObjectAsync(element, normalLoadOptions);
+        var (frontfaceRenderer, backfaceRenderer) = GetFrontAndBackfaceRenderer(go);
+
         var objectElementComponent = go.GetComponent<PomlObjectElementComponent>();
 
         Assert.That(objectElementComponent, Is.Not.Null);
@@ -101,7 +132,8 @@ public class VideoElementComponentTests
         // wait until loading has completed
         await UniTask.Delay(100);
 
-        SpirareTestUtils.AssertThatMeshIsVisible(go, loaderSettings.occlusionMaterial);
+        SpirareTestUtils.AssertThatMeshIsVisible(frontfaceRenderer, loaderSettings.occlusionMaterial);
+        SpirareTestUtils.AssertThatMeshIsInvisible(backfaceRenderer);
     }
 
     [TestCase(PomlDisplayType.Visible)]
@@ -111,7 +143,8 @@ public class VideoElementComponentTests
         var element = new PomlVideoElement()
         {
             Display = initialDisplayType,
-            Src = videoDataPath
+            Src = videoDataPath,
+            BackfaceMode = PomlBackfaceModeType.Visible
         };
 
         var go = await CreateObjectAsync(element, normalLoadOptions);
@@ -133,5 +166,14 @@ public class VideoElementComponentTests
         var go = factory.CreateObject(element, loadOptions, parentTransform);
         await Task.Delay(100);
         return go;
+    }
+
+    private (MeshRenderer frontfaceRenderer, MeshRenderer backfaceRenderer) GetFrontAndBackfaceRenderer(GameObject go)
+    {
+        var meshRenderers = go.GetComponentsInChildren<MeshRenderer>();
+        Assert.That(meshRenderers.Length, Is.EqualTo(2));
+        var frontfaceRenderer = meshRenderers.First(x => x.transform.GetSiblingIndex() == 0);
+        var backfaceRenderer = meshRenderers.First(x => x.transform.GetSiblingIndex() != 0);
+        return (frontfaceRenderer, backfaceRenderer);
     }
 }
