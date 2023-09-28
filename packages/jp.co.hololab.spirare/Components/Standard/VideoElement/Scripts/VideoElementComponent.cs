@@ -186,6 +186,7 @@ namespace HoloLab.Spirare
                 if (backfaceMaterial != null)
                 {
                     Destroy(backfaceMaterial);
+                    backfaceMaterial = null;
                 }
 
                 switch (element.BackfaceMode)
