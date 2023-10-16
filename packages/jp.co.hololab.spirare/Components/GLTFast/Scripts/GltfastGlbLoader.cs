@@ -137,17 +137,25 @@ namespace HoloLab.Spirare
                 materialGenerator = new OcclusionMaterialGenerator(material);
             }
 
-            var gltfImport = new GltfImport(materialGenerator: materialGenerator);
-            var loadResult = await gltfImport.LoadGltfBinary(data);
-            if (loadResult == false)
+            try
             {
-                gltfImport.Dispose();
-                gltfImport = null;
+                var gltfImport = new GltfImport(materialGenerator: materialGenerator);
+                var loadResult = await gltfImport.LoadGltfBinary(data);
+                if (loadResult == false)
+                {
+                    gltfImport.Dispose();
+                    gltfImport = null;
 
-                InvokeLoadingStatusChanged(LoadingStatus.ModelLoadError, onLoadingStatusChanged);
+                    InvokeLoadingStatusChanged(LoadingStatus.ModelLoadError, onLoadingStatusChanged);
+                }
+
+                return (loadResult, gltfImport);
             }
-
-            return (loadResult, gltfImport);
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+                return (false, null);
+            }
         }
 
         private static async UniTask<(bool Success, GameObject GltfObject)> InstantiateModel(GltfastGlbInstance glbInstance, Transform parent, GltfImport gltfImport, Action<LoadingStatus> onLoadingStatusChanged = null)
