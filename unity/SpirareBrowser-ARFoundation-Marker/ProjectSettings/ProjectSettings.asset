@@ -12,8 +12,8 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
-  productName: SpirareBrowser-ARFoundation-Marker
+  companyName: HoloLab Inc.
+  productName: SB Marker
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -154,14 +154,16 @@ PlayerSettings:
   resetResolutionOnWindowResize: 0
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
-  applicationIdentifier: {}
+  applicationIdentifier:
+    Android: jp.co.hololab.spirarebrowsermarker
+    iPhone: jp.co.hololab.spirarebrowsermarker
   buildNumber:
     Standalone: 0
     iPhone: 0
     tvOS: 0
-  overrideDefaultApplicationIdentifier: 0
+  overrideDefaultApplicationIdentifier: 1
   AndroidBundleVersionCode: 1
-  AndroidMinSdkVersion: 22
+  AndroidMinSdkVersion: 26
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
   aotOptions: 
@@ -244,7 +246,7 @@ PlayerSettings:
   useCustomBaseGradleTemplate: 0
   useCustomGradlePropertiesTemplate: 0
   useCustomProguardFile: 0
-  AndroidTargetArchitectures: 1
+  AndroidTargetArchitectures: 2
   AndroidTargetDevices: 0
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
@@ -268,7 +270,14 @@ PlayerSettings:
   AndroidMinifyDebug: 0
   AndroidValidateAppBundleSize: 1
   AndroidAppBundleSizeToValidate: 150
-  m_BuildTargetIcons: []
+  m_BuildTargetIcons:
+  - m_BuildTarget: 
+    m_Icons:
+    - serializedVersion: 2
+      m_Icon: {fileID: 2800000, guid: 1115d06a3e25f954dbae10d22371b052, type: 3}
+      m_Width: 128
+      m_Height: 128
+      m_Kind: 0
   m_BuildTargetPlatformIcons:
   - m_BuildTarget: iPhone
     m_Icons:
@@ -510,8 +519,8 @@ PlayerSettings:
     m_GraphicsJobMode: 0
   m_BuildTargetGraphicsAPIs:
   - m_BuildTarget: AndroidPlayer
-    m_APIs: 150000000b000000
-    m_Automatic: 1
+    m_APIs: 0b000000
+    m_Automatic: 0
   - m_BuildTarget: iOSSupport
     m_APIs: 10000000
     m_Automatic: 1
@@ -561,9 +570,9 @@ PlayerSettings:
   enableInternalProfiler: 0
   logObjCUncaughtExceptions: 1
   enableCrashReportAPI: 0
-  cameraUsageDescription: 
-  locationUsageDescription: 
-  microphoneUsageDescription: 
+  cameraUsageDescription: Use camera
+  locationUsageDescription: Use location
+  microphoneUsageDescription: Use microphone
   bluetoothUsageDescription: 
   switchNMETAOverride: 
   switchNetLibKey: 
@@ -807,7 +816,8 @@ PlayerSettings:
   scriptingDefineSymbols: {}
   additionalCompilerArguments: {}
   platformArchitecture: {}
-  scriptingBackend: {}
+  scriptingBackend:
+    Android: 1
   il2cppCompilerConfiguration: {}
   managedStrippingLevel:
     EmbeddedLinux: 1
@@ -828,7 +838,7 @@ PlayerSettings:
   allowUnsafeCode: 0
   useDeterministicCompilation: 1
   enableRoslynAnalyzers: 1
-  selectedPlatform: 0
+  selectedPlatform: 2
   additionalIl2CppArgs: 
   scriptingRuntimeVersion: 1
   gcIncremental: 1
@@ -837,8 +847,8 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: Template_3D
-  metroPackageVersion: 
+  metroPackageName: Template3D
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -846,7 +856,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: Template_3D
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: SpirareBrowser-ARFoundation-Marker
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
