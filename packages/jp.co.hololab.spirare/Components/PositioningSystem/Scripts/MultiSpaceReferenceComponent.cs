@@ -58,7 +58,8 @@ namespace HoloLab.Spirare
 
         private void OnSpaceBound(SpaceBinding spaceBinding)
         {
-            if (isBindingActive)
+            // Ignore if already bound with another space.
+            if (isBindingActive && BindingIsValid(bindingSpaceReferenceElement, spaceBinding) == false)
             {
                 return;
             }
