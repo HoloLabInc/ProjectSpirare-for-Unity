@@ -23,6 +23,13 @@ POML has the following features:
 - Position Alignment Method
   - ARCore Geospatial API
 
+### [SpirareBrowser-ARFoundation-Marker](./unity/SpirareBrowser-ARFoundation-Marker)
+
+- Target Devices
+  - ARFoundation supported devices
+- Position Alignment Method
+  - Marker tracking (QR)
+
 ### [SpirareBrowser-ARFoundation-Immersal](./unity/SpirareBrowser-ARFoundation-Immersal)
 
 - Target Devices
