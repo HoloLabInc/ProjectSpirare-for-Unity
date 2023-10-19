@@ -332,6 +332,13 @@
       "dependencies": {},
       "hash": "78446a1fe729bd33b7815ba45406e4c457ad4e23"
     },
+    "jp.co.hololab.positioningtools.arfoundationmarker": {
+      "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.arfoundationmarker#6e8495ee22107d8bf0d02286b7f42932c4e21a20",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "6e8495ee22107d8bf0d02286b7f42932c4e21a20"
+    },
     "jp.co.hololab.positioningtools.geographiccoordinate": {
       "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.geographiccoordinate#v0.4.0",
       "depth": 0,
