@@ -35,7 +35,7 @@ Please enter the URL where the POML is being served in the input field and press
 
 ### Loading POML from local files
 
-To create a folder for placing the map files, please launch the application once.
+To create a folder for placing the POML files, please launch the application once.
 
 #### Android
 
