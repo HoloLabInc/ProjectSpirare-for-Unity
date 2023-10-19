@@ -326,11 +326,11 @@
       "hash": "c1b5e0514941dc5f6d499ec32f2281f459f051c9"
     },
     "jp.co.hololab.iwasmunity": {
-      "version": "https://github.com/HoloLabInc/IwasmUnity.git?path=Assets/IwasmUnity#v0.2.0",
+      "version": "https://github.com/HoloLabInc/IwasmUnity.git?path=Assets/IwasmUnity#v0.3.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "e0033bed325356cb1a3a34e96f2c8beca67677e0"
+      "hash": "156a84363b5db486eb3f74bdbfb33daf714416ea"
     },
     "jp.co.hololab.positioningtools": {
       "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools#v0.4.0",
