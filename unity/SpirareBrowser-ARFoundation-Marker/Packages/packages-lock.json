@@ -312,18 +312,18 @@
       "hash": "c9e1f3a0af64bcd6cb6cfba8e3691b48699b3ffa"
     },
     "jp.co.hololab.arfoundationqrtracking": {
-      "version": "https://github.com/HoloLabInc/ARFoundationQRTracking-Unity.git?path=packages/jp.co.hololab.arfoundationqrtracking",
+      "version": "https://github.com/HoloLabInc/ARFoundationQRTracking-Unity.git?path=packages/jp.co.hololab.arfoundationqrtracking#v0.2.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "c1b5e0514941dc5f6d499ec32f2281f459f051c9"
+      "hash": "c9269599168545901ee4fabbd70715d72da2be9e"
     },
     "jp.co.hololab.arfoundationqrtracking.libraries": {
-      "version": "https://github.com/HoloLabInc/ARFoundationQRTracking-Unity.git?path=packages/jp.co.hololab.arfoundationqrtracking.libraries",
+      "version": "https://github.com/HoloLabInc/ARFoundationQRTracking-Unity.git?path=packages/jp.co.hololab.arfoundationqrtracking.libraries#v0.2.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "c1b5e0514941dc5f6d499ec32f2281f459f051c9"
+      "hash": "c9269599168545901ee4fabbd70715d72da2be9e"
     },
     "jp.co.hololab.iwasmunity": {
       "version": "https://github.com/HoloLabInc/IwasmUnity.git?path=Assets/IwasmUnity#v0.3.0",
@@ -333,25 +333,25 @@
       "hash": "156a84363b5db486eb3f74bdbfb33daf714416ea"
     },
     "jp.co.hololab.positioningtools": {
-      "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools#v0.4.0",
+      "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools#v0.5.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "78446a1fe729bd33b7815ba45406e4c457ad4e23"
+      "hash": "a706d3a3db02c54739f362201deaedfc805e0b17"
     },
     "jp.co.hololab.positioningtools.arfoundationmarker": {
-      "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.arfoundationmarker#6e8495ee22107d8bf0d02286b7f42932c4e21a20",
+      "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.arfoundationmarker#v0.5.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "6e8495ee22107d8bf0d02286b7f42932c4e21a20"
+      "hash": "a706d3a3db02c54739f362201deaedfc805e0b17"
     },
     "jp.co.hololab.positioningtools.geographiccoordinate": {
-      "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.geographiccoordinate#v0.4.0",
+      "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.geographiccoordinate#v0.5.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "78446a1fe729bd33b7815ba45406e4c457ad4e23"
+      "hash": "a706d3a3db02c54739f362201deaedfc805e0b17"
     },
     "jp.co.hololab.spirare": {
       "version": "file:../../../packages/jp.co.hololab.spirare",
