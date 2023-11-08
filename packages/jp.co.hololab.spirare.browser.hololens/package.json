@@ -1,6 +1,6 @@
 {
     "name": "jp.co.hololab.spirare.browser.hololens",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "displayName": "Spirare Browser HoloLens",
     "description": "Project Spirare Browser Components for HoloLens",
     "unity": "2019.4",

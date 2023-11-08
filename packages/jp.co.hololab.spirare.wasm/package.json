@@ -1,6 +1,6 @@
 {
     "name": "jp.co.hololab.spirare.wasm",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "displayName": "Spirare Wasm",
     "description": "Wasm Module for Project Spirare",
     "unity": "2019.4",
