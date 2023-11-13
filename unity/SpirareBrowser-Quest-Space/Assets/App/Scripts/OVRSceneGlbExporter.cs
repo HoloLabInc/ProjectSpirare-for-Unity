@@ -31,10 +31,10 @@ namespace SpirareBrowser.Quest.Space
             exportOrigin.transform.SetPositionAndRotation(originAnchor.transform.position, originAnchor.transform.rotation);
 
             var exportPlanes = new List<OVRScenePlane>
-        {
-            sceneRoom.Floor,
-            sceneRoom.Ceiling
-        };
+            {
+                sceneRoom.Floor,
+                sceneRoom.Ceiling
+            };
             exportPlanes.AddRange(sceneRoom.Walls);
 
             foreach (var plane in exportPlanes)
