@@ -30,6 +30,23 @@ namespace SpirareBrowser.Quest.Space
             return sceneAnchors.ToArray();
         }
 
+        public static OVRSceneAnchor[] FindFloorAnchors()
+        {
+            var sceneAnchors = new List<OVRSceneAnchor>();
+
+            var sceneRooms = UnityEngine.Object.FindObjectsOfType<OVRSceneRoom>();
+            foreach (var sceneRoom in sceneRooms)
+            {
+                var floor = sceneRoom.Floor;
+                if (floor.TryGetComponent<OVRSceneAnchor>(out var sceneAnchor))
+                {
+                    sceneAnchors.Add(sceneAnchor);
+                }
+            }
+
+            return sceneAnchors.ToArray();
+        }
+
         public static bool TryGetSceneByAnchorId(string id, out OVRSceneRoom sceneRoom, out OVRSceneAnchor sceneAnchor)
         {
             var sceneRooms = UnityEngine.Object.FindObjectsOfType<OVRSceneRoom>();
@@ -93,8 +110,7 @@ namespace SpirareBrowser.Quest.Space
         public string RoomDownloadPage()
         {
             var globalMeshAnchors = OVRSceneFinder.FindGlobalMeshAnchors();
-
-            string globalMeshHtml = @"
+            var globalMeshHtml = @"
 <div>
   <h2>Global Mesh</h2>
   <div>
@@ -109,50 +125,37 @@ namespace SpirareBrowser.Quest.Space
 </div>
 ";
 
+            var floorAnchors = OVRSceneFinder.FindFloorAnchors();
+            var scenePlanesHtml = @"
+<div>
+  <h2>Scene Plane</h2>
+  <div>
+";
+            foreach (var floorAnchor in floorAnchors)
+            {
+                var id = floorAnchor.Uuid.ToString();
+                scenePlanesHtml += $@"<p><a href=""/room/download/{id}"">{id}</a></p>";
+            }
+            scenePlanesHtml += @"
+  </div>
+</div>
+";
+
             var html =
                 $@"
 <html>
   <body>
     {globalMeshHtml}
+    {scenePlanesHtml}
   </body>
 </html>";
 
             return html;
-            /*
-            var sceneRooms = FindObjectsOfType<OVRSceneRoom>();
-
-            string links = "";
-            foreach (var sceneRoom in sceneRooms)
-            {
-                if (TryGetGlobalMesh(sceneRoom, out var globalMeshObject))
-                {
-                    if (globalMeshObject.TryGetComponent<OVRSceneAnchor>(out var sceneAnchor))
-                    {
-                        var id = sceneAnchor.Uuid.ToString();
-                        links += $@"<p><a href=""/room/download/{id}""> {id} </a></p>";
-                    }
-                }
-            }
-
-            var html =
-                $@"
-<html>
-  <body>
-    <div>
-      {links}
-    </div>
-  </body>
-</html>";
-
-            return html;
-            */
         }
 
         [Route("room/download/:id")]
         public async Task<byte[]> FileDownload(HttpListenerResponse response, string id)
         {
-            Debug.Log("download" + id);
-
             if (OVRSceneFinder.TryGetSceneByAnchorId(id, out var sceneRoom, out var sceneAnchor) == false)
             {
                 response.StatusCode = 400;

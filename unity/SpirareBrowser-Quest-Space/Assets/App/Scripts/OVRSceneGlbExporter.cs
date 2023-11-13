@@ -42,7 +42,7 @@ namespace SpirareBrowser.Quest.Space
                 CreateScenePlaneGameObject(plane, exportOrigin.transform, material);
             }
 
-            var originRotation = Quaternion.Euler(-90, 0, 0);
+            var originRotation = Quaternion.Euler(-90, 180, 0);
             exportOrigin.transform.SetPositionAndRotation(Vector3.zero, originRotation);
 
             return exportOrigin;
@@ -84,7 +84,7 @@ namespace SpirareBrowser.Quest.Space
             var meshRenderer = exportOrigin.AddComponent<MeshRenderer>();
             meshRenderer.sharedMaterial = material;
 
-            var originRotation = Quaternion.Euler(-90, 0, 0);
+            var originRotation = Quaternion.Euler(-90, 180, 0);
             exportOrigin.transform.SetPositionAndRotation(Vector3.zero, originRotation);
 
             return exportOrigin;
