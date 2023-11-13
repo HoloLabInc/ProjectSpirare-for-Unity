@@ -1156,8 +1156,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2253d75e3ddc644b8153409c62dd74e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlanePrefab: {fileID: 502567593}
-  VolumePrefab: {fileID: 422128261}
+  PlanePrefab: {fileID: 102490448831091297, guid: 19eaa1918d9a5014889edb43d3e32f55, type: 3}
+  VolumePrefab: {fileID: 8013016026686888416, guid: d9e6bf90859da5e4a99697b186a19545, type: 3}
   PrefabOverrides:
   - Prefab: {fileID: 4025537716497158586, guid: cc6abc5a64fded74e93ae4ae2442dc81, type: 3}
     ClassificationLabel: GLOBAL_MESH
