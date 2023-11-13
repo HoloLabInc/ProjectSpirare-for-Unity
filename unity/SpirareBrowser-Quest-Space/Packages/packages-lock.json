@@ -292,6 +292,12 @@
       "source": "local",
       "dependencies": {}
     },
+    "jp.co.hololab.spirare.browser.httpserver": {
+      "version": "file:../../../packages/jp.co.hololab.spirare.browser.httpserver",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "jp.co.hololab.spirare.wasm": {
       "version": "file:../../../packages/jp.co.hololab.spirare.wasm",
       "depth": 0,
