@@ -304,6 +304,13 @@
       "source": "local",
       "dependencies": {}
     },
+    "jp.co.hololab.uniwebserver": {
+      "version": "https://github.com/HoloLabInc/UniWebServer.git?path=packages/jp.co.hololab.uniwebserver#v0.2.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "be1a9b5758abfa96e5e2f64a5db2f12d51511bb8"
+    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 0,
