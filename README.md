@@ -68,6 +68,13 @@ POML has the following features:
 - Target Devices
   - Meta Quest
 
+### [SpirareBrowser-Quest-Space](./unity/SpirareBrowser-Quest-Space)
+
+- Target Devices
+  - Meta Quest 3
+- Position Alignment Method
+  - Scene Anchors
+
 ## Unity Projects for Development
 
 ### [Spirare-Dev](./unity/Spirare-Dev)

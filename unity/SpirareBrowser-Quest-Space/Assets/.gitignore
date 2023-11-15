@@ -1,0 +1,9 @@
+/_Dev_gitignore
+/_Dev_gitignore.meta
+
+/Oculus/*
+!/Oculus/OculusProjectConfig.asset
+!/Oculus/OculusProjectConfig.asset.meta
+
+/TextMesh Pro
+/TextMesh Pro.meta
