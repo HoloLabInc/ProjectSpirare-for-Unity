@@ -305,6 +305,12 @@
       "source": "local",
       "dependencies": {}
     },
+    "jp.co.hololab.spirare.browser.quest": {
+      "version": "file:../../../packages/jp.co.hololab.spirare.browser.quest",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "jp.co.hololab.spirare.wasm": {
       "version": "file:../../../packages/jp.co.hololab.spirare.wasm",
       "depth": 0,
