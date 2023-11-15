@@ -18,9 +18,6 @@ namespace HoloLab.Spirare.Browser.HttpServer
         private TextAsset rootPageHtml = null;
 
         [SerializeField]
-        private TextAsset rootPageScriptHtml = null;
-
-        [SerializeField]
         private TextAsset loadFormHtml = null;
 
         [SerializeField]
@@ -39,11 +36,13 @@ namespace HoloLab.Spirare.Browser.HttpServer
                     .Aggregate((a, b) => $"{a}\n{b}");
             }
 
+            var scriptHtml = "";
+
             var args = new string[]
             {
                 loadFormHtml.text,
                 contentListHtml,
-                rootPageScriptHtml.text,
+                scriptHtml
             };
             var html = string.Format(rootPageHtml.text, args);
             return html;
@@ -85,38 +84,12 @@ namespace HoloLab.Spirare.Browser.HttpServer
             response.Redirect("/");
         }
 
-        [Route("/content/:id/auto-reload")]
-        public async Task SetAutoReload(string id, HttpListenerRequest request, HttpListenerResponse response)
-        {
-            var autoReloadInterval = 5;
-
-            if (request.HttpMethod == "POST")
-            {
-                var reader = new StreamReader(request.InputStream);
-                var body = await reader.ReadToEndAsync();
-
-                var queries = HttpQueryParser.ParseQueryString(body);
-                if (queries.TryGetValue("enabled", out var enabledString))
-                {
-                    if (bool.TryParse(enabledString, out var enabled))
-                    {
-                        Debug.Log(enabled);
-                        pomlContentManager.SetAutoReload(id, enabled, autoReloadInterval);
-                    }
-                }
-            }
-
-            response.Redirect("/");
-        }
-
-
         private string CreateContentHtml(LoadedContentInfo contentInfo)
         {
             var args = new string[]
             {
-            contentInfo.Id,
-            contentInfo.Url,
-            contentInfo.AutoReload ? "checked" : ""
+                contentInfo.Id,
+                contentInfo.Url
             };
             var html = string.Format(contentHtml.text, args);
             return html;
