@@ -1,5 +1,5 @@
 {
-    "name": "SpirareBrowser.Quest.Space",
+    "name": "HoloLab.Spirare.Browser.Quest",
     "rootNamespace": "",
     "references": [
         "GUID:a42927d1d4a3b4cda9b076a7adecb9cc",
