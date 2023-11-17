@@ -28,7 +28,6 @@ MonoBehaviour:
     m_Name: package.openupm.com
     m_Url: https://package.openupm.com
     m_Scopes:
-    - com.atteneder
     - com.cysharp.unitask
     - com.openupm
     - jp.co.hololab.mrtk.ja
@@ -56,7 +55,6 @@ MonoBehaviour:
       m_Name: package.openupm.com
       m_Url: https://package.openupm.com
       m_Scopes:
-      - com.atteneder
       - com.cysharp.unitask
       - com.openupm
       - jp.co.hololab.mrtk.ja
@@ -66,7 +64,6 @@ MonoBehaviour:
     m_Name: package.openupm.com
     m_Url: https://package.openupm.com
     m_Scopes:
-    - com.atteneder
     - com.cysharp.unitask
     - com.openupm
     - jp.co.hololab.mrtk.ja
