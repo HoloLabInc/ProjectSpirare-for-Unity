@@ -1,9 +1,9 @@
 {
   "dependencies": {
-    "com.atteneder.gltfast": "5.0.4",
     "com.cysharp.unitask": "2.2.5",
     "com.google.ar.core.arfoundation.extensions": "https://github.com/HoloLabInc/arcore-unity-extensions.git#v1.37.0-fix-project-settings-bug",
     "com.gwaredd.mggif": "https://github.com/gwaredd/mgGif.git?path=Assets/mgGif",
+    "com.unity.cloud.gltfast": "6.0.1",
     "com.unity.collab-proxy": "2.0.1",
     "com.unity.ide.rider": "3.0.18",
     "com.unity.ide.visualstudio": "2.0.17",
@@ -72,7 +72,6 @@
       "name": "package.openupm.com",
       "url": "https://package.openupm.com",
       "scopes": [
-        "com.atteneder",
         "com.cysharp.unitask",
         "com.openupm"
       ]

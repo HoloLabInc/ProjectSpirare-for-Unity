@@ -215,10 +215,17 @@ namespace HoloLab.Spirare
             this.occlusionMaterial = occlusionMaterial;
         }
 
+#if GLTFAST_6_0_0_OR_NEWER
+        public Material GenerateMaterial(GLTFast.Schema.MaterialBase gltfMaterial, IGltfReadable gltf, bool pointsSupport = false)
+        {
+            throw new NotImplementedException();
+        }
+#else
         public Material GenerateMaterial(GLTFast.Schema.Material gltfMaterial, IGltfReadable gltf, bool pointsSupport = false)
         {
             return new Material(occlusionMaterial);
         }
+#endif
 
         public Material GetDefaultMaterial(bool pointsSupport = false)
         {

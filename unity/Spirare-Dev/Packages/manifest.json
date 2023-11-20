@@ -1,12 +1,12 @@
 {
   "dependencies": {
-    "com.atteneder.gltfast": "5.0.0",
     "com.cysharp.unitask": "2.2.5",
     "com.gwaredd.mggif": "https://github.com/gwaredd/mgGif.git?path=Assets/mgGif",
     "com.microsoft.mixedreality.toolkit.extensions": "2.7.3",
     "com.microsoft.mixedreality.toolkit.foundation": "2.7.3",
     "com.microsoft.mixedreality.toolkit.standardassets": "2.7.3",
     "com.microsoft.mixedreality.toolkit.tools": "2.7.3",
+    "com.unity.cloud.gltfast": "6.0.1",
     "com.unity.collab-proxy": "1.9.0",
     "com.unity.ide.rider": "2.0.7",
     "com.unity.ide.visualstudio": "2.0.14",
@@ -16,6 +16,7 @@
     "com.unity.textmeshpro": "3.0.6",
     "com.unity.timeline": "1.4.8",
     "com.unity.ugui": "1.0.0",
+    "jp.co.hololab.iwasmunity": "https://github.com/HoloLabInc/IwasmUnity.git?path=Assets/IwasmUnity#v0.2.0",
     "jp.co.hololab.positioningtools": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools#v0.3.0",
     "jp.co.hololab.positioningtools.geographiccoordinate": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.geographiccoordinate#v0.3.0",
     "jp.co.hololab.spirare": "file:../../../packages/jp.co.hololab.spirare",
@@ -25,7 +26,6 @@
     "jp.co.hololab.spirare.wasm.iwasm": "file:../../../packages/jp.co.hololab.spirare.wasm.iwasm",
     "jp.co.hololab.spirare.wasm.tests": "file:../../../packages/jp.co.hololab.spirare.wasm.tests",
     "jp.co.hololab.uniwebserver": "https://github.com/HoloLabInc/UniWebServer.git?path=packages/jp.co.hololab.uniwebserver",
-    "jp.co.hololab.iwasmunity": "https://github.com/HoloLabInc/IwasmUnity.git?path=Assets/IwasmUnity#v0.2.0",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
@@ -63,7 +63,6 @@
       "name": "package.openupm.com",
       "url": "https://package.openupm.com",
       "scopes": [
-        "com.atteneder",
         "com.cysharp.unitask",
         "com.openupm"
       ]
