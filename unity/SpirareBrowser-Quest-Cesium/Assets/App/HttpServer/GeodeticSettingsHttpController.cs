@@ -15,6 +15,9 @@ public class GeodeticSettingsHttpController : MonoBehaviour, IHttpController
     [SerializeField]
     private CesiumGeoreference cesiumGeoreference;
 
+    [SerializeField]
+    private Transform cameraOriginTransform;
+
     private const string latitudeSaveKey = "GeodeticSettingsHttpController_latitude";
     private const string longitudeSaveKey = "GeodeticSettingsHttpController_longitude";
     private const string heightSaveKey = "GeodeticSettingsHttpController_height";
@@ -114,6 +117,8 @@ public class GeodeticSettingsHttpController : MonoBehaviour, IHttpController
                     PlayerPrefs.SetFloat(heightSaveKey, height);
                 }
             }
+
+            cameraOriginTransform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
         }
 
         response.Redirect("/geodetic-settings");
