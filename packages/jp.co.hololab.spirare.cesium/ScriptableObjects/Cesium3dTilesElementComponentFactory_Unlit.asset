@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5c3621fb1fe4e74db797cb505b8cc7d, type: 3}
+  m_Name: Cesium3dTilesElementComponentFactory_Unlit
+  m_EditorClassIdentifier: 
+  cesium3dTilesetPrefab: {fileID: 3754860161179283850, guid: 83b6c6dac84c33649b49779333e95095, type: 3}
