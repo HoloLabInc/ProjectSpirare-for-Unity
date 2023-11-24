@@ -55,6 +55,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9119335251751129115, guid: 2a16c70c34ecd9642a4a60274b60d83c, type: 3}
+      propertyPath: rootPageHtml
+      value: 
+      objectReference: {fileID: 4900000, guid: 92426b63089bf9440af00b1567d97c85, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a16c70c34ecd9642a4a60274b60d83c, type: 3}
 --- !u!1 &598546845547737323 stripped
@@ -75,3 +79,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cesiumGeoreference: {fileID: 0}
+  cameraOriginTransform: {fileID: 0}
