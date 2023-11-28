@@ -1,0 +1,23 @@
+{
+    "name": "HoloLab.Spirare.Cesium3DMaps",
+    "rootNamespace": "",
+    "references": [
+        "GUID:63cab5ddbd23cf34ca160a9b3d74438d",
+        "GUID:d8b63aba1907145bea998dd612889d6b",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:e0c997780b5b8ac43ac18452857ceebe",
+        "GUID:0417082d726aa6940a7b8f3a975db6d3",
+        "GUID:5e7031352d050134eb5f29d15e79dbc3",
+        "GUID:ddc9502104b19204e806efb31b283e26",
+        "GUID:0df9762fedbe5e44f8c93309c32c356e"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
