@@ -1,4 +1,4 @@
-using CesiumForUnity;
+using HoloLab.PositioningTools.GeographicCoordinate;
 using HoloLab.Spirare.Browser.HttpServer;
 using HoloLab.UniWebServer;
 using System;
@@ -15,20 +15,25 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
     public class Cesium3dMapsHttpController : MonoBehaviour, IHttpController
     {
         [SerializeField]
-        private CesiumGeoreference cesiumGeoreference;
+        private CesiumRectangleMap cesiumRectangleMap;
 
+        /*
         [SerializeField]
         private Transform cameraOriginTransform;
 
-        private const string latitudeSaveKey = "GeodeticSettingsHttpController_latitude";
-        private const string longitudeSaveKey = "GeodeticSettingsHttpController_longitude";
-        private const string heightSaveKey = "GeodeticSettingsHttpController_height";
+        private const string latitudeSaveKey = "Cesium3dMapsHttpController_latitude";
+        private const string longitudeSaveKey = "Cesium3dMapsHttpController_longitude";
+        private const string heightSaveKey = "Cesium3dMapsHttpController_height";
+        private const string scaleSaveKey = "Cesium3dMapsHttpController_height";
+        */
 
         private void Start()
         {
+            /*
             var savedLatitudeString = PlayerPrefs.GetString(latitudeSaveKey);
             var savedLongitudeString = PlayerPrefs.GetString(longitudeSaveKey);
             var savedHeight = PlayerPrefs.GetFloat(heightSaveKey);
+            var savedScaleString = PlayerPrefs.GetString(heightSaveKey);
 
             var latitude = cesiumGeoreference.latitude;
             var longitude = cesiumGeoreference.longitude;
@@ -48,19 +53,23 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
             }
 
             cesiumGeoreference.SetOriginLongitudeLatitudeHeight(longitude, latitude, height);
+            */
         }
 
         [Route("/geodetic-settings")]
         public string Index()
         {
-            var latLon = $"{cesiumGeoreference.latitude},{cesiumGeoreference.longitude}";
-            var height = cesiumGeoreference.height;
+            var center = cesiumRectangleMap.Center;
+            var latLon = $"{center.Latitude},{center.Longitude}";
+            var height = center.EllipsoidalHeight.ToString();
+            var scale = cesiumRectangleMap.Scale.ToString();
+
             var html = $@"
 <html>
   <body>
     <a href=""/"">Back</a>
 
-    <h2>Settings Page for Geodetic Position</h2>
+    <h2>Settings Page for Map</h2>
     <form action=""/geodetic-settings/position"" method=""POST"" accept-charset=""utf-8"">
       <div>
         <label for=""latlon"">Latitude Longitude</label>
@@ -75,6 +84,9 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
         <label for=""height"">Ellipsoidal height</label>
         <input name=""height"" id=""height"" value=""{height}"" />
       </div>
+      <div>
+        <label for=""scale"">Map scale</label>
+        <input name=""scale"" id=""scale"" value=""{scale}"" />
       <div>
         <button type=""submit"">Update</button>
       </div>
@@ -99,12 +111,8 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
                 {
                     if (TryParseLatitudeLongitude(latLonString, out var latitude, out var longitude))
                     {
-                        var height = cesiumGeoreference.height;
-                        cesiumGeoreference.SetOriginLongitudeLatitudeHeight(longitude, latitude, height);
-
-                        PlayerPrefs.SetString(latitudeSaveKey, latitude.ToString());
-                        PlayerPrefs.SetString(longitudeSaveKey, longitude.ToString());
-                        PlayerPrefs.Save();
+                        var center = cesiumRectangleMap.Center;
+                        cesiumRectangleMap.Center = new GeodeticPosition(latitude, longitude, center.EllipsoidalHeight);
                     }
                 }
 
@@ -112,15 +120,18 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
                 {
                     if (TryParseFloat(heightString, out var height))
                     {
-                        var longitude = cesiumGeoreference.longitude;
-                        var latitude = cesiumGeoreference.latitude;
-                        cesiumGeoreference.SetOriginLongitudeLatitudeHeight(longitude, latitude, height);
-
-                        PlayerPrefs.SetFloat(heightSaveKey, height);
+                        var center = cesiumRectangleMap.Center;
+                        cesiumRectangleMap.Center = new GeodeticPosition(center.Latitude, center.Longitude, height);
                     }
                 }
 
-                cameraOriginTransform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+                if (queries.TryGetValue("scale", out var scaleString))
+                {
+                    if (TryParseFloat(scaleString, out var scale))
+                    {
+                        cesiumRectangleMap.Scale = scale;
+                    }
+                }
             }
 
             response.Redirect("/geodetic-settings");
