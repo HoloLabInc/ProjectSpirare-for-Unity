@@ -361,6 +361,18 @@
       "source": "local",
       "dependencies": {}
     },
+    "jp.co.hololab.spirare.cesium": {
+      "version": "file:../../../packages/jp.co.hololab.spirare.cesium",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
+    "jp.co.hololab.spirare.cesium3dmaps": {
+      "version": "file:../../../packages/jp.co.hololab.spirare.cesium3dmaps",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "jp.co.hololab.spirare.wasm": {
       "version": "file:../../../packages/jp.co.hololab.spirare.wasm",
       "depth": 0,

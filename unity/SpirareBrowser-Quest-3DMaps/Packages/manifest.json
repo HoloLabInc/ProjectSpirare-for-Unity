@@ -28,6 +28,8 @@
     "jp.co.hololab.spirare.browser": "file:../../../packages/jp.co.hololab.spirare.browser",
     "jp.co.hololab.spirare.browser.httpserver": "file:../../../packages/jp.co.hololab.spirare.browser.httpserver",
     "jp.co.hololab.spirare.browser.quest": "file:../../../packages/jp.co.hololab.spirare.browser.quest",
+    "jp.co.hololab.spirare.cesium": "file:../../../packages/jp.co.hololab.spirare.cesium",
+    "jp.co.hololab.spirare.cesium3dmaps": "file:../../../packages/jp.co.hololab.spirare.cesium3dmaps",
     "jp.co.hololab.spirare.wasm": "file:../../../packages/jp.co.hololab.spirare.wasm",
     "jp.co.hololab.spirare.wasm.iwasm": "file:../../../packages/jp.co.hololab.spirare.wasm.iwasm",
     "jp.co.hololab.uniwebserver": "https://github.com/HoloLabInc/UniWebServer.git?path=packages/jp.co.hololab.uniwebserver#v0.2.0",
