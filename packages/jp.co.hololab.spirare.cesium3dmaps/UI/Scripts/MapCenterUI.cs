@@ -5,49 +5,48 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class MapCenterUI : MonoBehaviour
+namespace HoloLab.Spirare.Cesium3DMaps
 {
-    [SerializeField]
-    private TMP_InputField inputField;
-
-    private CesiumRectangleMap cesiumRectangleMap;
-
-    private void Start()
+    public class MapCenterUI : MonoBehaviour
     {
-        cesiumRectangleMap = FindObjectOfType<CesiumRectangleMap>();
+        [SerializeField]
+        private TMP_InputField inputField;
 
-        if (cesiumRectangleMap != null)
+        private CesiumRectangleMap cesiumRectangleMap;
+
+        private void Start()
         {
-            CesiumRectangleMap_OnCenterChanged(cesiumRectangleMap.Center);
-            cesiumRectangleMap.OnCenterChanged += CesiumRectangleMap_OnCenterChanged;
+            cesiumRectangleMap = FindObjectOfType<CesiumRectangleMap>();
+
+            if (cesiumRectangleMap != null)
+            {
+                CesiumRectangleMap_OnCenterChanged(cesiumRectangleMap.Center);
+                cesiumRectangleMap.OnCenterChanged += CesiumRectangleMap_OnCenterChanged;
+            }
+
+            inputField.onEndEdit.AddListener(InputField_OnValueChanged);
         }
 
-        //inputField.onValueChanged.AddListener(InputField_OnValueChanged);
-        inputField.onEndEdit.AddListener(InputField_OnValueChanged);
-    }
-
-    private void CesiumRectangleMap_OnCenterChanged(GeodeticPosition position)
-    {
-        inputField.text = $"{position.Latitude}, {position.Longitude}";
-    }
-
-    private void InputField_OnValueChanged(string text)
-    {
-        Debug.Log(text);
-        Debug.Log("InputFiledChanged");
-
-        var separator = new char[] { ',', ' ', '(', ')' };
-        var tokens = text.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-
-        if (tokens.Length < 2)
+        private void CesiumRectangleMap_OnCenterChanged(GeodeticPosition position)
         {
-            return;
+            inputField.text = $"{position.Latitude}, {position.Longitude}";
         }
 
-        if (float.TryParse(tokens[0], out var latitude) && float.TryParse(tokens[1], out var longitude))
+        private void InputField_OnValueChanged(string text)
         {
-            var center = cesiumRectangleMap.Center;
-            cesiumRectangleMap.Center = new GeodeticPosition(latitude, longitude, center.EllipsoidalHeight);
+            var separator = new char[] { ',', ' ', '(', ')' };
+            var tokens = text.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+
+            if (tokens.Length < 2)
+            {
+                return;
+            }
+
+            if (float.TryParse(tokens[0], out var latitude) && float.TryParse(tokens[1], out var longitude))
+            {
+                var center = cesiumRectangleMap.Center;
+                cesiumRectangleMap.Center = new GeodeticPosition(latitude, longitude, center.EllipsoidalHeight);
+            }
         }
     }
 }
