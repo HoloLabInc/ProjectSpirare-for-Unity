@@ -1,17 +1,33 @@
 {
   "dependencies": {
+    "com.cysharp.unitask": "2.2.5",
+    "com.gwaredd.mggif": "https://github.com/gwaredd/mgGif.git?path=Assets/mgGif",
+    "com.cesium.unity": "1.6.4",
     "com.meta.xr.sdk.core": "59.0.0",
+    "com.unity.cloud.gltfast": "6.0.1",
     "com.unity.collab-proxy": "2.2.0",
     "com.unity.feature.development": "1.0.1",
-    "com.unity.ide.rider": "3.0.25",
-    "com.unity.ide.visualstudio": "2.0.21",
+    "com.unity.ide.rider": "3.0.26",
+    "com.unity.ide.visualstudio": "2.0.22",
     "com.unity.ide.vscode": "1.2.5",
+    "com.unity.nuget.newtonsoft-json": "3.0.2",
+    "com.unity.render-pipelines.universal": "12.1.13",
     "com.unity.test-framework": "1.1.33",
     "com.unity.textmeshpro": "3.0.6",
     "com.unity.timeline": "1.6.5",
     "com.unity.ugui": "1.0.0",
     "com.unity.visualscripting": "1.9.1",
     "com.unity.xr.oculus": "3.3.0",
+    "jp.co.hololab.iwasmunity": "https://github.com/HoloLabInc/IwasmUnity.git?path=Assets/IwasmUnity#v0.3.0",
+    "jp.co.hololab.positioningtools": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools#v0.5.0-quest",
+    "jp.co.hololab.positioningtools.geographiccoordinate": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.geographiccoordinate#v0.5.0-quest",
+    "jp.co.hololab.spirare": "file:../../../packages/jp.co.hololab.spirare",
+    "jp.co.hololab.spirare.browser": "file:../../../packages/jp.co.hololab.spirare.browser",
+    "jp.co.hololab.spirare.browser.httpserver": "file:../../../packages/jp.co.hololab.spirare.browser.httpserver",
+    "jp.co.hololab.spirare.browser.quest": "file:../../../packages/jp.co.hololab.spirare.browser.quest",
+    "jp.co.hololab.spirare.wasm": "file:../../../packages/jp.co.hololab.spirare.wasm",
+    "jp.co.hololab.spirare.wasm.iwasm": "file:../../../packages/jp.co.hololab.spirare.wasm.iwasm",
+    "jp.co.hololab.uniwebserver": "https://github.com/HoloLabInc/UniWebServer.git?path=packages/jp.co.hololab.uniwebserver#v0.2.0",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
@@ -43,5 +59,33 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  }
+  },
+  "scopedRegistries": [
+    {
+      "name": "Cesium",
+      "url": "https://unity.pkg.cesium.com",
+      "scopes": [
+        "com.cesium.unity"
+      ]
+    },
+    {
+      "name": "package.openupm.com",
+      "url": "https://package.openupm.com",
+      "scopes": [
+        "com.cysharp.unitask",
+        "com.openupm"
+      ]
+    },
+    {
+      "name": "pkgs.dev.azure.com",
+      "url": "https://pkgs.dev.azure.com/aipmr/MixedReality-Unity-Packages/_packaging/Unity-packages/npm/registry",
+      "scopes": [
+        "com.azure",
+        "com.microsoft.mixedreality.toolkit.extensions",
+        "com.microsoft.mixedreality.toolkit.foundation",
+        "com.microsoft.mixedreality.toolkit.standardassets",
+        "com.microsoft.mixedreality.toolkit.tools"
+      ]
+    }
+  ]
 }
