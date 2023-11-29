@@ -6,31 +6,34 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CesiumCreditText : MonoBehaviour
+namespace HoloLab.Spirare.Cesium3DMaps
 {
-    private TMP_Text tmpText;
-    private Text unityText;
-
-    private CesiumCreditSystemStringConverter creditSystemStringConverter;
-
-    private void Start()
+    public class CesiumCreditText : MonoBehaviour
     {
-        tmpText = GetComponent<TMP_Text>();
-        unityText = GetComponent<Text>();
+        private TMP_Text tmpText;
+        private Text unityText;
 
-        creditSystemStringConverter = FindObjectOfType<CesiumCreditSystemStringConverter>();
-        creditSystemStringConverter.OnCreditsUpdated += CesiumCreditSystemStringConverter_OnCreditsUpdated;
-    }
+        private CesiumCreditSystemStringConverter creditSystemStringConverter;
 
-    private void CesiumCreditSystemStringConverter_OnCreditsUpdated(string credit)
-    {
-        if (tmpText != null)
+        private void Start()
         {
-            tmpText.text = credit;
+            tmpText = GetComponent<TMP_Text>();
+            unityText = GetComponent<Text>();
+
+            creditSystemStringConverter = FindObjectOfType<CesiumCreditSystemStringConverter>();
+            creditSystemStringConverter.OnCreditsUpdated += CesiumCreditSystemStringConverter_OnCreditsUpdated;
         }
-        if (unityText != null)
+
+        private void CesiumCreditSystemStringConverter_OnCreditsUpdated(string credit)
         {
-            unityText.text = credit;
+            if (tmpText != null)
+            {
+                tmpText.text = credit;
+            }
+            if (unityText != null)
+            {
+                unityText.text = credit;
+            }
         }
     }
 }
