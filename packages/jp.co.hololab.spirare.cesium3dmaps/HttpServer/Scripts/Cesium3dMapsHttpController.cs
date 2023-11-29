@@ -17,45 +17,6 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
         [SerializeField]
         private CesiumRectangleMap cesiumRectangleMap;
 
-        /*
-        [SerializeField]
-        private Transform cameraOriginTransform;
-
-        private const string latitudeSaveKey = "Cesium3dMapsHttpController_latitude";
-        private const string longitudeSaveKey = "Cesium3dMapsHttpController_longitude";
-        private const string heightSaveKey = "Cesium3dMapsHttpController_height";
-        private const string scaleSaveKey = "Cesium3dMapsHttpController_height";
-        */
-
-        private void Start()
-        {
-            /*
-            var savedLatitudeString = PlayerPrefs.GetString(latitudeSaveKey);
-            var savedLongitudeString = PlayerPrefs.GetString(longitudeSaveKey);
-            var savedHeight = PlayerPrefs.GetFloat(heightSaveKey);
-            var savedScaleString = PlayerPrefs.GetString(heightSaveKey);
-
-            var latitude = cesiumGeoreference.latitude;
-            var longitude = cesiumGeoreference.longitude;
-            var height = cesiumGeoreference.height;
-
-            if (double.TryParse(savedLatitudeString, out var savedLatitude))
-            {
-                latitude = savedLatitude;
-            }
-            if (double.TryParse(savedLongitudeString, out var savedLongitude))
-            {
-                longitude = savedLongitude;
-            }
-            if (savedHeight != 0)
-            {
-                height = savedHeight;
-            }
-
-            cesiumGeoreference.SetOriginLongitudeLatitudeHeight(longitude, latitude, height);
-            */
-        }
-
         [Route("/map")]
         public string Index()
         {
