@@ -56,7 +56,7 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
             */
         }
 
-        [Route("/geodetic-settings")]
+        [Route("/map")]
         public string Index()
         {
             var center = cesiumRectangleMap.Center;
@@ -70,7 +70,7 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
     <a href=""/"">Back</a>
 
     <h2>Settings Page for Map</h2>
-    <form action=""/geodetic-settings/position"" method=""POST"" accept-charset=""utf-8"">
+    <form action=""/map/position"" method=""POST"" accept-charset=""utf-8"">
       <div>
         <label for=""latlon"">Latitude Longitude</label>
         <input
@@ -97,7 +97,7 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
             return html;
         }
 
-        [Route("/geodetic-settings/position")]
+        [Route("/map/position")]
         public async Task ChangePosition(HttpListenerRequest request, HttpListenerResponse response)
         {
             if (request.HttpMethod == "POST")
@@ -134,7 +134,7 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
                 }
             }
 
-            response.Redirect("/geodetic-settings");
+            response.Redirect("/map");
         }
 
         private static bool TryParseFloat(string text, out float value)
