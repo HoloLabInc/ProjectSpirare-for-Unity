@@ -1,6 +1,9 @@
 using UnityEngine;
 
-public abstract class AbstractCesiumRectangleMapCredit : MonoBehaviour
+namespace HoloLab.Spirare.Cesium3DMaps
 {
-    public abstract void SetWidth(float width);
+    public abstract class AbstractCesiumRectangleMapCredit : MonoBehaviour
+    {
+        public abstract void SetWidth(float width);
+    }
 }

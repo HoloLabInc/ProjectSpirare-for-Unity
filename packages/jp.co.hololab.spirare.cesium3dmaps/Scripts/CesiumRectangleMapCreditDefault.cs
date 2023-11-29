@@ -1,20 +1,23 @@
 using UnityEngine;
 
-public class CesiumRectangleMapCreditDefault : AbstractCesiumRectangleMapCredit
+namespace HoloLab.Spirare.Cesium3DMaps
 {
-    [SerializeField]
-    private Canvas canvas;
-
-    private RectTransform canvasRectTransform;
-
-    private void Awake()
+    public class CesiumRectangleMapCreditDefault : AbstractCesiumRectangleMapCredit
     {
-        canvasRectTransform = canvas.GetComponent<RectTransform>();
-    }
+        [SerializeField]
+        private Canvas canvas;
 
-    public override void SetWidth(float width)
-    {
-        var sizeDeltaX = width / canvasRectTransform.localScale.x;
-        canvasRectTransform.sizeDelta = new Vector2(sizeDeltaX, canvasRectTransform.sizeDelta.y);
+        private RectTransform canvasRectTransform;
+
+        private void Awake()
+        {
+            canvasRectTransform = canvas.GetComponent<RectTransform>();
+        }
+
+        public override void SetWidth(float width)
+        {
+            var sizeDeltaX = width / canvasRectTransform.localScale.x;
+            canvasRectTransform.sizeDelta = new Vector2(sizeDeltaX, canvasRectTransform.sizeDelta.y);
+        }
     }
 }
