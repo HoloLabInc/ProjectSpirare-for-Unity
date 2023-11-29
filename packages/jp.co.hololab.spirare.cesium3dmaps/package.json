@@ -1,6 +1,6 @@
 {
     "name": "jp.co.hololab.spirare.cesium3dmaps",
-    "version": "0.1.0",
+    "version": "1.1.0",
     "displayName": "Spirare Cesium 3D Maps",
     "description": "Project Spirare Cesium 3D Maps Components",
     "unity": "2021.3",
