@@ -84,14 +84,13 @@ namespace HoloLab.Spirare.Cesium3DMaps
         }
 
         [SerializeField]
-        private List<Cesium3DTileset> clippingTargetTilesets;
+        private bool attatchTilesetClipperForChildTilesets = true;
 
         [SerializeField]
         private CesiumRectangleMapBase mapBase;
 
         private CesiumGeoreference[] cesiumGeoreferences;
         private CesiumGeodeticAreaExcluder[] cesiumGeodeticAreaExcluders;
-        //private CesiumTilesetRectangleClipper[] tilesetRectangleClippers;
 
         private const float MinimumScale = 0.000001f;
 
@@ -107,26 +106,27 @@ namespace HoloLab.Spirare.Cesium3DMaps
             cesiumGeoreferences = GetComponentsInChildren<CesiumGeoreference>();
             cesiumGeodeticAreaExcluders = GetComponentsInChildren<CesiumGeodeticAreaExcluder>();
 
-            var tilesets = GetComponentsInChildren<Cesium3DTileset>();
-            foreach (var tileset in tilesets)
+            if (attatchTilesetClipperForChildTilesets)
             {
-                tileset.gameObject.AddComponent<CesiumRectangleMapTilesetClipper>();
+                AttachTilesetClipperForChildTilesets();
             }
-            /*
-            tilesetRectangleClippers = clippingTargetTilesets
-                .Select(
-                    x => x.gameObject.AddComponent<CesiumTilesetRectangleClipper>())
-                .ToArray();
-            foreach (var clipper in tilesetRectangleClippers)
-            {
-                clipper.ClippingOriginTransform = transform;
-            }
-            */
 
             LoadCenterPosition();
             LoadScale();
 
             UpdateMap();
+        }
+
+        private void AttachTilesetClipperForChildTilesets()
+        {
+            var tilesets = GetComponentsInChildren<Cesium3DTileset>();
+            foreach (var tileset in tilesets)
+            {
+                if (tileset.gameObject.TryGetComponent<CesiumRectangleMapTilesetClipper>(out _) == false)
+                {
+                    tileset.gameObject.AddComponent<CesiumRectangleMapTilesetClipper>();
+                }
+            }
         }
 
         private void SaveCenterPosition()
@@ -174,7 +174,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
             UpdateMapBase();
             UpdateCesiumGeoreferences();
             UpdateCesiumGeodeticAreaExcluders();
-            // UpdateCesiumTilesetRectangleClippers();
         }
 
         private void UpdateMapBase()
@@ -211,17 +210,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
                 cesiumGeodeticAreaExcluder.LowerRightLatitude = lowerRightLonLatHeight.y;
             }
         }
-
-        /*
-    private void UpdateCesiumTilesetRectangleClippers()
-    {
-        foreach (var tilesetRectangleClipper in tilesetRectangleClippers)
-        {
-            tilesetRectangleClipper.ClippingSizeX = mapSizeX;
-            tilesetRectangleClipper.ClippingSizeZ = mapSizeZ;
-        }
-    }
-        */
 
         private void InvokeOnScaleChanged(float scale)
         {
