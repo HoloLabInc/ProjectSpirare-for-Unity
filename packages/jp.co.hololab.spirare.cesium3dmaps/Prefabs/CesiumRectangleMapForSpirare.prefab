@@ -76,7 +76,7 @@ PrefabInstance:
     - target: {fileID: 451510481513926599, guid: 6afd5c5640f35ac4b94fe08a3ed2b431, type: 3}
       propertyPath: pomlLoaderSettings
       value: 
-      objectReference: {fileID: 11400000, guid: 44349071269d6774f96ddcef15b2718a, type: 2}
+      objectReference: {fileID: 11400000, guid: bb517985f775669479bcf194631ee64e, type: 2}
     - target: {fileID: 451510481513926616, guid: 6afd5c5640f35ac4b94fe08a3ed2b431, type: 3}
       propertyPath: m_RootOrder
       value: 1
