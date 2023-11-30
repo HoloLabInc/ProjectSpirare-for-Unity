@@ -13,7 +13,7 @@ PrefabInstance:
       objectReference: {fileID: -6465566751694194690, guid: df3f25f2d0b94fc4b896540a1e7b6608, type: 3}
     - target: {fileID: 404690091185039488, guid: 19435349bbcc52948ab31ec72dffd6de, type: 3}
       propertyPath: m_Name
-      value: Cesium3dTileset_Clipping
+      value: Cesium3dTileset_RectangleMapClipping
       objectReference: {fileID: 0}
     - target: {fileID: 404690091185039550, guid: 19435349bbcc52948ab31ec72dffd6de, type: 3}
       propertyPath: m_RootOrder
@@ -63,6 +63,10 @@ PrefabInstance:
       propertyPath: _opaqueMaterial
       value: 
       objectReference: {fileID: 2100000, guid: 23f729cdfc1bb8b47a3bfae9514745f5, type: 2}
+    - target: {fileID: 404690091185039551, guid: 19435349bbcc52948ab31ec72dffd6de, type: 3}
+      propertyPath: _createPhysicsMeshes
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 19435349bbcc52948ab31ec72dffd6de, type: 3}
 --- !u!1 &3429914604711693059 stripped
