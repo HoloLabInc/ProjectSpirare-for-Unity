@@ -35,7 +35,11 @@ namespace CesiumForUnity
         private static string JoinCreditTexts(List<CesiumCredit> credits)
         {
             var components = credits.SelectMany(x => x.components);
-            var componentTexts = components.Select(x => x.text);
+            var componentTexts = components
+                .Select(x => x.text)
+                .Distinct()
+                .Where(x => string.IsNullOrEmpty(x) == false);
+
             return string.Join(" ･ ", componentTexts);
         }
     }
