@@ -26,6 +26,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
             {
                 mapSizeX = value;
                 UpdateMap();
+                InvokeOnMapSizeChanged(mapSizeX, mapSizeZ);
             }
         }
 
@@ -42,6 +43,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
             {
                 mapSizeZ = value;
                 UpdateMap();
+                InvokeOnMapSizeChanged(mapSizeX, mapSizeZ);
             }
         }
 
@@ -82,14 +84,13 @@ namespace HoloLab.Spirare.Cesium3DMaps
         }
 
         [SerializeField]
-        private List<Cesium3DTileset> clippingTargetTilesets;
+        private bool attatchTilesetClipperForChildTilesets = true;
 
         [SerializeField]
         private CesiumRectangleMapBase mapBase;
 
         private CesiumGeoreference[] cesiumGeoreferences;
         private CesiumGeodeticAreaExcluder[] cesiumGeodeticAreaExcluders;
-        private CesiumTilesetRectangleClipper[] tilesetRectangleClippers;
 
         private const float MinimumScale = 0.000001f;
 
@@ -98,25 +99,34 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
         public Action<float> OnScaleChanged;
         public Action<GeodeticPosition> OnCenterChanged;
+        public Action<(float MapSizeX, float MapSizeZ)> OnMapSizeChanged;
 
         private void Start()
         {
             cesiumGeoreferences = GetComponentsInChildren<CesiumGeoreference>();
             cesiumGeodeticAreaExcluders = GetComponentsInChildren<CesiumGeodeticAreaExcluder>();
 
-            tilesetRectangleClippers = clippingTargetTilesets
-                .Select(
-                    x => x.gameObject.AddComponent<CesiumTilesetRectangleClipper>())
-                .ToArray();
-            foreach (var clipper in tilesetRectangleClippers)
+            if (attatchTilesetClipperForChildTilesets)
             {
-                clipper.ClippingOriginTransform = transform;
+                AttachTilesetClipperForChildTilesets();
             }
 
             LoadCenterPosition();
             LoadScale();
 
             UpdateMap();
+        }
+
+        private void AttachTilesetClipperForChildTilesets()
+        {
+            var tilesets = GetComponentsInChildren<Cesium3DTileset>();
+            foreach (var tileset in tilesets)
+            {
+                if (tileset.gameObject.TryGetComponent<CesiumRectangleMapTilesetClipper>(out _) == false)
+                {
+                    tileset.gameObject.AddComponent<CesiumRectangleMapTilesetClipper>();
+                }
+            }
         }
 
         private void SaveCenterPosition()
@@ -164,7 +174,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
             UpdateMapBase();
             UpdateCesiumGeoreferences();
             UpdateCesiumGeodeticAreaExcluders();
-            UpdateCesiumTilesetRectangleClippers();
         }
 
         private void UpdateMapBase()
@@ -202,15 +211,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
             }
         }
 
-        private void UpdateCesiumTilesetRectangleClippers()
-        {
-            foreach (var tilesetRectangleClipper in tilesetRectangleClippers)
-            {
-                tilesetRectangleClipper.ClippingSizeX = mapSizeX;
-                tilesetRectangleClipper.ClippingSizeZ = mapSizeZ;
-            }
-        }
-
         private void InvokeOnScaleChanged(float scale)
         {
             try
@@ -228,6 +228,18 @@ namespace HoloLab.Spirare.Cesium3DMaps
             try
             {
                 OnCenterChanged?.Invoke(center);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+        }
+
+        private void InvokeOnMapSizeChanged(float mapSizeX, float mapSizeZ)
+        {
+            try
+            {
+                OnMapSizeChanged?.Invoke((mapSizeX, mapSizeZ));
             }
             catch (Exception ex)
             {
