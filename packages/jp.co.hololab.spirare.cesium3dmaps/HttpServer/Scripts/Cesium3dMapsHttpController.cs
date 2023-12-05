@@ -1,3 +1,4 @@
+#if SPIRAREBROWSER_HTTPSERVER_PRESENT
 using HoloLab.PositioningTools.GeographicCoordinate;
 using HoloLab.Spirare.Browser.HttpServer;
 using HoloLab.UniWebServer;
@@ -129,3 +130,4 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
         }
     }
 }
+#endif

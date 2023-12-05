@@ -15,6 +15,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "jp.co.hololab.spirare.browser.httpserver",
+            "expression": "",
+            "define": "SPIRAREBROWSER_HTTPSERVER_PRESENT"
+        }
+    ],
     "noEngineReferences": false
 }
