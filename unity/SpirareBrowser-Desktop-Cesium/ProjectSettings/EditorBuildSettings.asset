@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/App/Scenes/SpirareBrowserCesium_3DTileTerrain.unity
+    path: Assets/App/Scenes/SpirareBrowserCesium_Photorealistic3DTilesTerrain.unity
     guid: 91b152273ddc08e4b8e3ad5f13ffaa02
   - enabled: 0
     path: Assets/App/Scenes/SpirareBrowserCesium_PLATEAU_Terrain.unity
