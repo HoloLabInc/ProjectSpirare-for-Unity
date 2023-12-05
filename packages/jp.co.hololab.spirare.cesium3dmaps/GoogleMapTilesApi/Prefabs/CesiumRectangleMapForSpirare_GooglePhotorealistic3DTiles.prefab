@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2978464675467185422}
   - component: {fileID: 7145315380624859446}
   m_Layer: 0
-  m_Name: GoogleMapTile
+  m_Name: GooglePhotorealistic3DTiles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -147,7 +147,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4238588975929779498, guid: 6d93fdac22fa57f4a873cf11831d1023, type: 3}
       propertyPath: m_Name
-      value: CesiumRectangleMapForSpirare_GoogleMapTiles
+      value: CesiumRectangleMapForSpirare_GoogleMapTilesApi
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d93fdac22fa57f4a873cf11831d1023, type: 3}
