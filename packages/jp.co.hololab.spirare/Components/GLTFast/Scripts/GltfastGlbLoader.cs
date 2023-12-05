@@ -218,7 +218,7 @@ namespace HoloLab.Spirare
 #if GLTFAST_6_0_0_OR_NEWER
         public Material GenerateMaterial(GLTFast.Schema.MaterialBase gltfMaterial, IGltfReadable gltf, bool pointsSupport = false)
         {
-            throw new NotImplementedException();
+            return new Material(occlusionMaterial);
         }
 #else
         public Material GenerateMaterial(GLTFast.Schema.Material gltfMaterial, IGltfReadable gltf, bool pointsSupport = false)
