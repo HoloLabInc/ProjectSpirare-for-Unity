@@ -57,8 +57,8 @@ MonoBehaviour:
   _maximumSimultaneousTileLoads: 20
   _maximumCachedBytes: 536870912
   _loadingDescendantLimit: 20
-  _enableFrustumCulling: 0
-  _enableFogCulling: 0
+  _enableFrustumCulling: 1
+  _enableFogCulling: 1
   _enforceCulledScreenSpaceError: 1
   _culledScreenSpaceError: 0
   _opaqueMaterial: {fileID: 2100000, guid: c8559b5fa6ec1c242b67c21c12acf6c2, type: 2}
