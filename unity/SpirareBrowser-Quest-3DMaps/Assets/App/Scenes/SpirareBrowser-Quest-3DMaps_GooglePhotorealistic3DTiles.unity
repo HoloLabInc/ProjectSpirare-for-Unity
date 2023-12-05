@@ -11164,7 +11164,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1824122917764930139, guid: 666da7be6a42ab243a9b470c36526f11, type: 3}
       propertyPath: m_Name
-      value: CesiumRectangleMapForSpirare_GoogleMapTiles
+      value: CesiumRectangleMapForSpirare_GooglePhotorealistic3DTiles
       objectReference: {fileID: 0}
     - target: {fileID: 1824122918014660200, guid: 666da7be6a42ab243a9b470c36526f11, type: 3}
       propertyPath: _maximumScreenSpaceError
