@@ -728,7 +728,7 @@ GameObject:
   - component: {fileID: 1973441937}
   - component: {fileID: 1973441936}
   m_Layer: 5
-  m_Name: Image
+  m_Name: GoogleLogo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
