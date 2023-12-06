@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3007009572124515678
+--- !u!1 &1481112247708100805
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,23 +8,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5762467013746581666}
-  - component: {fileID: 2978464675467185422}
-  - component: {fileID: 7145315380624859446}
+  - component: {fileID: 8136915270595700399}
+  - component: {fileID: 6573528583348797571}
+  - component: {fileID: 7870099498005019459}
   m_Layer: 0
-  m_Name: GoogleMapTile
+  m_Name: PLATEAU Bing Terrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5762467013746581666
+--- !u!4 &8136915270595700399
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3007009572124515678}
+  m_GameObject: {fileID: 1481112247708100805}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -33,22 +33,22 @@ Transform:
   m_Father: {fileID: 1824122918158158366}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2978464675467185422
+--- !u!114 &6573528583348797571
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3007009572124515678}
+  m_GameObject: {fileID: 1481112247708100805}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 844ac86b07dcfa3468f56da55d787510, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _showCreditsOnScreen: 1
-  _tilesetSource: 1
+  _showCreditsOnScreen: 0
+  _tilesetSource: 0
   _url: 
-  _ionAssetID: 0
+  _ionAssetID: 770371
   _ionAccessToken: 
   _maximumScreenSpaceError: 16
   _preloadAncestors: 1
@@ -60,7 +60,7 @@ MonoBehaviour:
   _enableFrustumCulling: 1
   _enableFogCulling: 1
   _enforceCulledScreenSpaceError: 1
-  _culledScreenSpaceError: 0
+  _culledScreenSpaceError: 64
   _opaqueMaterial: {fileID: 2100000, guid: c8559b5fa6ec1c242b67c21c12acf6c2, type: 2}
   _generateSmoothNormals: 0
   _pointCloudShading:
@@ -73,19 +73,25 @@ MonoBehaviour:
   _updateInEditor: 1
   _logSelectionStats: 0
   _createPhysicsMeshes: 0
---- !u!114 &7145315380624859446
+--- !u!114 &7870099498005019459
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3007009572124515678}
+  m_GameObject: {fileID: 1481112247708100805}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be74ac2e44d2fe544b30e99db39c9737, type: 3}
+  m_Script: {fileID: 11500000, guid: 0bca0907bd759be4e8b4d7ca5f84131c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  settings: {fileID: 11400000, guid: 7f948eef0a404a64eb497bdaced032b5, type: 2}
+  _showCreditsOnScreen: 1
+  _maximumScreenSpaceError: 2
+  _maximumTextureSize: 2048
+  _maximumSimultaneousTileLoads: 20
+  _subTileCacheBytes: 16777216
+  _ionAssetID: 2
+  _ionAccessToken: 
 --- !u!1001 &2558862721620213617
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -96,7 +102,7 @@ PrefabInstance:
     - target: {fileID: 4238588974971669967, guid: 6d93fdac22fa57f4a873cf11831d1023, type: 3}
       propertyPath: creditPrefab
       value: 
-      objectReference: {fileID: 9122001286912431394, guid: 433c754e6dfd85b48adfa46fda609c36, type: 3}
+      objectReference: {fileID: 9122001286912431394, guid: 1fe510c813a90154087e058efe8647d9, type: 3}
     - target: {fileID: 4238588974971669967, guid: 6d93fdac22fa57f4a873cf11831d1023, type: 3}
       propertyPath: showCreditText
       value: 1
@@ -147,7 +153,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4238588975929779498, guid: 6d93fdac22fa57f4a873cf11831d1023, type: 3}
       propertyPath: m_Name
-      value: CesiumRectangleMapForSpirare_GoogleMapTiles
+      value: CesiumRectangleMapForSpirare_PLATEAU-Bing
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d93fdac22fa57f4a873cf11831d1023, type: 3}

@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/App/Scenes/SpirareBrowser-Quest-3DMaps.unity
+    path: Assets/App/Scenes/SpirareBrowser-Quest-3DMaps_GooglePhotorealistic3DTiles.unity
     guid: 567fca633e82bb64faa75d8b9e6e9236
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 044c30111f103c54f95e4fc984f9bd01, type: 2}
