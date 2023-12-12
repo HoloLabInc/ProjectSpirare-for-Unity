@@ -60,16 +60,21 @@ namespace HoloLab.Spirare
 
             var data = CreateSplatData(fetchResult.Data);
 
-            var visualEffect = UnityEngine.Object.Instantiate(splatPrefab, parent);
-            // glbObject.AddComponent<>
+            var visualEffect = UnityEngine.Object.Instantiate(splatPrefab);
+            var splatObject = visualEffect.gameObject;
 
-            var binderBase = visualEffect.gameObject.AddComponent<VFXPropertyBinder>();
+            var binderBase = splatObject.AddComponent<VFXPropertyBinder>();
             var binder = binderBase.AddPropertyBinder<VFXSplatDataBinder>();
             binder.SplatData = data;
 
+            //await UniTask.Yield();
+            await UniTask.Delay(5000);
+            // Change position after VFX is initialized
+            splatObject.transform.SetParent(parent, worldPositionStays: false);
+
             InvokeLoadingStatusChanged(LoadingStatus.Loaded, onLoadingStatusChanged);
 
-            return (true, visualEffect.gameObject);
+            return (true, splatObject);
 
             // var glbInstance = glbObject.AddComponent<GltfastGlbInstance>();
 

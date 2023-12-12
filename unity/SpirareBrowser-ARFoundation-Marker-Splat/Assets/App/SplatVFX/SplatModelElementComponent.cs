@@ -3,14 +3,11 @@ using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using System.Linq;
-
-#if UNITY_EDITOR
-// using UnityEditor;
-#endif
+using UnityEngine.VFX;
 
 namespace HoloLab.Spirare
 {
-    public sealed class GltfastModelElementComponent : ModelElementComponent
+    public sealed class SplatModelElementComponent : ModelElementComponent
     {
         private bool localModel;
         private Animation _animation;
@@ -21,29 +18,26 @@ namespace HoloLab.Spirare
 
         private CameraVisibleHelper[] _cameraVisibleHelpers;
 
-        #region static properties and methods
-        // private static readonly GltfastGlbLoader glbLoader = new GltfastGlbLoader();
+        private VisualEffect splatPrefab;
 
-        /*
-        internal static void ClearGltfImportCache()
-        {
-            glbLoader.ClearGltfImportCache();
-        }
-        */
-        #endregion
+        private static readonly SplatVfxSplatLoader splatLoader = new SplatVfxSplatLoader();
 
         public override WrapMode WrapMode
         {
             get
             {
-                if (_animation == null) { return WrapMode.Loop; }
-                return _animation.wrapMode;
+                return WrapMode.Default;
             }
             set
             {
-                if (_animation == null) { return; }
-                _animation.wrapMode = value;
+                return;
             }
+        }
+
+        public void Initialize(PomlModelElement element, PomlLoadOptions loadOptions, VisualEffect splatPrefab)
+        {
+            Initialize(element, loadOptions);
+            this.splatPrefab = splatPrefab;
         }
 
         public override bool IsWithinCamera(Camera camera)
@@ -67,38 +61,18 @@ namespace HoloLab.Spirare
 
             currentDisplayType = DisplayType;
 
-            if (DisplayType == PomlDisplayType.None)
+            if (DisplayType != PomlDisplayType.Visible)
             {
                 return;
             }
 
             _cameraVisibleHelpers = null;
 
-            Material material = null;
-            if (DisplayType == PomlDisplayType.Occlusion)
-            {
-                material = loadOptions.OcclusionMaterial;
-            }
-
-            // var loadResult = await glbLoader.LoadAsync(transform, element.Src, material,
+            var loadResult = await splatLoader.LoadAsync(transform, element.Src, splatPrefab);
             // onLoadingStatusChanged: OnLoadingStatusChanged);
-            currentModelObject = loadResult.GlbObject;
+            currentModelObject = loadResult.SplatObject;
 
             _currentModelSource = element.Src;
-
-            _animation = GetComponentInChildren<Animation>(true);
-            if (_animation != null)
-            {
-                _animationStates = _animation.OfType<AnimationState>().ToArray();
-                _animation.Play();
-            }
-
-            _cameraVisibleHelpers = currentModelObject.GetComponentsInChildren<Renderer>(true)
-                .Select(renderer =>
-                {
-                    return renderer.gameObject.AddComponent<CameraVisibleHelper>();
-                })
-                .ToArray();
 
             await UniTask.Yield();
         }

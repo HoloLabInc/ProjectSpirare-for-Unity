@@ -1,10 +1,15 @@
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.VFX;
 
 namespace HoloLab.Spirare.Splat
 {
+    [CreateAssetMenu(fileName = "SplatModelElementObjectFactory", menuName = "Spirare/SplatModelElementObjectFactory")]
     public class SplatModelElementObjectFactory : ModelElementObjectFactory
     {
+        [SerializeField]
+        private VisualEffect splatPrefab;
+
         public override GameObject CreateObject(PomlModelElement element, PomlLoadOptions loadOptions, Transform parentTransform = null)
         {
             var go = new GameObject("model");
@@ -18,7 +23,7 @@ namespace HoloLab.Spirare.Splat
             pomlObjectElementComponent.Initialize(element);
 
             var modelElementComponent = go.AddComponent<SplatModelElementComponent>();
-            modelElementComponent.Initialize(element, loadOptions);
+            modelElementComponent.Initialize(element, loadOptions, splatPrefab);
             _ = modelElementComponent.UpdateGameObject();
 
             return go;

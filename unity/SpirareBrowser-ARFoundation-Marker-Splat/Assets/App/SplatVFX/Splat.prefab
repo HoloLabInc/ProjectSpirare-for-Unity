@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 5470159150008476763}
   - component: {fileID: 2772346103288078257}
   - component: {fileID: 3226782537865663776}
-  - component: {fileID: 6102335473537172987}
-  - component: {fileID: 4346358392727686181}
   m_Layer: 0
   m_Name: Splat
   m_TagString: Untagged
@@ -118,40 +116,3 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &6102335473537172987
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 404552135004275379}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdafc37f32b176349b1684c4455b98e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ExecuteInEditor: 1
-  m_Bindings:
-  - {fileID: 4346358392727686181}
-  m_VisualEffect: {fileID: 2772346103288078257}
---- !u!114 &4346358392727686181
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 404552135004275379}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b23e4c8461b80e458b0acda332b8a17, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SplatData: {fileID: 0}
-  _splatCountProperty:
-    m_Name: SplatCount
-  _positionBufferProperty:
-    m_Name: PositionBuffer
-  _axisBufferProperty:
-    m_Name: AxisBuffer
-  _colorBufferProperty:
-    m_Name: ColorBuffer
