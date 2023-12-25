@@ -136,7 +136,7 @@ PlayerSettings:
   vulkanEnableLateAcquireNextImage: 0
   vulkanEnableCommandBufferRecycling: 1
   loadStoreDebugModeEnabled: 0
-  bundleVersion: 0.1
+  bundleVersion: 1.1.0
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -161,6 +161,7 @@ PlayerSettings:
   applicationIdentifier:
     Android: jp.co.hololab.spirarebrowsermarkersplat
     Standalone: com.DefaultCompany.SpirareBrowser-ARFoundation-Marker-Splat
+    iPhone: jp.co.hololab.spirarebrowsermarkersplat
   buildNumber:
     Bratwurst: 0
     Standalone: 0
