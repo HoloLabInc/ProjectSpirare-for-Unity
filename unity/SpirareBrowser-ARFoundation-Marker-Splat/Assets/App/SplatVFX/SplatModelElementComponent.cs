@@ -9,10 +9,6 @@ namespace HoloLab.Spirare
 {
     public sealed class SplatModelElementComponent : ModelElementComponent
     {
-        private bool localModel;
-        private Animation _animation;
-        private AnimationState[] _animationStates;
-
         private GameObject currentModelObject;
         private string _currentModelSource;
 
@@ -21,6 +17,9 @@ namespace HoloLab.Spirare
         private VisualEffect splatPrefab;
 
         private static readonly SplatVfxSplatLoader splatLoader = new SplatVfxSplatLoader();
+
+        private const string hiddenLayerName = "SpirareHidden";
+        private int HiddenLayer => ConvertLayerNameToLayer(hiddenLayerName);
 
         public override WrapMode WrapMode
         {
@@ -38,6 +37,11 @@ namespace HoloLab.Spirare
         {
             Initialize(element, loadOptions);
             this.splatPrefab = splatPrefab;
+        }
+
+        private async void OnEnable()
+        {
+            await ShowSplatModel();
         }
 
         public override bool IsWithinCamera(Camera camera)
@@ -68,13 +72,16 @@ namespace HoloLab.Spirare
 
             _cameraVisibleHelpers = null;
 
-            var loadResult = await splatLoader.LoadAsync(transform, element.Src, splatPrefab);
+            var (success, splatObject) = await splatLoader.LoadAsync(transform, element.Src, splatPrefab);
             // onLoadingStatusChanged: OnLoadingStatusChanged);
-            currentModelObject = loadResult.SplatObject;
+            currentModelObject = splatObject;
+
+            if (success)
+            {
+                await ShowSplatModel();
+            }
 
             _currentModelSource = element.Src;
-
-            await UniTask.Yield();
         }
 
         public override bool ChangeAnimation(int animationIndex)
@@ -106,6 +113,40 @@ namespace HoloLab.Spirare
             return false;
         }
 
+        private async UniTask ShowSplatModel()
+        {
+            if (currentModelObject == null)
+            {
+                return;
+
+            }
+            currentModelObject.layer = HiddenLayer;
+            currentModelObject.transform.SetParent(null, worldPositionStays: false);
+
+            await UniTask.Yield();
+            await UniTask.Yield();
+
+            if (currentModelObject == null)
+            {
+                return;
+            }
+
+            currentModelObject.transform.SetParent(transform, worldPositionStays: false);
+            currentModelObject.layer = 0;
+        }
+
+        private static int ConvertLayerNameToLayer(string layerName)
+        {
+            var layer = LayerMask.NameToLayer(layerName);
+            if (layer == -1)
+            {
+                return 0;
+            }
+            else
+            {
+                return layer;
+            }
+        }
         /*
         private void OnLoadingStatusChanged(GltfastGlbLoader.LoadingStatus loadingStatus)
         {

@@ -67,7 +67,7 @@ namespace HoloLab.Spirare
             var binder = binderBase.AddPropertyBinder<VFXSplatDataBinder>();
             binder.SplatData = data;
 
-            await UniTask.Yield();
+            // await UniTask.Yield();
             //await UniTask.Delay(5000);
             // Change position after VFX is initialized
             splatObject.transform.SetParent(parent, worldPositionStays: false);
