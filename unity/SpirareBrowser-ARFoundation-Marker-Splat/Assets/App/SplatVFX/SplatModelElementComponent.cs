@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks;
 using System.Linq;
 using UnityEngine.VFX;
 
-namespace HoloLab.Spirare
+namespace HoloLab.Spirare.Splat
 {
     public sealed class SplatModelElementComponent : ModelElementComponent
     {
@@ -73,7 +73,6 @@ namespace HoloLab.Spirare
             _cameraVisibleHelpers = null;
 
             var (success, splatObject) = await splatLoader.LoadAsync(transform, element.Src, splatPrefab);
-            // onLoadingStatusChanged: OnLoadingStatusChanged);
             currentModelObject = splatObject;
 
             if (success)
@@ -147,35 +146,5 @@ namespace HoloLab.Spirare
                 return layer;
             }
         }
-        /*
-        private void OnLoadingStatusChanged(GltfastGlbLoader.LoadingStatus loadingStatus)
-        {
-            PomlElementLoadingStatus pomlElementLoadingStatus;
-            switch (loadingStatus)
-            {
-                case GltfastGlbLoader.LoadingStatus.DataFetching:
-                    pomlElementLoadingStatus = PomlElementLoadingStatus.DataFetching;
-                    break;
-                case GltfastGlbLoader.LoadingStatus.ModelLoading:
-                case GltfastGlbLoader.LoadingStatus.ModelInstantiating:
-                    pomlElementLoadingStatus = PomlElementLoadingStatus.Loading;
-                    break;
-                case GltfastGlbLoader.LoadingStatus.Loaded:
-                    pomlElementLoadingStatus = PomlElementLoadingStatus.Loaded;
-                    break;
-                case GltfastGlbLoader.LoadingStatus.DataFetchError:
-                    pomlElementLoadingStatus = PomlElementLoadingStatus.DataFetchError;
-                    break;
-                case GltfastGlbLoader.LoadingStatus.ModelLoadError:
-                case GltfastGlbLoader.LoadingStatus.ModelInstantiateError:
-                    pomlElementLoadingStatus = PomlElementLoadingStatus.LoadError;
-                    break;
-                default:
-                    return;
-            }
-
-            ChangeLoadingStatus(pomlElementLoadingStatus);
-        }
-        */
     }
 }
