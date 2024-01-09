@@ -29,7 +29,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
         private void CesiumRectangleMap_OnCenterChanged(GeodeticPosition position)
         {
-            inputField.text = $"{position.Latitude}, {position.Longitude}";
+            inputField.text = $"{position.Latitude}, {position.Longitude}, {position.EllipsoidalHeight}";
         }
 
         private void InputField_OnValueChanged(string text)
@@ -42,10 +42,19 @@ namespace HoloLab.Spirare.Cesium3DMaps
                 return;
             }
 
-            if (float.TryParse(tokens[0], out var latitude) && float.TryParse(tokens[1], out var longitude))
+            if (double.TryParse(tokens[0], out var latitude) && double.TryParse(tokens[1], out var longitude))
             {
                 var center = cesiumRectangleMap.Center;
                 cesiumRectangleMap.Center = new GeodeticPosition(latitude, longitude, center.EllipsoidalHeight);
+            }
+
+            if (tokens.Length >= 3)
+            {
+                if (float.TryParse(tokens[2], out var height))
+                {
+                    var center = cesiumRectangleMap.Center;
+                    cesiumRectangleMap.Center = new GeodeticPosition(center.Latitude, center.Longitude, height);
+                }
             }
         }
     }
