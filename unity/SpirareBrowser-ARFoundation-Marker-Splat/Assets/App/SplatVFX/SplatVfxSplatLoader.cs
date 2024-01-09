@@ -38,6 +38,7 @@ namespace HoloLab.Spirare.Splat
 
             var data = CreateSplatData(fetchResult.Data);
 
+            InvokeLoadingStatusChanged(LoadingStatus.ModelInstantiating, onLoadingStatusChanged);
             var visualEffect = UnityEngine.Object.Instantiate(splatPrefab);
             var splatObject = visualEffect.gameObject;
 
