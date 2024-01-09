@@ -4,7 +4,6 @@ using UnityEngine.VFX;
 
 namespace HoloLab.Spirare.Splat
 {
-    [CreateAssetMenu(fileName = "SplatModelElementObjectFactory", menuName = "Spirare/SplatModelElementObjectFactory")]
     public class SplatModelElementObjectFactory : ModelElementObjectFactory
     {
         [SerializeField]
