@@ -155,9 +155,9 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: jp.co.hololab.spirarebrowserimmersal
+    Android: jp.co.hololab.spirarebrowser.immersal
     Standalone: com.HoloLabInc..SpirareBrowser
-    iPhone: jp.co.hololab.spirarebrowserimmersal
+    iPhone: jp.co.hololab.spirarebrowser.immersal
   buildNumber:
     Standalone: 0
     iPhone: 0
