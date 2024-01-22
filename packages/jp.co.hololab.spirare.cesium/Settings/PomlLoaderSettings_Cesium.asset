@@ -17,7 +17,7 @@ MonoBehaviour:
   videoElementObjectFactory: {fileID: 11400000, guid: 0ae4360eac6bdf94080d5ce40deef69e, type: 2}
   textElementObjectFactory: {fileID: 11400000, guid: 67998f9a447c35949a09d1516008f906, type: 2}
   geometryElementObjectFactory: {fileID: 11400000, guid: e9a836534f9aa4d45a7f91027336e4fa, type: 2}
-  screenSpaceElementObjectFactory: {fileID: 0}
+  screenSpaceElementObjectFactory: {fileID: 11400000, guid: bc1373b381031d445a326684e927b381, type: 2}
   spaceReferenceElementComponentFactory: {fileID: 11400000, guid: d8b3599310e6f0542b6c5686a9009046, type: 2}
   geoReferenceElementComponentFactory: {fileID: 11400000, guid: 080afc39abf94c64ea13a444d0d10bd1, type: 2}
   scriptElementComponentFactory: {fileID: 11400000, guid: 13a611523b00a10449431cbd45349907, type: 2}
