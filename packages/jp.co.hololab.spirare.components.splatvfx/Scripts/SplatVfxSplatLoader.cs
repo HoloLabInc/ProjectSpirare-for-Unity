@@ -10,7 +10,7 @@ using Unity.Mathematics;
 using UnityEngine.VFX.Utility;
 using UnityEngine.VFX;
 
-namespace HoloLab.Spirare.Splat
+namespace HoloLab.Spirare.Components.SplatVfx
 {
     internal class SplatVfxSplatLoader
     {

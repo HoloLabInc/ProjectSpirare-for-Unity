@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.VFX;
 
-namespace HoloLab.Spirare.Splat
+namespace HoloLab.Spirare.Components.SplatVfx
 {
     public class SplatModelElementObjectFactory : ModelElementObjectFactory
     {
