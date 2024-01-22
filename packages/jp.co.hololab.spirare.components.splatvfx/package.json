@@ -1,0 +1,10 @@
+{
+    "name": "jp.co.hololab.spirare.components.splatvfx",
+    "version": "1.1.0",
+    "displayName": "Spirare Components Splat VFX",
+    "description": "Splat VFX components for Project Spirare",
+    "unity": "2022.3",
+    "author": {
+        "name": "HoloLab Inc."
+    }
+}
