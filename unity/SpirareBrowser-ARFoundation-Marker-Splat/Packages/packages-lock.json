@@ -394,6 +394,12 @@
       "source": "local",
       "dependencies": {}
     },
+    "jp.co.hololab.spirare.components.splatvfx": {
+      "version": "file:../../../packages/jp.co.hololab.spirare.components.splatvfx",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "jp.co.hololab.spirare.wasm": {
       "version": "file:../../../packages/jp.co.hololab.spirare.wasm",
       "depth": 0,

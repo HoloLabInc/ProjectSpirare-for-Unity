@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks;
 using System.Linq;
 using UnityEngine.VFX;
 
-namespace HoloLab.Spirare.Splat
+namespace HoloLab.Spirare.Components.SplatVfx
 {
     public sealed class SplatModelElementComponent : ModelElementComponent
     {
