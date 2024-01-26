@@ -1,3 +1,4 @@
+using Codice.CM.Common.Tree.Partial;
 using HoloLab.PositioningTools.GeographicCoordinate;
 using HoloLab.Spirare.Cesium3DMaps;
 using Microsoft.MixedReality.Toolkit.Input;
@@ -11,6 +12,14 @@ public class CesiumRectanbleMapManipulator : MonoBehaviour, IMixedRealityPointer
 {
     private CesiumRectangleMap cesiumRectangleMap;
 
+    private readonly List<PointerData> pointerDataList = new List<PointerData>();
+
+    private int PointerCount => pointerDataList.Count;
+
+    // private bool OnePointerManipulation => PointerCount == 1;
+
+    // private bool TwoPointersManipulation => PointerCount > 2;
+
     private void Start()
     {
         cesiumRectangleMap = GetComponentInParent<CesiumRectangleMap>();
@@ -20,7 +29,6 @@ public class CesiumRectanbleMapManipulator : MonoBehaviour, IMixedRealityPointer
 
         cesiumRectangleMap.OnMapSizeChanged += CesiumRectangleMap_OnMapSizeChanged;
     }
-
 
     private void CesiumRectangleMap_OnMapSizeChanged((float MapSizeX, float MapSizeZ) mapSize)
     {
@@ -43,8 +51,6 @@ public class CesiumRectanbleMapManipulator : MonoBehaviour, IMixedRealityPointer
             IsTargetPositionLockedOnFocusLock = pointer.IsTargetPositionLockedOnFocusLock;
         }
     }
-
-    private List<PointerData> pointerDataList = new List<PointerData>();
 
     private bool TryGetPointerData(uint pointerId, out PointerData pointerData)
     {
@@ -75,6 +81,25 @@ public class CesiumRectanbleMapManipulator : MonoBehaviour, IMixedRealityPointer
         return Vector3.Scale(localPoint, transform.transform.localScale);
     }
 
+
+    private Vector3 GetPointerLocalPosition(IMixedRealityPointer pointer)
+    {
+        var pointerLocalPosition = GetLocalPosition(pointer.Result.Details.Point);
+
+        if (pointer.Result.Details.LastRaycastHit.transform == transform)
+        {
+            return pointerLocalPosition;
+        }
+        else
+        {
+            var startPoint = GetLocalPosition(pointer.Result.StartPoint);
+
+            var t = Mathf.InverseLerp(startPoint.z, pointerLocalPosition.z, 0);
+            var pointerLocalPositionIntersectingOperatingPlane = Vector3.Lerp(startPoint, pointerLocalPosition, t);
+            return pointerLocalPositionIntersectingOperatingPlane;
+        }
+    }
+
     public void OnPointerDragged(MixedRealityPointerEventData eventData)
     {
         var pointer = eventData.Pointer;
@@ -83,33 +108,18 @@ public class CesiumRectanbleMapManipulator : MonoBehaviour, IMixedRealityPointer
             return;
         }
 
-        //var pointerLocalPosition = GetLocalPosition(pointer.Position);
-        //Debug.Log(pointer.Result.CurrentPointerTarget);
-        //Debug.Log(pointer.Result.Details.Object);
-        Debug.Log(pointer.Result.Details.LastRaycastHit.transform == transform);
-
-        Vector3 pointerLocalPosition;
-
-        if (pointer.Result.Details.LastRaycastHit.transform == transform)
-        {
-            pointerLocalPosition = GetLocalPosition(pointer.Result.Details.Point);
-        }
-        else
-        {
-            var startPoint = GetLocalPosition(pointer.Result.StartPoint);
-            var pointerLocalPosition2 = GetLocalPosition(pointer.Result.Details.Point);
-
-            var t = Mathf.InverseLerp(startPoint.z, pointerLocalPosition2.z, 0);
-            pointerLocalPosition = Vector3.Lerp(startPoint, pointerLocalPosition2, t);
-        }
-
-
+        var pointerLocalPosition = GetPointerLocalPosition(pointer);
         var deltaPosition = pointerLocalPosition - pointerData.PreviousPosition;
 
+        MoveCenter(deltaPosition);
+        if (PointerCount >= 2)
+        {
+            ChangeScale(pointerData, pointerLocalPosition);
+        }
+
         pointerData.PreviousPosition = pointerLocalPosition;
-
-
-        var panDelta = deltaPosition;
+        /*
+        var panDelta = deltaPosition / PointerCount;
         var mapScale = cesiumRectangleMap.Scale;
 
         var east = -panDelta.x / mapScale;
@@ -121,7 +131,42 @@ public class CesiumRectanbleMapManipulator : MonoBehaviour, IMixedRealityPointer
         }
 
         cesiumRectangleMap.Center = newCenterPosition;
+        */
+    }
 
+    private void ChangeScale(PointerData pointerData, Vector3 pointerLocalPosition)
+    {
+        var otherPointersSum = pointerDataList
+            .Where(x => x != pointerData)
+            .Aggregate(Vector3.zero, (s, x) => s + x.PreviousPosition);
+
+        var previousCenter = (otherPointersSum + pointerData.PreviousPosition) / PointerCount;
+        var currentCenter = (otherPointersSum + pointerLocalPosition) / PointerCount;
+
+        var previousDistance = (previousCenter - pointerData.PreviousPosition).magnitude;
+        var currentDistance = (currentCenter - pointerLocalPosition).magnitude;
+
+        var mapScale = cesiumRectangleMap.Scale / previousDistance * currentDistance;
+        var scaleCenter = (previousCenter + currentCenter) / 2;
+
+        cesiumRectangleMap.Scale = mapScale;
+    }
+
+    private void MoveCenter(Vector3 deltaPosition)
+    {
+        var panDelta = deltaPosition / PointerCount;
+        var mapScale = cesiumRectangleMap.Scale;
+
+        var east = -panDelta.x / mapScale;
+        var north = -panDelta.y / mapScale;
+        var newCenterEnu = new EnuPosition(east, north, 0);
+        if (cesiumRectangleMap.TryConvertEnuPositionToGeodeticPosition(newCenterEnu, out var newCenterPosition) == false)
+        {
+            return;
+        }
+
+        var currentCenter = cesiumRectangleMap.Center;
+        cesiumRectangleMap.Center = new GeodeticPosition(newCenterPosition.Latitude, newCenterPosition.Longitude, currentCenter.EllipsoidalHeight); ;
     }
 
     public void OnPointerUp(MixedRealityPointerEventData eventData)
