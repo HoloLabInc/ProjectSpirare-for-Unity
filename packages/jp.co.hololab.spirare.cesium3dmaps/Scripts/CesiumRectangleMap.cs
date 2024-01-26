@@ -117,6 +117,20 @@ namespace HoloLab.Spirare.Cesium3DMaps
             UpdateMap();
         }
 
+        public bool TryConvertEnuPositionToGeodeticPosition(EnuPosition enuPosition, out GeodeticPosition geodeticPosition)
+        {
+            var georeference = cesiumGeoreferences.FirstOrDefault();
+            if (georeference == null)
+            {
+                geodeticPosition = default;
+                return false;
+            }
+
+            var geodeticDouble3 = EnuToGeodetic(georeference, new double3(enuPosition.East, enuPosition.Up, enuPosition.North));
+            geodeticPosition = new GeodeticPosition(geodeticDouble3.y, geodeticDouble3.x, geodeticDouble3.z);
+            return true;
+        }
+
         private void AttachTilesetClipperForChildTilesets()
         {
             var tilesets = GetComponentsInChildren<Cesium3DTileset>();
