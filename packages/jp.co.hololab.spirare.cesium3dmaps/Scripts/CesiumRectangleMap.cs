@@ -88,6 +88,9 @@ namespace HoloLab.Spirare.Cesium3DMaps
         }
 
         [SerializeField]
+        private bool autoAdjustmentCenterHeight = true;
+
+        [SerializeField]
         private bool attatchTilesetClipperForChildTilesets = true;
 
         [SerializeField]
@@ -117,6 +120,105 @@ namespace HoloLab.Spirare.Cesium3DMaps
             LoadScale();
 
             UpdateMap();
+
+            StartCoroutine(AdjustMapHeightLoopCoroutine());
+        }
+
+        private RaycastHit[] hits = new RaycastHit[100];
+
+        private IEnumerator AdjustMapHeightLoopCoroutine()
+        {
+            while (true)
+            {
+                if (autoAdjustmentCenterHeight)
+                {
+                    AdjustMapHeight();
+                }
+
+                yield return new WaitForSeconds(1);
+            }
+        }
+
+        void OnDrawGizmos()
+        {
+            //Physics.queriesHitBackfaces = true;
+
+            // var raycastCenter = transform.position;
+            // Gizmos.DrawRay(raycastCenter, transform.up * 10);
+            var raycastCenter = transform.TransformPoint(new Vector3(0, -10, 0));
+            var lossyScale = transform.lossyScale;
+            var halfExtent = new Vector3(lossyScale.x * mapSizeX / 2, lossyScale.y, lossyScale.z * mapSizeZ / 2);
+            var layerMask = LayerMask.GetMask("Ignore Raycast");
+            Debug.Log(transform.rotation);
+            var hitCount = Physics.BoxCastNonAlloc(raycastCenter, halfExtent, transform.up, hits, transform.rotation, float.MaxValue, layerMask);
+
+            if (hitCount > 0)
+            {
+                Gizmos.DrawRay(raycastCenter, transform.up * hits[0].distance);
+                Gizmos.DrawWireCube(raycastCenter + transform.up * hits[0].distance, halfExtent * 2);
+            }
+        }
+
+        private void AdjustMapHeight()
+        {
+            // Physics.queriesHitBackfaces = true;
+
+            // TODO transform point y 
+
+            var mapCenterEcef = GeographicCoordinateConversion.GeodeticToEcef(Center);
+            var distanceFromEarthCenter = Mathf.Sqrt((float)(mapCenterEcef.X * mapCenterEcef.X + mapCenterEcef.Y * mapCenterEcef.Y + mapCenterEcef.Z * mapCenterEcef.Z));
+
+            Debug.Log(-distanceFromEarthCenter * scale);
+            var raycastCenter = transform.TransformPoint(new Vector3(0, -distanceFromEarthCenter * scale, 0));
+            var lossyScale = transform.lossyScale;
+            var halfExtent = new Vector3(lossyScale.x * mapSizeX / 2, lossyScale.y, lossyScale.z * mapSizeZ / 2);
+            var layerMask = LayerMask.GetMask("Ignore Raycast");
+            var hitCount = Physics.BoxCastNonAlloc(raycastCenter, halfExtent, transform.up, hits, transform.rotation, float.MaxValue, layerMask);
+
+            Debug.Log($"hitCount: {hitCount}");
+            for (var i = 0; i < hitCount; i++)
+            {
+                Debug.Log(hits[i].transform.gameObject.name);
+            }
+
+            int? nearestHitIndex = null;
+            var nearestDistance = float.MaxValue;
+
+            for (var i = 0; i < hitCount; i++)
+            {
+                if (hits[i].distance < nearestDistance && IsDescendant(hits[i].transform, transform))
+                {
+                    nearestHitIndex = i;
+                    nearestDistance = hits[i].distance;
+                }
+            }
+
+            if (nearestHitIndex.HasValue)
+            {
+                var hitPointLocal = transform.InverseTransformPoint(hits[nearestHitIndex.Value].point);
+                Debug.Log(hitPointLocal);
+
+                var heightChange = hitPointLocal.y / scale;
+                Debug.Log($"change: {heightChange}");
+
+                var newCenter = new GeodeticPosition(center.Latitude, center.Longitude, center.EllipsoidalHeight + heightChange);
+                Center = newCenter;
+            }
+        }
+
+        private static bool IsDescendant(Transform target, Transform parent)
+        {
+            var targetParent = target.parent;
+            while (targetParent != null)
+            {
+                Debug.Log(targetParent.gameObject.name);
+                if (targetParent == parent)
+                {
+                    return true;
+                }
+                targetParent = targetParent.parent;
+            }
+            return false;
         }
 
         public GeodeticPosition ConvertEnuPositionToGeodeticPosition(EnuPosition enuPosition)
