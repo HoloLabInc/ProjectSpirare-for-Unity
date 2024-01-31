@@ -139,6 +139,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
             }
         }
 
+        /*
         void OnDrawGizmos()
         {
             //Physics.queriesHitBackfaces = true;
@@ -157,13 +158,10 @@ namespace HoloLab.Spirare.Cesium3DMaps
                 Gizmos.DrawWireCube(raycastCenter + transform.up * hits[0].distance, halfExtent * 2);
             }
         }
+        */
 
         private void AdjustMapHeight()
         {
-            Physics.queriesHitBackfaces = true;
-
-            // TODO transform point y 
-
             var mapCenterEcef = GeographicCoordinateConversion.GeodeticToEcef(Center);
             var distanceFromEarthCenter = Mathf.Sqrt((float)(mapCenterEcef.X * mapCenterEcef.X + mapCenterEcef.Y * mapCenterEcef.Y + mapCenterEcef.Z * mapCenterEcef.Z));
 
@@ -172,7 +170,11 @@ namespace HoloLab.Spirare.Cesium3DMaps
             var lossyScale = transform.lossyScale;
             var halfExtent = new Vector3(lossyScale.x * mapSizeX / 2, lossyScale.y, lossyScale.z * mapSizeZ / 2);
             var layerMask = LayerMask.GetMask("Ignore Raycast");
+
+            var queriesHitBackfaces = Physics.queriesHitBackfaces;
+            Physics.queriesHitBackfaces = true;
             var hitCount = Physics.BoxCastNonAlloc(raycastCenter, halfExtent, transform.up, hits, transform.rotation, float.MaxValue, layerMask);
+            Physics.queriesHitBackfaces = queriesHitBackfaces;
 
             Debug.Log($"hitCount: {hitCount}");
             for (var i = 0; i < hitCount; i++)
