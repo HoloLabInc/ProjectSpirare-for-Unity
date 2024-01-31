@@ -56,12 +56,18 @@ namespace HoloLab.Spirare.Cesium3DMaps
             }
             set
             {
-                scale = Mathf.Max(value, MinimumScale);
+                scale = Mathf.Clamp(value, scaleMin, scaleMax);
                 SaveScale();
                 UpdateMap();
                 InvokeOnScaleChanged(scale);
             }
         }
+
+        [SerializeField]
+        private float scaleMin = 1 / 1_000_000f;
+
+        [SerializeField]
+        private float scaleMax = 1;
 
         [SerializeField]
         private GeodeticPositionForInspector center;
@@ -89,8 +95,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
         private CesiumGeoreference[] cesiumGeoreferences;
         private CesiumGeodeticAreaExcluder[] cesiumGeodeticAreaExcluders;
-
-        private const float MinimumScale = 0.000001f;
 
         private const string PlayerPrefs_CenterKey = "CesiumRectangleMap_Center";
         private const string PlayerPrefs_ScaleKey = "CesiumRectangleMap_Scale";

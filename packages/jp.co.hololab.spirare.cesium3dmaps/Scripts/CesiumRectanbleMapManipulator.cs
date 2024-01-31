@@ -1,5 +1,4 @@
 using HoloLab.PositioningTools.GeographicCoordinate;
-using HoloLab.Spirare.Cesium3DMaps;
 using Microsoft.MixedReality.Toolkit.Input;
 using System;
 using System.Collections;
@@ -88,7 +87,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
             pointerData.PreviousPosition = pointerLocalPosition;
         }
 
-
         public void OnPointerUp(MixedRealityPointerEventData eventData)
         {
             var pointer = eventData.Pointer;
@@ -142,18 +140,8 @@ namespace HoloLab.Spirare.Cesium3DMaps
         private void ChangeMapCenter(Vector3 deltaPosition)
         {
             var panDelta = deltaPosition / PointerCount;
-            var mapScale = cesiumRectangleMap.Scale;
 
-            var east = -panDelta.x * cesiumRectangleMap.MapSizeX / mapScale;
-            var north = -panDelta.y * cesiumRectangleMap.MapSizeZ / mapScale;
-            var newCenterEnu = new EnuPosition(east, north, 0);
-
-            /*
-            if (cesiumRectangleMap.TryConvertEnuPositionToGeodeticPosition(newCenterEnu, out var newCenterPosition) == false)
-            {
-                return;
-            }
-            */
+            var newCenterEnu = ConvertLocalPositionToEnuPosition(new Vector3(-panDelta.x, -panDelta.y, 0));
             var newCenterPosition = cesiumRectangleMap.ConvertEnuPositionToGeodeticPosition(newCenterEnu);
 
             var currentCenter = cesiumRectangleMap.Center;
