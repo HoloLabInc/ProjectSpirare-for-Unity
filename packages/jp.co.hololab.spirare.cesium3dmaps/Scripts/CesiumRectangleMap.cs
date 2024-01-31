@@ -117,6 +117,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
             UpdateMap();
         }
 
+        /*
         public bool TryConvertEnuPositionToGeodeticPosition(EnuPosition enuPosition, out GeodeticPosition geodeticPosition)
         {
             var georeference = cesiumGeoreferences.FirstOrDefault();
@@ -129,6 +130,11 @@ namespace HoloLab.Spirare.Cesium3DMaps
             var geodeticDouble3 = EnuToGeodetic(georeference, new double3(enuPosition.East, enuPosition.Up, enuPosition.North));
             geodeticPosition = new GeodeticPosition(geodeticDouble3.y, geodeticDouble3.x, geodeticDouble3.z);
             return true;
+        }
+        */
+        public GeodeticPosition ConvertEnuPositionToGeodeticPosition(EnuPosition enuPosition)
+        {
+            return EnuToGeodetic(enuPosition);
         }
 
         public void ScaleAroundEnuPosition(float mapScale, EnuPosition scaleCenter)
@@ -224,22 +230,27 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
         private void UpdateCesiumGeodeticAreaExcluders()
         {
+            /*
             var georeference = cesiumGeoreferences.FirstOrDefault();
             if (georeference == null)
             {
                 return;
             }
+            */
 
-            var upperLeftLonLatHeight = EnuToGeodetic(georeference, new double3(-mapSizeX / 2 / scale, 0, mapSizeZ / 2 / scale));
-            var lowerRightLonLatHeight = EnuToGeodetic(georeference, new double3(mapSizeX / 2 / scale, 0, -mapSizeZ / 2 / scale));
+            //var upperLeftLonLatHeight = EnuToGeodetic(georeference, new double3(-mapSizeX / 2 / scale, 0, mapSizeZ / 2 / scale));
+            //var lowerRightLonLatHeight = EnuToGeodetic(georeference, new double3(mapSizeX / 2 / scale, 0, -mapSizeZ / 2 / scale));
+
+            var upperLeftLonLatHeight = EnuToGeodetic(new EnuPosition(-mapSizeX / 2 / scale, mapSizeZ / 2 / scale, 0));
+            var lowerRightLonLatHeight = EnuToGeodetic(new EnuPosition(mapSizeX / 2 / scale, -mapSizeZ / 2 / scale, 0));
 
             foreach (var cesiumGeodeticAreaExcluder in cesiumGeodeticAreaExcluders)
             {
-                cesiumGeodeticAreaExcluder.UpperLeftLongitude = upperLeftLonLatHeight.x;
-                cesiumGeodeticAreaExcluder.UpperLeftLatitude = upperLeftLonLatHeight.y;
+                cesiumGeodeticAreaExcluder.UpperLeftLongitude = upperLeftLonLatHeight.Longitude;
+                cesiumGeodeticAreaExcluder.UpperLeftLatitude = upperLeftLonLatHeight.Latitude;
 
-                cesiumGeodeticAreaExcluder.LowerRightLongitude = lowerRightLonLatHeight.x;
-                cesiumGeodeticAreaExcluder.LowerRightLatitude = lowerRightLonLatHeight.y;
+                cesiumGeodeticAreaExcluder.LowerRightLongitude = lowerRightLonLatHeight.Longitude;
+                cesiumGeodeticAreaExcluder.LowerRightLatitude = lowerRightLonLatHeight.Latitude;
             }
         }
 
@@ -279,11 +290,23 @@ namespace HoloLab.Spirare.Cesium3DMaps
             }
         }
 
+        /*
         private static double3 EnuToGeodetic(CesiumGeoreference georeference, double3 enuPosition)
         {
             var ecef = georeference.TransformUnityPositionToEarthCenteredEarthFixed(enuPosition);
             var lonLatHeight = CesiumWgs84Ellipsoid.EarthCenteredEarthFixedToLongitudeLatitudeHeight(ecef);
             return lonLatHeight;
+        }
+        */
+
+        private GeodeticPosition EnuToGeodetic(EnuPosition enuPosition)
+        {
+            return EnuToGeodetic(enuPosition, Center);
+        }
+
+        private static GeodeticPosition EnuToGeodetic(EnuPosition enuPosition, GeodeticPosition originPosition)
+        {
+            return GeographicCoordinateConversion.EnuToGeodetic(enuPosition, originPosition);
         }
     }
 }
