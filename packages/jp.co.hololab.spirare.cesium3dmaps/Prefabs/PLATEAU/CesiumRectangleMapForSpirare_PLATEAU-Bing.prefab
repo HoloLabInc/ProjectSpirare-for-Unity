@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8136915270595700399}
   - component: {fileID: 6573528583348797571}
   - component: {fileID: 7870099498005019459}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: PLATEAU Bing Terrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
