@@ -126,8 +126,8 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
         public void ScaleAroundEnuPosition(float mapScale, EnuPosition scaleCenter)
         {
-            var scaleCenterGeodetic = GeographicCoordinateConversion.EnuToGeodetic(scaleCenter, Center);
-            var scaleCenterToCurrentMapCenter = GeographicCoordinateConversion.GeodeticToEnu(Center, scaleCenterGeodetic);
+            var scaleCenterGeodetic = EnuToGeodetic(scaleCenter, Center);
+            var scaleCenterToCurrentMapCenter = GeodeticToEnu(Center, scaleCenterGeodetic);
 
             var relativeScale = (double)Scale / mapScale;
             var scaleCenterToNewMapCenter = new EnuPosition(
@@ -135,7 +135,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
                 scaleCenterToCurrentMapCenter.North * relativeScale,
                 scaleCenterToCurrentMapCenter.Up * relativeScale);
 
-            var newMapCenter = GeographicCoordinateConversion.EnuToGeodetic(scaleCenterToNewMapCenter, scaleCenterGeodetic);
+            var newMapCenter = EnuToGeodetic(scaleCenterToNewMapCenter, scaleCenterGeodetic);
             var newMapCenterWithSameHeight = new GeodeticPosition(newMapCenter.Latitude, newMapCenter.Longitude, Center.EllipsoidalHeight);
 
             Center = newMapCenterWithSameHeight;
@@ -274,6 +274,11 @@ namespace HoloLab.Spirare.Cesium3DMaps
         private static GeodeticPosition EnuToGeodetic(EnuPosition enuPosition, GeodeticPosition originPosition)
         {
             return GeographicCoordinateConversion.EnuToGeodetic(enuPosition, originPosition);
+        }
+
+        private static EnuPosition GeodeticToEnu(GeodeticPosition geodeticPosition, GeodeticPosition originPosition)
+        {
+            return GeographicCoordinateConversion.GeodeticToEnu(geodeticPosition, originPosition);
         }
     }
 }
