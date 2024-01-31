@@ -5,8 +5,6 @@ using HoloLab.Spirare.Cesium;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace HoloLab.Spirare.Cesium3DMaps
@@ -117,21 +115,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
             UpdateMap();
         }
 
-        /*
-        public bool TryConvertEnuPositionToGeodeticPosition(EnuPosition enuPosition, out GeodeticPosition geodeticPosition)
-        {
-            var georeference = cesiumGeoreferences.FirstOrDefault();
-            if (georeference == null)
-            {
-                geodeticPosition = default;
-                return false;
-            }
-
-            var geodeticDouble3 = EnuToGeodetic(georeference, new double3(enuPosition.East, enuPosition.Up, enuPosition.North));
-            geodeticPosition = new GeodeticPosition(geodeticDouble3.y, geodeticDouble3.x, geodeticDouble3.z);
-            return true;
-        }
-        */
         public GeodeticPosition ConvertEnuPositionToGeodeticPosition(EnuPosition enuPosition)
         {
             return EnuToGeodetic(enuPosition);
@@ -230,17 +213,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
         private void UpdateCesiumGeodeticAreaExcluders()
         {
-            /*
-            var georeference = cesiumGeoreferences.FirstOrDefault();
-            if (georeference == null)
-            {
-                return;
-            }
-            */
-
-            //var upperLeftLonLatHeight = EnuToGeodetic(georeference, new double3(-mapSizeX / 2 / scale, 0, mapSizeZ / 2 / scale));
-            //var lowerRightLonLatHeight = EnuToGeodetic(georeference, new double3(mapSizeX / 2 / scale, 0, -mapSizeZ / 2 / scale));
-
             var upperLeftLonLatHeight = EnuToGeodetic(new EnuPosition(-mapSizeX / 2 / scale, mapSizeZ / 2 / scale, 0));
             var lowerRightLonLatHeight = EnuToGeodetic(new EnuPosition(mapSizeX / 2 / scale, -mapSizeZ / 2 / scale, 0));
 
@@ -289,15 +261,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
                 Debug.LogException(ex);
             }
         }
-
-        /*
-        private static double3 EnuToGeodetic(CesiumGeoreference georeference, double3 enuPosition)
-        {
-            var ecef = georeference.TransformUnityPositionToEarthCenteredEarthFixed(enuPosition);
-            var lonLatHeight = CesiumWgs84Ellipsoid.EarthCenteredEarthFixedToLongitudeLatitudeHeight(ecef);
-            return lonLatHeight;
-        }
-        */
 
         private GeodeticPosition EnuToGeodetic(EnuPosition enuPosition)
         {
