@@ -149,7 +149,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
             var lossyScale = transform.lossyScale;
             var halfExtent = new Vector3(lossyScale.x * mapSizeX / 2, lossyScale.y, lossyScale.z * mapSizeZ / 2);
             var layerMask = LayerMask.GetMask("Ignore Raycast");
-            Debug.Log(transform.rotation);
             var hitCount = Physics.BoxCastNonAlloc(raycastCenter, halfExtent, transform.up, hits, transform.rotation, float.MaxValue, layerMask);
 
             if (hitCount > 0)
