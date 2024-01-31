@@ -48,7 +48,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
             transform.localScale = localScale;
         }
 
-
         public void OnPointerDown(MixedRealityPointerEventData eventData)
         {
             if (TryGetPointerData(eventData.Pointer.PointerId, out _))
@@ -157,8 +156,10 @@ namespace HoloLab.Spirare.Cesium3DMaps
             var previousCenter = (otherPointersSum + pointerData.PreviousPosition) / PointerCount;
             var currentCenter = (otherPointersSum + pointerLocalPosition) / PointerCount;
 
-            var previousDistance = (previousCenter - pointerData.PreviousPosition).magnitude;
-            var currentDistance = (currentCenter - pointerLocalPosition).magnitude;
+            // To prevent sudden changes in scale, use threshold for pointer distance.
+            var distanceThreshold = 0.01f;
+            var previousDistance = Mathf.Max((previousCenter - pointerData.PreviousPosition).magnitude, distanceThreshold);
+            var currentDistance = Mathf.Max((currentCenter - pointerLocalPosition).magnitude, distanceThreshold);
 
             var mapScale = cesiumRectangleMap.Scale / previousDistance * currentDistance;
             var scaleCenter = (previousCenter + currentCenter) / 2;
