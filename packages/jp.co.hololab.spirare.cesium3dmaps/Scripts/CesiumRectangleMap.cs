@@ -160,14 +160,14 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
         private void AdjustMapHeight()
         {
-            // Physics.queriesHitBackfaces = true;
+            Physics.queriesHitBackfaces = true;
 
             // TODO transform point y 
 
             var mapCenterEcef = GeographicCoordinateConversion.GeodeticToEcef(Center);
             var distanceFromEarthCenter = Mathf.Sqrt((float)(mapCenterEcef.X * mapCenterEcef.X + mapCenterEcef.Y * mapCenterEcef.Y + mapCenterEcef.Z * mapCenterEcef.Z));
 
-            Debug.Log(-distanceFromEarthCenter * scale);
+            //Debug.Log(-distanceFromEarthCenter * scale);
             var raycastCenter = transform.TransformPoint(new Vector3(0, -distanceFromEarthCenter * scale, 0));
             var lossyScale = transform.lossyScale;
             var halfExtent = new Vector3(lossyScale.x * mapSizeX / 2, lossyScale.y, lossyScale.z * mapSizeZ / 2);
@@ -177,7 +177,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
             Debug.Log($"hitCount: {hitCount}");
             for (var i = 0; i < hitCount; i++)
             {
-                Debug.Log(hits[i].transform.gameObject.name);
+                // Debug.Log(hits[i].transform.gameObject.name);
             }
 
             int? nearestHitIndex = null;
@@ -192,11 +192,20 @@ namespace HoloLab.Spirare.Cesium3DMaps
                 }
             }
 
+            Debug.Log($"hitPointY: {-distanceFromEarthCenter * scale + nearestDistance}");
+
             if (nearestHitIndex.HasValue)
             {
-                var hitPointLocal = transform.InverseTransformPoint(hits[nearestHitIndex.Value].point);
-                Debug.Log(hitPointLocal);
+                Debug.Log(hits[nearestHitIndex.Value].point.ToString("f7"));
 
+                // TODO threshold to prevent shaking
+                var hitPointLocal = transform.InverseTransformPoint(hits[nearestHitIndex.Value].point);
+                Debug.Log(hitPointLocal.ToString("f7"));
+
+                if (0 <= hitPointLocal.y && hitPointLocal.y <= 0.005)
+                {
+                    return;
+                }
                 var heightChange = hitPointLocal.y / scale;
                 Debug.Log($"change: {heightChange}");
 
@@ -210,7 +219,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
             var targetParent = target.parent;
             while (targetParent != null)
             {
-                Debug.Log(targetParent.gameObject.name);
+                // Debug.Log(targetParent.gameObject.name);
                 if (targetParent == parent)
                 {
                     return true;
