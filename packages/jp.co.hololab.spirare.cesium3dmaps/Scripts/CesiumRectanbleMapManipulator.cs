@@ -80,11 +80,11 @@ public class CesiumRectanbleMapManipulator : MonoBehaviour, IMixedRealityPointer
         var pointerLocalPosition = GetPointerLocalPosition(pointer);
         var deltaPosition = pointerLocalPosition - pointerData.PreviousPosition;
 
-        MoveCenter(deltaPosition);
+        ChangeMapCenter(deltaPosition);
 
         if (PointerCount >= 2)
         {
-            ChangeScale(pointerData, pointerLocalPosition);
+            ChangeMapScale(pointerData, pointerLocalPosition);
         }
 
         pointerData.PreviousPosition = pointerLocalPosition;
@@ -141,7 +141,7 @@ public class CesiumRectanbleMapManipulator : MonoBehaviour, IMixedRealityPointer
         return pointerData != null;
     }
 
-    private void MoveCenter(Vector3 deltaPosition)
+    private void ChangeMapCenter(Vector3 deltaPosition)
     {
         var panDelta = deltaPosition / PointerCount;
         var mapScale = cesiumRectangleMap.Scale;
@@ -158,7 +158,7 @@ public class CesiumRectanbleMapManipulator : MonoBehaviour, IMixedRealityPointer
         cesiumRectangleMap.Center = new GeodeticPosition(newCenterPosition.Latitude, newCenterPosition.Longitude, currentCenter.EllipsoidalHeight);
     }
 
-    private void ChangeScale(PointerData pointerData, Vector3 pointerLocalPosition)
+    private void ChangeMapScale(PointerData pointerData, Vector3 pointerLocalPosition)
     {
         var otherPointersSum = pointerDataList
             .Where(x => x != pointerData)
@@ -173,6 +173,18 @@ public class CesiumRectanbleMapManipulator : MonoBehaviour, IMixedRealityPointer
         var mapScale = cesiumRectangleMap.Scale / previousDistance * currentDistance;
         var scaleCenter = (previousCenter + currentCenter) / 2;
 
-        cesiumRectangleMap.Scale = mapScale;
+        var scaleCenterEnu = ConvertLocalPositionToEnuPosition(scaleCenter);
+        cesiumRectangleMap.ScaleAroundEnuPosition(mapScale, scaleCenterEnu);
+    }
+
+    private EnuPosition ConvertLocalPositionToEnuPosition(Vector3 localPosition)
+    {
+        var mapScale = cesiumRectangleMap.Scale;
+
+        var east = localPosition.x * cesiumRectangleMap.MapSizeX / mapScale;
+        var north = localPosition.y * cesiumRectangleMap.MapSizeZ / mapScale;
+        var up = localPosition.z / mapScale;
+
+        return new EnuPosition(east, north, up);
     }
 }

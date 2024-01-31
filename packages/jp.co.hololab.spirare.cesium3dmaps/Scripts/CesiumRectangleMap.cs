@@ -131,6 +131,24 @@ namespace HoloLab.Spirare.Cesium3DMaps
             return true;
         }
 
+        public void ScaleAroundEnuPosition(float mapScale, EnuPosition scaleCenter)
+        {
+            var scaleCenterGeodetic = GeographicCoordinateConversion.EnuToGeodetic(scaleCenter, Center);
+            var scaleCenterToCurrentMapCenter = GeographicCoordinateConversion.GeodeticToEnu(Center, scaleCenterGeodetic);
+
+            var relativeScale = (double)Scale / mapScale;
+            var scaleCenterToNewMapCenter = new EnuPosition(
+                scaleCenterToCurrentMapCenter.East * relativeScale,
+                scaleCenterToCurrentMapCenter.North * relativeScale,
+                scaleCenterToCurrentMapCenter.Up * relativeScale);
+
+            var newMapCenter = GeographicCoordinateConversion.EnuToGeodetic(scaleCenterToNewMapCenter, scaleCenterGeodetic);
+            var newMapCenterWithSameHeight = new GeodeticPosition(newMapCenter.Latitude, newMapCenter.Longitude, Center.EllipsoidalHeight);
+
+            Center = newMapCenterWithSameHeight;
+            Scale = mapScale;
+        }
+
         private void AttachTilesetClipperForChildTilesets()
         {
             var tilesets = GetComponentsInChildren<Cesium3DTileset>();
