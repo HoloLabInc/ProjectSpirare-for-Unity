@@ -1,4 +1,3 @@
-using Codice.CM.Common.Tree.Partial;
 using HoloLab.PositioningTools.GeographicCoordinate;
 using HoloLab.Spirare.Cesium3DMaps;
 using Microsoft.MixedReality.Toolkit.Input;
@@ -78,7 +77,7 @@ public class CesiumRectanbleMapManipulator : MonoBehaviour, IMixedRealityPointer
     private Vector3 GetLocalPosition(Vector3 worldPosition)
     {
         var localPoint = transform.InverseTransformPoint(worldPosition);
-        return Vector3.Scale(localPoint, transform.transform.localScale);
+        return localPoint;
     }
 
 
@@ -118,20 +117,6 @@ public class CesiumRectanbleMapManipulator : MonoBehaviour, IMixedRealityPointer
         }
 
         pointerData.PreviousPosition = pointerLocalPosition;
-        /*
-        var panDelta = deltaPosition / PointerCount;
-        var mapScale = cesiumRectangleMap.Scale;
-
-        var east = -panDelta.x / mapScale;
-        var north = -panDelta.y / mapScale;
-        var newCenterEnu = new EnuPosition(east, north, 0);
-        if (cesiumRectangleMap.TryConvertEnuPositionToGeodeticPosition(newCenterEnu, out var newCenterPosition) == false)
-        {
-            return;
-        }
-
-        cesiumRectangleMap.Center = newCenterPosition;
-        */
     }
 
     private void ChangeScale(PointerData pointerData, Vector3 pointerLocalPosition)
@@ -157,8 +142,8 @@ public class CesiumRectanbleMapManipulator : MonoBehaviour, IMixedRealityPointer
         var panDelta = deltaPosition / PointerCount;
         var mapScale = cesiumRectangleMap.Scale;
 
-        var east = -panDelta.x / mapScale;
-        var north = -panDelta.y / mapScale;
+        var east = -panDelta.x * cesiumRectangleMap.MapSizeX / mapScale;
+        var north = -panDelta.y * cesiumRectangleMap.MapSizeZ / mapScale;
         var newCenterEnu = new EnuPosition(east, north, 0);
         if (cesiumRectangleMap.TryConvertEnuPositionToGeodeticPosition(newCenterEnu, out var newCenterPosition) == false)
         {
@@ -166,7 +151,7 @@ public class CesiumRectanbleMapManipulator : MonoBehaviour, IMixedRealityPointer
         }
 
         var currentCenter = cesiumRectangleMap.Center;
-        cesiumRectangleMap.Center = new GeodeticPosition(newCenterPosition.Latitude, newCenterPosition.Longitude, currentCenter.EllipsoidalHeight); ;
+        cesiumRectangleMap.Center = new GeodeticPosition(newCenterPosition.Latitude, newCenterPosition.Longitude, currentCenter.EllipsoidalHeight);
     }
 
     public void OnPointerUp(MixedRealityPointerEventData eventData)
@@ -186,5 +171,6 @@ public class CesiumRectanbleMapManipulator : MonoBehaviour, IMixedRealityPointer
 
     public void OnPointerClicked(MixedRealityPointerEventData eventData)
     {
+        // Do nothing
     }
 }
