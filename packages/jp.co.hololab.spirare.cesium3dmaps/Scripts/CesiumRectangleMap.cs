@@ -174,6 +174,14 @@ namespace HoloLab.Spirare.Cesium3DMaps
             }
         }
 
+        private void OnApplicationFocus(bool focus)
+        {
+            if (focus == false)
+            {
+                PlayerPrefs.Save();
+            }
+        }
+
         public GeodeticPosition ConvertEnuPositionToGeodeticPosition(EnuPosition enuPosition)
         {
             return EnuToGeodetic(enuPosition);
@@ -211,6 +219,9 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
         private IEnumerator AdjustMapHeightLoopCoroutine()
         {
+            // Wait a few seconds for initial loading
+            yield return new WaitForSeconds(3f);
+
             while (true)
             {
                 if (autoAdjustCenterHeight)
