@@ -9593,7 +9593,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c65c9dd2f312b8d41b8849d58e1053fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  alignmentType: 0
+  alignmentType: 2
   containerObject: {fileID: 0}
 --- !u!4 &1848120909
 Transform:
@@ -11116,7 +11116,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1824122917764930136, guid: 666da7be6a42ab243a9b470c36526f11, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.1
+      value: -0.75
       objectReference: {fileID: 0}
     - target: {fileID: 1824122917764930136, guid: 666da7be6a42ab243a9b470c36526f11, type: 3}
       propertyPath: m_LocalPosition.z
