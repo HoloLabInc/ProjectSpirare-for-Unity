@@ -155,7 +155,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
                 if (Mathf.Abs((float)center.EllipsoidalHeight - centerTargetEllipsoidalHeight.Value) * scale < 0.001)
                 {
-                    Debug.LogWarning("lerp finished");
                     newHeight = centerTargetEllipsoidalHeight.Value;
                     centerTargetEllipsoidalHeight = null;
                 }
@@ -169,29 +168,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
                 Center = newCenter;
             }
         }
-
-
-        /*
-        void OnDrawGizmos()
-        {
-            //Physics.queriesHitBackfaces = true;
-
-            // var raycastCenter = transform.position;
-            // Gizmos.DrawRay(raycastCenter, transform.up * 10);
-            var raycastCenter = transform.TransformPoint(new Vector3(0, -10, 0));
-            var lossyScale = transform.lossyScale;
-            var halfExtent = new Vector3(lossyScale.x * mapSizeX / 2, lossyScale.y, lossyScale.z * mapSizeZ / 2);
-            var layerMask = LayerMask.GetMask("Ignore Raycast");
-            var hitCount = Physics.BoxCastNonAlloc(raycastCenter, halfExtent, transform.up, hits, transform.rotation, float.MaxValue, layerMask);
-
-            if (hitCount > 0)
-            {
-                Gizmos.DrawRay(raycastCenter, transform.up * hits[0].distance);
-                Gizmos.DrawWireCube(raycastCenter + transform.up * hits[0].distance, halfExtent * 2);
-            }
-        }
-        */
-
 
         public GeodeticPosition ConvertEnuPositionToGeodeticPosition(EnuPosition enuPosition)
         {
@@ -247,8 +223,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
             var distanceFromEarthCenter = Mathf.Sqrt((float)(mapCenterEcef.X * mapCenterEcef.X + mapCenterEcef.Y * mapCenterEcef.Y + mapCenterEcef.Z * mapCenterEcef.Z));
 
             var raycastCenterDepth = Mathf.Max(-distanceFromEarthCenter * scale, -50000);
-            Debug.Log(-distanceFromEarthCenter * scale);
-            Debug.Log(raycastCenterDepth);
             var raycastCenter = transform.TransformPoint(new Vector3(0, raycastCenterDepth, 0));
             var lossyScale = transform.lossyScale;
             var halfExtent = new Vector3(lossyScale.x * mapSizeX / 2, lossyScale.y, lossyScale.z * mapSizeZ / 2);
@@ -258,12 +232,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
             Physics.queriesHitBackfaces = true;
             var hitCount = Physics.BoxCastNonAlloc(raycastCenter, halfExtent, transform.up, hits, transform.rotation, float.MaxValue, layerMask);
             Physics.queriesHitBackfaces = queriesHitBackfaces;
-
-            Debug.Log($"hitCount: {hitCount}");
-            for (var i = 0; i < hitCount; i++)
-            {
-                // Debug.Log(hits[i].transform.gameObject.name);
-            }
 
             int? nearestHitIndex = null;
             var nearestDistance = float.MaxValue;
@@ -277,26 +245,17 @@ namespace HoloLab.Spirare.Cesium3DMaps
                 }
             }
 
-            Debug.Log($"hitPointY: {-distanceFromEarthCenter * scale + nearestDistance}");
-
             if (nearestHitIndex.HasValue)
             {
-                Debug.Log(hits[nearestHitIndex.Value].point.ToString("f7"));
-
-                // TODO threshold to prevent shaking
                 var hitPointLocal = transform.InverseTransformPoint(hits[nearestHitIndex.Value].point);
-                Debug.Log(hitPointLocal.ToString("f7"));
 
                 if (0 <= hitPointLocal.y && hitPointLocal.y <= 0.005)
                 {
                     return;
                 }
-                var heightChange = hitPointLocal.y / scale;
-                Debug.Log($"change: {heightChange}");
 
+                var heightChange = hitPointLocal.y / scale;
                 centerTargetEllipsoidalHeight = (float)center.EllipsoidalHeight + heightChange;
-                // var newCenter = new GeodeticPosition(center.Latitude, center.Longitude, center.EllipsoidalHeight + heightChange);
-                // Center = newCenter;
             }
         }
 
@@ -304,7 +263,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
         {
             var centerString = $"{Center.Latitude} {Center.Longitude} {Center.EllipsoidalHeight}";
             PlayerPrefs.SetString(PlayerPrefs_CenterKey, centerString);
-            // PlayerPrefs.Save();
         }
 
         private void LoadCenterPosition()
@@ -328,7 +286,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
         private void SaveScale()
         {
             PlayerPrefs.SetFloat(PlayerPrefs_ScaleKey, Scale);
-            // PlayerPrefs.Save();
         }
 
         private void LoadScale()
