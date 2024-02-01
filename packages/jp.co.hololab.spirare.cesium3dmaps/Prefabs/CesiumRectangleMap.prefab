@@ -231,12 +231,13 @@ MonoBehaviour:
   mapSizeX: 1
   mapSizeZ: 1
   scale: 0.002
-  scaleMin: 0.000001
+  scaleMin: 0.0000005
   scaleMax: 1
   center:
     latitude: 0
     longitude: 0
     ellipsoidalHeight: 0
+  autoAdjustCenterHeight: 1
   attatchTilesetClipperForChildTilesets: 1
   mapBase: {fileID: 1880583417923694539}
 --- !u!1001 &7763261871981109843

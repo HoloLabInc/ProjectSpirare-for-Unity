@@ -66,7 +66,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
         }
 
         [SerializeField]
-        private float scaleMin = 1 / 1_000_000f;
+        private float scaleMin = 1 / 2_000_000f;
 
         [SerializeField]
         private float scaleMax = 1;
