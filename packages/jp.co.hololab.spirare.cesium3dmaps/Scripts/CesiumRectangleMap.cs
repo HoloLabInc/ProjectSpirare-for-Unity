@@ -24,6 +24,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
             {
                 mapSizeX = value;
                 UpdateMap();
+                UpdateMapBase();
                 InvokeOnMapSizeChanged(mapSizeX, mapSizeZ);
             }
         }
@@ -41,6 +42,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
             {
                 mapSizeZ = value;
                 UpdateMap();
+                UpdateMapBase();
                 InvokeOnMapSizeChanged(mapSizeX, mapSizeZ);
             }
         }
@@ -64,7 +66,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
         }
 
         [SerializeField]
-        private float scaleMin = 1 / 1_000_000f;
+        private float scaleMin = 1 / 2_000_000f;
 
         [SerializeField]
         private float scaleMax = 1;
@@ -88,6 +90,29 @@ namespace HoloLab.Spirare.Cesium3DMaps
         }
 
         [SerializeField]
+        private bool autoAdjustCenterHeight = true;
+
+        public bool AutoAdjustCenterHeight
+        {
+            get
+            {
+                return autoAdjustCenterHeight;
+            }
+            set
+            {
+                autoAdjustCenterHeight = value;
+                if (autoAdjustCenterHeight == false)
+                {
+                    centerTargetEllipsoidalHeight = null;
+                }
+                SaveAutoAdjustCenterHeight();
+                InvokeOnAutoAdjustCenterHeightChanged(value);
+            }
+        }
+
+        private float? centerTargetEllipsoidalHeight = null;
+
+        [SerializeField]
         private bool attatchTilesetClipperForChildTilesets = true;
 
         [SerializeField]
@@ -96,12 +121,16 @@ namespace HoloLab.Spirare.Cesium3DMaps
         private CesiumGeoreference[] cesiumGeoreferences;
         private CesiumGeodeticAreaExcluder[] cesiumGeodeticAreaExcluders;
 
+        private RaycastHit[] hits = new RaycastHit[100];
+
         private const string PlayerPrefs_CenterKey = "CesiumRectangleMap_Center";
         private const string PlayerPrefs_ScaleKey = "CesiumRectangleMap_Scale";
+        private const string PlayerPrefs_AutoAdjustCenterHeightKey = "CesiumRectangleMap_AutoAdjustCenterHeight";
 
-        public Action<float> OnScaleChanged;
-        public Action<GeodeticPosition> OnCenterChanged;
-        public Action<(float MapSizeX, float MapSizeZ)> OnMapSizeChanged;
+        public event Action<float> OnScaleChanged;
+        public event Action<GeodeticPosition> OnCenterChanged;
+        public event Action<(float MapSizeX, float MapSizeZ)> OnMapSizeChanged;
+        public event Action<bool> OnAutoAdjustCenterHeightChanged;
 
         private void Start()
         {
@@ -115,8 +144,42 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
             LoadCenterPosition();
             LoadScale();
+            LoadAutoAdjustCenterHeight();
 
             UpdateMap();
+            UpdateMapBase();
+
+            StartCoroutine(AdjustMapHeightLoopCoroutine());
+        }
+
+        private void Update()
+        {
+            if (centerTargetEllipsoidalHeight.HasValue)
+            {
+                float newHeight;
+
+                if (Mathf.Abs((float)center.EllipsoidalHeight - centerTargetEllipsoidalHeight.Value) * scale < 0.001)
+                {
+                    newHeight = centerTargetEllipsoidalHeight.Value;
+                    centerTargetEllipsoidalHeight = null;
+                }
+                else
+                {
+                    var lerpLate = 2f;
+                    newHeight = Mathf.Lerp((float)center.EllipsoidalHeight, centerTargetEllipsoidalHeight.Value, lerpLate * Time.deltaTime);
+                }
+
+                var newCenter = new GeodeticPosition(center.Latitude, center.Longitude, newHeight);
+                Center = newCenter;
+            }
+        }
+
+        private void OnApplicationFocus(bool focus)
+        {
+            if (focus == false)
+            {
+                PlayerPrefs.Save();
+            }
         }
 
         public GeodeticPosition ConvertEnuPositionToGeodeticPosition(EnuPosition enuPosition)
@@ -154,11 +217,70 @@ namespace HoloLab.Spirare.Cesium3DMaps
             }
         }
 
+        private IEnumerator AdjustMapHeightLoopCoroutine()
+        {
+            // Wait a few seconds for initial loading
+            yield return new WaitForSeconds(3f);
+
+            while (true)
+            {
+                if (autoAdjustCenterHeight)
+                {
+                    AdjustMapHeight();
+                }
+
+                yield return new WaitForSeconds(0.5f);
+            }
+        }
+
+        private void AdjustMapHeight()
+        {
+            var mapCenterEcef = GeographicCoordinateConversion.GeodeticToEcef(Center);
+            var distanceFromEarthCenter = Mathf.Sqrt((float)(mapCenterEcef.X * mapCenterEcef.X + mapCenterEcef.Y * mapCenterEcef.Y + mapCenterEcef.Z * mapCenterEcef.Z));
+
+            var raycastCenterDepth = Mathf.Max(-distanceFromEarthCenter * scale, -50000);
+            var raycastCenter = transform.TransformPoint(new Vector3(0, raycastCenterDepth, 0));
+            var lossyScale = transform.lossyScale;
+            var halfExtent = new Vector3(lossyScale.x * mapSizeX / 2, lossyScale.y, lossyScale.z * mapSizeZ / 2);
+            var layerMask = LayerMask.GetMask("Ignore Raycast");
+
+            var queriesHitBackfaces = Physics.queriesHitBackfaces;
+            Physics.queriesHitBackfaces = true;
+            var hitCount = Physics.BoxCastNonAlloc(raycastCenter, halfExtent, transform.up, hits, transform.rotation, float.MaxValue, layerMask);
+            Physics.queriesHitBackfaces = queriesHitBackfaces;
+
+            int? nearestHitIndex = null;
+            var nearestDistance = float.MaxValue;
+
+            for (var i = 0; i < hitCount; i++)
+            {
+                if (hits[i].distance < nearestDistance && IsDescendant(hits[i].transform, transform))
+                {
+                    nearestHitIndex = i;
+                    nearestDistance = hits[i].distance;
+                }
+            }
+
+            if (nearestHitIndex.HasValue)
+            {
+                var hitPointLocal = transform.InverseTransformPoint(hits[nearestHitIndex.Value].point);
+
+                if (0 <= hitPointLocal.y && hitPointLocal.y <= 0.005)
+                {
+                    return;
+                }
+
+                var heightChange = hitPointLocal.y / scale;
+                centerTargetEllipsoidalHeight = (float)center.EllipsoidalHeight + heightChange;
+            }
+        }
+
+        #region Save load methods
+
         private void SaveCenterPosition()
         {
             var centerString = $"{Center.Latitude} {Center.Longitude} {Center.EllipsoidalHeight}";
             PlayerPrefs.SetString(PlayerPrefs_CenterKey, centerString);
-            PlayerPrefs.Save();
         }
 
         private void LoadCenterPosition()
@@ -182,7 +304,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
         private void SaveScale()
         {
             PlayerPrefs.SetFloat(PlayerPrefs_ScaleKey, Scale);
-            PlayerPrefs.Save();
         }
 
         private void LoadScale()
@@ -194,9 +315,28 @@ namespace HoloLab.Spirare.Cesium3DMaps
             }
         }
 
+        private void SaveAutoAdjustCenterHeight()
+        {
+            PlayerPrefs.SetInt(PlayerPrefs_AutoAdjustCenterHeightKey, autoAdjustCenterHeight ? 1 : 0);
+        }
+
+        private void LoadAutoAdjustCenterHeight()
+        {
+            var value = PlayerPrefs.GetInt(PlayerPrefs_AutoAdjustCenterHeightKey, -1);
+            if (value == -1)
+            {
+                return;
+            }
+
+            AutoAdjustCenterHeight = value == 1;
+        }
+
+        #endregion
+
+        #region Update map methods
+
         private void UpdateMap()
         {
-            UpdateMapBase();
             UpdateCesiumGeoreferences();
             UpdateCesiumGeodeticAreaExcluders();
         }
@@ -229,6 +369,10 @@ namespace HoloLab.Spirare.Cesium3DMaps
                 cesiumGeodeticAreaExcluder.LowerRightLatitude = lowerRightLonLatHeight.Latitude;
             }
         }
+
+        #endregion
+
+        #region Invoke events
 
         private void InvokeOnScaleChanged(float scale)
         {
@@ -266,6 +410,22 @@ namespace HoloLab.Spirare.Cesium3DMaps
             }
         }
 
+        private void InvokeOnAutoAdjustCenterHeightChanged(bool autoAdjustCenterHeight)
+        {
+            try
+            {
+                OnAutoAdjustCenterHeightChanged?.Invoke(autoAdjustCenterHeight);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+        }
+
+        #endregion
+
+        #region Utility methods
+
         private GeodeticPosition EnuToGeodetic(EnuPosition enuPosition)
         {
             return EnuToGeodetic(enuPosition, Center);
@@ -280,5 +440,21 @@ namespace HoloLab.Spirare.Cesium3DMaps
         {
             return GeographicCoordinateConversion.GeodeticToEnu(geodeticPosition, originPosition);
         }
+
+        private static bool IsDescendant(Transform target, Transform parent)
+        {
+            var targetParent = target.parent;
+            while (targetParent != null)
+            {
+                if (targetParent == parent)
+                {
+                    return true;
+                }
+                targetParent = targetParent.parent;
+            }
+            return false;
+        }
+
+        #endregion
     }
 }

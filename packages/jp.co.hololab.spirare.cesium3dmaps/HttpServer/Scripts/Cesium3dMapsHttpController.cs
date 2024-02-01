@@ -26,6 +26,8 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
             var height = center.EllipsoidalHeight.ToString();
             var scale = cesiumRectangleMap.Scale.ToString();
 
+            var autoAdjustHeightChecked = cesiumRectangleMap.AutoAdjustCenterHeight ? "checked" : "";
+
             var html = $@"
 <html>
   <body>
@@ -47,8 +49,16 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
         <input name=""height"" id=""height"" value=""{height}"" />
       </div>
       <div>
+        <label for=""auto-adjust-height"">Auto adjust height</label>
+        <input type=""checkbox"" id=""auto-adjust-height"" name=""auto-adjust-height"" {autoAdjustHeightChecked} />
+      </div>
+      <div>
         <label for=""scale"">Map scale</label>
         <input name=""scale"" id=""scale"" value=""{scale}"" />
+      </div>
+
+      <input type=""hidden"" name=""request-source"" value=""form"">
+
       <div>
         <button type=""submit"">Update</button>
       </div>
@@ -75,6 +85,27 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
                     {
                         var center = cesiumRectangleMap.Center;
                         cesiumRectangleMap.Center = new GeodeticPosition(latitude, longitude, center.EllipsoidalHeight);
+                    }
+                }
+
+                if (queries.TryGetValue("auto-adjust-height", out var autoAdjustHeightString))
+                {
+                    switch (autoAdjustHeightString)
+                    {
+                        case "on":
+                            cesiumRectangleMap.AutoAdjustCenterHeight = true;
+                            break;
+                        case "off":
+                            cesiumRectangleMap.AutoAdjustCenterHeight = false;
+                            break;
+                    }
+                }
+                else
+                {
+                    // When checkbox is not checked in the web form, the value is not included in query.
+                    if (queries.TryGetValue("request-source", out var requestSource) && requestSource == "form")
+                    {
+                        cesiumRectangleMap.AutoAdjustCenterHeight = false;
                     }
                 }
 

@@ -72,7 +72,7 @@ MonoBehaviour:
   _showTilesInHierarchy: 0
   _updateInEditor: 1
   _logSelectionStats: 0
-  _createPhysicsMeshes: 0
+  _createPhysicsMeshes: 1
 --- !u!114 &7145315380624859446
 MonoBehaviour:
   m_ObjectHideFlags: 0
