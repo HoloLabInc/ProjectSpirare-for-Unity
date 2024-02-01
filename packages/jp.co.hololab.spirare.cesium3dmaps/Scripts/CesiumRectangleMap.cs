@@ -105,6 +105,8 @@ namespace HoloLab.Spirare.Cesium3DMaps
                 {
                     centerTargetEllipsoidalHeight = null;
                 }
+                SaveAutoAdjustCenterHeight();
+                InvokeOnAutoAdjustCenterHeightChanged(value);
             }
         }
 
@@ -123,10 +125,12 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
         private const string PlayerPrefs_CenterKey = "CesiumRectangleMap_Center";
         private const string PlayerPrefs_ScaleKey = "CesiumRectangleMap_Scale";
+        private const string PlayerPrefs_AutoAdjustCenterHeightKey = "CesiumRectangleMap_AutoAdjustCenterHeight";
 
-        public Action<float> OnScaleChanged;
-        public Action<GeodeticPosition> OnCenterChanged;
-        public Action<(float MapSizeX, float MapSizeZ)> OnMapSizeChanged;
+        public event Action<float> OnScaleChanged;
+        public event Action<GeodeticPosition> OnCenterChanged;
+        public event Action<(float MapSizeX, float MapSizeZ)> OnMapSizeChanged;
+        public event Action<bool> OnAutoAdjustCenterHeightChanged;
 
         private void Start()
         {
@@ -140,6 +144,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
             LoadCenterPosition();
             LoadScale();
+            LoadAutoAdjustCenterHeight();
 
             UpdateMap();
             UpdateMapBase();
@@ -259,6 +264,8 @@ namespace HoloLab.Spirare.Cesium3DMaps
             }
         }
 
+        #region Save load methods
+
         private void SaveCenterPosition()
         {
             var centerString = $"{Center.Latitude} {Center.Longitude} {Center.EllipsoidalHeight}";
@@ -297,6 +304,26 @@ namespace HoloLab.Spirare.Cesium3DMaps
             }
         }
 
+        private void SaveAutoAdjustCenterHeight()
+        {
+            PlayerPrefs.SetInt(PlayerPrefs_AutoAdjustCenterHeightKey, autoAdjustCenterHeight ? 1 : 0);
+        }
+
+        private void LoadAutoAdjustCenterHeight()
+        {
+            var value = PlayerPrefs.GetInt(PlayerPrefs_AutoAdjustCenterHeightKey, -1);
+            if (value == -1)
+            {
+                return;
+            }
+
+            AutoAdjustCenterHeight = value == 1;
+        }
+
+        #endregion
+
+        #region Update map methods
+
         private void UpdateMap()
         {
             UpdateCesiumGeoreferences();
@@ -331,6 +358,10 @@ namespace HoloLab.Spirare.Cesium3DMaps
                 cesiumGeodeticAreaExcluder.LowerRightLatitude = lowerRightLonLatHeight.Latitude;
             }
         }
+
+        #endregion
+
+        #region Invoke events
 
         private void InvokeOnScaleChanged(float scale)
         {
@@ -367,6 +398,20 @@ namespace HoloLab.Spirare.Cesium3DMaps
                 Debug.LogException(ex);
             }
         }
+
+        private void InvokeOnAutoAdjustCenterHeightChanged(bool autoAdjustCenterHeight)
+        {
+            try
+            {
+                OnAutoAdjustCenterHeightChanged?.Invoke(autoAdjustCenterHeight);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+        }
+
+        #endregion
 
         private GeodeticPosition EnuToGeodetic(EnuPosition enuPosition)
         {
