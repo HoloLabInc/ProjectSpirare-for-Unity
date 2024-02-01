@@ -24,6 +24,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
             {
                 mapSizeX = value;
                 UpdateMap();
+                UpdateMapBase();
                 InvokeOnMapSizeChanged(mapSizeX, mapSizeZ);
             }
         }
@@ -41,6 +42,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
             {
                 mapSizeZ = value;
                 UpdateMap();
+                UpdateMapBase();
                 InvokeOnMapSizeChanged(mapSizeX, mapSizeZ);
             }
         }
@@ -88,7 +90,25 @@ namespace HoloLab.Spirare.Cesium3DMaps
         }
 
         [SerializeField]
-        private bool autoAdjustmentCenterHeight = true;
+        private bool autoAdjustCenterHeight = true;
+
+        public bool AutoAdjustCenterHeight
+        {
+            get
+            {
+                return autoAdjustCenterHeight;
+            }
+            set
+            {
+                autoAdjustCenterHeight = value;
+                if (autoAdjustCenterHeight == false)
+                {
+                    centerTargetEllipsoidalHeight = null;
+                }
+            }
+        }
+
+        private float? centerTargetEllipsoidalHeight = null;
 
         [SerializeField]
         private bool attatchTilesetClipperForChildTilesets = true;
@@ -98,6 +118,8 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
         private CesiumGeoreference[] cesiumGeoreferences;
         private CesiumGeodeticAreaExcluder[] cesiumGeodeticAreaExcluders;
+
+        private RaycastHit[] hits = new RaycastHit[100];
 
         private const string PlayerPrefs_CenterKey = "CesiumRectangleMap_Center";
         private const string PlayerPrefs_ScaleKey = "CesiumRectangleMap_Scale";
@@ -120,24 +142,34 @@ namespace HoloLab.Spirare.Cesium3DMaps
             LoadScale();
 
             UpdateMap();
+            UpdateMapBase();
 
             StartCoroutine(AdjustMapHeightLoopCoroutine());
         }
 
-        private RaycastHit[] hits = new RaycastHit[100];
-
-        private IEnumerator AdjustMapHeightLoopCoroutine()
+        private void Update()
         {
-            while (true)
+            if (centerTargetEllipsoidalHeight.HasValue)
             {
-                if (autoAdjustmentCenterHeight)
+                float newHeight;
+
+                if (Mathf.Abs((float)center.EllipsoidalHeight - centerTargetEllipsoidalHeight.Value) * scale < 0.001)
                 {
-                    AdjustMapHeight();
+                    Debug.LogWarning("lerp finished");
+                    newHeight = centerTargetEllipsoidalHeight.Value;
+                    centerTargetEllipsoidalHeight = null;
+                }
+                else
+                {
+                    var lerpLate = 2f;
+                    newHeight = Mathf.Lerp((float)center.EllipsoidalHeight, centerTargetEllipsoidalHeight.Value, lerpLate * Time.deltaTime);
                 }
 
-                yield return new WaitForSeconds(1);
+                var newCenter = new GeodeticPosition(center.Latitude, center.Longitude, newHeight);
+                Center = newCenter;
             }
         }
+
 
         /*
         void OnDrawGizmos()
@@ -160,13 +192,64 @@ namespace HoloLab.Spirare.Cesium3DMaps
         }
         */
 
+
+        public GeodeticPosition ConvertEnuPositionToGeodeticPosition(EnuPosition enuPosition)
+        {
+            return EnuToGeodetic(enuPosition);
+        }
+
+        public void ScaleAroundEnuPosition(float mapScale, EnuPosition scaleCenter)
+        {
+            var scaleCenterGeodetic = EnuToGeodetic(scaleCenter, Center);
+            var scaleCenterToCurrentMapCenter = GeodeticToEnu(Center, scaleCenterGeodetic);
+
+            var relativeScale = (double)Scale / mapScale;
+            var scaleCenterToNewMapCenter = new EnuPosition(
+                scaleCenterToCurrentMapCenter.East * relativeScale,
+                scaleCenterToCurrentMapCenter.North * relativeScale,
+                scaleCenterToCurrentMapCenter.Up * relativeScale);
+
+            var newMapCenter = EnuToGeodetic(scaleCenterToNewMapCenter, scaleCenterGeodetic);
+            var newMapCenterWithSameHeight = new GeodeticPosition(newMapCenter.Latitude, newMapCenter.Longitude, Center.EllipsoidalHeight);
+
+            Center = newMapCenterWithSameHeight;
+            Scale = mapScale;
+        }
+
+        private void AttachTilesetClipperForChildTilesets()
+        {
+            var tilesets = GetComponentsInChildren<Cesium3DTileset>();
+            foreach (var tileset in tilesets)
+            {
+                if (tileset.gameObject.TryGetComponent<CesiumRectangleMapTilesetClipper>(out _) == false)
+                {
+                    tileset.gameObject.AddComponent<CesiumRectangleMapTilesetClipper>();
+                }
+            }
+        }
+
+        private IEnumerator AdjustMapHeightLoopCoroutine()
+        {
+            while (true)
+            {
+                if (autoAdjustCenterHeight)
+                {
+                    AdjustMapHeight();
+                }
+
+                yield return new WaitForSeconds(0.5f);
+            }
+        }
+
         private void AdjustMapHeight()
         {
             var mapCenterEcef = GeographicCoordinateConversion.GeodeticToEcef(Center);
             var distanceFromEarthCenter = Mathf.Sqrt((float)(mapCenterEcef.X * mapCenterEcef.X + mapCenterEcef.Y * mapCenterEcef.Y + mapCenterEcef.Z * mapCenterEcef.Z));
 
-            //Debug.Log(-distanceFromEarthCenter * scale);
-            var raycastCenter = transform.TransformPoint(new Vector3(0, -distanceFromEarthCenter * scale, 0));
+            var raycastCenterDepth = Mathf.Max(-distanceFromEarthCenter * scale, -50000);
+            Debug.Log(-distanceFromEarthCenter * scale);
+            Debug.Log(raycastCenterDepth);
+            var raycastCenter = transform.TransformPoint(new Vector3(0, raycastCenterDepth, 0));
             var lossyScale = transform.lossyScale;
             var halfExtent = new Vector3(lossyScale.x * mapSizeX / 2, lossyScale.y, lossyScale.z * mapSizeZ / 2);
             var layerMask = LayerMask.GetMask("Ignore Raycast");
@@ -211,58 +294,9 @@ namespace HoloLab.Spirare.Cesium3DMaps
                 var heightChange = hitPointLocal.y / scale;
                 Debug.Log($"change: {heightChange}");
 
-                var newCenter = new GeodeticPosition(center.Latitude, center.Longitude, center.EllipsoidalHeight + heightChange);
-                Center = newCenter;
-            }
-        }
-
-        private static bool IsDescendant(Transform target, Transform parent)
-        {
-            var targetParent = target.parent;
-            while (targetParent != null)
-            {
-                // Debug.Log(targetParent.gameObject.name);
-                if (targetParent == parent)
-                {
-                    return true;
-                }
-                targetParent = targetParent.parent;
-            }
-            return false;
-        }
-
-        public GeodeticPosition ConvertEnuPositionToGeodeticPosition(EnuPosition enuPosition)
-        {
-            return EnuToGeodetic(enuPosition);
-        }
-
-        public void ScaleAroundEnuPosition(float mapScale, EnuPosition scaleCenter)
-        {
-            var scaleCenterGeodetic = EnuToGeodetic(scaleCenter, Center);
-            var scaleCenterToCurrentMapCenter = GeodeticToEnu(Center, scaleCenterGeodetic);
-
-            var relativeScale = (double)Scale / mapScale;
-            var scaleCenterToNewMapCenter = new EnuPosition(
-                scaleCenterToCurrentMapCenter.East * relativeScale,
-                scaleCenterToCurrentMapCenter.North * relativeScale,
-                scaleCenterToCurrentMapCenter.Up * relativeScale);
-
-            var newMapCenter = EnuToGeodetic(scaleCenterToNewMapCenter, scaleCenterGeodetic);
-            var newMapCenterWithSameHeight = new GeodeticPosition(newMapCenter.Latitude, newMapCenter.Longitude, Center.EllipsoidalHeight);
-
-            Center = newMapCenterWithSameHeight;
-            Scale = mapScale;
-        }
-
-        private void AttachTilesetClipperForChildTilesets()
-        {
-            var tilesets = GetComponentsInChildren<Cesium3DTileset>();
-            foreach (var tileset in tilesets)
-            {
-                if (tileset.gameObject.TryGetComponent<CesiumRectangleMapTilesetClipper>(out _) == false)
-                {
-                    tileset.gameObject.AddComponent<CesiumRectangleMapTilesetClipper>();
-                }
+                centerTargetEllipsoidalHeight = (float)center.EllipsoidalHeight + heightChange;
+                // var newCenter = new GeodeticPosition(center.Latitude, center.Longitude, center.EllipsoidalHeight + heightChange);
+                // Center = newCenter;
             }
         }
 
@@ -270,7 +304,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
         {
             var centerString = $"{Center.Latitude} {Center.Longitude} {Center.EllipsoidalHeight}";
             PlayerPrefs.SetString(PlayerPrefs_CenterKey, centerString);
-            PlayerPrefs.Save();
+            // PlayerPrefs.Save();
         }
 
         private void LoadCenterPosition()
@@ -294,7 +328,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
         private void SaveScale()
         {
             PlayerPrefs.SetFloat(PlayerPrefs_ScaleKey, Scale);
-            PlayerPrefs.Save();
+            // PlayerPrefs.Save();
         }
 
         private void LoadScale()
@@ -308,7 +342,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
         private void UpdateMap()
         {
-            UpdateMapBase();
             UpdateCesiumGeoreferences();
             UpdateCesiumGeodeticAreaExcluders();
         }
@@ -391,6 +424,20 @@ namespace HoloLab.Spirare.Cesium3DMaps
         private static EnuPosition GeodeticToEnu(GeodeticPosition geodeticPosition, GeodeticPosition originPosition)
         {
             return GeographicCoordinateConversion.GeodeticToEnu(geodeticPosition, originPosition);
+        }
+
+        private static bool IsDescendant(Transform target, Transform parent)
+        {
+            var targetParent = target.parent;
+            while (targetParent != null)
+            {
+                if (targetParent == parent)
+                {
+                    return true;
+                }
+                targetParent = targetParent.parent;
+            }
+            return false;
         }
     }
 }
