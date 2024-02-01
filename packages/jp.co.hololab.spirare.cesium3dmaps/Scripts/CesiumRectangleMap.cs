@@ -413,6 +413,8 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
         #endregion
 
+        #region Utility methods
+
         private GeodeticPosition EnuToGeodetic(EnuPosition enuPosition)
         {
             return EnuToGeodetic(enuPosition, Center);
@@ -441,5 +443,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
             }
             return false;
         }
+
+        #endregion
     }
 }
