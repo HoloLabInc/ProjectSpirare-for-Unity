@@ -121,6 +121,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
         private CesiumGeoreference[] cesiumGeoreferences;
         private CesiumGeodeticAreaExcluder[] cesiumGeodeticAreaExcluders;
 
+        private Camera mainCamera;
         private RaycastHit[] hits = new RaycastHit[100];
 
         private const string PlayerPrefs_CenterKey = "CesiumRectangleMap_Center";
@@ -224,7 +225,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
             while (true)
             {
-                if (autoAdjustCenterHeight)
+                if (autoAdjustCenterHeight && MapOriginIsVisible())
                 {
                     AdjustMapHeight();
                 }
@@ -425,6 +426,28 @@ namespace HoloLab.Spirare.Cesium3DMaps
         #endregion
 
         #region Utility methods
+
+        private bool MapOriginIsVisible()
+        {
+            if (mainCamera == null)
+            {
+                mainCamera = Camera.main;
+                if (mainCamera == null)
+                {
+                    return false;
+                }
+            }
+
+            var viewportPoint = mainCamera.WorldToViewportPoint(transform.position);
+            if (viewportPoint.x >= 0 && viewportPoint.x <= 1 && viewportPoint.y >= 0 && viewportPoint.y <= 1 && viewportPoint.z >= 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         private GeodeticPosition EnuToGeodetic(EnuPosition enuPosition)
         {
