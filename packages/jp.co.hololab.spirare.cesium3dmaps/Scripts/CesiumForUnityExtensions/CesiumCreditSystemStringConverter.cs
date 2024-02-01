@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace CesiumForUnity
 {
-    [RequireComponent(typeof(CesiumCreditSystem))]
     public class CesiumCreditSystemStringConverter : MonoBehaviour
     {
         private CesiumCreditSystem cesiumCreditSystem;
