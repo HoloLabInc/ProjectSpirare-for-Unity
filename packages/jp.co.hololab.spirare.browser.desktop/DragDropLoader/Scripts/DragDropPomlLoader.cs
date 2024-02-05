@@ -80,7 +80,7 @@ namespace HoloLab.Spirare.Browser.Desktop
             {
                 await onetimeLocalPomlLoader.LoadPomlAsync(filePath);
             }
-            else if (lowerFilePath.EndsWith(".poml.zip"))
+            else if (lowerFilePath.EndsWith(".zip"))
             {
                 await onetimeLocalPomlLoader.LoadPomlZipAsync(filePath);
             }
