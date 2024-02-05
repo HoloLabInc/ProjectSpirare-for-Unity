@@ -16,8 +16,17 @@ namespace HoloLab.Spirare.Cesium
 
         public void StartOnRandomPort()
         {
-            port = 12345;
-            httpServer.Start(port);
+            var random = new System.Random();
+
+            while (true)
+            {
+                port = random.Next(49152, 65535);
+                var success = httpServer.Start(port);
+                if (success)
+                {
+                    break;
+                }
+            }
 
             httpServer.OnRequest += HttpServer_OnRequest;
         }

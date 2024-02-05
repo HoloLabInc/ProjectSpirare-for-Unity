@@ -12,7 +12,7 @@ namespace HoloLab.Spirare.Cesium
 
         public event Action<HttpListenerContext> OnRequest;
 
-        public void Start(int port)
+        public bool Start(int port)
         {
             httpListener = new HttpListener();
             var uri = $"http://*:{port}/";
@@ -21,15 +21,25 @@ namespace HoloLab.Spirare.Cesium
             tokenSource = new CancellationTokenSource();
             var token = tokenSource.Token;
 
-            Task.Run(async () =>
+            try
             {
                 httpListener.Start();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            Task.Run(async () =>
+            {
                 while (true)
                 {
                     var context = await httpListener.GetContextAsync();
                     OnRequest?.Invoke(context);
                 }
             }, token);
+
+            return true;
         }
 
         public void Stop()
