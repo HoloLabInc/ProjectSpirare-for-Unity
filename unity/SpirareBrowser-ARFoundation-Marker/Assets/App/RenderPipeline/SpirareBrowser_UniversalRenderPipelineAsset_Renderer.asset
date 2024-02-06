@@ -69,4 +69,4 @@ MonoBehaviour:
   m_Name: ARCameraCompositionRendererFeature
   m_EditorClassIdentifier: 
   m_Active: 1
-  opacity: 0.9
+  opacity: 1
