@@ -229,7 +229,11 @@ namespace HoloLab.Spirare
                 return;
             }
 
-            var distance = Vector3.Distance(cameraTransform.position, transform.position);
+            // Calc distance between camera and object in pomlComponent space.
+            var cameraPositionLocal = pomlComponent.transform.InverseTransformPoint(cameraTransform.position);
+            var objectPositionLocal = pomlComponent.transform.InverseTransformPoint(transform.position);
+            var distance = Vector3.Distance(cameraPositionLocal, objectPositionLocal);
+
             var localScale = distance * PomlElement.ScaleByDistance.Value * PomlElement.Scale;
 
             // Ensure that the scale does not fall below the minimum scale.
