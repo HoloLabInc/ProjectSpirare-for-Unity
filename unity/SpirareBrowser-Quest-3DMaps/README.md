@@ -29,6 +29,22 @@ Switch the platform to Android and build the project.
 
 ## Usage
 
-### How to Operate
+### How to operate
 
 You can change the position and size of map objects by manipulating the sides of the map base with the controller. By operating the top surface of the map with the controller, you can move the center of the map and zoom in or out.
+
+### Load POML from local files
+
+Place POML files (.poml) or POML.zip files (.poml.zip) under the `Android\data\jp.co.hololab.spirarebrowserquest3dmaps\files\LocalContent` folder.
+
+<img width="640" alt="Place POML with SideQuest" src="https://github.com/HoloLabInc/ProjectSpirare-for-Unity/assets/4415085/c3b19896-9ee6-4077-9b2d-edea28619286">
+
+These POML files are loaded when the application starts.
+
+### Load POML from URL
+
+Access `http://<Quest IP Address>:8080` in your PC's browser to open the management page.
+
+<img width="640" alt="App management page" src="https://github.com/HoloLabInc/ProjectSpirare-for-Unity/assets/4415085/1c2b97a3-fb65-4256-b950-124c5e2dc7a0">
+
+Load the POML file by entering the URL in the input field and pressing the `Load` button.
