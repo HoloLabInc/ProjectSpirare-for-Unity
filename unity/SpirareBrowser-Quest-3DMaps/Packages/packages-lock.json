@@ -373,6 +373,12 @@
       "source": "local",
       "dependencies": {}
     },
+    "jp.co.hololab.spirare.mrtk": {
+      "version": "file:../../../packages/jp.co.hololab.spirare.mrtk",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "jp.co.hololab.spirare.wasm": {
       "version": "file:../../../packages/jp.co.hololab.spirare.wasm",
       "depth": 0,
