@@ -115,7 +115,7 @@ https://developers.google.com/maps/documentation/tile/get-api-key?hl=en
 
 ### Set API Key
 
-Select `Assets\Resources\Spirare\TilesetSourceSettings` and enter the following URL into the URL field.
+Select `Assets\Resources\Spirare\GooglePhotorealistic3DTilesSourceSettings` and enter the following URL into the URL field.
 
 `https://tile.googleapis.com/v1/3dtiles/root.json?key=<Your API Key>`
 
