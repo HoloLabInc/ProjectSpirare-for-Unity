@@ -6,7 +6,7 @@ This project is a browser application for Spirare that is capable of displaying 
 
 ## Target Devices
 
-Meta Quest 3
+Meta Quest
 
 ## Project Setup
 
