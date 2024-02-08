@@ -2,20 +2,23 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.XR.ARFoundation;
 
 namespace HoloLab.Spirare.Browser.ARFoundation
 {
+    [RequireComponent(typeof(ARCameraManager))]
     public class ARLightEstimation : MonoBehaviour
     {
         [SerializeField]
-        private ARCameraManager cameraManager;
+        [FormerlySerializedAs("light")]
+        private Light sceneLight;
 
-        [SerializeField]
-        private Light light;
+        private ARCameraManager cameraManager;
 
         private void OnEnable()
         {
+            cameraManager = GetComponent<ARCameraManager>();
             cameraManager.frameReceived += OnCameraFrameReceived;
         }
 
@@ -35,14 +38,14 @@ namespace HoloLab.Spirare.Browser.ARFoundation
             if (averageBrightness.HasValue)
             {
                 var intensity = Mathf.Clamp01(averageBrightness.Value * 2);
-                light.intensity = intensity;
+                sceneLight.intensity = intensity;
                 RenderSettings.ambientIntensity = intensity;
             }
 
             var colorTemperature = e.lightEstimation.averageColorTemperature;
             if (colorTemperature.HasValue)
             {
-                light.colorTemperature = colorTemperature.Value;
+                sceneLight.colorTemperature = colorTemperature.Value;
             }
         }
     }
