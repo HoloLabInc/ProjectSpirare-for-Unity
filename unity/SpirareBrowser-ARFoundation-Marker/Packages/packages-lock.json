@@ -340,11 +340,11 @@
       "url": "https://packages.unity.com"
     },
     "jp.co.hololab.arcameracomposition": {
-      "version": "https://github.com/HoloLabInc/ARCameraComposition-Unity.git?path=packages/jp.co.hololab.arcameracomposition#feature/urp-14",
+      "version": "https://github.com/HoloLabInc/ARCameraComposition-Unity.git?path=packages/jp.co.hololab.arcameracomposition#v1.0.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "d5ee2c0df009866cede30cc6cba4808b03b86e7b"
+      "hash": "138784c41a6f610e04734d2d67c149547faaa99d"
     },
     "jp.co.hololab.arfoundationqrtracking": {
       "version": "https://github.com/HoloLabInc/ARFoundationQRTracking-Unity.git?path=packages/jp.co.hololab.arfoundationqrtracking#v0.2.0",
