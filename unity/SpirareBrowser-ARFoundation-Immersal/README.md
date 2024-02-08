@@ -12,7 +12,8 @@ Immersal
 
 ## Project Setup
 
-Download the Immersal SDK Core unitypackage from the [developer portal](https://developers.immersal.com) and import it.
+Download the Immersal SDK Core unitypackage from the [developer portal](https://developers.immersal.com) and import it.  
+The tested version is Immseral SDK v1.20.0.
 
 ## Usage
 
