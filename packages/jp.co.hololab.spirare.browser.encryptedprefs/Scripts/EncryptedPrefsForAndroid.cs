@@ -22,7 +22,6 @@ namespace HoloLab.Spirare.Browser.EncryptedPrefs
                     return false;
                 }
 
-
                 return encryptedPreferencesManager.Call<bool>("isAvailable");
             }
         }
