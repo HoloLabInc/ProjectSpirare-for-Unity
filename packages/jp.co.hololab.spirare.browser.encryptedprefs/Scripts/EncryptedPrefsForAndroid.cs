@@ -1,4 +1,4 @@
-#if !UNITY_EDITOR && UNIY_ANDROID || TRUE
+#if !UNITY_EDITOR && UNIY_ANDROID
 
 using System;
 using System.Collections;
