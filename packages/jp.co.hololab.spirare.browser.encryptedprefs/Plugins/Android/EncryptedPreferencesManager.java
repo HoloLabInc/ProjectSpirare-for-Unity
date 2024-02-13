@@ -1,4 +1,4 @@
-package jp.co.hololab.spirare.browser.utilities;
+package jp.co.hololab.spirare.browser.encryptedprefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
