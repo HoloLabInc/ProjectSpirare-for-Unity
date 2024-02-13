@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using UnityEngine;
 
 namespace HoloLab.Spirare.Browser.EncryptedPrefs
 {
@@ -22,31 +23,48 @@ namespace HoloLab.Spirare.Browser.EncryptedPrefs
 
         public bool SaveString(string key, string value)
         {
-            var result = KeychainHelper_Save(key, value);
-            return result;
+            try
+            {
+                var result = KeychainHelper_Save(key, value);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+                return false;
+            }
         }
 
         public bool LoadString(string key, out string value)
         {
-            KeychainHelper_Load(key, out IntPtr ptr, out int length);
-
-            if (ptr == IntPtr.Zero)
+            try
             {
+                KeychainHelper_Load(key, out IntPtr ptr, out int length);
+
+                if (ptr == IntPtr.Zero)
+                {
+                    value = null;
+                    return false;
+                }
+
+                if (length == 0)
+                {
+                    value = string.Empty;
+                }
+                else
+                {
+                    value = Marshal.PtrToStringUTF8(ptr, length);
+                }
+
+                DeallocatePointer(ptr);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
                 value = null;
                 return false;
             }
-
-            if (length == 0)
-            {
-                value = string.Empty;
-            }
-            else
-            {
-                value = Marshal.PtrToStringUTF8(ptr, length);
-            }
-
-            DeallocatePointer(ptr);
-            return true;
         }
     }
 }
