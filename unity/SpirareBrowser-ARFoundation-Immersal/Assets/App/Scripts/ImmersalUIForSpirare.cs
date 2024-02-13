@@ -1,6 +1,6 @@
 using HoloLab.PositioningTools.Immersal;
 using HoloLab.PositioningTools.Immersal.UI;
-using HoloLab.Spirare.Browser.Utilities;
+using HoloLab.Spirare.Browser.EncryptedPrefs;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,12 +32,12 @@ namespace HoloLab.Spirare.Browser.Immersal
 
         private void LoadUserInfo()
         {
-            if (EncryptedPrefs.LoadString(emailAddressKey, out var emailAddress))
+            if (EncryptedPrefsManager.LoadString(emailAddressKey, out var emailAddress))
             {
                 immersalSignInUI.EmailAddress = emailAddress;
             }
 
-            if (EncryptedPrefs.LoadString(passwordKey, out var password))
+            if (EncryptedPrefsManager.LoadString(passwordKey, out var password))
             {
                 immersalSignInUI.Password = password;
             }
@@ -45,8 +45,8 @@ namespace HoloLab.Spirare.Browser.Immersal
 
         private void SaveUserInfo()
         {
-            EncryptedPrefs.SaveString(emailAddressKey, immersalSignInUI.EmailAddress);
-            EncryptedPrefs.SaveString(passwordKey, immersalSignInUI.Password);
+            EncryptedPrefsManager.SaveString(emailAddressKey, immersalSignInUI.EmailAddress);
+            EncryptedPrefsManager.SaveString(passwordKey, immersalSignInUI.Password);
         }
     }
 }
