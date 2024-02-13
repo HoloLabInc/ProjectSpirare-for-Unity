@@ -1,4 +1,4 @@
-﻿namespace HoloLab.Spirare.Browser.Utilities
+﻿namespace HoloLab.Spirare.Browser.EncryptedPrefs
 {
     internal class EncryptedPrefsNotSupported : IEncryptedPrefs
     {

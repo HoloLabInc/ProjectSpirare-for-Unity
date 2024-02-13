@@ -5,13 +5,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HoloLab.Spirare.Browser.Utilities
+namespace HoloLab.Spirare.Browser.EncryptedPrefs
 {
     public class EncryptedPrefsForAndroid : IEncryptedPrefs
     {
         private readonly AndroidJavaObject encryptedPreferencesManager;
 
-        private static readonly string javaClassName = "jp.co.hololab.spirare.browser.utilities.EncryptedPreferencesManager";
+        private static readonly string javaClassName = "jp.co.hololab.spirare.browser.encryptedprefs.EncryptedPreferencesManager";
 
         public bool IsAvailable
         {

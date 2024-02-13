@@ -1,6 +1,6 @@
-namespace HoloLab.Spirare.Browser.Utilities
+namespace HoloLab.Spirare.Browser.EncryptedPrefs
 {
-    public static class EncryptedPrefs
+    public static class EncryptedPrefsManager
     {
         private static readonly IEncryptedPrefs encryptedPrefsImpl =
 #if !UNITY_EDITOR && UNITY_IOS

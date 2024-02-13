@@ -36,13 +36,13 @@ public class KeychainHelper {
     }
 }
 
-@_cdecl("SpirareBrowserUtilities_KeychainHelper_Save")
+@_cdecl("SpirareBrowserEncryptedPrefs_KeychainHelper_Save")
 public func KeychainHelper_Save(key: UnsafePointer<CChar>, data: UnsafePointer<CChar>) -> Bool
 {
     return KeychainHelper.save(key: String(cString: key), data: String(cString: data))
 }
 
-@_cdecl("SpirareBrowserUtilities_KeychainHelper_Load")
+@_cdecl("SpirareBrowserEncryptedPrefs_KeychainHelper_Load")
 public func KeychainHelper_Load(key: UnsafePointer<CChar>, ptr: UnsafeMutablePointer<UnsafePointer<CChar>?>, length: UnsafeMutablePointer<Int32>)
 {
     let valueString = KeychainHelper.load(key: String(cString: key))
@@ -61,7 +61,7 @@ public func KeychainHelper_Load(key: UnsafePointer<CChar>, ptr: UnsafeMutablePoi
     }
 }
 
-@_cdecl("SpirareBrowserUtilities_DeallocatePointer")
+@_cdecl("SpirareBrowserEncryptedPrefs_DeallocatePointer")
 public func DeallocatePointer(ptr: UnsafeMutablePointer<CChar>?) {
     ptr?.deallocate()
 }
