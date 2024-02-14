@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using HoloLab.PositioningTools.Immersal;
 using HoloLab.PositioningTools.Immersal.UI;
 using HoloLab.Spirare.Browser.EncryptedPrefs;
@@ -12,17 +13,31 @@ namespace HoloLab.Spirare.Browser.Immersal
         [SerializeField]
         private ImmersalMapManager immersalMapManager = null;
 
+        [SerializeField]
+        private bool autoSignIn = true;
+
         private ImmersalSignInUI immersalSignInUI;
 
         private const string emailAddressKey = "ImmersalUIForSpirare_EmailAddress";
         private const string passwordKey = "ImmersalUIForSpirare_Password";
 
-        private void Start()
+        private async void Start()
         {
             immersalSignInUI = GetComponentInChildren<ImmersalSignInUI>();
             LoadUserInfo();
 
             immersalMapManager.OnLogin += ImmersalMapManager_OnLogin;
+
+            if (autoSignIn)
+            {
+                // Wait until Immersal UI is initialized
+                await UniTask.Yield();
+
+                if (string.IsNullOrEmpty(immersalSignInUI.EmailAddress) == false && string.IsNullOrEmpty(immersalSignInUI.Password) == false)
+                {
+                    await immersalSignInUI.LoginAsync();
+                }
+            }
         }
 
         private void ImmersalMapManager_OnLogin()
