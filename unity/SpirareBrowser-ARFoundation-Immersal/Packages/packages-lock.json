@@ -313,11 +313,11 @@
       "hash": "5d4df6720fe79c98d3560e2da0b40eb9c1cdc6b4"
     },
     "jp.co.hololab.positioningtools.immersal": {
-      "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.immersal#5d4df6720fe79c98d3560e2da0b40eb9c1cdc6b4",
+      "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.immersal#feature/immersal-ui-signout",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "5d4df6720fe79c98d3560e2da0b40eb9c1cdc6b4"
+      "hash": "90d73bbc8624bd6c509077c70cdbb4f9c0306479"
     },
     "jp.co.hololab.spirare": {
       "version": "file:../../../packages/jp.co.hololab.spirare",
