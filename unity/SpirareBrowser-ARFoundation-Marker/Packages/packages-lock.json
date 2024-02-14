@@ -368,25 +368,25 @@
       "hash": "156a84363b5db486eb3f74bdbfb33daf714416ea"
     },
     "jp.co.hololab.positioningtools": {
-      "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools#fa948b1470524787b1ff3bed5bcb904cbfa2c605",
+      "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools#v0.6.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "fa948b1470524787b1ff3bed5bcb904cbfa2c605"
+      "hash": "3335ed9700957f265724d07061e82f1f9f97495e"
     },
     "jp.co.hololab.positioningtools.arfoundationmarker": {
-      "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.arfoundationmarker#fa948b1470524787b1ff3bed5bcb904cbfa2c605",
+      "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.arfoundationmarker#v0.6.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "fa948b1470524787b1ff3bed5bcb904cbfa2c605"
+      "hash": "3335ed9700957f265724d07061e82f1f9f97495e"
     },
     "jp.co.hololab.positioningtools.geographiccoordinate": {
-      "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.geographiccoordinate#fa948b1470524787b1ff3bed5bcb904cbfa2c605",
+      "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.geographiccoordinate#v0.6.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "fa948b1470524787b1ff3bed5bcb904cbfa2c605"
+      "hash": "3335ed9700957f265724d07061e82f1f9f97495e"
     },
     "jp.co.hololab.spirare": {
       "version": "file:../../../packages/jp.co.hololab.spirare",
