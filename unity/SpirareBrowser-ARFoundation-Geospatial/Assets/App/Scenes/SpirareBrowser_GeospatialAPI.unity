@@ -1946,7 +1946,7 @@ PrefabInstance:
     - target: {fileID: 6179950555023758563, guid: 7cd9758577344c54c9f4c8ac659ae071, type: 3}
       propertyPath: arStreetscapeGeometryManager
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1009058220}
     - target: {fileID: 6179950555023758564, guid: 7cd9758577344c54c9f4c8ac659ae071, type: 3}
       propertyPath: m_Name
       value: StreetscapeGeometry
