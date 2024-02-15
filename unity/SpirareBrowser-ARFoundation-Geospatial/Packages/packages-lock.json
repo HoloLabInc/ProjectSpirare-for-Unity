@@ -219,6 +219,15 @@
         "com.unity.modules.imgui": "1.0.0"
       }
     },
+    "com.unity.visualeffectgraph": {
+      "version": "14.0.9",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.shadergraph": "14.0.9",
+        "com.unity.render-pipelines.core": "14.0.9"
+      }
+    },
     "com.unity.xr.arcore": {
       "version": "5.1.2",
       "depth": 0,
@@ -346,6 +355,12 @@
       "source": "local",
       "dependencies": {}
     },
+    "jp.co.hololab.spirare.components.splatvfx": {
+      "version": "file:../../../packages/jp.co.hololab.spirare.components.splatvfx",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "jp.co.hololab.spirare.wasm": {
       "version": "file:../../../packages/jp.co.hololab.spirare.wasm",
       "depth": 0,
@@ -357,6 +372,13 @@
       "depth": 0,
       "source": "local",
       "dependencies": {}
+    },
+    "jp.keijiro.splat-vfx": {
+      "version": "https://github.com/keijiro/SplatVFX.git?path=jp.keijiro.splat-vfx",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "138e65dbb0faddabaec06c14f15af075a84e6471"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
