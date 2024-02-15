@@ -11,4 +11,5 @@ EditorBuildSettings:
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 5d57e72fa843dba498ca5a91fcef9494, type: 2}
     UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: 7cabd0900c4257f4cb8a2c8fa50d83e4, type: 2}
+    com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: a4dfeb3f0efdd4c49b0216c547ef512c, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 4f1459dde66bb274bb8e02d7f8c8a2fc, type: 2}
