@@ -1,27 +1,44 @@
 <dependencies>
   <packages>
-    <package>com.google.android.gms:play-services-location:16+</package>
+    <package>com.google.android.gms:play-services-location:17+</package>
   </packages>
   <files>
-    <file>Assets/Plugins/Android/android.arch.core.common-1.0.0.jar</file>
-    <file>Assets/Plugins/Android/android.arch.lifecycle.common-1.0.0.jar</file>
-    <file>Assets/Plugins/Android/android.arch.lifecycle.runtime-1.0.0.aar</file>
-    <file>Assets/Plugins/Android/com.android.support.support-annotations-26.1.0.jar</file>
-    <file>Assets/Plugins/Android/com.android.support.support-compat-26.1.0.aar</file>
-    <file>Assets/Plugins/Android/com.android.support.support-core-ui-26.1.0.aar</file>
-    <file>Assets/Plugins/Android/com.android.support.support-core-utils-26.1.0.aar</file>
-    <file>Assets/Plugins/Android/com.android.support.support-fragment-26.1.0.aar</file>
-    <file>Assets/Plugins/Android/com.android.support.support-media-compat-26.1.0.aar</file>
-    <file>Assets/Plugins/Android/com.android.support.support-v4-26.1.0.aar</file>
-    <file>Assets/Plugins/Android/com.google.android.gms.play-services-base-16.0.1.aar</file>
-    <file>Assets/Plugins/Android/com.google.android.gms.play-services-basement-16.0.1.aar</file>
-    <file>Assets/Plugins/Android/com.google.android.gms.play-services-location-16.0.0.aar</file>
-    <file>Assets/Plugins/Android/com.google.android.gms.play-services-places-placereport-16.0.0.aar</file>
-    <file>Assets/Plugins/Android/com.google.android.gms.play-services-tasks-16.0.1.aar</file>
+    <file>Assets/Plugins/Android/androidx.annotation.annotation-1.1.0.jar</file>
+    <file>Assets/Plugins/Android/androidx.arch.core.core-common-2.0.0.jar</file>
+    <file>Assets/Plugins/Android/androidx.arch.core.core-runtime-2.0.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.asynclayoutinflater.asynclayoutinflater-1.0.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.collection.collection-1.0.0.jar</file>
+    <file>Assets/Plugins/Android/androidx.coordinatorlayout.coordinatorlayout-1.0.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.core.core-1.2.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.cursoradapter.cursoradapter-1.0.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.customview.customview-1.0.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.documentfile.documentfile-1.0.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.drawerlayout.drawerlayout-1.0.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.fragment.fragment-1.0.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.interpolator.interpolator-1.0.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.legacy.legacy-support-core-ui-1.0.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.legacy.legacy-support-core-utils-1.0.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.lifecycle.lifecycle-common-2.0.0.jar</file>
+    <file>Assets/Plugins/Android/androidx.lifecycle.lifecycle-livedata-2.0.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.lifecycle.lifecycle-livedata-core-2.0.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.lifecycle.lifecycle-runtime-2.0.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.lifecycle.lifecycle-viewmodel-2.0.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.loader.loader-1.0.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.localbroadcastmanager.localbroadcastmanager-1.0.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.print.print-1.0.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.slidingpanelayout.slidingpanelayout-1.0.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.swiperefreshlayout.swiperefreshlayout-1.0.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.versionedparcelable.versionedparcelable-1.1.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.viewpager.viewpager-1.0.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-base-17.3.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-basement-17.3.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-location-17.1.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-places-placereport-17.0.0.aar</file>
+    <file>Assets/Plugins/Android/com.google.android.gms.play-services-tasks-17.1.0.aar</file>
   </files>
   <settings>
     <setting name="androidAbis" value="arm64-v8a" />
-    <setting name="bundleId" value="jp.co.hololab.spirarebrowsergeospatial" />
+    <setting name="bundleId" value="jp.co.hololab.spirarebrowser.geospatial" />
     <setting name="explodeAars" value="True" />
     <setting name="gradleBuildEnabled" value="True" />
     <setting name="gradlePropertiesTemplateEnabled" value="False" />
@@ -32,6 +49,8 @@
     <setting name="patchAndroidManifest" value="True" />
     <setting name="patchMainTemplateGradle" value="True" />
     <setting name="projectExportEnabled" value="False" />
-    <setting name="useJetifier" value="False" />
+    <setting name="useFullCustomMavenRepoPathWhenExport" value="True" />
+    <setting name="useFullCustomMavenRepoPathWhenNotExport" value="False" />
+    <setting name="useJetifier" value="True" />
   </settings>
 </dependencies>
