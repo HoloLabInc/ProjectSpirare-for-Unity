@@ -614,8 +614,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4966719baa26e4b0e8231a24d9bd491a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FocusMode: 1
-  m_LightEstimationMode: 0
+  m_FocusMode: -1
+  m_LightEstimationMode: -1
   m_AutoFocus: 1
   m_LightEstimation: 0
   m_FacingDirection: 1
@@ -1573,7 +1573,7 @@ PrefabInstance:
     - target: {fileID: 451510481513926599, guid: 6afd5c5640f35ac4b94fe08a3ed2b431, type: 3}
       propertyPath: pomlLoaderSettings
       value: 
-      objectReference: {fileID: 11400000, guid: c84a74f2491edfd42ad508c023562b01, type: 2}
+      objectReference: {fileID: 11400000, guid: becebd8d4e77ee04aacbdc885647445d, type: 2}
     - target: {fileID: 451510481513926616, guid: 6afd5c5640f35ac4b94fe08a3ed2b431, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -1946,7 +1946,7 @@ PrefabInstance:
     - target: {fileID: 6179950555023758563, guid: 7cd9758577344c54c9f4c8ac659ae071, type: 3}
       propertyPath: arStreetscapeGeometryManager
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1009058220}
     - target: {fileID: 6179950555023758564, guid: 7cd9758577344c54c9f4c8ac659ae071, type: 3}
       propertyPath: m_Name
       value: StreetscapeGeometry
