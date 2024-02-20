@@ -19,6 +19,9 @@ namespace HoloLab.Spirare
 
         private PomlComponent pomlComponent;
 
+        private float billboardDirectionSwitchLerpRatio = 0;
+        private static readonly float billboardDirectionSwitchThreshold = 1 / Mathf.Sqrt(2);
+
         public override void Initialize(PomlElement element)
         {
             base.Initialize(element);
@@ -203,13 +206,29 @@ namespace HoloLab.Spirare
                     return;
                 case PomlRotationMode.Billboard:
                     {
-                        transform.LookAt(cameraTransform);
+                        var cameraForward = cameraTransform.forward;
+                        var directionSwitchTarget = Mathf.Abs(cameraForward.y) > billboardDirectionSwitchThreshold ? 1 : 0;
+                        billboardDirectionSwitchLerpRatio = Mathf.Lerp(billboardDirectionSwitchLerpRatio, directionSwitchTarget, 0.1f);
+
+                        var upDirection = Vector3.Lerp(Vector3.up, cameraTransform.up, billboardDirectionSwitchLerpRatio);
+                        transform.LookAt(transform.position - cameraForward, upDirection);
                         break;
                     }
                 case PomlRotationMode.VerticalBillboard:
                     {
-                        var target = new Vector3(cameraTransform.position.x, transform.position.y, cameraTransform.position.z);
-                        transform.LookAt(target);
+                        var cameraForward = cameraTransform.forward;
+                        var directionSwitchTarget = Mathf.Abs(cameraForward.y) > billboardDirectionSwitchThreshold ? 1 : 0;
+                        billboardDirectionSwitchLerpRatio = Mathf.Lerp(billboardDirectionSwitchLerpRatio, directionSwitchTarget, 0.1f);
+
+                        var objectToCamera = transform.position - cameraTransform.position;
+                        objectToCamera.y = 0;
+
+                        var cameraUp = cameraTransform.up;
+                        var lookAtCameraUpDirection = Vector3.Dot(cameraUp, objectToCamera) > 0 ? -cameraUp : cameraUp;
+                        var lookAtDirection = Vector3.Lerp(-cameraForward, lookAtCameraUpDirection, billboardDirectionSwitchLerpRatio);
+                        lookAtDirection.y = 0;
+
+                        transform.LookAt(transform.position + lookAtDirection);
                         break;
                     }
                 default:
