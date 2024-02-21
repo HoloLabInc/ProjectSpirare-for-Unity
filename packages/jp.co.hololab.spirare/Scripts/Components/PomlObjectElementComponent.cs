@@ -19,6 +19,9 @@ namespace HoloLab.Spirare
 
         private PomlComponent pomlComponent;
 
+        private float planeBillboardUpDirectionRatio = 0;
+        private static readonly float planeBillboardDirectionSwitchThreshold = 1 / Mathf.Sqrt(2);
+
         public override void Initialize(PomlElement element)
         {
             base.Initialize(element);
@@ -46,13 +49,8 @@ namespace HoloLab.Spirare
             // If controlling rotation with Billboard, disable rotation control by WorldCoordinateOrigin.
             if (TryGetComponent<WorldCoordinateOrigin>(out var worldCoordinateOrigin))
             {
-                switch (PomlElement.RotationMode)
-                {
-                    case PomlRotationMode.Billboard:
-                    case PomlRotationMode.VerticalBillboard:
-                        worldCoordinateOrigin.BindRotation = false;
-                        break;
-                }
+                var bindRotation = PomlElement.RotationMode == PomlRotationMode.None;
+                worldCoordinateOrigin.BindRotation = bindRotation;
             }
         }
 
@@ -210,6 +208,16 @@ namespace HoloLab.Spirare
                     {
                         var target = new Vector3(cameraTransform.position.x, transform.position.y, cameraTransform.position.z);
                         transform.LookAt(target);
+                        break;
+                    }
+                case PomlRotationMode.PlaneBillboard:
+                    {
+                        var cameraForward = cameraTransform.forward;
+                        var planeBillboardUpDirection = Mathf.Abs(cameraForward.y) > planeBillboardDirectionSwitchThreshold ? 1 : 0;
+                        planeBillboardUpDirectionRatio = Mathf.Lerp(planeBillboardUpDirectionRatio, planeBillboardUpDirection, 0.1f);
+
+                        var upDirection = Vector3.Lerp(Vector3.up, cameraTransform.up, planeBillboardUpDirectionRatio);
+                        transform.LookAt(transform.position - cameraForward, upDirection);
                         break;
                     }
                 default:

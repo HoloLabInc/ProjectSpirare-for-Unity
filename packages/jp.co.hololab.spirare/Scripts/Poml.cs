@@ -377,6 +377,8 @@ namespace HoloLab.Spirare
         Billboard,
         [EnumLabel("vertical-billboard")]
         VerticalBillboard,
+        [EnumLabel("plane-billboard")]
+        PlaneBillboard,
     }
 
     public enum PomlDisplayType
