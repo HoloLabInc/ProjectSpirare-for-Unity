@@ -211,7 +211,8 @@ namespace HoloLab.Spirare
                         billboardDirectionSwitchLerpRatio = Mathf.Lerp(billboardDirectionSwitchLerpRatio, directionSwitchTarget, 0.1f);
 
                         var upDirection = Vector3.Lerp(Vector3.up, cameraTransform.up, billboardDirectionSwitchLerpRatio);
-                        transform.LookAt(transform.position - cameraForward, upDirection);
+                        //transform.LookAt(transform.position - cameraForward, upDirection);
+                        transform.LookAt(cameraTransform, upDirection);
                         break;
                     }
                 case PomlRotationMode.VerticalBillboard:
