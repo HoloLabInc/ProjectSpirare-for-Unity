@@ -49,13 +49,8 @@ namespace HoloLab.Spirare
             // If controlling rotation with Billboard, disable rotation control by WorldCoordinateOrigin.
             if (TryGetComponent<WorldCoordinateOrigin>(out var worldCoordinateOrigin))
             {
-                switch (PomlElement.RotationMode)
-                {
-                    case PomlRotationMode.Billboard:
-                    case PomlRotationMode.VerticalBillboard:
-                        worldCoordinateOrigin.BindRotation = false;
-                        break;
-                }
+                var bindRotation = PomlElement.RotationMode == PomlRotationMode.None;
+                worldCoordinateOrigin.BindRotation = bindRotation;
             }
         }
 
