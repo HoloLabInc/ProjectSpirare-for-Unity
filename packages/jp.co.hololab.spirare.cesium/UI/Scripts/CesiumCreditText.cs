@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HoloLab.Spirare.Cesium3DMaps
+namespace HoloLab.Spirare.Cesium.UI
 {
     public class CesiumCreditText : MonoBehaviour
     {
