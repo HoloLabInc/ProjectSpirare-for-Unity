@@ -19,6 +19,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.microsoft.mixedreality.toolkit.foundation",
+            "expression": "",
+            "define": "MRTK2_PRESENT"
+        }
+    ],
     "noEngineReferences": false
 }

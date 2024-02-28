@@ -1,13 +1,17 @@
+#if MRTK2_PRESENT
 using HoloLab.PositioningTools.GeographicCoordinate;
 using Microsoft.MixedReality.Toolkit.Input;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+#endif
+
 using UnityEngine;
 
 namespace HoloLab.Spirare.Cesium3DMaps
 {
+#if MRTK2_PRESENT
     public class CesiumRectanbleMapManipulator : MonoBehaviour, IMixedRealityPointerHandler
     {
         private class PointerData
@@ -179,4 +183,8 @@ namespace HoloLab.Spirare.Cesium3DMaps
             return new EnuPosition(east, north, up);
         }
     }
+#else
+    public class CesiumRectanbleMapManipulator : MonoBehaviour { }
+#endif
 }
+
