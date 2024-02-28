@@ -109,12 +109,23 @@ namespace HoloLab.Spirare
                 var data = downloadHandler.data;
                 result.Data.Dispose();
 
-                if (enableCache)
+                if (data == null)
                 {
-                    var savedCachePath = await SaveCacheAsync(url, data);
-                    CompleteCacheDownloadTaskSouce(url, downloadTaskSource, savedCachePath);
+                    if (enableCache)
+                    {
+                        CompleteCacheDownloadTaskSouce(url, downloadTaskSource, result: null);
+                    }
+                    return CreateErrroResult<byte[]>(new Exception("Downloaded data is empty"));
                 }
-                return CreateSuccessResult(data);
+                else
+                {
+                    if (enableCache)
+                    {
+                        var savedCachePath = await SaveCacheAsync(url, data);
+                        CompleteCacheDownloadTaskSouce(url, downloadTaskSource, savedCachePath);
+                    }
+                    return CreateSuccessResult(data);
+                }
             }
             else
             {
