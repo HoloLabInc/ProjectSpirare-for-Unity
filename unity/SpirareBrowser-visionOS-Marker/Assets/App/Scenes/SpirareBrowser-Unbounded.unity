@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Dimensions: {x: 3, y: 3, z: 3}
   m_IsUniformScale: 0
-  m_OutputConfiguration: {fileID: 11400000, guid: bbf69c8c5c5a3464499ea7098ded8c0f, type: 2}
+  m_OutputConfiguration: {fileID: 11400000, guid: 780e9fdf3d43042578153145466820cf, type: 2}
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 2147483703
@@ -284,6 +284,10 @@ PrefabInstance:
       propertyPath: displayModeInBuild
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -313180071768544894, guid: fd440e61af2e5f146ab8c524926176cd, type: 3}
+      propertyPath: pomlLoaderSettings
+      value: 
+      objectReference: {fileID: 11400000, guid: 3fe3065eea36646cda16d5adcc799b22, type: 2}
     - target: {fileID: 1181938687609358824, guid: fd440e61af2e5f146ab8c524926176cd, type: 3}
       propertyPath: m_Name
       value: WebPomlClient
@@ -848,11 +852,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 064394c1d026bfe4e8fe8c1b8c099691, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  qrDetectionIntervalMilliseconds: 1000
-  cameraManager: {fileID: 0}
-  arTrackedImageManager: {fileID: 0}
-  qrDetectionProcessing: 0
-  latestQRDetectionTime: 0
 --- !u!114 &1794603679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -990,7 +989,7 @@ PrefabInstance:
     - target: {fileID: 451510481513926599, guid: 6afd5c5640f35ac4b94fe08a3ed2b431, type: 3}
       propertyPath: pomlLoaderSettings
       value: 
-      objectReference: {fileID: 11400000, guid: c84a74f2491edfd42ad508c023562b01, type: 2}
+      objectReference: {fileID: 11400000, guid: 3fe3065eea36646cda16d5adcc799b22, type: 2}
     - target: {fileID: 451510481513926616, guid: 6afd5c5640f35ac4b94fe08a3ed2b431, type: 3}
       propertyPath: m_RootOrder
       value: 8

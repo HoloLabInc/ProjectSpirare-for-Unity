@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3352fc3da2dd43409bca579c116572d, type: 3}
+  m_Name: StandardTextElementObjectFactory_PolySpatial
+  m_EditorClassIdentifier: 
+  builtInTextElementComponentPrefab: {fileID: 4612856805404001844, guid: 1dd41ee3680e36942aab2576774315c8, type: 3}
+  urpTextElementComponentPrefab: {fileID: 3213961219189522223, guid: cb9b701eda1ee4b5b80e28a3e95331f1, type: 3}
