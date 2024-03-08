@@ -123,6 +123,73 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &792586775
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 792586777}
+  - component: {fileID: 792586776}
+  m_Layer: 0
+  m_Name: VolumeCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &792586776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 792586775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33acc3b6f04fc124fa646203f42ed25f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Dimensions: {x: 3, y: 3, z: 3}
+  m_IsUniformScale: 0
+  m_OutputConfiguration: {fileID: 11400000, guid: bbf69c8c5c5a3464499ea7098ded8c0f, type: 2}
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 2147483703
+  OpenWindowOnLoad: 1
+  m_ShowVolumeCameraEventsFoldout: 0
+  OnWindowEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnWindowOpened:
+    m_PersistentCalls:
+      m_Calls: []
+  OnWindowClosed:
+    m_PersistentCalls:
+      m_Calls: []
+  OnWindowResized:
+    m_PersistentCalls:
+      m_Calls: []
+  OnWindowFocused:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!4 &792586777
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 792586775}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1098723704
 GameObject:
   m_ObjectHideFlags: 0
@@ -184,12 +251,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SendPointerHoverToParent: 1
-  m_EventSystem: {fileID: 0}
-  m_InputOverride: {fileID: 0}
-  m_DefaultInput: {fileID: 0}
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
-  m_TrackedDeviceDragThresholdMultiplier: 2
   m_XRTrackingOrigin: {fileID: 0}
   m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
   m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
@@ -205,6 +268,71 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
+--- !u!1001 &1218736650
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -313180071768544894, guid: fd440e61af2e5f146ab8c524926176cd, type: 3}
+      propertyPath: url
+      value: http://192.168.0.5:8080
+      objectReference: {fileID: 0}
+    - target: {fileID: -313180071768544894, guid: fd440e61af2e5f146ab8c524926176cd, type: 3}
+      propertyPath: displayModeInBuild
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1181938687609358824, guid: fd440e61af2e5f146ab8c524926176cd, type: 3}
+      propertyPath: m_Name
+      value: WebPomlClient
+      objectReference: {fileID: 0}
+    - target: {fileID: 3847953135069677622, guid: fd440e61af2e5f146ab8c524926176cd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3847953135069677622, guid: fd440e61af2e5f146ab8c524926176cd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3847953135069677622, guid: fd440e61af2e5f146ab8c524926176cd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3847953135069677622, guid: fd440e61af2e5f146ab8c524926176cd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3847953135069677622, guid: fd440e61af2e5f146ab8c524926176cd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3847953135069677622, guid: fd440e61af2e5f146ab8c524926176cd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3847953135069677622, guid: fd440e61af2e5f146ab8c524926176cd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3847953135069677622, guid: fd440e61af2e5f146ab8c524926176cd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3847953135069677622, guid: fd440e61af2e5f146ab8c524926176cd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3847953135069677622, guid: fd440e61af2e5f146ab8c524926176cd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fd440e61af2e5f146ab8c524926176cd, type: 3}
 --- !u!1 &1288641510
 GameObject:
   m_ObjectHideFlags: 0
@@ -475,13 +603,6 @@ MonoBehaviour:
       m_SingletonActionBindings: []
       m_Flags: 0
     m_Reference: {fileID: 0}
-  m_CurrentPosition: {x: 0, y: 0, z: 0}
-  m_CurrentRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_CurrentTrackingState: 3
-  m_RotationBound: 0
-  m_PositionBound: 0
-  m_TrackingStateBound: 0
-  m_IsFirstUpdate: 1
   m_PositionAction:
     m_Name: 
     m_Type: 0
@@ -512,16 +633,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 816b289ef451e094f9ae174fb4cf8db0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Camera: {fileID: 0}
-  m_CameraManager: {fileID: 0}
-  m_OcclusionManager: {fileID: 0}
   m_UseCustomMaterial: 0
   m_CustomMaterial: {fileID: 0}
-  m_DefaultMaterial: {fileID: 0}
-  m_PreviousCameraDepthMode: 0
-  m_BackgroundRenderingEnabled: 0
-  m_CommandBufferCullingState: 0
-  m_CommandBufferRenderOrderState: 0
 --- !u!114 &1598513069
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -534,8 +647,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4966719baa26e4b0e8231a24d9bd491a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Camera: {fileID: 0}
-  m_PreRenderInvertCullingValue: 0
   m_FocusMode: -1
   m_LightEstimationMode: -1
   m_AutoFocus: 1
@@ -691,9 +802,6 @@ MonoBehaviour:
   m_AttemptUpdate: 1
   m_MatchFrameRate: 1
   m_TrackingMode: 2
-  m_VSyncCount: 0
-  m_TargetFrameRate: 0
-  m_WasFrameRateSet: 0
 --- !u!4 &1653931406
 Transform:
   m_ObjectHideFlags: 0
@@ -757,8 +865,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dea56a9eaadd1c439095de4f9a371cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <origin>k__BackingField: {fileID: 0}
-  <sessionOrigin>k__BackingField: {fileID: 0}
   m_SerializedLibrary: {fileID: 0}
   m_MaxNumberOfMovingImages: 4
   m_TrackedImagePrefab: {fileID: 0}
@@ -775,14 +881,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Camera: {fileID: 1598513071}
-  <TrackablesParent>k__BackingField: {fileID: 0}
   m_OriginBaseGameObject: {fileID: 1794603676}
   m_CameraFloorOffsetObject: {fileID: 1427891662}
   m_RequestedTrackingOriginMode: 0
   m_CameraYOffset: 1.1176
-  <CurrentTrackingOriginMode>k__BackingField: 0
-  m_CameraInitialized: 0
-  m_CameraInitializing: 0
 --- !u!4 &1794603681
 Transform:
   m_ObjectHideFlags: 0
@@ -888,7 +990,7 @@ PrefabInstance:
     - target: {fileID: 451510481513926599, guid: 6afd5c5640f35ac4b94fe08a3ed2b431, type: 3}
       propertyPath: pomlLoaderSettings
       value: 
-      objectReference: {fileID: 11400000, guid: becebd8d4e77ee04aacbdc885647445d, type: 2}
+      objectReference: {fileID: 11400000, guid: c84a74f2491edfd42ad508c023562b01, type: 2}
     - target: {fileID: 451510481513926616, guid: 6afd5c5640f35ac4b94fe08a3ed2b431, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -1013,8 +1115,10 @@ SceneRoots:
   m_Roots:
   - {fileID: 1653931406}
   - {fileID: 1794603681}
+  - {fileID: 792586777}
   - {fileID: 1945440848}
   - {fileID: 1288641512}
   - {fileID: 1098723707}
   - {fileID: 451510482484952968}
   - {fileID: 995636814833129743}
+  - {fileID: 1218736650}
