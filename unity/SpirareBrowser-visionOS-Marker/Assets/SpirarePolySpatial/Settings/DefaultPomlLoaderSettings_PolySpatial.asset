@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   modelElementObjectFactory: {fileID: 11400000, guid: f6dd5d184ff69f5419cfc27912c78afe, type: 2}
   imageElementObjectFactory: {fileID: 11400000, guid: 5e1a0c15b23ea46d68609c66f6a508bb, type: 2}
-  videoElementObjectFactory: {fileID: 11400000, guid: 0ae4360eac6bdf94080d5ce40deef69e, type: 2}
+  videoElementObjectFactory: {fileID: 11400000, guid: 1183c67f674a0448d923c2e540b8d088, type: 2}
   textElementObjectFactory: {fileID: 11400000, guid: 148dcb37332824dadb35c3816fd828ea, type: 2}
   geometryElementObjectFactory: {fileID: 11400000, guid: e9a836534f9aa4d45a7f91027336e4fa, type: 2}
   screenSpaceElementObjectFactory: {fileID: 11400000, guid: bc1373b381031d445a326684e927b381, type: 2}
