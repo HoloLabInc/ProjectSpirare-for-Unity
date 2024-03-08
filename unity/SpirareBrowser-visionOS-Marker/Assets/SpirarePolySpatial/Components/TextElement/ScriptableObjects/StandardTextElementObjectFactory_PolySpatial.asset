@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3352fc3da2dd43409bca579c116572d, type: 3}
   m_Name: StandardTextElementObjectFactory_PolySpatial
   m_EditorClassIdentifier: 
-  builtInTextElementComponentPrefab: {fileID: 4612856805404001844, guid: 1dd41ee3680e36942aab2576774315c8, type: 3}
-  urpTextElementComponentPrefab: {fileID: 3213961219189522223, guid: cb9b701eda1ee4b5b80e28a3e95331f1, type: 3}
+  builtInTextElementComponentPrefab: {fileID: 5084756207768247959, guid: 2e570de4b87364c6c8836718ddb2b378, type: 3}
+  urpTextElementComponentPrefab: {fileID: 5084756207768247959, guid: 2e570de4b87364c6c8836718ddb2b378, type: 3}
