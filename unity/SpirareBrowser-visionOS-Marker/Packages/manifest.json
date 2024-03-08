@@ -1,15 +1,17 @@
 {
   "dependencies": {
+    "com.atteneder.gltfast": "https://github.com/HoloLabInc/glTFast.git#polyspatial-urp",
     "com.cysharp.unitask": "2.5.3",
     "com.gwaredd.mggif": "https://github.com/gwaredd/mgGif.git?path=Assets/mgGif",
     "com.unity.ai.navigation": "1.1.5",
-    "com.unity.cloud.gltfast": "6.0.1",
     "com.unity.collab-proxy": "2.2.0",
     "com.unity.feature.development": "1.0.1",
     "com.unity.ide.rider": "3.0.27",
     "com.unity.ide.visualstudio": "2.0.22",
     "com.unity.ide.vscode": "1.2.5",
     "com.unity.nuget.newtonsoft-json": "3.2.1",
+    "com.unity.polyspatial.visionos": "1.1.4",
+    "com.unity.polyspatial.xr": "1.1.4",
     "com.unity.render-pipelines.universal": "14.0.10",
     "com.unity.test-framework": "1.1.33",
     "com.unity.textmeshpro": "3.0.8",
