@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_PresetInfoIsWorld
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3345430053786392154, guid: b9bc2824ddc3add429b35a9acd818233, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 5763cc629913448c081e7763fa299b5e, type: 2}
     - target: {fileID: 3732530262507718483, guid: b9bc2824ddc3add429b35a9acd818233, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -60,6 +64,10 @@ PrefabInstance:
       propertyPath: m_PresetInfoIsWorld
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7563731403556690832, guid: b9bc2824ddc3add429b35a9acd818233, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 5763cc629913448c081e7763fa299b5e, type: 2}
     - target: {fileID: 8331533514023816901, guid: b9bc2824ddc3add429b35a9acd818233, type: 3}
       propertyPath: backfaceSolidMaterial
       value: 
