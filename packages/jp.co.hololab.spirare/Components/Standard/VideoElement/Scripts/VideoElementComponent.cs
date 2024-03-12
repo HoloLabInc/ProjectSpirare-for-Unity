@@ -156,10 +156,10 @@ namespace HoloLab.Spirare
             }
 
             var urlChanged = videoPlayer.url != url;
-            videoPlayer.url = url;
 
             if (urlChanged)
             {
+                videoPlayer.url = url;
                 videoPlayer.Prepare();
                 await UniTask.WaitUntil(() => videoPlayer.isPrepared);
 
