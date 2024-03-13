@@ -22,6 +22,6 @@ MonoBehaviour:
   geoReferenceElementComponentFactory: {fileID: 11400000, guid: c9aa2bdc0fc2aad4584f403ee106bbb2, type: 2}
   scriptElementComponentFactory: {fileID: 11400000, guid: 13a611523b00a10449431cbd45349907, type: 2}
   cesium3dTilesElementFactory: {fileID: 0}
-  occlusionMaterial: {fileID: 2100000, guid: 309b0b26b311cf64e8e9f689bec8ff43, type: 2}
+  occlusionMaterial: {fileID: 2100000, guid: d6c7e9debb87140cdacb6ef06dc64387, type: 2}
   defaultLayerName: Default
   screenSpaceLayerName: SpirareScreenSpace
