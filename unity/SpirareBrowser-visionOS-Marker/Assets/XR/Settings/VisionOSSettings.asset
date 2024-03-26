@@ -16,6 +16,6 @@ MonoBehaviour:
   m_HandsTrackingUsageDescription: Use hand tracking
   m_WorldSensingUsageDescription: Detect markers
   m_RuntimeSettings: {fileID: 11400000, guid: 786ef98a48f694f67bebe9965428231f, type: 2}
-  m_UpperLimbVisibility: 0
+  m_UpperLimbVisibility: 1
   m_FoveatedRendering: 1
   m_IL2CPPLargeExeWorkaround: 0
