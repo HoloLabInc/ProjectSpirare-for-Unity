@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 848409ee8ba454f42a5ddff137688a27, type: 3}
+  m_Name: ReferenceImageLibrary
+  m_EditorClassIdentifier: 
+  m_GuidLow: 4957595099524478643
+  m_GuidHigh: 10474910968607809434
+  m_DataStore:
+    m_Storage: []
+  m_Images:
+  - m_SerializedGuid:
+      m_GuidLow: 4636056549310605339
+      m_GuidHigh: 9600615819560831133
+    m_SerializedTextureGuid:
+      m_GuidLow: 298015887701369770
+      m_GuidHigh: 14169317457619447387
+    m_Size: {x: 1, y: 1}
+    m_SpecifySize: 1
+    m_Name: QR
+    m_Texture: {fileID: 0}
