@@ -27,12 +27,12 @@ namespace HoloLab.Spirare.Cesium
             anchor = gameObject.AddComponent<CesiumGlobeAnchor>();
 
             UpdateAnchorPose();
-            OnElementUpdated += PomlElementCOmponent_OnElementUpdated;
+            OnElementUpdated += PomlElementComponent_OnElementUpdated;
 
             return this;
         }
 
-        private void PomlElementCOmponent_OnElementUpdated(PomlElement element)
+        private void PomlElementComponent_OnElementUpdated(PomlElement element)
         {
             UpdateAnchorPose();
         }
