@@ -17,6 +17,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
         private VisualEffect splatPrefab;
 
         private static readonly SplatVfxSplatLoader splatLoader = new SplatVfxSplatLoader();
+        private static readonly SplatVfxPlyLoader splatPlyLoader = new SplatVfxPlyLoader();
 
         private const string hiddenLayerName = "SpirareHidden";
         private int HiddenLayer => ConvertLayerNameToLayer(hiddenLayerName);
@@ -72,8 +73,20 @@ namespace HoloLab.Spirare.Components.SplatVfx
 
             _cameraVisibleHelpers = null;
 
-            var (success, splatObject) = await splatLoader.LoadAsync(transform, element.Src, splatPrefab);
-            currentModelObject = splatObject;
+            bool success = false;
+            GameObject modelObject = null;
+
+            switch (element.GetSrcFileExtension())
+            {
+                case ".splat":
+                    (success, modelObject) = await splatLoader.LoadAsync(transform, element.Src, splatPrefab);
+                    break;
+                case ".ply":
+                    (success, modelObject) = await splatPlyLoader.LoadAsync(transform, element.Src, splatPrefab);
+                    break;
+            }
+
+            currentModelObject = modelObject;
 
             if (success)
             {

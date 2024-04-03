@@ -116,7 +116,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
 
             var positions = new Vector3[count];
             var axis = new Vector3[count * 3];
-            var color = new Color[count * 3];
+            var color = new Color[count];
 
 
             for (var i = 0; i < header.vertexCount; i++)
@@ -147,6 +147,9 @@ namespace HoloLab.Spirare.Components.SplatVfx
                         case DataProperty.DC2:
                             b = ReadAsFloat(reader, prop.Type);
                             break;
+                        case DataProperty.Opacity:
+                            a = ReadAsFloat(reader, prop.Type);
+                            break;
                         default:
                             SkipData(reader, prop.Type);
                             break;
@@ -155,10 +158,11 @@ namespace HoloLab.Spirare.Components.SplatVfx
                     }
                 }
 
-                positions[i] = new Vector3(x, y, z);
-                axis[3 * i + 0] = new Vector3(1, 0, 0);
-                axis[3 * i + 1] = new Vector3(0, 1, 0);
-                axis[3 * i + 2] = new Vector3(0, 0, 1);
+                positions[i] = new Vector3(x, -y, z);
+                var scale = 0.001f;
+                axis[3 * i + 0] = new Vector3(scale, 0, 0);
+                axis[3 * i + 1] = new Vector3(0, scale, 0);
+                axis[3 * i + 2] = new Vector3(0, 0, scale);
                 color[i] = new Color(r, g, b, a);
             }
 
@@ -365,11 +369,23 @@ namespace HoloLab.Spirare.Components.SplatVfx
 
         private DataProperty ParseDataProperty(string dataPropertyString)
         {
+            // TODO
             return dataPropertyString switch
             {
                 "x" => DataProperty.X,
                 "y" => DataProperty.Y,
                 "z" => DataProperty.Z,
+                "f_dc_0" => DataProperty.DC0,
+                "f_dc_1" => DataProperty.DC1,
+                "f_dc_2" => DataProperty.DC2,
+                "scale_0" => DataProperty.Scale0,
+                "scale_1" => DataProperty.Scale1,
+                "scale_2" => DataProperty.Scale2,
+                "rot_0" => DataProperty.Rot0,
+                "rot_1" => DataProperty.Rot1,
+                "rot_2" => DataProperty.Rot2,
+                "rot_3" => DataProperty.Rot3,
+                "opacity" => DataProperty.Opacity,
 
                 _ => DataProperty.Unknown
             };
