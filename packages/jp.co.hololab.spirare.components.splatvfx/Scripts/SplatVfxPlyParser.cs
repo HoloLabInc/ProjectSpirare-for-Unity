@@ -8,8 +8,6 @@ namespace HoloLab.Spirare.Components.SplatVfx
 {
     internal class SplatVfxPlyParser
     {
-        private const double SH_C0 = 0.28209479177387814;
-
         private enum DataProperty
         {
             Unknown,
@@ -63,6 +61,21 @@ namespace HoloLab.Spirare.Components.SplatVfx
             public Color[] Colors;
         }
 
+        private const double SH_C0 = 0.28209479177387814;
+
+        private static readonly DataProperty[] neededProperties = new DataProperty[] {
+                DataProperty.X,
+                DataProperty.Y,
+                DataProperty.Z,
+                DataProperty.Rot0,
+                DataProperty.Rot1,
+                DataProperty.Rot2,
+                DataProperty.Rot3,
+                DataProperty.Scale0,
+                DataProperty.Scale1,
+                DataProperty.Scale2,
+            };
+
         public (SplatData SplatData, ParseErrorType Error) TryParseSplatData(byte[] splatBytes)
         {
             using var memoryStream = new MemoryStream(splatBytes);
@@ -70,6 +83,11 @@ namespace HoloLab.Spirare.Components.SplatVfx
             using var streamReader = new StreamReader(memoryStream);
             var headerResult = TryReadDataHeader(streamReader, out var header);
             if (headerResult == false)
+            {
+                return (null, ParseErrorType.InvalidHeader);
+            }
+
+            if (IsHeaderValid(header) == false)
             {
                 return (null, ParseErrorType.InvalidHeader);
             }
@@ -260,6 +278,21 @@ namespace HoloLab.Spirare.Components.SplatVfx
 
             // Rewind the stream back to the exact position of the reader.
             reader.BaseStream.Position = readCount;
+
+            return true;
+        }
+
+        private static bool IsHeaderValid(DataHeader header)
+        {
+            var properties = header.properties;
+
+            foreach (var neededProperty in neededProperties)
+            {
+                if (properties.Exists(p => p.Property == neededProperty) == false)
+                {
+                    return false;
+                }
+            }
 
             return true;
         }
