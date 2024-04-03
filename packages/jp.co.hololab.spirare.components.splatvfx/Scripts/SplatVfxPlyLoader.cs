@@ -45,6 +45,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
                 case SplatVfxPlyParser.ParseErrorType.None:
 
                     // var data = CreateSplatData(fetchResult.Data);
+                    var data = CreateSplatData(parseResult.SplatData);
 
                     InvokeLoadingStatusChanged(LoadingStatus.ModelInstantiating, onLoadingStatusChanged);
                     var visualEffect = UnityEngine.Object.Instantiate(splatPrefab);
@@ -52,7 +53,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
 
                     var binderBase = splatObject.AddComponent<VFXPropertyBinder>();
                     var binder = binderBase.AddPropertyBinder<VFXSplatDataBinder>();
-                    binder.SplatData = parseResult.SplatData;
+                    binder.SplatData = data;
 
                     splatObject.transform.SetParent(parent, worldPositionStays: false);
 
@@ -69,20 +70,18 @@ namespace HoloLab.Spirare.Components.SplatVfx
             }
         }
 
-        private static SplatData CreateSplatData(byte[] splatBytes)
+        private static SplatData CreateSplatData(SplatVfxPlyParser.SplatData data)
         {
-            var data = ScriptableObject.CreateInstance<SplatData>();
+            var splatData = ScriptableObject.CreateInstance<SplatData>();
 
-            var arrays = LoadDataArrays(splatBytes);
-            data.PositionArray = arrays.position;
-            data.AxisArray = arrays.axis;
-            data.ColorArray = arrays.color;
-            data.ReleaseGpuResources();
+            splatData.PositionArray = data.Positions;
+            splatData.AxisArray = data.Axes;
+            splatData.ColorArray = data.Colors;
 
-            return data;
+            return splatData;
         }
 
-   #pragma warning disable CS0649
+#pragma warning disable CS0649
 
         private struct ReadData
         {

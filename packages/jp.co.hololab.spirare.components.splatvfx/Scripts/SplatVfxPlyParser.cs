@@ -23,6 +23,13 @@ namespace HoloLab.Spirare.Components.SplatVfx
             InvalidBody
         }
 
+        public class SplatData
+        {
+            public Vector3[] Positions;
+            public Vector3[] Axes;
+            public Color[] Colors;
+        }
+
         public (SplatData SplatData, ParseErrorType Error) TryParseSplatData(byte[] splatBytes)
         {
             /*
@@ -40,21 +47,20 @@ namespace HoloLab.Spirare.Components.SplatVfx
                 using (var streamReader = new StreamReader(memoryStream))
                 {
                     var headerResult = TryReadDataHeader(streamReader, out var header);
-
                     if (headerResult == false)
                     {
                         return (null, ParseErrorType.InvalidHeader);
                     }
 
+                    var bodyResult = TryReadBody(memoryStream, header, out var body);
+                    if (bodyResult == false)
+                    {
+                        return (null, ParseErrorType.InvalidBody);
+                    }
 
-
-
-                    return (null, ParseErrorType.None);
+                    return (body, ParseErrorType.None);
                 }
             }
-
-
-            // return data;
         }
 
         private static float ReadAsFloat(BinaryReader reader, DataType dataType)
@@ -102,7 +108,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
             }
         }
 
-        private bool TryReadBody(Stream stream, DataHeader header, out (Vector3[] position, Vector3[] axis, Color[] color) body)
+        private bool TryReadBody(Stream stream, DataHeader header, out SplatData data)
         {
             var reader = new BinaryReader(stream);
 
@@ -112,12 +118,13 @@ namespace HoloLab.Spirare.Components.SplatVfx
             var axis = new Vector3[count * 3];
             var color = new Color[count * 3];
 
-            float x = 0, y = 0, z = 0;
-            //Byte r = 255, g = 255, b = 255, a = 255;
-            float r, g, b, a;
 
             for (var i = 0; i < header.vertexCount; i++)
             {
+                float x = 0, y = 0, z = 0;
+                //Byte r = 255, g = 255, b = 255, a = 255;
+                float r = 0, g = 0, b = 0, a = 0;
+
                 foreach (var prop in header.properties)
                 {
                     switch (prop.Property)
@@ -148,8 +155,20 @@ namespace HoloLab.Spirare.Components.SplatVfx
                     }
                 }
 
+                positions[i] = new Vector3(x, y, z);
+                axis[3 * i + 0] = new Vector3(1, 0, 0);
+                axis[3 * i + 1] = new Vector3(0, 1, 0);
+                axis[3 * i + 2] = new Vector3(0, 0, 1);
+                color[i] = new Color(r, g, b, a);
             }
 
+            data = new SplatData
+            {
+                Positions = positions,
+                Axes = axis,
+                Colors = color
+            };
+            return true;
         }
 
 #pragma warning disable CS0649
