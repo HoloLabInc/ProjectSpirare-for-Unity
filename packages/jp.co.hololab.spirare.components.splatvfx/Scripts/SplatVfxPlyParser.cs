@@ -1,14 +1,8 @@
-﻿using System.Threading.Tasks;
-using UnityEngine;
-using System.Threading;
+﻿using UnityEngine;
 using System;
-using Cysharp.Threading.Tasks;
-using SplatVfx;
 using System.Runtime.InteropServices;
 using Unity.Burst;
 using Unity.Mathematics;
-using UnityEngine.VFX.Utility;
-using UnityEngine.VFX;
 using System.IO;
 using System.Collections.Generic;
 
@@ -124,6 +118,10 @@ namespace HoloLab.Spirare.Components.SplatVfx
                 float x = 0, y = 0, z = 0;
                 //Byte r = 255, g = 255, b = 255, a = 255;
                 float r = 0, g = 0, b = 0, a = 0;
+                float rx = 0, ry = 0, rz = 0, rw = 1;
+                float scaleX = 0, scaleY = 0, scaleZ = 0;
+
+                const double SH_C0 = 0.28209479177387814;
 
                 foreach (var prop in header.properties)
                 {
@@ -139,30 +137,57 @@ namespace HoloLab.Spirare.Components.SplatVfx
                             z = ReadAsFloat(reader, prop.Type);
                             break;
                         case DataProperty.DC0:
-                            r = ReadAsFloat(reader, prop.Type);
+                            //r = ReadAsFloat(reader, prop.Type);
+                            r = (float)(0.5 + SH_C0 * ReadAsFloat(reader, prop.Type));
                             break;
                         case DataProperty.DC1:
-                            g = ReadAsFloat(reader, prop.Type);
+                            g = (float)(0.5 + SH_C0 * ReadAsFloat(reader, prop.Type));
                             break;
                         case DataProperty.DC2:
-                            b = ReadAsFloat(reader, prop.Type);
+                            b = (float)(0.5 + SH_C0 * ReadAsFloat(reader, prop.Type));
                             break;
                         case DataProperty.Opacity:
-                            a = ReadAsFloat(reader, prop.Type);
+                            //a = ReadAsFloat(reader, prop.Type);
+                            // rgba[3] = (1 / (1 + Math.exp(-value))) * 255;
+                            a = (float)(1 / (1 + Math.Exp(-ReadAsFloat(reader, prop.Type))));
+                            break;
+                        case DataProperty.Rot0:
+                            rx = ReadAsFloat(reader, prop.Type);
+                            break;
+                        case DataProperty.Rot1:
+                            ry = ReadAsFloat(reader, prop.Type);
+                            break;
+                        case DataProperty.Rot2:
+                            rz = ReadAsFloat(reader, prop.Type);
+                            break;
+                        case DataProperty.Rot3:
+                            rw = ReadAsFloat(reader, prop.Type);
+                            break;
+                        case DataProperty.Scale0:
+                            scaleX = math.exp(ReadAsFloat(reader, prop.Type));
+                            break;
+                        case DataProperty.Scale1:
+                            scaleY = math.exp(ReadAsFloat(reader, prop.Type));
+                            break;
+                        case DataProperty.Scale2:
+                            scaleZ = math.exp(ReadAsFloat(reader, prop.Type));
                             break;
                         default:
                             SkipData(reader, prop.Type);
                             break;
-
-
                     }
                 }
 
                 positions[i] = new Vector3(x, -y, z);
-                var scale = 0.001f;
-                axis[3 * i + 0] = new Vector3(scale, 0, 0);
-                axis[3 * i + 1] = new Vector3(0, scale, 0);
-                axis[3 * i + 2] = new Vector3(0, 0, scale);
+                var q = math.quaternion(rx, -ry, rz, -rw);
+                var axis1 = math.mul(q, math.float3(scaleX, 0, 0));
+                var axis2 = math.mul(q, math.float3(0, scaleY, 0));
+                var axis3 = math.mul(q, math.float3(0, 0, scaleZ));
+
+                axis[3 * i + 0] = axis1;
+                axis[3 * i + 1] = axis2;
+                axis[3 * i + 2] = axis3;
+
                 color[i] = new Color(r, g, b, a);
             }
 
