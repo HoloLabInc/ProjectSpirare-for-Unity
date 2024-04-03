@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using System;
-using System.Runtime.InteropServices;
-using Unity.Burst;
 using Unity.Mathematics;
 using System.IO;
 using System.Collections.Generic;
@@ -10,6 +8,8 @@ namespace HoloLab.Spirare.Components.SplatVfx
 {
     internal class SplatVfxPlyParser
     {
+        const double SH_C0 = 0.28209479177387814;
+
         public enum ParseErrorType
         {
             None,
@@ -24,78 +24,33 @@ namespace HoloLab.Spirare.Components.SplatVfx
             public Color[] Colors;
         }
 
+
+
         public (SplatData SplatData, ParseErrorType Error) TryParseSplatData(byte[] splatBytes)
         {
-            using (var memoryStream = new MemoryStream(splatBytes))
+            using var memoryStream = new MemoryStream(splatBytes);
+
+            using var streamReader = new StreamReader(memoryStream);
+            var headerResult = TryReadDataHeader(streamReader, out var header);
+            if (headerResult == false)
             {
-                using (var streamReader = new StreamReader(memoryStream))
-                {
-                    var headerResult = TryReadDataHeader(streamReader, out var header);
-                    if (headerResult == false)
-                    {
-                        return (null, ParseErrorType.InvalidHeader);
-                    }
-
-                    var bodyResult = TryReadBody(memoryStream, header, out var body);
-                    if (bodyResult == false)
-                    {
-                        return (null, ParseErrorType.InvalidBody);
-                    }
-
-                    return (body, ParseErrorType.None);
-                }
+                return (null, ParseErrorType.InvalidHeader);
             }
-        }
 
-        private static float ReadAsFloat(BinaryReader reader, DataType dataType)
-        {
-            return dataType switch
+            using var binaryReader = new BinaryReader(memoryStream);
+            var bodyResult = TryReadBody(binaryReader, header, out var body);
+            if (bodyResult == false)
             {
-                DataType.Int8 => (float)reader.ReadSByte(),
-                DataType.UInt8 => (float)reader.ReadByte(),
-                DataType.Int16 => (float)reader.ReadInt16(),
-                DataType.UInt16 => (float)reader.ReadUInt16(),
-                DataType.Int32 => (float)reader.ReadInt32(),
-                DataType.UInt32 => (float)reader.ReadUInt32(),
-                DataType.Float32 => reader.ReadSingle(),
-                DataType.Float64 => (float)reader.ReadDouble(),
-                _ => throw new InvalidOperationException()
-            };
-        }
-
-        private static void SkipData(BinaryReader reader, DataType dataType)
-        {
-            switch (dataType)
-            {
-                case DataType.Int8:
-                case DataType.UInt8:
-                    reader.BaseStream.Position += 1;
-                    break;
-
-                case DataType.Int16:
-                case DataType.UInt16:
-                    reader.BaseStream.Position += 2;
-                    break;
-
-                case DataType.Int32:
-                case DataType.UInt32:
-                    reader.BaseStream.Position += 4;
-                    break;
-
-                case DataType.Float32:
-                    reader.BaseStream.Position += 4;
-                    break;
-
-                case DataType.Float64:
-                    reader.BaseStream.Position += 8;
-                    break;
+                return (null, ParseErrorType.InvalidBody);
             }
+
+            return (body, ParseErrorType.None);
         }
 
-        private bool TryReadBody(Stream stream, DataHeader header, out SplatData data)
-        {
-            var reader = new BinaryReader(stream);
 
+
+        private bool TryReadBody(BinaryReader reader, DataHeader header, out SplatData data)
+        {
             var count = header.vertexCount;
 
             var positions = new Vector3[count];
@@ -108,8 +63,6 @@ namespace HoloLab.Spirare.Components.SplatVfx
                 float r = 0, g = 0, b = 0, a = 0;
                 float rx = 0, ry = 0, rz = 0, rw = 1;
                 float scaleX = 0, scaleY = 0, scaleZ = 0;
-
-                const double SH_C0 = 0.28209479177387814;
 
                 foreach (var prop in header.properties)
                 {
@@ -188,58 +141,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
             return true;
         }
 
-#pragma warning disable CS0649
-
-        private struct ReadData
-        {
-            public float px, py, pz;
-            public float sx, sy, sz;
-            public byte r, g, b, a;
-            public byte rw, rx, ry, rz;
-        }
-
-#pragma warning restore CS0649
-
-        private static (Vector3[] position, Vector3[] axis, Color[] color) LoadDataArrays(byte[] splatBytes)
-        {
-            var bytes = new Span<byte>(splatBytes);
-            var count = bytes.Length / 32;
-
-            var source = MemoryMarshal.Cast<byte, ReadData>(bytes);
-
-            var position = new Vector3[count];
-            var axis = new Vector3[count * 3];
-            var color = new Color[count];
-
-            for (var i = 0; i < count; i++)
-                ParseReadData(source[i],
-                              out position[i],
-                              out axis[i * 3],
-                              out axis[i * 3 + 1],
-                              out axis[i * 3 + 2],
-                              out color[i]);
-
-            return (position, axis, color);
-        }
-
-        [BurstCompile]
-        private static void ParseReadData(in ReadData src,
-                           out Vector3 position,
-                           out Vector3 axis1,
-                           out Vector3 axis2,
-                           out Vector3 axis3,
-                           out Color color)
-        {
-            var rv = (math.float4(src.rx, src.ry, src.rz, src.rw) - 128) / 128;
-            var q = math.quaternion(rv.x, -rv.y, rv.z, -rv.w);
-            position = math.float3(src.px, -src.py, src.pz);
-            axis1 = math.mul(q, math.float3(src.sx, 0, 0));
-            axis2 = math.mul(q, math.float3(0, src.sy, 0));
-            axis3 = math.mul(q, math.float3(0, 0, src.sz));
-            color = (Vector4)math.float4(src.r, src.g, src.b, src.a) / 255;
-        }
-
-        enum DataProperty
+        private enum DataProperty
         {
             Unknown,
             X,
@@ -383,7 +285,6 @@ namespace HoloLab.Spirare.Components.SplatVfx
 
         private DataProperty ParseDataProperty(string dataPropertyString)
         {
-            // TODO
             return dataPropertyString switch
             {
                 "x" => DataProperty.X,
@@ -404,6 +305,51 @@ namespace HoloLab.Spirare.Components.SplatVfx
 
                 _ => DataProperty.Unknown
             };
+        }
+
+        private static float ReadAsFloat(BinaryReader reader, DataType dataType)
+        {
+            return dataType switch
+            {
+                DataType.Int8 => (float)reader.ReadSByte(),
+                DataType.UInt8 => (float)reader.ReadByte(),
+                DataType.Int16 => (float)reader.ReadInt16(),
+                DataType.UInt16 => (float)reader.ReadUInt16(),
+                DataType.Int32 => (float)reader.ReadInt32(),
+                DataType.UInt32 => (float)reader.ReadUInt32(),
+                DataType.Float32 => reader.ReadSingle(),
+                DataType.Float64 => (float)reader.ReadDouble(),
+                _ => throw new InvalidOperationException()
+            };
+        }
+
+        private static void SkipData(BinaryReader reader, DataType dataType)
+        {
+            switch (dataType)
+            {
+                case DataType.Int8:
+                case DataType.UInt8:
+                    reader.BaseStream.Position += 1;
+                    break;
+
+                case DataType.Int16:
+                case DataType.UInt16:
+                    reader.BaseStream.Position += 2;
+                    break;
+
+                case DataType.Int32:
+                case DataType.UInt32:
+                    reader.BaseStream.Position += 4;
+                    break;
+
+                case DataType.Float32:
+                    reader.BaseStream.Position += 4;
+                    break;
+
+                case DataType.Float64:
+                    reader.BaseStream.Position += 8;
+                    break;
+            }
         }
     }
 }
