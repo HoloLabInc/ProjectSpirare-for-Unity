@@ -8,138 +8,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
 {
     internal class SplatVfxPlyParser
     {
-        const double SH_C0 = 0.28209479177387814;
-
-        public enum ParseErrorType
-        {
-            None,
-            InvalidHeader,
-            InvalidBody
-        }
-
-        public class SplatData
-        {
-            public Vector3[] Positions;
-            public Vector3[] Axes;
-            public Color[] Colors;
-        }
-
-
-
-        public (SplatData SplatData, ParseErrorType Error) TryParseSplatData(byte[] splatBytes)
-        {
-            using var memoryStream = new MemoryStream(splatBytes);
-
-            using var streamReader = new StreamReader(memoryStream);
-            var headerResult = TryReadDataHeader(streamReader, out var header);
-            if (headerResult == false)
-            {
-                return (null, ParseErrorType.InvalidHeader);
-            }
-
-            using var binaryReader = new BinaryReader(memoryStream);
-            var bodyResult = TryReadBody(binaryReader, header, out var body);
-            if (bodyResult == false)
-            {
-                return (null, ParseErrorType.InvalidBody);
-            }
-
-            return (body, ParseErrorType.None);
-        }
-
-
-
-        private bool TryReadBody(BinaryReader reader, DataHeader header, out SplatData data)
-        {
-            var count = header.vertexCount;
-
-            var positions = new Vector3[count];
-            var axis = new Vector3[count * 3];
-            var color = new Color[count];
-
-            for (var i = 0; i < header.vertexCount; i++)
-            {
-                float x = 0, y = 0, z = 0;
-                float r = 0, g = 0, b = 0, a = 0;
-                float rx = 0, ry = 0, rz = 0, rw = 1;
-                float scaleX = 0, scaleY = 0, scaleZ = 0;
-
-                foreach (var prop in header.properties)
-                {
-                    switch (prop.Property)
-                    {
-                        case DataProperty.X:
-                            x = ReadAsFloat(reader, prop.Type);
-                            break;
-                        case DataProperty.Y:
-                            y = ReadAsFloat(reader, prop.Type);
-                            break;
-                        case DataProperty.Z:
-                            z = ReadAsFloat(reader, prop.Type);
-                            break;
-                        case DataProperty.DC0:
-                            r = (float)(0.5 + SH_C0 * ReadAsFloat(reader, prop.Type));
-                            break;
-                        case DataProperty.DC1:
-                            g = (float)(0.5 + SH_C0 * ReadAsFloat(reader, prop.Type));
-                            break;
-                        case DataProperty.DC2:
-                            b = (float)(0.5 + SH_C0 * ReadAsFloat(reader, prop.Type));
-                            break;
-                        case DataProperty.DC3:
-                            a = (float)(0.5 + SH_C0 * ReadAsFloat(reader, prop.Type));
-                            break;
-                        case DataProperty.Opacity:
-                            a = (float)(1 / (1 + Math.Exp(-ReadAsFloat(reader, prop.Type))));
-                            break;
-                        case DataProperty.Rot0:
-                            rw = ReadAsFloat(reader, prop.Type);
-                            break;
-                        case DataProperty.Rot1:
-                            rx = ReadAsFloat(reader, prop.Type);
-                            break;
-                        case DataProperty.Rot2:
-                            ry = ReadAsFloat(reader, prop.Type);
-                            break;
-                        case DataProperty.Rot3:
-                            rz = ReadAsFloat(reader, prop.Type);
-                            break;
-                        case DataProperty.Scale0:
-                            scaleX = math.exp(ReadAsFloat(reader, prop.Type));
-                            break;
-                        case DataProperty.Scale1:
-                            scaleY = math.exp(ReadAsFloat(reader, prop.Type));
-                            break;
-                        case DataProperty.Scale2:
-                            scaleZ = math.exp(ReadAsFloat(reader, prop.Type));
-                            break;
-                        default:
-                            SkipData(reader, prop.Type);
-                            break;
-                    }
-                }
-
-                positions[i] = new Vector3(x, -y, z);
-                var q = math.quaternion(rx, -ry, rz, -rw);
-                var axis1 = math.mul(q, math.float3(scaleX, 0, 0));
-                var axis2 = math.mul(q, math.float3(0, scaleY, 0));
-                var axis3 = math.mul(q, math.float3(0, 0, scaleZ));
-
-                axis[3 * i + 0] = axis1;
-                axis[3 * i + 1] = axis2;
-                axis[3 * i + 2] = axis3;
-
-                color[i] = new Color(r, g, b, a);
-            }
-
-            data = new SplatData
-            {
-                Positions = positions,
-                Axes = axis,
-                Colors = color
-            };
-            return true;
-        }
+        private const double SH_C0 = 0.28209479177387814;
 
         private enum DataProperty
         {
@@ -178,6 +47,142 @@ namespace HoloLab.Spirare.Components.SplatVfx
         {
             public List<(DataProperty Property, DataType Type)> properties = new List<(DataProperty, DataType)>();
             public int vertexCount = -1;
+        }
+
+        public enum ParseErrorType
+        {
+            None,
+            InvalidHeader,
+            InvalidBody
+        }
+
+        public class SplatData
+        {
+            public Vector3[] Positions;
+            public Vector3[] Axes;
+            public Color[] Colors;
+        }
+
+        public (SplatData SplatData, ParseErrorType Error) TryParseSplatData(byte[] splatBytes)
+        {
+            using var memoryStream = new MemoryStream(splatBytes);
+
+            using var streamReader = new StreamReader(memoryStream);
+            var headerResult = TryReadDataHeader(streamReader, out var header);
+            if (headerResult == false)
+            {
+                return (null, ParseErrorType.InvalidHeader);
+            }
+
+            using var binaryReader = new BinaryReader(memoryStream);
+            var bodyResult = TryReadBody(binaryReader, header, out var body);
+            if (bodyResult == false)
+            {
+                return (null, ParseErrorType.InvalidBody);
+            }
+
+            return (body, ParseErrorType.None);
+        }
+
+        private bool TryReadBody(BinaryReader reader, DataHeader header, out SplatData data)
+        {
+            var count = header.vertexCount;
+
+            var positions = new Vector3[count];
+            var axis = new Vector3[count * 3];
+            var color = new Color[count];
+
+            try
+            {
+                for (var i = 0; i < header.vertexCount; i++)
+                {
+                    float x = 0, y = 0, z = 0;
+                    float r = 0, g = 0, b = 0, a = 0;
+                    float rx = 0, ry = 0, rz = 0, rw = 1;
+                    float scaleX = 0, scaleY = 0, scaleZ = 0;
+
+                    foreach (var prop in header.properties)
+                    {
+                        switch (prop.Property)
+                        {
+                            case DataProperty.X:
+                                x = ReadAsFloat(reader, prop.Type);
+                                break;
+                            case DataProperty.Y:
+                                y = ReadAsFloat(reader, prop.Type);
+                                break;
+                            case DataProperty.Z:
+                                z = ReadAsFloat(reader, prop.Type);
+                                break;
+                            case DataProperty.DC0:
+                                r = (float)(0.5 + SH_C0 * ReadAsFloat(reader, prop.Type));
+                                break;
+                            case DataProperty.DC1:
+                                g = (float)(0.5 + SH_C0 * ReadAsFloat(reader, prop.Type));
+                                break;
+                            case DataProperty.DC2:
+                                b = (float)(0.5 + SH_C0 * ReadAsFloat(reader, prop.Type));
+                                break;
+                            case DataProperty.DC3:
+                                a = (float)(0.5 + SH_C0 * ReadAsFloat(reader, prop.Type));
+                                break;
+                            case DataProperty.Opacity:
+                                a = (float)(1 / (1 + Math.Exp(-ReadAsFloat(reader, prop.Type))));
+                                break;
+                            case DataProperty.Rot0:
+                                rw = ReadAsFloat(reader, prop.Type);
+                                break;
+                            case DataProperty.Rot1:
+                                rx = ReadAsFloat(reader, prop.Type);
+                                break;
+                            case DataProperty.Rot2:
+                                ry = ReadAsFloat(reader, prop.Type);
+                                break;
+                            case DataProperty.Rot3:
+                                rz = ReadAsFloat(reader, prop.Type);
+                                break;
+                            case DataProperty.Scale0:
+                                scaleX = math.exp(ReadAsFloat(reader, prop.Type));
+                                break;
+                            case DataProperty.Scale1:
+                                scaleY = math.exp(ReadAsFloat(reader, prop.Type));
+                                break;
+                            case DataProperty.Scale2:
+                                scaleZ = math.exp(ReadAsFloat(reader, prop.Type));
+                                break;
+                            default:
+                                SkipData(reader, prop.Type);
+                                break;
+                        }
+                    }
+
+                    positions[i] = new Vector3(x, -y, z);
+                    var q = math.quaternion(rx, -ry, rz, -rw);
+                    var axis1 = math.mul(q, math.float3(scaleX, 0, 0));
+                    var axis2 = math.mul(q, math.float3(0, scaleY, 0));
+                    var axis3 = math.mul(q, math.float3(0, 0, scaleZ));
+
+                    axis[3 * i + 0] = axis1;
+                    axis[3 * i + 1] = axis2;
+                    axis[3 * i + 2] = axis3;
+
+                    color[i] = new Color(r, g, b, a);
+                }
+
+                data = new SplatData
+                {
+                    Positions = positions,
+                    Axes = axis,
+                    Colors = color
+                };
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+                data = null;
+                return false;
+            }
         }
 
         private bool TryReadDataHeader(StreamReader reader, out DataHeader header)
@@ -259,7 +264,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
             return true;
         }
 
-        private DataType ParseDataType(string dataTypeString)
+        private static DataType ParseDataType(string dataTypeString)
         {
             return dataTypeString switch
             {
@@ -283,7 +288,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
             };
         }
 
-        private DataProperty ParseDataProperty(string dataPropertyString)
+        private static DataProperty ParseDataProperty(string dataPropertyString)
         {
             return dataPropertyString switch
             {
