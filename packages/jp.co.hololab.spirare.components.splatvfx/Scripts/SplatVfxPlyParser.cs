@@ -26,16 +26,6 @@ namespace HoloLab.Spirare.Components.SplatVfx
 
         public (SplatData SplatData, ParseErrorType Error) TryParseSplatData(byte[] splatBytes)
         {
-            /*
-            var data = ScriptableObject.CreateInstance<SplatData>();
-
-            var arrays = LoadDataArrays(splatBytes);
-            data.PositionArray = arrays.position;
-            data.AxisArray = arrays.axis;
-            data.ColorArray = arrays.color;
-            data.ReleaseGpuResources();
-            */
-
             using (var memoryStream = new MemoryStream(splatBytes))
             {
                 using (var streamReader = new StreamReader(memoryStream))
@@ -112,11 +102,9 @@ namespace HoloLab.Spirare.Components.SplatVfx
             var axis = new Vector3[count * 3];
             var color = new Color[count];
 
-
             for (var i = 0; i < header.vertexCount; i++)
             {
                 float x = 0, y = 0, z = 0;
-                //Byte r = 255, g = 255, b = 255, a = 255;
                 float r = 0, g = 0, b = 0, a = 0;
                 float rx = 0, ry = 0, rz = 0, rw = 1;
                 float scaleX = 0, scaleY = 0, scaleZ = 0;
@@ -137,7 +125,6 @@ namespace HoloLab.Spirare.Components.SplatVfx
                             z = ReadAsFloat(reader, prop.Type);
                             break;
                         case DataProperty.DC0:
-                            //r = ReadAsFloat(reader, prop.Type);
                             r = (float)(0.5 + SH_C0 * ReadAsFloat(reader, prop.Type));
                             break;
                         case DataProperty.DC1:
@@ -146,22 +133,23 @@ namespace HoloLab.Spirare.Components.SplatVfx
                         case DataProperty.DC2:
                             b = (float)(0.5 + SH_C0 * ReadAsFloat(reader, prop.Type));
                             break;
+                        case DataProperty.DC3:
+                            a = (float)(0.5 + SH_C0 * ReadAsFloat(reader, prop.Type));
+                            break;
                         case DataProperty.Opacity:
-                            //a = ReadAsFloat(reader, prop.Type);
-                            // rgba[3] = (1 / (1 + Math.exp(-value))) * 255;
                             a = (float)(1 / (1 + Math.Exp(-ReadAsFloat(reader, prop.Type))));
                             break;
                         case DataProperty.Rot0:
-                            rx = ReadAsFloat(reader, prop.Type);
+                            rw = ReadAsFloat(reader, prop.Type);
                             break;
                         case DataProperty.Rot1:
-                            ry = ReadAsFloat(reader, prop.Type);
+                            rx = ReadAsFloat(reader, prop.Type);
                             break;
                         case DataProperty.Rot2:
-                            rz = ReadAsFloat(reader, prop.Type);
+                            ry = ReadAsFloat(reader, prop.Type);
                             break;
                         case DataProperty.Rot3:
-                            rw = ReadAsFloat(reader, prop.Type);
+                            rz = ReadAsFloat(reader, prop.Type);
                             break;
                         case DataProperty.Scale0:
                             scaleX = math.exp(ReadAsFloat(reader, prop.Type));
@@ -268,6 +256,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
             DC0,
             DC1,
             DC2,
+            DC3,
         }
 
         private enum DataType
@@ -403,6 +392,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
                 "f_dc_0" => DataProperty.DC0,
                 "f_dc_1" => DataProperty.DC1,
                 "f_dc_2" => DataProperty.DC2,
+                "f_dc_3" => DataProperty.DC3,
                 "scale_0" => DataProperty.Scale0,
                 "scale_1" => DataProperty.Scale1,
                 "scale_2" => DataProperty.Scale2,
