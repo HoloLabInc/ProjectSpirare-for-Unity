@@ -15,9 +15,11 @@ namespace HoloLab.Spirare.Components.SplatVfx
         private CameraVisibleHelper[] _cameraVisibleHelpers;
 
         private VisualEffect splatPrefab;
+        private PointCloudPlyComponent pointCloudPrefab;
 
         private static readonly SplatVfxSplatLoader splatLoader = new SplatVfxSplatLoader();
         private static readonly SplatVfxPlyLoader splatPlyLoader = new SplatVfxPlyLoader();
+        private static readonly PointCloudPlyLoader pointCloudPlyLoader = new PointCloudPlyLoader();
 
         private const string hiddenLayerName = "SpirareHidden";
         private int HiddenLayer => ConvertLayerNameToLayer(hiddenLayerName);
@@ -34,10 +36,11 @@ namespace HoloLab.Spirare.Components.SplatVfx
             }
         }
 
-        public void Initialize(PomlModelElement element, PomlLoadOptions loadOptions, VisualEffect splatPrefab)
+        public void Initialize(PomlModelElement element, PomlLoadOptions loadOptions, VisualEffect splatPrefab, PointCloudPlyComponent pointCloudPrefab)
         {
             Initialize(element, loadOptions);
             this.splatPrefab = splatPrefab;
+            this.pointCloudPrefab = pointCloudPrefab;
         }
 
         private async void OnEnable()
@@ -82,7 +85,25 @@ namespace HoloLab.Spirare.Components.SplatVfx
                     (success, modelObject) = await splatLoader.LoadAsync(transform, element.Src, splatPrefab);
                     break;
                 case ".ply":
-                    (success, modelObject) = await splatPlyLoader.LoadAsync(transform, element.Src, splatPrefab);
+                    SplatVfxPlyLoader.LoadErrorType error;
+                    (error, modelObject) = await splatPlyLoader.LoadAsync(transform, element.Src, splatPrefab);
+
+                    switch (error)
+                    {
+                        case SplatVfxPlyLoader.LoadErrorType.None:
+                            success = true;
+                            break;
+                        case SplatVfxPlyLoader.LoadErrorType.InvalidHeader:
+                            // Load as point cloud
+                            (success, modelObject) = await pointCloudPlyLoader.LoadAsync(transform, element.Src, pointCloudPrefab);
+                            break;
+                        case SplatVfxPlyLoader.LoadErrorType.UnknownError:
+                        case SplatVfxPlyLoader.LoadErrorType.DataFetchError:
+                        case SplatVfxPlyLoader.LoadErrorType.InvalidBody:
+                        default:
+                            success = false;
+                            break;
+                    }
                     break;
             }
 

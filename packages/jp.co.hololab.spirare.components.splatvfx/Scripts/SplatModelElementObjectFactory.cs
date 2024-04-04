@@ -9,6 +9,9 @@ namespace HoloLab.Spirare.Components.SplatVfx
         [SerializeField]
         private VisualEffect splatPrefab;
 
+        [SerializeField]
+        private PointCloudPlyComponent pointCloudPrefab;
+
         public override GameObject CreateObject(PomlModelElement element, PomlLoadOptions loadOptions, Transform parentTransform = null)
         {
             var go = new GameObject("model");
@@ -22,7 +25,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
             pomlObjectElementComponent.Initialize(element);
 
             var modelElementComponent = go.AddComponent<SplatModelElementComponent>();
-            modelElementComponent.Initialize(element, loadOptions, splatPrefab);
+            modelElementComponent.Initialize(element, loadOptions, splatPrefab, pointCloudPrefab);
             _ = modelElementComponent.UpdateGameObject();
 
             return go;

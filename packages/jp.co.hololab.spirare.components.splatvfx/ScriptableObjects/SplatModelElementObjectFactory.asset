@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: SplatModelElementObjectFactory
   m_EditorClassIdentifier: 
   splatPrefab: {fileID: 2772346103288078257, guid: 727149b8db1726d4da242c988b0e6247, type: 3}
+  pointCloudPrefab: {fileID: 4399131160592427966, guid: 5ba3c68cfc3fd17478ed2ce9c902a256, type: 3}
