@@ -9,6 +9,13 @@ namespace HoloLab.Spirare.Components.SplatVfx
 {
     public sealed class SplatModelElementComponent : ModelElementComponent
     {
+        private enum ModelType
+        {
+            None,
+            Splat,
+            PointCloud
+        }
+
         private GameObject currentModelObject;
         private string _currentModelSource;
 
@@ -78,11 +85,16 @@ namespace HoloLab.Spirare.Components.SplatVfx
 
             bool success = false;
             GameObject modelObject = null;
+            ModelType modelType = ModelType.None;
 
             switch (element.GetSrcFileExtension())
             {
                 case ".splat":
                     (success, modelObject) = await splatLoader.LoadAsync(transform, element.Src, splatPrefab);
+                    if (success)
+                    {
+                        modelType = ModelType.Splat;
+                    }
                     break;
                 case ".ply":
                     SplatVfxPlyLoader.LoadErrorType error;
@@ -92,10 +104,18 @@ namespace HoloLab.Spirare.Components.SplatVfx
                     {
                         case SplatVfxPlyLoader.LoadErrorType.None:
                             success = true;
+                            if (success)
+                            {
+                                modelType = ModelType.Splat;
+                            }
                             break;
                         case SplatVfxPlyLoader.LoadErrorType.InvalidHeader:
                             // Load as point cloud
                             (success, modelObject) = await pointCloudPlyLoader.LoadAsync(transform, element.Src, pointCloudPrefab);
+                            if (success)
+                            {
+                                modelType = ModelType.PointCloud;
+                            }
                             break;
                         case SplatVfxPlyLoader.LoadErrorType.UnknownError:
                         case SplatVfxPlyLoader.LoadErrorType.DataFetchError:
@@ -109,7 +129,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
 
             currentModelObject = modelObject;
 
-            if (success)
+            if (success && modelType == ModelType.Splat)
             {
                 await ShowSplatModel();
             }
