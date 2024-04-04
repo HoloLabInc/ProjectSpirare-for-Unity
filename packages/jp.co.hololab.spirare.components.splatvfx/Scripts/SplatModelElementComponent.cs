@@ -9,14 +9,24 @@ namespace HoloLab.Spirare.Components.SplatVfx
 {
     public sealed class SplatModelElementComponent : ModelElementComponent
     {
+        private enum ModelType
+        {
+            None,
+            Splat,
+            PointCloud
+        }
+
         private GameObject currentModelObject;
         private string _currentModelSource;
 
         private CameraVisibleHelper[] _cameraVisibleHelpers;
 
         private VisualEffect splatPrefab;
+        private PointCloudPlyComponent pointCloudPrefab;
 
         private static readonly SplatVfxSplatLoader splatLoader = new SplatVfxSplatLoader();
+        private static readonly SplatVfxPlyLoader splatPlyLoader = new SplatVfxPlyLoader();
+        private static readonly PointCloudPlyLoader pointCloudPlyLoader = new PointCloudPlyLoader();
 
         private const string hiddenLayerName = "SpirareHidden";
         private int HiddenLayer => ConvertLayerNameToLayer(hiddenLayerName);
@@ -33,10 +43,11 @@ namespace HoloLab.Spirare.Components.SplatVfx
             }
         }
 
-        public void Initialize(PomlModelElement element, PomlLoadOptions loadOptions, VisualEffect splatPrefab)
+        public void Initialize(PomlModelElement element, PomlLoadOptions loadOptions, VisualEffect splatPrefab, PointCloudPlyComponent pointCloudPrefab)
         {
             Initialize(element, loadOptions);
             this.splatPrefab = splatPrefab;
+            this.pointCloudPrefab = pointCloudPrefab;
         }
 
         private async void OnEnable()
@@ -72,10 +83,53 @@ namespace HoloLab.Spirare.Components.SplatVfx
 
             _cameraVisibleHelpers = null;
 
-            var (success, splatObject) = await splatLoader.LoadAsync(transform, element.Src, splatPrefab);
-            currentModelObject = splatObject;
+            bool success = false;
+            GameObject modelObject = null;
+            ModelType modelType = ModelType.None;
 
-            if (success)
+            switch (element.GetSrcFileExtension())
+            {
+                case ".splat":
+                    (success, modelObject) = await splatLoader.LoadAsync(transform, element.Src, splatPrefab);
+                    if (success)
+                    {
+                        modelType = ModelType.Splat;
+                    }
+                    break;
+                case ".ply":
+                    SplatVfxPlyLoader.LoadErrorType error;
+                    (error, modelObject) = await splatPlyLoader.LoadAsync(transform, element.Src, splatPrefab);
+
+                    switch (error)
+                    {
+                        case SplatVfxPlyLoader.LoadErrorType.None:
+                            success = true;
+                            if (success)
+                            {
+                                modelType = ModelType.Splat;
+                            }
+                            break;
+                        case SplatVfxPlyLoader.LoadErrorType.InvalidHeader:
+                            // Load as point cloud
+                            (success, modelObject) = await pointCloudPlyLoader.LoadAsync(transform, element.Src, pointCloudPrefab);
+                            if (success)
+                            {
+                                modelType = ModelType.PointCloud;
+                            }
+                            break;
+                        case SplatVfxPlyLoader.LoadErrorType.UnknownError:
+                        case SplatVfxPlyLoader.LoadErrorType.DataFetchError:
+                        case SplatVfxPlyLoader.LoadErrorType.InvalidBody:
+                        default:
+                            success = false;
+                            break;
+                    }
+                    break;
+            }
+
+            currentModelObject = modelObject;
+
+            if (success && modelType == ModelType.Splat)
             {
                 await ShowSplatModel();
             }
