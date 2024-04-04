@@ -2,7 +2,6 @@
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.VFX;
 
 namespace HoloLab.Spirare.Components.SplatVfx
 {
@@ -35,49 +34,26 @@ namespace HoloLab.Spirare.Components.SplatVfx
                 return (false, null);
             }
 
+            InvokeLoadingStatusChanged(LoadingStatus.ModelInstantiating, onLoadingStatusChanged);
+
             var plyComponent = UnityEngine.Object.Instantiate(pointCloudPrefab);
             plyComponent.transform.SetParent(parent, false);
             plyComponent.LoadPlyFromFile(fetchResult.Filepath);
 
+            InvokeLoadingStatusChanged(LoadingStatus.Loaded, onLoadingStatusChanged);
+
             return (true, plyComponent.gameObject);
-            /*
-            var parseResult = parser.TryParseSplatData(fetchResult.Data);
-
-            switch (parseResult.Error)
-            {
-                case SplatVfxPlyParser.ParseErrorType.None:
-
-                    var data = CreateSplatData(parseResult.SplatData);
-
-                    InvokeLoadingStatusChanged(LoadingStatus.ModelInstantiating, onLoadingStatusChanged);
-                    var visualEffect = UnityEngine.Object.Instantiate(splatPrefab);
-                    var splatObject = visualEffect.gameObject;
-
-                    var binderBase = splatObject.AddComponent<VFXPropertyBinder>();
-                    var binder = binderBase.AddPropertyBinder<VFXSplatDataBinder>();
-                    binder.SplatData = data;
-
-                    splatObject.transform.SetParent(parent, worldPositionStays: false);
-
-                    InvokeLoadingStatusChanged(LoadingStatus.Loaded, onLoadingStatusChanged);
-
-                    return (LoadErrorType.None, splatObject);
-
-                case SplatVfxPlyParser.ParseErrorType.InvalidHeader:
-                    return (LoadErrorType.InvalidHeader, null);
-
-                case SplatVfxPlyParser.ParseErrorType.InvalidBody:
-                    return (LoadErrorType.InvalidBody, null);
-
-                default:
-                    return (LoadErrorType.UnknownError, null);
-            }
-            */
         }
 
         private static async UniTask<(bool Success, string Filepath)> FetchData(string src, Action<LoadingStatus> onLoadingStatusChanged)
         {
             InvokeLoadingStatusChanged(LoadingStatus.DataFetching, onLoadingStatusChanged);
+
+            if (src.StartsWith("file://"))
+            {
+                var filepath = SpirareHttpClient.ConvertFileScemeUrlToFilePath(src);
+                return (true, filepath);
+            }
 
             var result = await SpirareHttpClient.Instance.DownloadToFileAsync(src, enableCache: true);
             if (result.Success)
