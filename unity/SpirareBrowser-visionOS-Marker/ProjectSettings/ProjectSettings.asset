@@ -137,7 +137,7 @@ PlayerSettings:
   vulkanEnableLateAcquireNextImage: 0
   vulkanEnableCommandBufferRecycling: 1
   loadStoreDebugModeEnabled: 0
-  visionOSBundleVersion: 1.0
+  visionOSBundleVersion: 1.2.0
   tvOSBundleVersion: 1.0
   bundleVersion: 1.2.0
   preloadedAssets: []
@@ -162,6 +162,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
     Android: jp.co.hololab.spirarebrowser.marker
+    VisionOS: jp.co.hololab.spirarebrowser.visionos.marker
     iPhone: jp.co.hololab.spirarebrowser.marker
   buildNumber:
     Standalone: 0
@@ -483,7 +484,10 @@ PlayerSettings:
       m_SubKind: 
   - m_BuildTarget: VisionOS
     m_Icons:
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 4627196ed8ee64de397ba45ab55845db, type: 3}
+      - {fileID: 2800000, guid: a1d0440909d3c46cc89a1ce0d504a1e7, type: 3}
+      - {fileID: 2800000, guid: c1f03757fd1614a58982f49dafe4ed6e, type: 3}
       m_Width: 1024
       m_Height: 1024
       m_Kind: 0
