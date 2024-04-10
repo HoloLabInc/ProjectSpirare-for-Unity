@@ -1,6 +1,6 @@
 {
     "name": "jp.co.hololab.spirare.browser.encryptedprefs",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "displayName": "Spirare Browser Encrypted Prefs",
     "description": "Encrypted Prefs for Spirare Browser",
     "unity": "2019.4",
