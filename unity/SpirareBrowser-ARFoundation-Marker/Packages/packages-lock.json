@@ -357,11 +357,11 @@
       "hash": "138784c41a6f610e04734d2d67c149547faaa99d"
     },
     "jp.co.hololab.arfoundationqrtracking": {
-      "version": "https://github.com/HoloLabInc/ARFoundationQRTracking-Unity.git?path=packages/jp.co.hololab.arfoundationqrtracking#v0.2.0",
+      "version": "https://github.com/HoloLabInc/ARFoundationQRTracking-Unity.git?path=packages/jp.co.hololab.arfoundationqrtracking#f59fb262aa6904229ac1a95a81d86876264d863c",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "c9269599168545901ee4fabbd70715d72da2be9e"
+      "hash": "f59fb262aa6904229ac1a95a81d86876264d863c"
     },
     "jp.co.hololab.arfoundationqrtracking.libraries": {
       "version": "https://github.com/HoloLabInc/ARFoundationQRTracking-Unity.git?path=packages/jp.co.hololab.arfoundationqrtracking.libraries#v0.2.0",
