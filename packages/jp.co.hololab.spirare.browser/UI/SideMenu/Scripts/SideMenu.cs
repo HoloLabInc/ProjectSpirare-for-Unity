@@ -20,12 +20,13 @@ namespace HoloLab.Spirare.Browser.UI
         private Button closeButton;
 
         private float menuWidth;
+        private MotionHandle motionHandle;
 
         private void Start()
         {
             menuWidth = menuContent.rect.width;
 
-            LMotion.Create(-menuWidth, -menuWidth, 0.01f)
+            motionHandle = LMotion.Create(-menuWidth, -menuWidth, 0.01f)
                 .WithEase(Ease.OutQuad)
                 .WithOnComplete(() => menuContent.gameObject.SetActive(false))
                 .BindToAnchoredPositionX(menuContent);
@@ -36,19 +37,31 @@ namespace HoloLab.Spirare.Browser.UI
 
         private void OnOpenButtonClick()
         {
-            LMotion.Create(-menuWidth, 0, 0.2f)
+            CompleteMotion();
+
+            menuContent.gameObject.SetActive(true);
+
+            motionHandle = LMotion.Create(-menuWidth, 0, 0.2f)
                 .WithEase(Ease.OutQuad)
                 .BindToAnchoredPositionX(menuContent);
-            menuContent.gameObject.SetActive(true);
         }
 
-        private async void OnCloseButtonClick()
+        private void OnCloseButtonClick()
         {
-            var handle = LMotion.Create(0, -menuWidth, 0.14f)
+            CompleteMotion();
+
+            motionHandle = LMotion.Create(0, -menuWidth, 0.14f)
                 .WithEase(Ease.OutQuad)
+                .WithOnComplete(() => menuContent.gameObject.SetActive(false))
                 .BindToAnchoredPositionX(menuContent);
-            await handle;
-            menuContent.gameObject.SetActive(false);
+        }
+
+        private void CompleteMotion()
+        {
+            if (motionHandle.IsActive())
+            {
+                motionHandle.Complete();
+            }
         }
     }
 }
