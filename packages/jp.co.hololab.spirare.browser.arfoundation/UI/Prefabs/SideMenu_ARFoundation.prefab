@@ -382,6 +382,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2200775241197604687, guid: 9ccdc776f93c4d440a9dff9243d5f200, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 130
+      objectReference: {fileID: 0}
     - target: {fileID: 2717797575243391239, guid: 9ccdc776f93c4d440a9dff9243d5f200, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -504,7 +508,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7089189599743067390, guid: 9ccdc776f93c4d440a9dff9243d5f200, type: 3}
       propertyPath: m_Name
-      value: SideMenu_ARFoundation Variant
+      value: SideMenu_ARFoundation
       objectReference: {fileID: 0}
     - target: {fileID: 7461098430012302097, guid: 9ccdc776f93c4d440a9dff9243d5f200, type: 3}
       propertyPath: m_Enabled
