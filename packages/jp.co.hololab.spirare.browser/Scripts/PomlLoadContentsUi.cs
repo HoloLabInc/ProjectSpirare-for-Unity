@@ -26,6 +26,8 @@ namespace HoloLab.Spirare.Browser
         {
             contentsManager = FindObjectOfType<PomlContentsManager>();
 
+            loadMessageText.text = "";
+
             loadContentsButton.onClick.AddListener(LoadContents);
             var contentsUrl = PlayerPrefs.GetString(ContentsUrlInputFieldKey);
             contentsUrlInputField.text = contentsUrl;
