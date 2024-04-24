@@ -26,13 +26,33 @@ namespace HoloLab.Spirare.Browser.UI
         {
             menuWidth = menuContent.rect.width;
 
-            motionHandle = LMotion.Create(-menuWidth, -menuWidth, 0.01f)
-                .WithEase(Ease.OutQuad)
-                .WithOnComplete(() => menuContent.gameObject.SetActive(false))
+            motionHandle = LMotion.Create(0f, 0f, 0.01f)
                 .BindToAnchoredPositionX(menuContent);
 
             openButton.onClick.AddListener(OnOpenButtonClick);
             closeButton.onClick.AddListener(OnCloseButtonClick);
+        }
+
+        private void Update()
+        {
+            if (motionHandle.IsActive() == false && menuContent.gameObject.activeSelf)
+            {
+                for (var i = 0; i < Input.touchCount; i++)
+                {
+                    var touch = Input.GetTouch(i);
+                    if (touch.phase == TouchPhase.Began && IsOutsideTouched(touch))
+                    {
+                        OnCloseButtonClick();
+                        break;
+                    }
+                }
+            }
+        }
+
+        private bool IsOutsideTouched(Touch touch)
+        {
+            var insideTouched = RectTransformUtility.RectangleContainsScreenPoint(menuContent, touch.position, null);
+            return !insideTouched;
         }
 
         private void OnOpenButtonClick()
