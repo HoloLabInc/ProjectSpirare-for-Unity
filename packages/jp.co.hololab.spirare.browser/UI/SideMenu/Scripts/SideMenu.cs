@@ -29,8 +29,6 @@ namespace HoloLab.Spirare.Browser.UI
 
         private MotionHandle motionHandle;
 
-        private CanvasScaler canvasScaler;
-
         private void Start()
         {
             defaultMenuWidth = menuScrollView.rect.width;
@@ -43,10 +41,9 @@ namespace HoloLab.Spirare.Browser.UI
 
             menuWidth = defaultMenuWidth + safeOffsetX;
 
-            var rectTransform = GetComponent<RectTransform>();
+            rectTransform = GetComponent<RectTransform>();
             rectTransform.sizeDelta = new Vector2(menuWidth, 0);
 
-            Debug.Log(safeOffsetY);
             menuContentRoot.anchoredPosition = new Vector2(0, -safeOffsetY);
 
             motionHandle = LMotion.Create(0f, 0f, 0.01f)
