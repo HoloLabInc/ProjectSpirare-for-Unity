@@ -14,20 +14,43 @@ namespace HoloLab.Spirare.Browser.UI
         private Button openButton;
 
         [SerializeField]
-        private RectTransform menuContent;
+        private RectTransform menuScrollView;
+
+        [SerializeField]
+        private RectTransform menuContentRoot;
 
         [SerializeField]
         private Button closeButton;
 
+        private RectTransform rectTransform;
+
+        private float defaultMenuWidth;
         private float menuWidth;
+
         private MotionHandle motionHandle;
+
+        private CanvasScaler canvasScaler;
 
         private void Start()
         {
-            menuWidth = menuContent.rect.width;
+            defaultMenuWidth = menuScrollView.rect.width;
+
+            var safeArea = Screen.safeArea;
+            var scaleX = transform.lossyScale.x;
+            var scaleY = transform.lossyScale.y;
+            var safeOffsetX = safeArea.x / scaleX;
+            var safeOffsetY = safeArea.y / scaleY;
+
+            menuWidth = defaultMenuWidth + safeOffsetX;
+
+            var rectTransform = GetComponent<RectTransform>();
+            rectTransform.sizeDelta = new Vector2(menuWidth, 0);
+
+            Debug.Log(safeOffsetY);
+            menuContentRoot.anchoredPosition = new Vector2(0, -safeOffsetY);
 
             motionHandle = LMotion.Create(0f, 0f, 0.01f)
-                .BindToAnchoredPositionX(menuContent);
+                .BindToAnchoredPositionX(menuScrollView);
 
             openButton.onClick.AddListener(OnOpenButtonClick);
             closeButton.onClick.AddListener(OnCloseButtonClick);
@@ -35,7 +58,7 @@ namespace HoloLab.Spirare.Browser.UI
 
         private void Update()
         {
-            if (motionHandle.IsActive() == false && menuContent.gameObject.activeSelf)
+            if (motionHandle.IsActive() == false && menuScrollView.gameObject.activeSelf)
             {
                 for (var i = 0; i < Input.touchCount; i++)
                 {
@@ -51,7 +74,7 @@ namespace HoloLab.Spirare.Browser.UI
 
         private bool IsOutsideTouched(Touch touch)
         {
-            var insideTouched = RectTransformUtility.RectangleContainsScreenPoint(menuContent, touch.position, null);
+            var insideTouched = RectTransformUtility.RectangleContainsScreenPoint(menuScrollView, touch.position, null);
             return !insideTouched;
         }
 
@@ -59,11 +82,11 @@ namespace HoloLab.Spirare.Browser.UI
         {
             CompleteMotion();
 
-            menuContent.gameObject.SetActive(true);
+            menuScrollView.gameObject.SetActive(true);
 
             motionHandle = LMotion.Create(-menuWidth, 0, 0.2f)
                 .WithEase(Ease.OutQuad)
-                .BindToAnchoredPositionX(menuContent);
+                .BindToAnchoredPositionX(menuScrollView);
         }
 
         private void OnCloseButtonClick()
@@ -72,8 +95,8 @@ namespace HoloLab.Spirare.Browser.UI
 
             motionHandle = LMotion.Create(0, -menuWidth, 0.14f)
                 .WithEase(Ease.OutQuad)
-                .WithOnComplete(() => menuContent.gameObject.SetActive(false))
-                .BindToAnchoredPositionX(menuContent);
+                .WithOnComplete(() => menuScrollView.gameObject.SetActive(false))
+                .BindToAnchoredPositionX(menuScrollView);
         }
 
         private void CompleteMotion()
