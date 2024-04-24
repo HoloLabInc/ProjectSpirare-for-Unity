@@ -62,10 +62,7 @@ namespace HoloLab.Spirare.Browser.UI
         {
             handlePositionX = Mathf.Abs(handle.anchoredPosition.x);
 
-            var backgroundColor = isOn ? backgroundColorOn : backgroundColorOff;
-            var handleDestination = isOn ? handlePositionX : -handlePositionX;
-            backgroundImage.color = backgroundColor;
-            handle.anchoredPosition = new Vector2(handleDestination, handle.anchoredPosition.y);
+            ChangeButtonStateWithoutAnimation();
 
             var button = GetComponent<Button>();
             button.onClick.AddListener(OnButtonClick);
@@ -76,6 +73,16 @@ namespace HoloLab.Spirare.Browser.UI
             isOn = !isOn;
             InvokeOnToggle();
             ChangeButtonState();
+        }
+
+        public void ChangeStateWithoutAnimation(bool isOn)
+        {
+            if (this.isOn != isOn)
+            {
+                this.isOn = isOn;
+                InvokeOnToggle();
+                ChangeButtonStateWithoutAnimation();
+            }
         }
 
         private void OnButtonClick()
@@ -97,13 +104,13 @@ namespace HoloLab.Spirare.Browser.UI
 
         private void ChangeButtonState()
         {
-            var backgroundColor = isOn ? backgroundColorOn : backgroundColorOff;
-            var handleDestination = isOn ? handlePositionX : -handlePositionX;
-
             if (motionHandle != null)
             {
                 motionHandle.Complete();
             }
+
+            var backgroundColor = isOn ? backgroundColorOn : backgroundColorOff;
+            var handleDestination = isOn ? handlePositionX : -handlePositionX;
 
             motionHandle = new CompositeMotionHandle();
 
@@ -117,5 +124,20 @@ namespace HoloLab.Spirare.Browser.UI
                 .BindToAnchoredPositionX(handle)
                 .AddTo(motionHandle);
         }
+
+        private void ChangeButtonStateWithoutAnimation()
+        {
+            if (motionHandle != null)
+            {
+                motionHandle.Complete();
+                motionHandle = null;
+            }
+
+            var backgroundColor = isOn ? backgroundColorOn : backgroundColorOff;
+            var handleDestination = isOn ? handlePositionX : -handlePositionX;
+            backgroundImage.color = backgroundColor;
+            handle.anchoredPosition = new Vector2(handleDestination, handle.anchoredPosition.y);
+        }
     }
 }
+
