@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace HoloLab.Spirare.Browser.UI
 {
@@ -13,8 +14,16 @@ namespace HoloLab.Spirare.Browser.UI
         [SerializeField]
         private GameObject panelRoot;
 
+        [SerializeField]
+        private Button closeButton;
+
         private void Start()
         {
+            closeButton.onClick.AddListener(() =>
+            {
+                displaySettingsState.IsMenuOpen = false;
+            });
+
             DisplaySettingsState_OnIsMenuOpenChanged();
             displaySettingsState.OnIsMenuOpenChanged += DisplaySettingsState_OnIsMenuOpenChanged;
         }
