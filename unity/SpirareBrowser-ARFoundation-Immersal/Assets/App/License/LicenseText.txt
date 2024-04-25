@@ -1,4 +1,4 @@
-This project includes the following third-party software components:
+This application includes the following third-party software components:
 
 <b>Noto Sans Japanese</b>
 
