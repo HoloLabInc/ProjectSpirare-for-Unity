@@ -675,7 +675,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_IgnoreLayout: 0
   m_MinWidth: -1
-  m_MinHeight: 15
+  m_MinHeight: 30
   m_PreferredWidth: -1
   m_PreferredHeight: -1
   m_FlexibleWidth: 1
@@ -733,7 +733,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openButton: {fileID: 8363608682430227012}
   menuScrollView: {fileID: 7688667568182208163}
-  menuContentRoot: {fileID: 900365388853462686}
   contentPadding: {fileID: 421999777252652273}
   closeButton: {fileID: 7902556740239077985}
 --- !u!1 &9029251816231084955
@@ -1087,11 +1086,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3030963882894521432, guid: 80f89c5c2be64a8439fb64f3fdbcad0b, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 15
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 3030963882894521432, guid: 80f89c5c2be64a8439fb64f3fdbcad0b, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 15
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 3030963882894521432, guid: 80f89c5c2be64a8439fb64f3fdbcad0b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1175,8 +1174,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreLayout: 0
-  m_MinWidth: 15
-  m_MinHeight: 15
+  m_MinWidth: 30
+  m_MinHeight: 30
   m_PreferredWidth: -1
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
