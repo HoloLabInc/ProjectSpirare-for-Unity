@@ -42,21 +42,51 @@ namespace HoloLab.Spirare.Browser.UI
 
             defaultMenuWidth = menuScrollView.rect.width;
 
+            AdjustToFitSafeArea();
+
 #if LITMOTION_PRESENT
             motionHandle = LMotion.Create(0f, 0f, 0.01f)
                 .BindToAnchoredPositionX(menuScrollView);
 #endif
 
-            AdjustToFitSafeArea();
-
-            openButton.onClick.AddListener(OnOpenButtonClick);
-            closeButton.onClick.AddListener(OnCloseButtonClick);
+            openButton.onClick.AddListener(OpenMenu);
+            closeButton.onClick.AddListener(CloseMenu);
         }
 
         private void Update()
         {
             CloseMenuWhenOutsideTouched();
             AdjustToFitSafeArea();
+        }
+
+        public void OpenMenu()
+        {
+            CompleteMotion();
+
+            menuScrollView.gameObject.SetActive(true);
+
+#if LITMOTION_PRESENT
+            motionHandle = LMotion.Create(-menuWidth, 0, 0.2f)
+                .WithEase(Ease.OutQuad)
+                .BindToAnchoredPositionX(menuScrollView);
+#else
+            menuScrollView.anchoredPosition = new Vector2(0, menuScrollView.anchoredPosition.y);
+#endif
+        }
+
+        public void CloseMenu()
+        {
+            CompleteMotion();
+
+#if LITMOTION_PRESENT
+            motionHandle = LMotion.Create(0, -menuWidth, 0.14f)
+                .WithEase(Ease.OutQuad)
+                .WithOnComplete(() => menuScrollView.gameObject.SetActive(false))
+                .BindToAnchoredPositionX(menuScrollView);
+#else
+            menuScrollView.anchoredPosition = new Vector2(-menuWidth, menuScrollView.anchoredPosition.y);
+            menuScrollView.gameObject.SetActive(false);
+#endif
         }
 
         private void AdjustToFitSafeArea()
@@ -98,7 +128,7 @@ namespace HoloLab.Spirare.Browser.UI
                     var touch = Input.GetTouch(i);
                     if (touch.phase == TouchPhase.Began && IsOutsideTouched(touch))
                     {
-                        OnCloseButtonClick();
+                        CloseMenu();
                         return;
                     }
                 }
@@ -109,36 +139,6 @@ namespace HoloLab.Spirare.Browser.UI
         {
             var insideTouched = RectTransformUtility.RectangleContainsScreenPoint(menuScrollView, touch.position, null);
             return !insideTouched;
-        }
-
-        private void OnOpenButtonClick()
-        {
-            CompleteMotion();
-
-            menuScrollView.gameObject.SetActive(true);
-
-#if LITMOTION_PRESENT
-            motionHandle = LMotion.Create(-menuWidth, 0, 0.2f)
-                .WithEase(Ease.OutQuad)
-                .BindToAnchoredPositionX(menuScrollView);
-#else
-            menuScrollView.anchoredPosition = new Vector2(0, menuScrollView.anchoredPosition.y);
-#endif
-        }
-
-        private void OnCloseButtonClick()
-        {
-            CompleteMotion();
-
-#if LITMOTION_PRESENT
-            motionHandle = LMotion.Create(0, -menuWidth, 0.14f)
-                .WithEase(Ease.OutQuad)
-                .WithOnComplete(() => menuScrollView.gameObject.SetActive(false))
-                .BindToAnchoredPositionX(menuScrollView);
-#else
-            menuScrollView.anchoredPosition = new Vector2(-menuWidth, menuScrollView.anchoredPosition.y);
-            menuScrollView.gameObject.SetActive(false);
-#endif
         }
 
         private void CompleteMotion()

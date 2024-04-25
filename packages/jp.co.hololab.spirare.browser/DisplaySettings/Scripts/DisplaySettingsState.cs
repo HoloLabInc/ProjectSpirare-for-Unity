@@ -10,19 +10,26 @@ namespace HoloLab.Spirare.Browser
         [SerializeField]
         private bool isMenuOpen = false;
 
+        private bool runtimeIsMenuOpen;
+
+        private void OnEnable()
+        {
+            runtimeIsMenuOpen = isMenuOpen;
+        }
+
         public bool IsMenuOpen
         {
             set
             {
-                if (isMenuOpen != value)
+                if (runtimeIsMenuOpen != value)
                 {
-                    isMenuOpen = value;
+                    runtimeIsMenuOpen = value;
                     OnIsMenuOpenChanged?.Invoke();
                 }
             }
             get
             {
-                return isMenuOpen;
+                return runtimeIsMenuOpen;
             }
         }
 
