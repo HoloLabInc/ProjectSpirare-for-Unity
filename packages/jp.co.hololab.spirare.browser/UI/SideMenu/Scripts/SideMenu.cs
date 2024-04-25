@@ -17,7 +17,7 @@ namespace HoloLab.Spirare.Browser.UI
         private RectTransform menuScrollView;
 
         [SerializeField]
-        private RectTransform menuContentRoot;
+        private LayoutElement contentPadding;
 
         [SerializeField]
         private Button closeButton;
@@ -29,25 +29,18 @@ namespace HoloLab.Spirare.Browser.UI
 
         private MotionHandle motionHandle;
 
+        private Rect previousSafeArea;
+
         private void Start()
         {
-            defaultMenuWidth = menuScrollView.rect.width;
-
-            var safeArea = Screen.safeArea;
-            var scaleX = transform.lossyScale.x;
-            var scaleY = transform.lossyScale.y;
-            var safeOffsetX = safeArea.x / scaleX;
-            var safeOffsetY = safeArea.y / scaleY;
-
-            menuWidth = defaultMenuWidth + safeOffsetX;
-
             rectTransform = GetComponent<RectTransform>();
-            rectTransform.sizeDelta = new Vector2(menuWidth, 0);
 
-            menuContentRoot.anchoredPosition = new Vector2(0, -safeOffsetY);
+            defaultMenuWidth = menuScrollView.rect.width;
 
             motionHandle = LMotion.Create(0f, 0f, 0.01f)
                 .BindToAnchoredPositionX(menuScrollView);
+
+            AdjustToFitSafeArea();
 
             openButton.onClick.AddListener(OnOpenButtonClick);
             closeButton.onClick.AddListener(OnCloseButtonClick);
@@ -55,7 +48,41 @@ namespace HoloLab.Spirare.Browser.UI
 
         private void Update()
         {
-            if (motionHandle.IsActive() == false && menuScrollView.gameObject.activeSelf)
+            CloseMenuWhenOutsideTouched();
+            AdjustToFitSafeArea();
+        }
+
+        private void AdjustToFitSafeArea()
+        {
+            var safeArea = Screen.safeArea;
+            if (safeArea == previousSafeArea)
+            {
+                return;
+            }
+
+            CompleteMotion();
+
+            var scaleX = transform.lossyScale.x;
+            var scaleY = transform.lossyScale.y;
+            var safeOffsetX = safeArea.x / scaleX;
+            var safeOffsetY = safeArea.y / scaleY;
+
+            menuWidth = defaultMenuWidth + safeOffsetX;
+            rectTransform.sizeDelta = new Vector2(menuWidth, 0);
+
+            contentPadding.minHeight = safeOffsetY;
+
+            previousSafeArea = safeArea;
+        }
+
+        private void CloseMenuWhenOutsideTouched()
+        {
+            if (motionHandle.IsActive())
+            {
+                return;
+            }
+
+            if (menuScrollView.gameObject.activeSelf)
             {
                 for (var i = 0; i < Input.touchCount; i++)
                 {
@@ -63,7 +90,7 @@ namespace HoloLab.Spirare.Browser.UI
                     if (touch.phase == TouchPhase.Began && IsOutsideTouched(touch))
                     {
                         OnCloseButtonClick();
-                        break;
+                        return;
                     }
                 }
             }

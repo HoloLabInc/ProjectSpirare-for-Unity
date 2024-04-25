@@ -157,7 +157,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 5312850525726302240}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -734,6 +734,7 @@ MonoBehaviour:
   openButton: {fileID: 8363608682430227012}
   menuScrollView: {fileID: 7688667568182208163}
   menuContentRoot: {fileID: 900365388853462686}
+  contentPadding: {fileID: 421999777252652273}
   closeButton: {fileID: 7902556740239077985}
 --- !u!1 &9029251816231084955
 GameObject:
