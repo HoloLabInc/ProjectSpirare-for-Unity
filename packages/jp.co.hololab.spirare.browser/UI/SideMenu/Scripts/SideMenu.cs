@@ -121,6 +121,8 @@ namespace HoloLab.Spirare.Browser.UI
             motionHandle = LMotion.Create(-menuWidth, 0, 0.2f)
                 .WithEase(Ease.OutQuad)
                 .BindToAnchoredPositionX(menuScrollView);
+#else
+            menuScrollView.anchoredPosition = new Vector2(0, menuScrollView.anchoredPosition.y);
 #endif
         }
 
@@ -133,6 +135,9 @@ namespace HoloLab.Spirare.Browser.UI
                 .WithEase(Ease.OutQuad)
                 .WithOnComplete(() => menuScrollView.gameObject.SetActive(false))
                 .BindToAnchoredPositionX(menuScrollView);
+#else
+            menuScrollView.anchoredPosition = new Vector2(-menuWidth, menuScrollView.anchoredPosition.y);
+            menuScrollView.gameObject.SetActive(false);
 #endif
         }
 
