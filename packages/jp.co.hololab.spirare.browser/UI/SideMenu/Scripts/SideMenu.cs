@@ -3,8 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
+#if LITMOTION_PRESENT
 using LitMotion;
 using LitMotion.Extensions;
+#endif
 
 namespace HoloLab.Spirare.Browser.UI
 {
@@ -27,7 +30,9 @@ namespace HoloLab.Spirare.Browser.UI
         private float defaultMenuWidth;
         private float menuWidth;
 
+#if LITMOTION_PRESENT
         private MotionHandle motionHandle;
+#endif
 
         private Rect previousSafeArea;
 
@@ -37,8 +42,10 @@ namespace HoloLab.Spirare.Browser.UI
 
             defaultMenuWidth = menuScrollView.rect.width;
 
+#if LITMOTION_PRESENT
             motionHandle = LMotion.Create(0f, 0f, 0.01f)
                 .BindToAnchoredPositionX(menuScrollView);
+#endif
 
             AdjustToFitSafeArea();
 
@@ -77,10 +84,12 @@ namespace HoloLab.Spirare.Browser.UI
 
         private void CloseMenuWhenOutsideTouched()
         {
+#if LITMOTION_PRESENT
             if (motionHandle.IsActive())
             {
                 return;
             }
+#endif
 
             if (menuScrollView.gameObject.activeSelf)
             {
@@ -108,27 +117,33 @@ namespace HoloLab.Spirare.Browser.UI
 
             menuScrollView.gameObject.SetActive(true);
 
+#if LITMOTION_PRESENT
             motionHandle = LMotion.Create(-menuWidth, 0, 0.2f)
                 .WithEase(Ease.OutQuad)
                 .BindToAnchoredPositionX(menuScrollView);
+#endif
         }
 
         private void OnCloseButtonClick()
         {
             CompleteMotion();
 
+#if LITMOTION_PRESENT
             motionHandle = LMotion.Create(0, -menuWidth, 0.14f)
                 .WithEase(Ease.OutQuad)
                 .WithOnComplete(() => menuScrollView.gameObject.SetActive(false))
                 .BindToAnchoredPositionX(menuScrollView);
+#endif
         }
 
         private void CompleteMotion()
         {
+#if LITMOTION_PRESENT
             if (motionHandle.IsActive())
             {
                 motionHandle.Complete();
             }
+#endif
         }
     }
 }

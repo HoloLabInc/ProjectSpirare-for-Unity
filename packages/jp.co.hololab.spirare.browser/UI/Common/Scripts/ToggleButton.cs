@@ -1,10 +1,13 @@
-using LitMotion;
-using LitMotion.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
+#if LITMOTION_PRESENT
+using LitMotion;
+using LitMotion.Extensions;
+#endif
 
 namespace HoloLab.Spirare.Browser.UI
 {
@@ -44,7 +47,10 @@ namespace HoloLab.Spirare.Browser.UI
         private Color backgroundColorOn = new Color(0.3843137f, 0.6313726f, 0.8f);
 
         private float handlePositionX;
+
+#if LITMOTION_PRESENT
         private CompositeMotionHandle motionHandle;
+#endif
 
         private const float toggleDuration = 0.36f;
 
@@ -60,6 +66,9 @@ namespace HoloLab.Spirare.Browser.UI
 
         private void Awake()
         {
+#if !LITMOTION_PRESENT
+            Debug.LogWarning($"LitMotion should be imported to use {nameof(ToggleButton)}.");
+#endif
             handlePositionX = Mathf.Abs(handle.anchoredPosition.x);
 
             ChangeButtonStateWithoutAnimation();
@@ -104,6 +113,7 @@ namespace HoloLab.Spirare.Browser.UI
 
         private void ChangeButtonState()
         {
+#if LITMOTION_PRESENT
             if (motionHandle != null)
             {
                 motionHandle.Complete();
@@ -123,15 +133,20 @@ namespace HoloLab.Spirare.Browser.UI
                 .WithEase(Ease.OutQuad)
                 .BindToAnchoredPositionX(handle)
                 .AddTo(motionHandle);
+#else
+            ChangeButtonStateWithoutAnimation();
+#endif
         }
 
         private void ChangeButtonStateWithoutAnimation()
         {
+#if LITMOTION_PRESENT
             if (motionHandle != null)
             {
                 motionHandle.Complete();
                 motionHandle = null;
             }
+#endif
 
             var backgroundColor = isOn ? backgroundColorOn : backgroundColorOff;
             var handleDestination = isOn ? handlePositionX : -handlePositionX;
