@@ -302,6 +302,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4862486439559489495, guid: a8e548135bd083f4d9afeb7f069a4eed, type: 3}
+      propertyPath: m_Padding.w
+      value: -2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4862486439559489495, guid: a8e548135bd083f4d9afeb7f069a4eed, type: 3}
+      propertyPath: m_Padding.y
+      value: -2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4862486439559489495, guid: a8e548135bd083f4d9afeb7f069a4eed, type: 3}
+      propertyPath: m_Padding.z
+      value: -4
+      objectReference: {fileID: 0}
     - target: {fileID: 4862486439574072784, guid: a8e548135bd083f4d9afeb7f069a4eed, type: 3}
       propertyPath: m_Name
       value: PomlUI
