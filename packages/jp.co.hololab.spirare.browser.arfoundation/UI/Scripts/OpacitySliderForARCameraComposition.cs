@@ -17,10 +17,16 @@ namespace HoloLab.Spirare.Browser.ARFoundation
 
         private void Start()
         {
+            ChangeValueText(slider.value);
             slider.onValueChanged.AddListener(OnValueChanged);
         }
 
         private void OnValueChanged(float value)
+        {
+            ChangeValueText(value);
+        }
+
+        private void ChangeValueText(float value)
         {
             valueText.text = $"{(int)(value * 100)}%";
         }
