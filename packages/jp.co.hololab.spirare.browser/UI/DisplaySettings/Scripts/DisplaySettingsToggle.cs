@@ -21,9 +21,9 @@ namespace HoloLab.Spirare.Browser.UI
             displaySettingsState.OnIsMenuOpenChanged += DisplaySettingsState_OnIsMenuOpenChanged;
         }
 
-        private void DisplaySettingsState_OnIsMenuOpenChanged()
+        private void DisplaySettingsState_OnIsMenuOpenChanged(bool isMenuOpen)
         {
-            toggleButton.IsOn = displaySettingsState.IsMenuOpen;
+            toggleButton.IsOn = isMenuOpen;
         }
 
         private void ToggleButton_OnToggle(bool isOn)

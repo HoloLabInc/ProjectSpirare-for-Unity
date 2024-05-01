@@ -28,6 +28,18 @@ namespace HoloLab.Spirare.Browser
                     return false;
             }
         }
+
+        public static bool TryGetFloat(string key, out float value)
+        {
+            value = PlayerPrefs.GetFloat(key, float.NaN);
+            if (float.IsNaN(value))
+            {
+                value = 0;
+                return false;
+            }
+
+            return true;
+        }
     }
 }
 

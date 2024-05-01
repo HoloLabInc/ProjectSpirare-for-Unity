@@ -9,13 +9,7 @@ namespace HoloLab.Spirare.Browser
     {
         [SerializeField]
         private bool isMenuOpen = false;
-
         private bool runtimeIsMenuOpen;
-
-        private void OnEnable()
-        {
-            runtimeIsMenuOpen = isMenuOpen;
-        }
 
         public bool IsMenuOpen
         {
@@ -24,7 +18,7 @@ namespace HoloLab.Spirare.Browser
                 if (runtimeIsMenuOpen != value)
                 {
                     runtimeIsMenuOpen = value;
-                    OnIsMenuOpenChanged?.Invoke();
+                    OnIsMenuOpenChanged?.Invoke(value);
                 }
             }
             get
@@ -33,6 +27,35 @@ namespace HoloLab.Spirare.Browser
             }
         }
 
-        public event Action OnIsMenuOpenChanged;
+        public event Action<bool> OnIsMenuOpenChanged;
+
+        [SerializeField]
+        private float opacity = 1f;
+        private float runtimeOpacity;
+
+        public float Opacity
+        {
+            set
+            {
+                if (runtimeOpacity != value)
+                {
+                    runtimeOpacity = value;
+                    OnOpacityChanged?.Invoke(value);
+                }
+            }
+            get
+            {
+                return runtimeOpacity;
+            }
+        }
+
+        public event Action<float> OnOpacityChanged;
+
+        private void OnEnable()
+        {
+            runtimeIsMenuOpen = isMenuOpen;
+            runtimeOpacity = opacity;
+        }
     }
 }
+

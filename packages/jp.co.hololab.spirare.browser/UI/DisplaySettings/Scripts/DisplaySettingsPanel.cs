@@ -26,7 +26,7 @@ namespace HoloLab.Spirare.Browser.UI
                 displaySettingsState.IsMenuOpen = false;
             });
 
-            DisplaySettingsState_OnIsMenuOpenChanged();
+            DisplaySettingsState_OnIsMenuOpenChanged(displaySettingsState.IsMenuOpen);
             displaySettingsState.OnIsMenuOpenChanged += DisplaySettingsState_OnIsMenuOpenChanged;
         }
 
@@ -42,9 +42,9 @@ namespace HoloLab.Spirare.Browser.UI
             }
         }
 
-        private void DisplaySettingsState_OnIsMenuOpenChanged()
+        private void DisplaySettingsState_OnIsMenuOpenChanged(bool isMenuOpen)
         {
-            panelRoot.SetActive(displaySettingsState.IsMenuOpen);
+            panelRoot.SetActive(isMenuOpen);
         }
     }
 }
