@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fd6cf032d5c49443994a6d72554ad6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  environmentOcculusionDropdown: {fileID: 0}
+  environmentOcculusionDropdown: {fileID: 6582145404664645323}
 --- !u!1 &8295669444319668453
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,6 +377,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8235219714516031367, guid: 8b862372d6bf85044a95873c88dc4e3b, type: 3}
   m_PrefabInstance: {fileID: 2561578588237026066}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6582145404664645323 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8706852777073890777, guid: 8b862372d6bf85044a95873c88dc4e3b, type: 3}
+  m_PrefabInstance: {fileID: 2561578588237026066}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6709946800839053747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6709946800839053747 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9120364530488738465, guid: 8b862372d6bf85044a95873c88dc4e3b, type: 3}
