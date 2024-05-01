@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace HoloLab.Spirare.Browser.ARFoundation
 {
-    public class FarClipUi : MonoBehaviour
+    public class FarClipSlider : MonoBehaviour
     {
         [SerializeField]
         private float farClipMin = 5;
@@ -46,7 +46,7 @@ namespace HoloLab.Spirare.Browser.ARFoundation
             {
                 camera.farClipPlane = farClipLength;
             }
-            farClipText.text = $"Far clip: {(int)farClipLength}m";
+            farClipText.text = $"{(int)farClipLength}m";
         }
 
         private float LogarithmicLerp(float a, float b, float t)
@@ -65,3 +65,4 @@ namespace HoloLab.Spirare.Browser.ARFoundation
         }
     }
 }
+
