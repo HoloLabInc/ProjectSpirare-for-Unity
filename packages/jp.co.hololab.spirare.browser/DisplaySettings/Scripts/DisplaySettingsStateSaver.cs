@@ -23,20 +23,16 @@ namespace HoloLab.Spirare.Browser
 
         private void LoadIsMenuOpen()
         {
-            var isMenuOpen = PlayerPrefs.GetInt("IsMenuOpen", -1);
-            if (isMenuOpen == 0)
+            if (PlayerPrefsUtility.TryGetBoolean("IsMenuOpen", out var isMenuOpen))
             {
-                displaySettingsState.IsMenuOpen = false;
-            }
-            else if (isMenuOpen == 1)
-            {
-                displaySettingsState.IsMenuOpen = true;
+                displaySettingsState.IsMenuOpen = isMenuOpen;
             }
         }
 
-        private void DisplaySettingsState_OnIsMenuOpenChanged()
+        private void DisplaySettingsState_OnIsMenuOpenChanged(bool isMenuOpen)
         {
-            PlayerPrefs.SetInt("IsMenuOpen", displaySettingsState.IsMenuOpen ? 1 : 0);
+            PlayerPrefsUtility.SetBoolean("IsMenuOpen", isMenuOpen);
         }
     }
 }
+
