@@ -59,6 +59,32 @@ namespace HoloLab.Spirare.Browser
 
         #endregion
 
+        #region FarClip
+
+        [SerializeField]
+        private float farClip = 100f;
+        private float runtimeFarClip;
+
+        public float FarClip
+        {
+            set
+            {
+                if (runtimeFarClip != value)
+                {
+                    runtimeFarClip = value;
+                    OnFarClipChanged?.Invoke(value);
+                }
+            }
+            get
+            {
+                return runtimeFarClip;
+            }
+        }
+
+        public event Action<float> OnFarClipChanged;
+
+        #endregion
+
         #region Occlusion
 
         public enum OcclusionType
@@ -99,6 +125,7 @@ namespace HoloLab.Spirare.Browser
         {
             runtimeIsMenuOpen = isMenuOpen;
             runtimeOpacity = opacity;
+            runtimeFarClip = farClip;
             runtimeOcclusion = occlusion;
         }
     }
