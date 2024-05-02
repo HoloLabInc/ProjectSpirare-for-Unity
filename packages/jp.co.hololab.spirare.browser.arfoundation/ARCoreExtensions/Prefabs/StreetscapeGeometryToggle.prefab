@@ -187,8 +187,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25872153d43b08e48bd677a9cc5abea8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  streetscapeGeometryObject: {fileID: 0}
   toggleButton: {fileID: 7056748146926070102}
+  displaySettingsState: {fileID: 11400000, guid: 8f9325c01f51afc42af4fcefbf853dfa, type: 2}
 --- !u!114 &7933866711614894026
 MonoBehaviour:
   m_ObjectHideFlags: 0
