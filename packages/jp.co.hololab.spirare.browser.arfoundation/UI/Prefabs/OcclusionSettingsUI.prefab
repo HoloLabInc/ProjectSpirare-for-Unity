@@ -50,7 +50,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fd6cf032d5c49443994a6d72554ad6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  environmentOcculusionDropdown: {fileID: 6582145404664645323}
+  occulusionDropdown: {fileID: 6582145404664645323}
+  displaySettingsState: {fileID: 11400000, guid: 8f9325c01f51afc42af4fcefbf853dfa, type: 2}
 --- !u!1 &8295669444319668453
 GameObject:
   m_ObjectHideFlags: 0
