@@ -12,6 +12,7 @@ namespace HoloLab.Spirare.Browser
 
         private const string IsMenuOpenKey = "DisplaySettingsStateSaver_IsMenuOpen";
         private const string OpacityKey = "DisplaySettingsStateSaver_Opacity";
+        private const string FarClipKey = "DisplaySettingsStateSaver_FarClip";
         private const string OcclusionKey = "DisplaySettingsStateSaver_Occlusion";
 
         private void Awake()
@@ -20,6 +21,7 @@ namespace HoloLab.Spirare.Browser
 
             displaySettingsState.OnIsMenuOpenChanged += DisplaySettingsState_OnIsMenuOpenChanged;
             displaySettingsState.OnOpacityChanged += DisplaySettingsState_OnOpacityChanged;
+            displaySettingsState.OnFarClipChanged += DisplaySettingsState_OnFarClipChanged;
             displaySettingsState.OnOcclusionChanged += DisplaySettingsState_OnOcclusionChanged;
         }
 
@@ -27,6 +29,7 @@ namespace HoloLab.Spirare.Browser
         {
             LoadIsMenuOpen();
             LoadOpacity();
+            LoadFarClip();
             LoadOcclusion();
         }
 
@@ -56,9 +59,17 @@ namespace HoloLab.Spirare.Browser
             PlayerPrefs.SetFloat(OpacityKey, opacity);
         }
 
-        private void DisplaySettingsState_OnOcclusionChanged(DisplaySettingsState.OcclusionType occlusion)
+        private void LoadFarClip()
         {
-            PlayerPrefsUtility.SetEnum(OcclusionKey, occlusion);
+            if (PlayerPrefsUtility.TryGetFloat(FarClipKey, out var farClip))
+            {
+                displaySettingsState.FarClip = farClip;
+            }
+        }
+
+        private void DisplaySettingsState_OnFarClipChanged(float farClip)
+        {
+            PlayerPrefs.SetFloat(FarClipKey, farClip);
         }
 
         private void LoadOcclusion()
@@ -67,6 +78,11 @@ namespace HoloLab.Spirare.Browser
             {
                 displaySettingsState.Occlusion = occlusion;
             }
+        }
+
+        private void DisplaySettingsState_OnOcclusionChanged(DisplaySettingsState.OcclusionType occlusion)
+        {
+            PlayerPrefsUtility.SetEnum(OcclusionKey, occlusion);
         }
     }
 }
