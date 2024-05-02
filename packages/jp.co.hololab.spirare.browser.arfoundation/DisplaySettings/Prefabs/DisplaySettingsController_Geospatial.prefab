@@ -1,5 +1,67 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &1777124306008820112
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4928782187278017455}
+    m_Modifications:
+    - target: {fileID: 795018917735616728, guid: d618417ccee40a44fbb6792a6a065f4a, type: 3}
+      propertyPath: m_Name
+      value: StreetscapeGeometryOcclusionController
+      objectReference: {fileID: 0}
+    - target: {fileID: 8510567381952057725, guid: d618417ccee40a44fbb6792a6a065f4a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8510567381952057725, guid: d618417ccee40a44fbb6792a6a065f4a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8510567381952057725, guid: d618417ccee40a44fbb6792a6a065f4a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8510567381952057725, guid: d618417ccee40a44fbb6792a6a065f4a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8510567381952057725, guid: d618417ccee40a44fbb6792a6a065f4a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8510567381952057725, guid: d618417ccee40a44fbb6792a6a065f4a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8510567381952057725, guid: d618417ccee40a44fbb6792a6a065f4a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8510567381952057725, guid: d618417ccee40a44fbb6792a6a065f4a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8510567381952057725, guid: d618417ccee40a44fbb6792a6a065f4a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8510567381952057725, guid: d618417ccee40a44fbb6792a6a065f4a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d618417ccee40a44fbb6792a6a065f4a, type: 3}
+--- !u!4 &7976445403586959597 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8510567381952057725, guid: d618417ccee40a44fbb6792a6a065f4a, type: 3}
+  m_PrefabInstance: {fileID: 1777124306008820112}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5726870914596265372
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -50,10 +112,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6521424466298586619, guid: eb7b6ce63bed856489080c29c9c4e745, type: 3}
       propertyPath: m_Name
-      value: DisplaySettingsController Variant
+      value: DisplaySettingsController_Geospatial
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 801468695485120051, guid: eb7b6ce63bed856489080c29c9c4e745, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7976445403586959597}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb7b6ce63bed856489080c29c9c4e745, type: 3}
+--- !u!4 &4928782187278017455 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 801468695485120051, guid: eb7b6ce63bed856489080c29c9c4e745, type: 3}
+  m_PrefabInstance: {fileID: 5726870914596265372}
+  m_PrefabAsset: {fileID: 0}
