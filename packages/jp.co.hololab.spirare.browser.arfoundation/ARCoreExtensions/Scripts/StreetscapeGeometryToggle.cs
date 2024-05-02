@@ -1,4 +1,5 @@
 using HoloLab.Spirare.Browser.UI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,20 +9,27 @@ namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
     public class StreetscapeGeometryToggle : MonoBehaviour
     {
         [SerializeField]
-        private GameObject streetscapeGeometryObject;
+        private ToggleButton toggleButton;
 
         [SerializeField]
-        private ToggleButton toggleButton;
+        private DisplaySettingsState displaySettingsState;
 
         private void Start()
         {
-            ToggleButton_OnToggle(toggleButton.IsOn);
+            toggleButton.ChangeStateWithoutAnimation(displaySettingsState.StreetscapeGeometryOcclusionEnabled);
+            displaySettingsState.OnStreetscapeGeometryOcclusionEnabledChanged += DisplaySettingsState_OnStreetscapeGeometryOcclusionEnabledChanged;
+
             toggleButton.OnToggle += ToggleButton_OnToggle;
+        }
+
+        private void DisplaySettingsState_OnStreetscapeGeometryOcclusionEnabledChanged(bool enabled)
+        {
+            toggleButton.IsOn = enabled;
         }
 
         private void ToggleButton_OnToggle(bool value)
         {
-            streetscapeGeometryObject.SetActive(value);
+            displaySettingsState.StreetscapeGeometryOcclusionEnabled = value;
         }
     }
 }

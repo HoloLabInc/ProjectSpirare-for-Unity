@@ -145,7 +145,7 @@ MonoBehaviour:
   farClipMax: 1000
   farClipText: {fileID: 6405392314306667821}
   farClipSlider: {fileID: 1683413405568869320}
-  cameraList: []
+  displaySettingsState: {fileID: 11400000, guid: 8f9325c01f51afc42af4fcefbf853dfa, type: 2}
 --- !u!114 &1683413405568869320 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8759501563812560149, guid: c212f73a5af60e6429c742b8d9d52366, type: 3}

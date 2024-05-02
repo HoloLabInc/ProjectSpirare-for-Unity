@@ -22,34 +22,41 @@ namespace HoloLab.Spirare.Browser.ARFoundation
         private Slider farClipSlider = null;
 
         [SerializeField]
-        private Camera[] cameraList = null;
+        private DisplaySettingsState displaySettingsState;
 
         private void Start()
         {
-            if (cameraList == null || cameraList.Length == 0)
-            {
-                cameraList = new Camera[] { Camera.main };
-            }
-
-            // Reflect the initial value on the slider.
-            var firstCamera = cameraList[0];
-            farClipSlider.value = LogarithmicInverseLerp(farClipMin, farClipMax, firstCamera.farClipPlane);
-            FarClipSlider_OnValueChanged(farClipSlider.value);
+            UpdateSliderValue(displaySettingsState.FarClip);
+            displaySettingsState.OnFarClipChanged += DisplaySettingsState_OnFarClipChanged;
 
             farClipSlider.onValueChanged.AddListener(FarClipSlider_OnValueChanged);
         }
 
-        private void FarClipSlider_OnValueChanged(float value)
+        private void DisplaySettingsState_OnFarClipChanged(float farClip)
         {
-            var farClipLength = LogarithmicLerp(farClipMin, farClipMax, value);
-            foreach (var camera in cameraList)
-            {
-                camera.farClipPlane = farClipLength;
-            }
-            farClipText.text = $"{(int)farClipLength}m";
+            UpdateSliderValue(farClip);
         }
 
-        private float LogarithmicLerp(float a, float b, float t)
+        private void UpdateSliderValue(float farClip)
+        {
+            farClipSlider.value = LogarithmicInverseLerp(farClipMin, farClipMax, farClip);
+            UpdateFarClipText(farClip);
+        }
+
+        private void UpdateFarClipText(float farClip)
+        {
+            farClipText.text = $"{(int)farClip}m";
+        }
+
+        private void FarClipSlider_OnValueChanged(float value)
+        {
+            var farClip = LogarithmicLerp(farClipMin, farClipMax, value);
+
+            UpdateFarClipText(farClip);
+            displaySettingsState.FarClip = farClip;
+        }
+
+        private static float LogarithmicLerp(float a, float b, float t)
         {
             var logA = Mathf.Log(a);
             var logB = Mathf.Log(b);
@@ -57,7 +64,7 @@ namespace HoloLab.Spirare.Browser.ARFoundation
             return Mathf.Exp(Mathf.Lerp(logA, logB, t));
         }
 
-        private float LogarithmicInverseLerp(float a, float b, float t)
+        private static float LogarithmicInverseLerp(float a, float b, float t)
         {
             var logA = Mathf.Log(a);
             var logB = Mathf.Log(b);

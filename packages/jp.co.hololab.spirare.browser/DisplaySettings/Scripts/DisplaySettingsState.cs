@@ -7,15 +7,11 @@ namespace HoloLab.Spirare.Browser
 {
     public class DisplaySettingsState : ScriptableObject
     {
+        #region IsMenuOpen
+
         [SerializeField]
         private bool isMenuOpen = false;
-
         private bool runtimeIsMenuOpen;
-
-        private void OnEnable()
-        {
-            runtimeIsMenuOpen = isMenuOpen;
-        }
 
         public bool IsMenuOpen
         {
@@ -24,7 +20,7 @@ namespace HoloLab.Spirare.Browser
                 if (runtimeIsMenuOpen != value)
                 {
                     runtimeIsMenuOpen = value;
-                    OnIsMenuOpenChanged?.Invoke();
+                    OnIsMenuOpenChanged?.Invoke(value);
                 }
             }
             get
@@ -33,6 +29,132 @@ namespace HoloLab.Spirare.Browser
             }
         }
 
-        public event Action OnIsMenuOpenChanged;
+        public event Action<bool> OnIsMenuOpenChanged;
+
+        #endregion
+
+        #region Opacity
+
+        [SerializeField]
+        private float opacity = 1f;
+        private float runtimeOpacity;
+
+        public float Opacity
+        {
+            set
+            {
+                if (runtimeOpacity != value)
+                {
+                    runtimeOpacity = value;
+                    OnOpacityChanged?.Invoke(value);
+                }
+            }
+            get
+            {
+                return runtimeOpacity;
+            }
+        }
+
+        public event Action<float> OnOpacityChanged;
+
+        #endregion
+
+        #region FarClip
+
+        [SerializeField]
+        private float farClip = 100f;
+        private float runtimeFarClip;
+
+        public float FarClip
+        {
+            set
+            {
+                if (runtimeFarClip != value)
+                {
+                    runtimeFarClip = value;
+                    OnFarClipChanged?.Invoke(value);
+                }
+            }
+            get
+            {
+                return runtimeFarClip;
+            }
+        }
+
+        public event Action<float> OnFarClipChanged;
+
+        #endregion
+
+        #region Occlusion
+
+        public enum OcclusionType
+        {
+            None = 0,
+            EnvironmentFastest,
+            EnvironmentMedium,
+            EnvironmentBest,
+            HumanFastest,
+            HumanBest
+        }
+
+        [SerializeField]
+        private OcclusionType occlusion = OcclusionType.None;
+        private OcclusionType runtimeOcclusion;
+
+        public OcclusionType Occlusion
+        {
+            set
+            {
+                if (runtimeOcclusion != value)
+                {
+                    runtimeOcclusion = value;
+                    OnOcclusionChanged?.Invoke(value);
+                }
+            }
+            get
+            {
+                return runtimeOcclusion;
+            }
+        }
+
+        public event Action<OcclusionType> OnOcclusionChanged;
+
+        #endregion
+
+        #region StreetscapeGeometryOcclusion
+
+        [SerializeField]
+        private bool streetscapeGeometryOcclusionEnabled = false;
+        private bool runtimeStreetscapeGeometryOcclusionEnabled;
+
+        public bool StreetscapeGeometryOcclusionEnabled
+        {
+            set
+            {
+                if (runtimeStreetscapeGeometryOcclusionEnabled != value)
+                {
+                    runtimeStreetscapeGeometryOcclusionEnabled = value;
+                    OnStreetscapeGeometryOcclusionEnabledChanged?.Invoke(value);
+                }
+            }
+            get
+            {
+                return runtimeStreetscapeGeometryOcclusionEnabled;
+            }
+        }
+
+        public event Action<bool> OnStreetscapeGeometryOcclusionEnabledChanged;
+
+        #endregion
+
+        private void OnEnable()
+        {
+            runtimeIsMenuOpen = isMenuOpen;
+            runtimeOpacity = opacity;
+            runtimeFarClip = farClip;
+            runtimeOcclusion = occlusion;
+            runtimeStreetscapeGeometryOcclusionEnabled = streetscapeGeometryOcclusionEnabled;
+        }
     }
 }
+

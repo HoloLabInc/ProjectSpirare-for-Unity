@@ -3,53 +3,57 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.XR.ARFoundation;
-using UnityEngine.XR.ARSubsystems;
+
+using static HoloLab.Spirare.Browser.DisplaySettingsState;
 
 namespace HoloLab.Spirare.Browser.ARFoundation
 {
     public class OcculusionSettingsUi : MonoBehaviour
     {
         [SerializeField]
-        private TMP_Dropdown environmentOcculusionDropdown = null;
+        private TMP_Dropdown occulusionDropdown = null;
 
-        AROcclusionManager arOcclusionManager = null;
+        [SerializeField]
+        private DisplaySettingsState displaySettingsState;
 
-        void Start()
+        private List<(OcclusionType Occlusion, string DropdownLabel)> dropdownOptions
+            = new List<(OcclusionType Occlusion, string DropdownLabel)>()
+                {
+                    (OcclusionType.None, "Disabled"),
+                    (OcclusionType.EnvironmentFastest, "Fastest"),
+                    (OcclusionType.EnvironmentMedium, "Medium"),
+                    (OcclusionType.EnvironmentBest, "Best"),
+                };
+
+        private void Start()
         {
-            arOcclusionManager = FindObjectOfType<AROcclusionManager>();
-            environmentOcculusionDropdown.onValueChanged.AddListener(OnValueChanged);
+            occulusionDropdown.options = dropdownOptions.ConvertAll(option => new TMP_Dropdown.OptionData(option.DropdownLabel));
 
-            // Reflect the initial value.
-            UpdateOcclusionSetting();
+            ChangeDropdownSelection(displaySettingsState.Occlusion);
+            displaySettingsState.OnOcclusionChanged += DisplaySettingsState_OnOcclusionChanged;
+
+            occulusionDropdown.onValueChanged.AddListener(OnValueChanged);
+        }
+
+        private void DisplaySettingsState_OnOcclusionChanged(OcclusionType occlusion)
+        {
+            ChangeDropdownSelection(occlusion);
+        }
+
+        private void ChangeDropdownSelection(OcclusionType occlusion)
+        {
+            var index = dropdownOptions.FindIndex(option => option.Occlusion == occlusion);
+            occulusionDropdown.value = index;
         }
 
         private void OnValueChanged(int selectedIndex)
         {
-            UpdateOcclusionSetting();
-        }
-
-        private void UpdateOcclusionSetting()
-        {
-            var selectedOption = environmentOcculusionDropdown.options[environmentOcculusionDropdown.value];
-            arOcclusionManager.requestedEnvironmentDepthMode = StringToEnvironmentDepthMode(selectedOption.text);
-        }
-
-        private static EnvironmentDepthMode StringToEnvironmentDepthMode(string depthMode)
-        {
-            switch (depthMode.ToLower())
+            if (0 <= selectedIndex && selectedIndex < dropdownOptions.Count)
             {
-                case "disabled":
-                    return EnvironmentDepthMode.Disabled;
-                case "fastest":
-                    return EnvironmentDepthMode.Fastest;
-                case "medium":
-                    return EnvironmentDepthMode.Medium;
-                case "best":
-                    return EnvironmentDepthMode.Best;
-                default:
-                    return EnvironmentDepthMode.Disabled;
+                var selectedOption = dropdownOptions[selectedIndex];
+                displaySettingsState.Occlusion = selectedOption.Occlusion;
             }
         }
     }
 }
+

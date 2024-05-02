@@ -12,7 +12,6 @@ namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
     public class StreetscapeGeometryController : MonoBehaviour
     {
 #if ARCOREEXTENSIONS_1_37_0_OR_NEWER
-        [SerializeField]
         private ARStreetscapeGeometryManager arStreetscapeGeometryManager;
 
         [SerializeField]
@@ -21,14 +20,29 @@ namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
         private readonly Dictionary<TrackableId, GameObject> streetscapeGeometryGameObjects =
             new Dictionary<TrackableId, GameObject>();
 
+        private void Awake()
+        {
+            arStreetscapeGeometryManager = FindObjectOfType<ARStreetscapeGeometryManager>();
+            if (arStreetscapeGeometryManager != null)
+            {
+                Debug.LogWarning($"{nameof(ARStreetscapeGeometryManager)} not found in scene");
+            }
+        }
+
         private void OnEnable()
         {
-            arStreetscapeGeometryManager.StreetscapeGeometriesChanged += StreetscapeGeometriesChanged;
+            if (arStreetscapeGeometryManager != null)
+            {
+                arStreetscapeGeometryManager.StreetscapeGeometriesChanged += StreetscapeGeometriesChanged;
+            }
         }
 
         private void OnDisable()
         {
-            arStreetscapeGeometryManager.StreetscapeGeometriesChanged -= StreetscapeGeometriesChanged;
+            if (arStreetscapeGeometryManager != null)
+            {
+                arStreetscapeGeometryManager.StreetscapeGeometriesChanged -= StreetscapeGeometriesChanged;
+            }
 
             DestroyAllGeometryObjects();
         }

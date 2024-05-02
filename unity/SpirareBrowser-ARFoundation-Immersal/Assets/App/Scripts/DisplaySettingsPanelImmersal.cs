@@ -34,6 +34,12 @@ namespace HoloLab.Spirare.Browser.Immersal
             var panelCorners = new Vector3[4];
             rectTransform.GetWorldCorners(panelCorners);
 
+            if (panelCorners[0].x == panelCorners[2].x)
+            {
+                // Wait until the layout is updated.
+                return;
+            }
+
             var logoCorners = new Vector3[4];
             logoTransform.GetWorldCorners(logoCorners);
 
