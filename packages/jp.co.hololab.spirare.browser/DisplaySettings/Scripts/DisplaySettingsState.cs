@@ -121,12 +121,39 @@ namespace HoloLab.Spirare.Browser
 
         #endregion
 
+        #region StreetscapeGeometryOcclusion
+
+        [SerializeField]
+        private bool streetscapeGeometryOcclusionEnabled = false;
+        private bool runtimeStreetscapeGeometryOcclusionEnabled;
+
+        public bool StreetscapeGeometryOcclusionEnabled
+        {
+            set
+            {
+                if (runtimeStreetscapeGeometryOcclusionEnabled != value)
+                {
+                    runtimeStreetscapeGeometryOcclusionEnabled = value;
+                    OnStreetscapeGeometryOcclusionEnabledChanged?.Invoke(value);
+                }
+            }
+            get
+            {
+                return runtimeStreetscapeGeometryOcclusionEnabled;
+            }
+        }
+
+        public event Action<bool> OnStreetscapeGeometryOcclusionEnabledChanged;
+
+        #endregion
+
         private void OnEnable()
         {
             runtimeIsMenuOpen = isMenuOpen;
             runtimeOpacity = opacity;
             runtimeFarClip = farClip;
             runtimeOcclusion = occlusion;
+            runtimeStreetscapeGeometryOcclusionEnabled = streetscapeGeometryOcclusionEnabled;
         }
     }
 }

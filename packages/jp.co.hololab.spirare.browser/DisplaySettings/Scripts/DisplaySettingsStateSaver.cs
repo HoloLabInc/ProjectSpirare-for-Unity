@@ -14,6 +14,7 @@ namespace HoloLab.Spirare.Browser
         private const string OpacityKey = "DisplaySettingsStateSaver_Opacity";
         private const string FarClipKey = "DisplaySettingsStateSaver_FarClip";
         private const string OcclusionKey = "DisplaySettingsStateSaver_Occlusion";
+        private const string StreetscapeGeometryOcclusionEnabledKey = "DisplaySettingsStateSaver_StreetscapeGeometryOcclusionEnabled";
 
         private void Awake()
         {
@@ -23,6 +24,7 @@ namespace HoloLab.Spirare.Browser
             displaySettingsState.OnOpacityChanged += DisplaySettingsState_OnOpacityChanged;
             displaySettingsState.OnFarClipChanged += DisplaySettingsState_OnFarClipChanged;
             displaySettingsState.OnOcclusionChanged += DisplaySettingsState_OnOcclusionChanged;
+            displaySettingsState.OnStreetscapeGeometryOcclusionEnabledChanged += DisplaySettingsState_OnStreetscapeGeometryOcclusionEnabledChanged;
         }
 
         private void LoadState()
@@ -31,6 +33,7 @@ namespace HoloLab.Spirare.Browser
             LoadOpacity();
             LoadFarClip();
             LoadOcclusion();
+            LoadStreetscapeGeometryOcclusionEnabled();
         }
 
         private void LoadIsMenuOpen()
@@ -83,6 +86,19 @@ namespace HoloLab.Spirare.Browser
         private void DisplaySettingsState_OnOcclusionChanged(DisplaySettingsState.OcclusionType occlusion)
         {
             PlayerPrefsUtility.SetEnum(OcclusionKey, occlusion);
+        }
+
+        private void LoadStreetscapeGeometryOcclusionEnabled()
+        {
+            if (PlayerPrefsUtility.TryGetBoolean(StreetscapeGeometryOcclusionEnabledKey, out var streetscapeGeometryOcclusionEnabled))
+            {
+                displaySettingsState.StreetscapeGeometryOcclusionEnabled = streetscapeGeometryOcclusionEnabled;
+            }
+        }
+
+        private void DisplaySettingsState_OnStreetscapeGeometryOcclusionEnabledChanged(bool streetscapeGeometryOcclusionEnabled)
+        {
+            PlayerPrefsUtility.SetBoolean(StreetscapeGeometryOcclusionEnabledKey, streetscapeGeometryOcclusionEnabled);
         }
     }
 }
