@@ -40,6 +40,26 @@ namespace HoloLab.Spirare.Browser
 
             return true;
         }
+
+        public static void SetEnum<T>(string key, T value) where T : Enum
+        {
+            PlayerPrefs.SetInt(key, Convert.ToInt32(value));
+        }
+
+        public static bool TryGetEnum<T>(string key, out T value) where T : Enum
+        {
+            var intValue = PlayerPrefs.GetInt(key, int.MinValue);
+            if (Enum.IsDefined(typeof(T), intValue))
+            {
+                value = (T)(object)intValue;
+                return true;
+            }
+            else
+            {
+                value = default;
+                return false;
+            }
+        }
     }
 }
 

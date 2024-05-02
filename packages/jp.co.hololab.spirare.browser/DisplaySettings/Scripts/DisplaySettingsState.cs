@@ -7,6 +7,8 @@ namespace HoloLab.Spirare.Browser
 {
     public class DisplaySettingsState : ScriptableObject
     {
+        #region IsMenuOpen
+
         [SerializeField]
         private bool isMenuOpen = false;
         private bool runtimeIsMenuOpen;
@@ -28,6 +30,10 @@ namespace HoloLab.Spirare.Browser
         }
 
         public event Action<bool> OnIsMenuOpenChanged;
+
+        #endregion
+
+        #region Opacity
 
         [SerializeField]
         private float opacity = 1f;
@@ -51,10 +57,49 @@ namespace HoloLab.Spirare.Browser
 
         public event Action<float> OnOpacityChanged;
 
+        #endregion
+
+        #region Occlusion
+
+        public enum OcclusionType
+        {
+            None = 0,
+            EnvironmentFastest,
+            EnvironmentMedium,
+            EnvironmentBest,
+            HumanFastest,
+            HumanBest
+        }
+
+        [SerializeField]
+        private OcclusionType occlusion = OcclusionType.None;
+        private OcclusionType runtimeOcclusion;
+
+        public OcclusionType Occlusion
+        {
+            set
+            {
+                if (runtimeOcclusion != value)
+                {
+                    runtimeOcclusion = value;
+                    OnOcclusionChanged?.Invoke(value);
+                }
+            }
+            get
+            {
+                return runtimeOcclusion;
+            }
+        }
+
+        public event Action<OcclusionType> OnOcclusionChanged;
+
+        #endregion
+
         private void OnEnable()
         {
             runtimeIsMenuOpen = isMenuOpen;
             runtimeOpacity = opacity;
+            runtimeOcclusion = occlusion;
         }
     }
 }
