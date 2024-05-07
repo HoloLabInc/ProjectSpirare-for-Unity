@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 577461084776459260}
   - component: {fileID: 1003046698873433403}
   - component: {fileID: 6023995015035929242}
-  - component: {fileID: 3719067581241726146}
   m_Layer: 5
   m_Name: ShowLicenseButton
   m_TagString: Untagged
@@ -137,7 +136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreLayout: 0
-  m_MinWidth: 100
+  m_MinWidth: 80
   m_MinHeight: 20
   m_PreferredWidth: -1
   m_PreferredHeight: -1
@@ -157,18 +156,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   licensePanelState: {fileID: 11400000, guid: 164978d1809e4c44eb79299cab16b958, type: 2}
---- !u!114 &3719067581241726146
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1830433242737615562}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a66cf586f540aa24486e928470bcbc90, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   developerModeState: {fileID: 11400000, guid: 590eff61c90e96f4f823e46b4e3d9f29, type: 2}
 --- !u!1 &2042996465681601099
 GameObject:

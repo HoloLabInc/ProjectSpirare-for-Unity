@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3490233109734520828}
   - component: {fileID: 5478765259096012210}
+  - component: {fileID: 8475415695239441789}
   m_Layer: 0
-  m_Name: Statistics
+  m_Name: StatisticsPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,6 +64,19 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &8475415695239441789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3927534267906473158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cee1842cc9cbf54988ee9815200f882, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  developerModeState: {fileID: 11400000, guid: 590eff61c90e96f4f823e46b4e3d9f29, type: 2}
 --- !u!1 &8858242188038628192
 GameObject:
   m_ObjectHideFlags: 0
