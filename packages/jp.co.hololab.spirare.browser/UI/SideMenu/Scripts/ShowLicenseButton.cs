@@ -20,7 +20,6 @@ namespace HoloLab.Spirare.Browser.UI
 
         private SideMenu sideMenu;
 
-
         private void Awake()
         {
             sideMenu = GetComponentInParent<SideMenu>();
