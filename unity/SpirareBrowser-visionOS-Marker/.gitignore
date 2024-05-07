@@ -106,7 +106,7 @@ Assets/MRTK/Providers/WindowsMixedReality/Shared/DotNetAdapter/.obj/
 .vsconfig
 
 # Visual Studio Code
-.vscode
+.vscode/
 
 # Auto generated certificate
 Assets/WSATestCertificate.pfx
