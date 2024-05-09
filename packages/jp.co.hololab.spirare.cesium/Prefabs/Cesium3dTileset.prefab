@@ -65,7 +65,7 @@ MonoBehaviour:
   _opaqueMaterial: {fileID: 0}
   _generateSmoothNormals: 0
   _pointCloudShading:
-    _attenuation: 0
+    _attenuation: 1
     _geometricErrorScale: 1
     _maximumAttenuation: 0
     _baseResolution: 0
