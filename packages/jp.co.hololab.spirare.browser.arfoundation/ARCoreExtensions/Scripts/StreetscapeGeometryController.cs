@@ -23,7 +23,7 @@ namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
         private void Awake()
         {
             arStreetscapeGeometryManager = FindObjectOfType<ARStreetscapeGeometryManager>();
-            if (arStreetscapeGeometryManager != null)
+            if (arStreetscapeGeometryManager == null)
             {
                 Debug.LogWarning($"{nameof(ARStreetscapeGeometryManager)} not found in scene");
             }
