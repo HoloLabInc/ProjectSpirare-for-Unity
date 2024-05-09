@@ -37,7 +37,24 @@ namespace HoloLab.Spirare.Browser.ARFoundation
 
         private void SetOcclusion(OcclusionType occlusion)
         {
+            arOcclusionManager.requestedOcclusionPreferenceMode = OcclusionTypeToPreferenceMode(occlusion);
             arOcclusionManager.requestedEnvironmentDepthMode = OcclusionTypeToEnvironmentDepthMode(occlusion);
+            arOcclusionManager.requestedHumanDepthMode = OcclusionTypeToHumanDepthMode(occlusion);
+            arOcclusionManager.requestedHumanStencilMode = OcclusionTypeToHumanStencilMode(occlusion);
+        }
+
+        private OcclusionPreferenceMode OcclusionTypeToPreferenceMode(OcclusionType occlusion)
+        {
+            return occlusion switch
+            {
+                OcclusionType.None => OcclusionPreferenceMode.NoOcclusion,
+                OcclusionType.EnvironmentFastest => OcclusionPreferenceMode.PreferEnvironmentOcclusion,
+                OcclusionType.EnvironmentMedium => OcclusionPreferenceMode.PreferEnvironmentOcclusion,
+                OcclusionType.EnvironmentBest => OcclusionPreferenceMode.PreferEnvironmentOcclusion,
+                OcclusionType.HumanFastest => OcclusionPreferenceMode.PreferHumanOcclusion,
+                OcclusionType.HumanBest => OcclusionPreferenceMode.PreferHumanOcclusion,
+                _ => OcclusionPreferenceMode.PreferEnvironmentOcclusion,
+            };
         }
 
         private static EnvironmentDepthMode OcclusionTypeToEnvironmentDepthMode(OcclusionType occlusion)
@@ -51,6 +68,27 @@ namespace HoloLab.Spirare.Browser.ARFoundation
                 _ => EnvironmentDepthMode.Disabled,
             };
         }
+
+        private static HumanSegmentationDepthMode OcclusionTypeToHumanDepthMode(OcclusionType occlusion)
+        {
+            return occlusion switch
+            {
+                OcclusionType.None => HumanSegmentationDepthMode.Disabled,
+                OcclusionType.HumanFastest => HumanSegmentationDepthMode.Fastest,
+                OcclusionType.HumanBest => HumanSegmentationDepthMode.Best,
+                _ => HumanSegmentationDepthMode.Disabled,
+            };
+        }
+
+        private static HumanSegmentationStencilMode OcclusionTypeToHumanStencilMode(OcclusionType occlusion)
+        {
+            return occlusion switch
+            {
+                OcclusionType.None => HumanSegmentationStencilMode.Disabled,
+                OcclusionType.HumanFastest => HumanSegmentationStencilMode.Fastest,
+                OcclusionType.HumanBest => HumanSegmentationStencilMode.Best,
+                _ => HumanSegmentationStencilMode.Disabled,
+            };
+        }
     }
 }
-

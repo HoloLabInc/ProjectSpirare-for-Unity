@@ -145,8 +145,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 12
-  m_fontSizeBase: 12
+  m_fontSize: 8
+  m_fontSizeBase: 8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -219,6 +219,22 @@ PrefabInstance:
       propertyPath: m_text
       value: Disabled
       objectReference: {fileID: 0}
+    - target: {fileID: 1142096200759788901, guid: 8b862372d6bf85044a95873c88dc4e3b, type: 3}
+      propertyPath: m_fontSize
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1142096200759788901, guid: 8b862372d6bf85044a95873c88dc4e3b, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6668136478059626525, guid: 8b862372d6bf85044a95873c88dc4e3b, type: 3}
+      propertyPath: m_fontSize
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6668136478059626525, guid: 8b862372d6bf85044a95873c88dc4e3b, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 8235219714516031367, guid: 8b862372d6bf85044a95873c88dc4e3b, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -245,7 +261,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8235219714516031367, guid: 8b862372d6bf85044a95873c88dc4e3b, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 90
+      value: 114.3587
       objectReference: {fileID: 0}
     - target: {fileID: 8235219714516031367, guid: 8b862372d6bf85044a95873c88dc4e3b, type: 3}
       propertyPath: m_SizeDelta.y
@@ -281,7 +297,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8235219714516031367, guid: 8b862372d6bf85044a95873c88dc4e3b, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 119.45
+      value: 107.270645
       objectReference: {fileID: 0}
     - target: {fileID: 8235219714516031367, guid: 8b862372d6bf85044a95873c88dc4e3b, type: 3}
       propertyPath: m_AnchoredPosition.y
