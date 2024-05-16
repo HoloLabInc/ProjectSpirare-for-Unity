@@ -48,7 +48,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
             var maxZ = positions.Max(p => p.z);
 
             var center = new Vector3((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2);
-            var size = new Vector3((maxX - minX) / 2, (maxY - maxY) / 2, (maxZ - minZ) / 2);
+            var size = new Vector3((maxX - minX) , (maxY - minY) , (maxZ - minZ) );
 
             return (center, size);
         }
