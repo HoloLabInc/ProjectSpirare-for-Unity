@@ -39,6 +39,9 @@ namespace HoloLab.Spirare.Components.SplatVfx
             var data = CreateSplatData(fetchResult.Data);
 
             InvokeLoadingStatusChanged(LoadingStatus.ModelInstantiating, onLoadingStatusChanged);
+
+            var splatObject = SplatVfxUtil.InstantiateSplatVfx(splatPrefab, data, parent);
+            /*
             var visualEffect = UnityEngine.Object.Instantiate(splatPrefab);
             var splatObject = visualEffect.gameObject;
 
@@ -47,6 +50,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
             binder.SplatData = data;
 
             splatObject.transform.SetParent(parent, worldPositionStays: false);
+            */
 
             InvokeLoadingStatusChanged(LoadingStatus.Loaded, onLoadingStatusChanged);
 
