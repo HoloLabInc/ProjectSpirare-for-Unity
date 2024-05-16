@@ -1,9 +1,6 @@
-﻿using Cysharp.Threading.Tasks;
-using SplatVfx;
+﻿using SplatVfx;
 using System;
 using System.Linq;
-using System.Threading.Tasks;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
@@ -48,7 +45,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
             var maxZ = positions.Max(p => p.z);
 
             var center = new Vector3((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2);
-            var size = new Vector3((maxX - minX) , (maxY - minY) , (maxZ - minZ) );
+            var size = new Vector3((maxX - minX), (maxY - minY), (maxZ - minZ));
 
             return (center, size);
         }
