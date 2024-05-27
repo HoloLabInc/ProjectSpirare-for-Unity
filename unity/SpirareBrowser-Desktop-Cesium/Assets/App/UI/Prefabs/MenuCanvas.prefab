@@ -32,7 +32,6 @@ RectTransform:
   - {fileID: 3150527576460464025}
   - {fileID: 4823085197968107267}
   m_Father: {fileID: 8197490531693991638}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -86,7 +85,6 @@ RectTransform:
   m_Children:
   - {fileID: 4236485765673005000}
   m_Father: {fileID: 8059562384631436602}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -262,7 +260,6 @@ RectTransform:
   m_Children:
   - {fileID: 5644500710856888957}
   m_Father: {fileID: 5744102798661835089}
-  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -385,7 +382,6 @@ RectTransform:
   m_Children:
   - {fileID: 5744102798661835089}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -409,7 +405,9 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -508,7 +506,6 @@ RectTransform:
   m_Children:
   - {fileID: 5744102798387494625}
   m_Father: {fileID: 8059562384631436602}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -640,7 +637,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5744102798223087062}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -782,7 +778,6 @@ RectTransform:
   - {fileID: 6008600043492855769}
   - {fileID: 1435251164717767615}
   m_Father: {fileID: 5744102797872207167}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -821,7 +816,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4236485765673005000}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -976,7 +970,6 @@ RectTransform:
   - {fileID: 8197490531693991638}
   - {fileID: 5744102798223087062}
   m_Father: {fileID: 5744102798661835089}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -1014,7 +1007,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4531941698299744685}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1149,7 +1141,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5744102798661835089}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -1284,7 +1275,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4236485765673005000}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1393,6 +1383,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 5744102798661835089}
     m_Modifications:
     - target: {fileID: 1415587930332951027, guid: a8e548135bd083f4d9afeb7f069a4eed, type: 3}
@@ -1531,7 +1522,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6001638295195002184, guid: a8e548135bd083f4d9afeb7f069a4eed, type: 3}
+      propertyPath: m_fontColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6001638295195002184, guid: a8e548135bd083f4d9afeb7f069a4eed, type: 3}
+      propertyPath: m_fontColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6001638295195002184, guid: a8e548135bd083f4d9afeb7f069a4eed, type: 3}
+      propertyPath: m_fontColor.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8e548135bd083f4d9afeb7f069a4eed, type: 3}
 --- !u!224 &6008600043492855769 stripped
 RectTransform:
@@ -1543,6 +1549,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 5744102798661835089}
     m_Modifications:
     - target: {fileID: 2431334258082521147, guid: dcf01ac0e303d634bb4377b12e582ea6, type: 3}
@@ -1642,6 +1649,9 @@ PrefabInstance:
       value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dcf01ac0e303d634bb4377b12e582ea6, type: 3}
 --- !u!114 &4236585078747629509 stripped
 MonoBehaviour:
@@ -1664,6 +1674,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 5744102798661835089}
     m_Modifications:
     - target: {fileID: 3217559499350530576, guid: 3577e0fea49d7ed40b48dc5a0e9c6c42, type: 3}
@@ -1736,7 +1747,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3217559499350530576, guid: 3577e0fea49d7ed40b48dc5a0e9c6c42, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -383
+      value: -400
       objectReference: {fileID: 0}
     - target: {fileID: 3217559499350530576, guid: 3577e0fea49d7ed40b48dc5a0e9c6c42, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1763,6 +1774,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3577e0fea49d7ed40b48dc5a0e9c6c42, type: 3}
 --- !u!224 &1435251164717767615 stripped
 RectTransform:
@@ -1774,6 +1788,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 5744102798661835089}
     m_Modifications:
     - target: {fileID: 2431334258082521147, guid: dcf01ac0e303d634bb4377b12e582ea6, type: 3}
@@ -1873,6 +1888,9 @@ PrefabInstance:
       value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dcf01ac0e303d634bb4377b12e582ea6, type: 3}
 --- !u!224 &3155200289010811961 stripped
 RectTransform:
@@ -1895,6 +1913,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 5744102798661835089}
     m_Modifications:
     - target: {fileID: 2431334258082521147, guid: dcf01ac0e303d634bb4377b12e582ea6, type: 3}
@@ -1994,6 +2013,9 @@ PrefabInstance:
       value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dcf01ac0e303d634bb4377b12e582ea6, type: 3}
 --- !u!224 &1839571130260793663 stripped
 RectTransform:
@@ -2016,6 +2038,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 5744102798661835089}
     m_Modifications:
     - target: {fileID: 2431334258082521147, guid: dcf01ac0e303d634bb4377b12e582ea6, type: 3}
@@ -2115,6 +2138,9 @@ PrefabInstance:
       value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dcf01ac0e303d634bb4377b12e582ea6, type: 3}
 --- !u!224 &229772350059483153 stripped
 RectTransform:

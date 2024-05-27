@@ -155,6 +155,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4851443856748840782, guid: 91c9493ca37349d4bbfc7a62e6eb92e7, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 5744102797872207163, guid: 91c9493ca37349d4bbfc7a62e6eb92e7, type: 3}
       propertyPath: m_Name
       value: MenuCanvas
@@ -265,6 +269,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6008600044366940917, guid: 91c9493ca37349d4bbfc7a62e6eb92e7, type: 3}
       propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6008600044366940917, guid: 91c9493ca37349d4bbfc7a62e6eb92e7, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6008600044366940917, guid: 91c9493ca37349d4bbfc7a62e6eb92e7, type: 3}
+      propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6008600044793383536, guid: 91c9493ca37349d4bbfc7a62e6eb92e7, type: 3}
