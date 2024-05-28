@@ -37,13 +37,6 @@ POML has the following features:
 - Position Alignment Method
   - Immersal
 
-### [SpirareBrowser-ARFoundation-VAT](./unity/SpirareBrowser-ARFoundation-VAT)
-
-- Target Devices
-  - ARFoundation supported devices
-- Position Alignment Method
-  - Vuforia Area Target
-
 ### [SpirareBrowser-Desktop-Cesium](./unity/SpirareBrowser-Desktop-Cesium)
 
 - Target Devices
@@ -55,13 +48,6 @@ POML has the following features:
   - HoloLens 2
 - Position Alignment Method
   - Immersal
-
-### [SpirareBrowser-HoloLens-VAT](./unity/SpirareBrowser-HoloLens-VAT)
-
-- Target Devices
-  - HoloLens 2
-- Position Alignment Method
-  - Vuforia Area Target
 
 ### [SpirareBrowser-Quest-3DMaps](./unity/SpirareBrowser-Quest-3DMaps)
 
