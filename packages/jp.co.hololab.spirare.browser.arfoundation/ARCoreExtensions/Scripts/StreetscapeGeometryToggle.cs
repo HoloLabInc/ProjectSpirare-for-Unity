@@ -16,20 +16,21 @@ namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
 
         private void Start()
         {
-            toggleButton.ChangeStateWithoutAnimation(displaySettingsState.StreetscapeGeometryOcclusionEnabled);
-            displaySettingsState.OnStreetscapeGeometryOcclusionEnabledChanged += DisplaySettingsState_OnStreetscapeGeometryOcclusionEnabledChanged;
+            toggleButton.ChangeStateWithoutAnimation(displaySettingsState.StreetscapeGeometryOcclusion == DisplaySettingsState.StreetscapeGeometryOcclusionType.All);
+            displaySettingsState.OnStreetscapeGeometryOcclusionChanged += DisplaySettingsState_OnStreetscapeGeometryOcclusionChanged;
 
             toggleButton.OnToggle += ToggleButton_OnToggle;
         }
 
-        private void DisplaySettingsState_OnStreetscapeGeometryOcclusionEnabledChanged(bool enabled)
+        private void DisplaySettingsState_OnStreetscapeGeometryOcclusionChanged(DisplaySettingsState.StreetscapeGeometryOcclusionType occlusionType)
         {
-            toggleButton.IsOn = enabled;
+            toggleButton.IsOn = occlusionType == DisplaySettingsState.StreetscapeGeometryOcclusionType.All;
         }
 
         private void ToggleButton_OnToggle(bool value)
         {
-            displaySettingsState.StreetscapeGeometryOcclusionEnabled = value;
+            //displaySettingsState.StreetscapeGeometryOcclusion = value;
+            displaySettingsState.StreetscapeGeometryOcclusion = DisplaySettingsState.StreetscapeGeometryOcclusionType.All;
         }
     }
 }
