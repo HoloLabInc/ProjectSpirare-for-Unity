@@ -123,27 +123,36 @@ namespace HoloLab.Spirare.Browser
 
         #region StreetscapeGeometryOcclusion
 
-        [SerializeField]
-        private bool streetscapeGeometryOcclusionEnabled = false;
-        private bool runtimeStreetscapeGeometryOcclusionEnabled;
+        [Flags]
+        public enum StreetscapeGeometryOcclusionType
+        {
+            None = 0,
+            Building = 1 << 0,
+            Terrain = 1 << 1,
+            All = Building | Terrain
+        }
 
-        public bool StreetscapeGeometryOcclusionEnabled
+        [SerializeField]
+        private StreetscapeGeometryOcclusionType streetscapeGeometryOcclusion = StreetscapeGeometryOcclusionType.None;
+        private StreetscapeGeometryOcclusionType runtimeStreetscapeGeometryOcclusion;
+
+        public StreetscapeGeometryOcclusionType StreetscapeGeometryOcclusion
         {
             set
             {
-                if (runtimeStreetscapeGeometryOcclusionEnabled != value)
+                if (runtimeStreetscapeGeometryOcclusion != value)
                 {
-                    runtimeStreetscapeGeometryOcclusionEnabled = value;
-                    OnStreetscapeGeometryOcclusionEnabledChanged?.Invoke(value);
+                    runtimeStreetscapeGeometryOcclusion = value;
+                    OnStreetscapeGeometryOcclusionChanged?.Invoke(value);
                 }
             }
             get
             {
-                return runtimeStreetscapeGeometryOcclusionEnabled;
+                return runtimeStreetscapeGeometryOcclusion;
             }
         }
 
-        public event Action<bool> OnStreetscapeGeometryOcclusionEnabledChanged;
+        public event Action<StreetscapeGeometryOcclusionType> OnStreetscapeGeometryOcclusionChanged;
 
         #endregion
 
@@ -153,7 +162,7 @@ namespace HoloLab.Spirare.Browser
             runtimeOpacity = opacity;
             runtimeFarClip = farClip;
             runtimeOcclusion = occlusion;
-            runtimeStreetscapeGeometryOcclusionEnabled = streetscapeGeometryOcclusionEnabled;
+            runtimeStreetscapeGeometryOcclusion = streetscapeGeometryOcclusion;
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static HoloLab.Spirare.Browser.DisplaySettingsState;
 
 namespace HoloLab.Spirare.Browser
 {
@@ -14,7 +15,7 @@ namespace HoloLab.Spirare.Browser
         private const string OpacityKey = "DisplaySettingsStateSaver_Opacity";
         private const string FarClipKey = "DisplaySettingsStateSaver_FarClip";
         private const string OcclusionKey = "DisplaySettingsStateSaver_Occlusion";
-        private const string StreetscapeGeometryOcclusionEnabledKey = "DisplaySettingsStateSaver_StreetscapeGeometryOcclusionEnabled";
+        private const string StreetscapeGeometryOcclusionKey = "DisplaySettingsStateSaver_StreetscapeGeometryOcclusion";
 
         private void Awake()
         {
@@ -24,7 +25,7 @@ namespace HoloLab.Spirare.Browser
             displaySettingsState.OnOpacityChanged += DisplaySettingsState_OnOpacityChanged;
             displaySettingsState.OnFarClipChanged += DisplaySettingsState_OnFarClipChanged;
             displaySettingsState.OnOcclusionChanged += DisplaySettingsState_OnOcclusionChanged;
-            displaySettingsState.OnStreetscapeGeometryOcclusionEnabledChanged += DisplaySettingsState_OnStreetscapeGeometryOcclusionEnabledChanged;
+            displaySettingsState.OnStreetscapeGeometryOcclusionChanged += DisplaySettingsState_OnStreetscapeGeometryOcclusionChanged;
         }
 
         private void LoadState()
@@ -33,7 +34,7 @@ namespace HoloLab.Spirare.Browser
             LoadOpacity();
             LoadFarClip();
             LoadOcclusion();
-            LoadStreetscapeGeometryOcclusionEnabled();
+            LoadStreetscapeGeometryOcclusion();
         }
 
         private void LoadIsMenuOpen()
@@ -77,28 +78,28 @@ namespace HoloLab.Spirare.Browser
 
         private void LoadOcclusion()
         {
-            if (PlayerPrefsUtility.TryGetEnum(OcclusionKey, out DisplaySettingsState.OcclusionType occlusion))
+            if (PlayerPrefsUtility.TryGetEnum(OcclusionKey, out OcclusionType occlusion))
             {
                 displaySettingsState.Occlusion = occlusion;
             }
         }
 
-        private void DisplaySettingsState_OnOcclusionChanged(DisplaySettingsState.OcclusionType occlusion)
+        private void DisplaySettingsState_OnOcclusionChanged(OcclusionType occlusion)
         {
             PlayerPrefsUtility.SetEnum(OcclusionKey, occlusion);
         }
 
-        private void LoadStreetscapeGeometryOcclusionEnabled()
+        private void LoadStreetscapeGeometryOcclusion()
         {
-            if (PlayerPrefsUtility.TryGetBoolean(StreetscapeGeometryOcclusionEnabledKey, out var streetscapeGeometryOcclusionEnabled))
+            if (PlayerPrefsUtility.TryGetEnum(StreetscapeGeometryOcclusionKey, out StreetscapeGeometryOcclusionType streetscapeGeometryOcclusion))
             {
-                displaySettingsState.StreetscapeGeometryOcclusionEnabled = streetscapeGeometryOcclusionEnabled;
+                displaySettingsState.StreetscapeGeometryOcclusion = streetscapeGeometryOcclusion;
             }
         }
 
-        private void DisplaySettingsState_OnStreetscapeGeometryOcclusionEnabledChanged(bool streetscapeGeometryOcclusionEnabled)
+        private void DisplaySettingsState_OnStreetscapeGeometryOcclusionChanged(StreetscapeGeometryOcclusionType streetscapeGeometryOcclusion)
         {
-            PlayerPrefsUtility.SetBoolean(StreetscapeGeometryOcclusionEnabledKey, streetscapeGeometryOcclusionEnabled);
+            PlayerPrefsUtility.SetEnum(StreetscapeGeometryOcclusionKey, streetscapeGeometryOcclusion);
         }
     }
 }
