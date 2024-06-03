@@ -91,9 +91,9 @@ namespace HoloLab.Spirare.Browser
 
         private void LoadStreetscapeGeometryOcclusion()
         {
-            if (PlayerPrefsUtility.TryGetEnum(StreetscapeGeometryOcclusionKey, out StreetscapeGeometryOcclusionType streetscapeGeometryOcclusionEnabled))
+            if (PlayerPrefsUtility.TryGetEnum(StreetscapeGeometryOcclusionKey, out StreetscapeGeometryOcclusionType streetscapeGeometryOcclusion))
             {
-                displaySettingsState.StreetscapeGeometryOcclusion = streetscapeGeometryOcclusionEnabled;
+                displaySettingsState.StreetscapeGeometryOcclusion = streetscapeGeometryOcclusion;
             }
         }
 
