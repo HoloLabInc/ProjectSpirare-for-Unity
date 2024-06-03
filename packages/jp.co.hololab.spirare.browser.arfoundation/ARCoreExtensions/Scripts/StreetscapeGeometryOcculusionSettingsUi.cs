@@ -24,29 +24,6 @@ namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
                 (StreetscapeGeometryOcclusionType.All, "All"),
             };
 
-        /*
-        private readonly List<(OcclusionType Occlusion, string DropdownLabel)> defaultOptions
-            = new List<(OcclusionType Occlusion, string DropdownLabel)>()
-                {
-                    (OcclusionType.None, "Disabled"),
-                };
-
-        private readonly List<(OcclusionType Occlusion, string DropdownLabel)> environmentOcclusionOptions
-            = new List<(OcclusionType Occlusion, string DropdownLabel)>()
-                {
-                    (OcclusionType.EnvironmentFastest, "Environment: Fastest"),
-                    (OcclusionType.EnvironmentMedium, "Environment: Medium"),
-                    (OcclusionType.EnvironmentBest, "Environment: Best"),
-                };
-
-        private readonly List<(OcclusionType Occlusion, string DropdownLabel)> humanOcclusionOptions
-            = new List<(OcclusionType Occlusion, string DropdownLabel)>()
-                {
-                    (OcclusionType.HumanFastest, "Human: Fastest"),
-                    (OcclusionType.HumanBest, "Human: Best"),
-                };
-        */
-
         private void Start()
         {
             UpdateDropdownOptions();

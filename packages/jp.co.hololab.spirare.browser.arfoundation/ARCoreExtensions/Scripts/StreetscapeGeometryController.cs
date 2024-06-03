@@ -142,17 +142,7 @@ namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
                 renderObject.GetComponent<MeshFilter>().mesh = streetscapeGeometry.mesh;
                 renderObject.GetComponent<MeshRenderer>().material = streetscapeGeometryMaterial;
 
-                // streetscapeGeometry.streetscapeGeometryType == StreetscapeGeometryType
-
                 var geometryType = streetscapeGeometry.streetscapeGeometryType;
-                /*
-                var geometryType = streetscapeGeometry.streetscapeGeometryType;
-
-                if (streetscapeGeometry.streetscapeGeometryType == StreetscapeGeometryType.Terrain)
-                {
-                    renderObject.SetActive(false);
-                }
-                */
                 var active = ShouldBeActive(geometryType, occlusionType);
                 renderObject.SetActive(active);
 
