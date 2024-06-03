@@ -38,6 +38,13 @@ namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
             {
                 Debug.LogWarning($"{nameof(ARStreetscapeGeometryManager)} not found in scene");
             }
+            else
+            {
+                if (occlusionType == StreetscapeGeometryOcclusionType.None)
+                {
+                    arStreetscapeGeometryManager.enabled = false;
+                }
+            }
         }
 
         private void OnEnable()
@@ -64,12 +71,12 @@ namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
 
             if (occlusionType == StreetscapeGeometryOcclusionType.None)
             {
-                arStreetscapeGeometryManager.gameObject.SetActive(false);
+                arStreetscapeGeometryManager.enabled = false;
                 DestroyAllGeometryObjects();
             }
             else
             {
-                arStreetscapeGeometryManager.gameObject.SetActive(true);
+                arStreetscapeGeometryManager.enabled = true;
 
                 foreach (var geometryObject in streetscapeGeometryGameObjects.Values)
                 {
