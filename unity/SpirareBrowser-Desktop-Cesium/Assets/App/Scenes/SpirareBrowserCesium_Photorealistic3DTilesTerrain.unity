@@ -231,7 +231,7 @@ MonoBehaviour:
   _maximumScreenSpaceError: 16
   _preloadAncestors: 1
   _preloadSiblings: 1
-  _forbidHoles: 0
+  _forbidHoles: 1
   _maximumSimultaneousTileLoads: 20
   _maximumCachedBytes: 536870912
   _loadingDescendantLimit: 20
@@ -464,6 +464,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6008600044366940917, guid: 91c9493ca37349d4bbfc7a62e6eb92e7, type: 3}
       propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6008600044366940917, guid: 91c9493ca37349d4bbfc7a62e6eb92e7, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6008600044366940917, guid: 91c9493ca37349d4bbfc7a62e6eb92e7, type: 3}
+      propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6008600044793383536, guid: 91c9493ca37349d4bbfc7a62e6eb92e7, type: 3}
