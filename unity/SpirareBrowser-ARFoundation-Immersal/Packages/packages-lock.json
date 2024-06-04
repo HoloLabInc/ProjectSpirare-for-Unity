@@ -359,11 +359,11 @@
       "hash": "de9e1f2c2d012993f648d3675f74f4eea3c029ef"
     },
     "jp.co.hololab.positioningtools.immersal": {
-      "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.immersal#v0.6.1",
+      "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.immersal#feature/add-support-for-immersal-public-maps",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "de9e1f2c2d012993f648d3675f74f4eea3c029ef"
+      "hash": "57336d93920df91d5946b112cf4f267ef46a3504"
     },
     "jp.co.hololab.spirare": {
       "version": "file:../../../packages/jp.co.hololab.spirare",
