@@ -11,6 +11,7 @@ namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
 {
     public class StreetscapeGeometryController : MonoBehaviour
     {
+#if ARCOREEXTENSIONS_1_37_0_OR_NEWER
         [Flags]
         public enum StreetscapeGeometryOcclusionType
         {
@@ -20,7 +21,6 @@ namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
             All = Building | Terrain
         }
 
-#if ARCOREEXTENSIONS_1_37_0_OR_NEWER
         [SerializeField]
         private Material streetscapeGeometryMaterial;
 
