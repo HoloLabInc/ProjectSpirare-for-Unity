@@ -1,8 +1,10 @@
+#if ARCOREEXTENSIONS_1_37_0_OR_NEWER
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using static HoloLab.Spirare.Browser.DisplaySettingsState;
+#endif
+using UnityEngine;
 
 namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
 {
@@ -14,6 +16,7 @@ namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
         [SerializeField]
         private DisplaySettingsState displaySettingsState;
 
+#if ARCOREEXTENSIONS_1_37_0_OR_NEWER
         private void Start()
         {
             SetStreetscapeGeometryControllerOcclusionType(displaySettingsState.StreetscapeGeometryOcclusion);
@@ -39,6 +42,7 @@ namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
 
             streetscapeGeometryController.SetOcclusionType(controllerOcclusionType);
         }
+#endif
     }
 }
 
