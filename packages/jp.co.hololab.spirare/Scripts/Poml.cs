@@ -14,6 +14,12 @@ namespace HoloLab.Spirare
             Scene = scene;
             Resource = resource;
         }
+
+        public Poml(PomlScene scene)
+        {
+            Scene = scene;
+            Resource = new PomlResource(Array.Empty<PomlElement>());
+        }
     }
 
     public sealed class PomlScene : PomlElement
