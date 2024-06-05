@@ -11,6 +11,9 @@ namespace HoloLab.Spirare.Cesium
         [SerializeField]
         private Shader unlitShader;
 
+        [SerializeField]
+        private bool forceEnabled = false;
+
         private Cesium3DTileset tileset;
 
         private void Start()
@@ -21,6 +24,11 @@ namespace HoloLab.Spirare.Cesium
 
         private bool UseUnlitShader()
         {
+            if (forceEnabled)
+            {
+                return true;
+            }
+
             var url = tileset.url;
             return url.Contains("plateau");
         }
