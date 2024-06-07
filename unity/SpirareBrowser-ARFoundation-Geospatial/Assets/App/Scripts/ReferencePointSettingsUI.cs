@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using HoloLab.PositioningTools.CoordinateSystem;
+using HoloLab.Spirare.Browser.UI;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,7 +16,7 @@ namespace HoloLab.SpirareBrowser
         private WorldCoordinateBinderWithLocationService worldCoordinateBinderWithLocationService = null;
 
         [SerializeField]
-        private Toggle autoAlignToggle = null;
+        private ToggleButton autoAlignToggle = null;
 
         [SerializeField]
         private Button bindButton = null;
@@ -23,7 +25,7 @@ namespace HoloLab.SpirareBrowser
         private Button unbindButton = null;
 
         [SerializeField]
-        private Text bindingInfoText = null;
+        private TMP_Text bindingInfoText = null;
 
         [SerializeField]
         private ReferencePointType referencePointType = ReferencePointType.MainReferencePoint;
@@ -36,7 +38,8 @@ namespace HoloLab.SpirareBrowser
 
         private void Start()
         {
-            autoAlignToggle.onValueChanged.AddListener(AutoAlignToggle_OnValueChanged);
+            //autoAlignToggle.onValueChanged.AddListener(AutoAlignToggle_OnValueChanged);
+            autoAlignToggle.OnToggle += AutoAlignToggle_OnToggle;
             bindButton.onClick.AddListener(BindButton_OnClick);
             unbindButton.onClick.AddListener(UnbindButton_OnClick);
 
@@ -50,7 +53,12 @@ namespace HoloLab.SpirareBrowser
                     break;
             }
 
-            AutoAlignToggle_OnValueChanged(autoAlignToggle.isOn);
+            AutoAlignToggle_OnValueChanged(autoAlignToggle.IsOn);
+        }
+
+        private void AutoAlignToggle_OnToggle(bool value)
+        {
+            AutoAlignToggle_OnValueChanged(value);
         }
 
         private void OnBound(WorldBinding worldBinding)
@@ -58,9 +66,11 @@ namespace HoloLab.SpirareBrowser
             var geodeticPose = worldBinding.GeodeticPose;
             var geodeticPosition = geodeticPose.GeodeticPosition;
 
+            var heading = geodeticPose.EnuRotation.eulerAngles.y;
+
             var builder = new StringBuilder();
-            builder.AppendLine($"Latitude: {geodeticPosition.Latitude}, Longitude: {geodeticPosition.Longitude}");
-            builder.AppendLine($"EllipsoidalHeight: {geodeticPosition.EllipsoidalHeight}, EnuRotation: {geodeticPose.EnuRotation.eulerAngles}");
+            builder.AppendLine($"lat: {geodeticPosition.Latitude:f9}, lon: {geodeticPosition.Longitude:f9}");
+            builder.AppendLine($"height: {geodeticPosition.EllipsoidalHeight:f2}, heading: {heading:f1}");
             bindingInfoText.text = builder.ToString();
         }
 
