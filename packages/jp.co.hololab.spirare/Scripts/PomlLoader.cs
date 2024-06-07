@@ -99,20 +99,6 @@ namespace HoloLab.Spirare
             return pomlComponent;
         }
 
-        private static void UpdatePomlElementParent(Poml poml)
-        {
-            UpdatePomlElementParent(poml.Scene, null);
-        }
-
-        private static void UpdatePomlElementParent(PomlElement pomlElement, PomlElement parent)
-        {
-            pomlElement.Parent = parent;
-            foreach (var child in pomlElement.Children)
-            {
-                UpdatePomlElementParent(child, pomlElement);
-            }
-        }
-
         private async Task LoadScene(PomlScene scene, Transform parentTransform, PomlComponent pomlComponent)
         {
             await LoadElement(scene, parentTransform, null, pomlComponent);
@@ -370,6 +356,20 @@ namespace HoloLab.Spirare
             else
             {
                 return screenSpaceElementObjectFactory.CreateObject(screenSpaceElement, loadOptions, parentTransform);
+            }
+        }
+
+        private static void UpdatePomlElementParent(Poml poml)
+        {
+            UpdatePomlElementParent(poml.Scene, null);
+        }
+
+        private static void UpdatePomlElementParent(PomlElement pomlElement, PomlElement parent)
+        {
+            pomlElement.Parent = parent;
+            foreach (var child in pomlElement.Children)
+            {
+                UpdatePomlElementParent(child, pomlElement);
             }
         }
     }
