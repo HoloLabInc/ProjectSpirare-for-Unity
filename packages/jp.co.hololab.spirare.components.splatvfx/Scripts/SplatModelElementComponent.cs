@@ -55,6 +55,15 @@ namespace HoloLab.Spirare.Components.SplatVfx
             await ShowSplatModel();
         }
 
+        private void OnDestroy()
+        {
+            if (currentModelObject != null)
+            {
+                Destroy(currentModelObject);
+                currentModelObject = null;
+            }
+        }
+
         public override bool IsWithinCamera(Camera camera)
         {
             return _cameraVisibleHelpers?.Any(x => x.IsInsideCameraBounds(camera)) ?? false;
@@ -171,7 +180,6 @@ namespace HoloLab.Spirare.Components.SplatVfx
             if (currentModelObject == null)
             {
                 return;
-
             }
             currentModelObject.layer = HiddenLayer;
             currentModelObject.transform.SetParent(null, worldPositionStays: false);
