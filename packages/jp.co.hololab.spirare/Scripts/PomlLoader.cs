@@ -88,6 +88,8 @@ namespace HoloLab.Spirare
 
         public async Task<PomlComponent> LoadPomlAsync(Poml poml, string uri, GameObject targetGameObject)
         {
+            UpdatePomlElementParent(poml);
+
             var contentsStore = new ElementStore();
             var pomlComponent = targetGameObject.AddComponent<PomlComponent>();
             pomlComponent.Initialize(contentsStore, poml, this, uri);
@@ -95,6 +97,20 @@ namespace HoloLab.Spirare
             await LoadScene(poml.Scene, targetGameObject.transform, pomlComponent);
             // await LoadResource(poml.Resource, pomlComponent);
             return pomlComponent;
+        }
+
+        private static void UpdatePomlElementParent(Poml poml)
+        {
+            UpdatePomlElementParent(poml.Scene, null);
+        }
+
+        private static void UpdatePomlElementParent(PomlElement pomlElement, PomlElement parent)
+        {
+            pomlElement.Parent = parent;
+            foreach (var child in pomlElement.Children)
+            {
+                UpdatePomlElementParent(child, pomlElement);
+            }
         }
 
         private async Task LoadScene(PomlScene scene, Transform parentTransform, PomlComponent pomlComponent)
