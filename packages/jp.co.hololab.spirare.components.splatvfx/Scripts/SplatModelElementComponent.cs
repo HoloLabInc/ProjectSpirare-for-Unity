@@ -55,6 +55,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
             await ShowSplatModel();
         }
 
+        /*
         private void OnDestroy()
         {
             if (currentModelObject != null)
@@ -63,6 +64,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
                 currentModelObject = null;
             }
         }
+        */
 
         public override bool IsWithinCamera(Camera camera)
         {
@@ -96,10 +98,12 @@ namespace HoloLab.Spirare.Components.SplatVfx
             GameObject modelObject = null;
             ModelType modelType = ModelType.None;
 
+            var cancellationToken = this.GetCancellationTokenOnDestroy();
+
             switch (element.GetSrcFileExtension())
             {
                 case ".splat":
-                    (success, modelObject) = await splatLoader.LoadAsync(transform, element.Src, splatPrefab);
+                    (success, modelObject) = await splatLoader.LoadAsync(transform, element.Src, splatPrefab, cancellationToken: cancellationToken);
                     if (success)
                     {
                         modelType = ModelType.Splat;
@@ -107,7 +111,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
                     break;
                 case ".ply":
                     SplatVfxPlyLoader.LoadErrorType error;
-                    (error, modelObject) = await splatPlyLoader.LoadAsync(transform, element.Src, splatPrefab);
+                    (error, modelObject) = await splatPlyLoader.LoadAsync(transform, element.Src, splatPrefab, cancellationToken: cancellationToken);
 
                     switch (error)
                     {
@@ -120,7 +124,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
                             break;
                         case SplatVfxPlyLoader.LoadErrorType.InvalidHeader:
                             // Load as point cloud
-                            (success, modelObject) = await pointCloudPlyLoader.LoadAsync(transform, element.Src, pointCloudPrefab);
+                            (success, modelObject) = await pointCloudPlyLoader.LoadAsync(transform, element.Src, pointCloudPrefab, cancellationToken: cancellationToken);
                             if (success)
                             {
                                 modelType = ModelType.PointCloud;
@@ -129,11 +133,21 @@ namespace HoloLab.Spirare.Components.SplatVfx
                         case SplatVfxPlyLoader.LoadErrorType.UnknownError:
                         case SplatVfxPlyLoader.LoadErrorType.DataFetchError:
                         case SplatVfxPlyLoader.LoadErrorType.InvalidBody:
+                        case SplatVfxPlyLoader.LoadErrorType.Cancelled:
                         default:
                             success = false;
                             break;
                     }
                     break;
+            }
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                if (modelObject != null)
+                {
+                    Destroy(modelObject);
+                    return;
+                }
             }
 
             currentModelObject = modelObject;
