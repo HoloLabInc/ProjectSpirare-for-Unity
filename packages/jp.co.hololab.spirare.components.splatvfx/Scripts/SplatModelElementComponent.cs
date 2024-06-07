@@ -55,7 +55,6 @@ namespace HoloLab.Spirare.Components.SplatVfx
             await ShowSplatModel();
         }
 
-        /*
         private void OnDestroy()
         {
             if (currentModelObject != null)
@@ -64,7 +63,6 @@ namespace HoloLab.Spirare.Components.SplatVfx
                 currentModelObject = null;
             }
         }
-        */
 
         public override bool IsWithinCamera(Camera camera)
         {
