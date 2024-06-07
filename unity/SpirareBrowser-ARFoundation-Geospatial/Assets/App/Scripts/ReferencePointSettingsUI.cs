@@ -38,10 +38,17 @@ namespace HoloLab.SpirareBrowser
 
         private void Start()
         {
-            //autoAlignToggle.onValueChanged.AddListener(AutoAlignToggle_OnValueChanged);
             autoAlignToggle.OnToggle += AutoAlignToggle_OnToggle;
-            bindButton.onClick.AddListener(BindButton_OnClick);
-            unbindButton.onClick.AddListener(UnbindButton_OnClick);
+
+            if (bindButton != null)
+            {
+                bindButton.onClick.AddListener(BindButton_OnClick);
+            }
+
+            if (unbindButton != null)
+            {
+                unbindButton.onClick.AddListener(UnbindButton_OnClick);
+            }
 
             switch (referencePointType)
             {
@@ -53,12 +60,36 @@ namespace HoloLab.SpirareBrowser
                     break;
             }
 
-            AutoAlignToggle_OnValueChanged(autoAlignToggle.IsOn);
+            AutoAlignToggle_OnToggle(autoAlignToggle.IsOn);
         }
 
-        private void AutoAlignToggle_OnToggle(bool value)
+        private void OnDestroy()
         {
-            AutoAlignToggle_OnValueChanged(value);
+            if (bindButton != null)
+            {
+                bindButton.onClick.RemoveListener(BindButton_OnClick);
+            }
+            if (unbindButton != null)
+            {
+                unbindButton.onClick.RemoveListener(UnbindButton_OnClick);
+            }
+        }
+
+        private void AutoAlignToggle_OnToggle(bool autoAlignmentEnabled)
+        {
+            if (bindButton != null)
+            {
+                bindButton.gameObject.SetActive(!autoAlignmentEnabled);
+            }
+            if (unbindButton != null)
+            {
+                unbindButton.gameObject.SetActive(!autoAlignmentEnabled);
+            }
+
+            if (worldCoordinateBinderWithLocationService != null)
+            {
+                worldCoordinateBinderWithLocationService.AutoUpdateReferencePoint = autoAlignmentEnabled;
+            }
         }
 
         private void OnBound(WorldBinding worldBinding)
@@ -72,29 +103,6 @@ namespace HoloLab.SpirareBrowser
             builder.AppendLine($"lat: {geodeticPosition.Latitude:f9}, lon: {geodeticPosition.Longitude:f9}");
             builder.AppendLine($"height: {geodeticPosition.EllipsoidalHeight:f2}, heading: {heading:f1}");
             bindingInfoText.text = builder.ToString();
-        }
-
-        private void OnDestroy()
-        {
-            bindButton.onClick.RemoveListener(BindButton_OnClick);
-            unbindButton.onClick.RemoveListener(UnbindButton_OnClick);
-        }
-
-        private void AutoAlignToggle_OnValueChanged(bool autoAlignEnabled)
-        {
-            if (bindButton != null)
-            {
-                bindButton.interactable = !autoAlignEnabled;
-            }
-            if (unbindButton != null)
-            {
-                unbindButton.interactable = !autoAlignEnabled;
-            }
-
-            if (worldCoordinateBinderWithLocationService != null)
-            {
-                worldCoordinateBinderWithLocationService.AutoUpdateReferencePoint = autoAlignEnabled;
-            }
         }
 
         private void BindButton_OnClick()
