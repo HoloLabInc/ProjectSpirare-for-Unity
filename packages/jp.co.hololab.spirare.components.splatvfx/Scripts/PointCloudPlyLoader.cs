@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -19,7 +20,9 @@ namespace HoloLab.Spirare.Components.SplatVfx
             ModelInstantiateError
         }
 
-        public async Task<(bool Success, GameObject SplatObject)> LoadAsync(Transform parent, string src, PointCloudPlyComponent pointCloudPrefab, Action<LoadingStatus> onLoadingStatusChanged = null)
+        public async Task<(bool Success, GameObject SplatObject)> LoadAsync(Transform parent, string src, PointCloudPlyComponent pointCloudPrefab,
+            Action<LoadingStatus> onLoadingStatusChanged = null,
+            CancellationToken cancellationToken = default)
         {
             if (pointCloudPrefab == null)
             {
@@ -29,7 +32,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
             // Data fetching
             var fetchResult = await FetchData(src, onLoadingStatusChanged);
 
-            if (fetchResult.Success == false)
+            if (fetchResult.Success == false || cancellationToken.IsCancellationRequested)
             {
                 return (false, null);
             }

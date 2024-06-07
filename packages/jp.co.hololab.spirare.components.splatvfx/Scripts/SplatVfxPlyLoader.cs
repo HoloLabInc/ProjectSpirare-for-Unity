@@ -1,6 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
 using SplatVfx;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.VFX;
@@ -30,10 +31,13 @@ namespace HoloLab.Spirare.Components.SplatVfx
             UnknownError,
             DataFetchError,
             InvalidHeader,
-            InvalidBody
+            InvalidBody,
+            Cancelled
         }
 
-        public async Task<(LoadErrorType Error, GameObject SplatObject)> LoadAsync(Transform parent, string src, VisualEffect splatPrefab, Action<LoadingStatus> onLoadingStatusChanged = null)
+        public async Task<(LoadErrorType Error, GameObject SplatObject)> LoadAsync(Transform parent, string src, VisualEffect splatPrefab,
+            Action<LoadingStatus> onLoadingStatusChanged = null,
+            CancellationToken cancellationToken = default)
         {
             // Data fetching
             var fetchResult = await FetchData(src, onLoadingStatusChanged);
@@ -41,6 +45,11 @@ namespace HoloLab.Spirare.Components.SplatVfx
             if (fetchResult.Success == false)
             {
                 return (LoadErrorType.DataFetchError, null);
+            }
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return (LoadErrorType.Cancelled, null);
             }
 
             var parseResult = parser.TryParseSplatData(fetchResult.Data);
