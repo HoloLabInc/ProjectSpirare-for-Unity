@@ -26,12 +26,14 @@ namespace HoloLab.Spirare.Components.SplatVfx
             ModelInstantiateError
         }
 
-        public async Task<(bool Success, GameObject SplatObject)> LoadAsync(Transform parent, string src, VisualEffect splatPrefab, Action<LoadingStatus> onLoadingStatusChanged = null)
+        public async Task<(bool Success, GameObject SplatObject)> LoadAsync(Transform parent, string src, VisualEffect splatPrefab,
+            Action<LoadingStatus> onLoadingStatusChanged = null,
+            CancellationToken cancellationToken = default)
         {
             // Data fetching
             var fetchResult = await FetchData(src, onLoadingStatusChanged);
 
-            if (fetchResult.Success == false)
+            if (fetchResult.Success == false || cancellationToken.IsCancellationRequested)
             {
                 return (false, null);
             }
