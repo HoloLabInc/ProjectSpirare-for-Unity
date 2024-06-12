@@ -96,6 +96,7 @@ namespace HoloLab.Spirare
         private async Task ReceiveMessageLoop(CancellationToken ct)
         {
             var buff = new ArraySegment<byte>(new byte[messageBufferSize]);
+            var ackMessage = Encoding.UTF8.GetBytes("ack");
 
             while (ws.State == WebSocketState.Open)
             {
@@ -121,6 +122,7 @@ namespace HoloLab.Spirare
 
                     if (ret.EndOfMessage)
                     {
+                        await ws.SendAsync(ackMessage, WebSocketMessageType.Text, true, ct);
                         break;
                     }
                 }
