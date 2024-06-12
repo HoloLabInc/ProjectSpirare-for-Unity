@@ -32,6 +32,7 @@ namespace HoloLab.Spirare
                 return;
             }
 
+            await UniTask.SwitchToMainThread();
             await UniTask.WhenAll(patches.Select(patch => ApplyPomlPatchAsync(patch)));
         }
 
