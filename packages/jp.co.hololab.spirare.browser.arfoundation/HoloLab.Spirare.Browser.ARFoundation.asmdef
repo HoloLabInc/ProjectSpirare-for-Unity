@@ -20,6 +20,11 @@
             "name": "jp.co.hololab.arcameracomposition",
             "expression": "",
             "define": "ARCAMERACOMPOSITION_PRESENT"
+        },
+        {
+            "name": "com.unity.xr.arfoundation",
+            "expression": "5.0.0",
+            "define": "ARFOUNDATION_5_0_0_OR_NEWER"
         }
     ],
     "noEngineReferences": false

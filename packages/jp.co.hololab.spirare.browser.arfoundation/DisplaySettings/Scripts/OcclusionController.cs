@@ -47,7 +47,11 @@ namespace HoloLab.Spirare.Browser.ARFoundation
         {
             return occlusion switch
             {
+#if ARFOUNDATION_5_0_0_OR_NEWER
                 OcclusionType.None => OcclusionPreferenceMode.NoOcclusion,
+#else
+                OcclusionType.None => OcclusionPreferenceMode.PreferEnvironmentOcclusion,
+#endif
                 OcclusionType.EnvironmentFastest => OcclusionPreferenceMode.PreferEnvironmentOcclusion,
                 OcclusionType.EnvironmentMedium => OcclusionPreferenceMode.PreferEnvironmentOcclusion,
                 OcclusionType.EnvironmentBest => OcclusionPreferenceMode.PreferEnvironmentOcclusion,
