@@ -13,7 +13,7 @@
       "url": "https://unity.pkg.cesium.com"
     },
     "com.cysharp.unitask": {
-      "version": "2.5.0",
+      "version": "2.5.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -27,7 +27,7 @@
       "hash": "0f74228f9e83035f04445f4f0cb0f8f4c1c3a20c"
     },
     "com.meta.xr.sdk.core": {
-      "version": "59.0.0",
+      "version": "66.0.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -145,7 +145,7 @@
       }
     },
     "com.unity.ide.rider": {
-      "version": "3.0.27",
+      "version": "3.0.31",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -275,7 +275,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.textmeshpro": {
-      "version": "3.0.6",
+      "version": "3.0.9",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -305,7 +305,7 @@
       }
     },
     "com.unity.visualscripting": {
-      "version": "1.9.1",
+      "version": "1.9.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {
