@@ -9,5 +9,6 @@ EditorBuildSettings:
     path: Assets/App/SpirareBrowser-Quest.unity
     guid: 6626239012831244d90a1df34ad39818
   m_configObjects:
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 132f3d78497bf6240bb4ff923acfd14a, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: fb5680c721b7257408d9ddd65a6e9612, type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 367adfa8bd1cfe24393d1afe1edda85e, type: 2}
