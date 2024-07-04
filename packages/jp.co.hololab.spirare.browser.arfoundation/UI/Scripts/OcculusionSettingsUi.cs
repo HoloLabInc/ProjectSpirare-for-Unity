@@ -52,6 +52,7 @@ namespace HoloLab.Spirare.Browser.ARFoundation
             occulusionDropdown.onValueChanged.AddListener(OnValueChanged);
 
             ARSession.stateChanged += ARSession_stateChanged;
+            ARSession_stateChanged(new ARSessionStateChangedEventArgs(ARSession.state));
 
 #if UNITY_EDITOR
             InitializeInEditor();
