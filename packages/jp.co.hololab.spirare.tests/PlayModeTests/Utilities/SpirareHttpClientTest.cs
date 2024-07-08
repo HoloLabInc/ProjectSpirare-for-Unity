@@ -114,6 +114,8 @@ public class SpirareHttpClientTest
         var request3 = spirareHttpClient.DownloadToFileAsync(url, enableCache: true);
         var data = await UniTask.WhenAll(request1, request2, request3);
 
+        var request4Result = await spirareHttpClient.DownloadToFileAsync(url, enableCache: true);
+
         Assert.IsTrue(data.Item1.Success);
         Assert.That(File.ReadAllText(data.Item1.Data), Is.EqualTo("test.txt"));
 
@@ -122,6 +124,9 @@ public class SpirareHttpClientTest
 
         Assert.IsTrue(data.Item3.Success);
         Assert.That(File.ReadAllText(data.Item3.Data), Is.EqualTo("test.txt"));
+
+        Assert.IsTrue(request4Result.Success);
+        Assert.That(File.ReadAllText(request4Result.Data), Is.EqualTo("test.txt"));
 
         Assert.That(resourceControllerForTest.RequestCountDictionary["/resources/test.txt"], Is.EqualTo(1));
     }
