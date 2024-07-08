@@ -82,7 +82,7 @@ namespace HoloLab.Spirare
 
         private static readonly HashAlgorithm hasher = MD5.Create();
 
-        private SpirareHttpClient(string cacheFolderPath, bool clearCacheOnInitialize = false)
+        public SpirareHttpClient(string cacheFolderPath, bool clearCacheOnInitialize = false)
         {
             semaphore = new DynamicSemaphore(maxConnections, maxConnectionsLimit);
 
