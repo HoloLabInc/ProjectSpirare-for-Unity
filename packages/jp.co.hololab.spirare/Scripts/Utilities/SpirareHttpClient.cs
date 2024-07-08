@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -55,21 +57,45 @@ namespace HoloLab.Spirare
 
         private static readonly string singletonCacheFolderPath = Path.Combine(Application.temporaryCachePath, "SpirareHttpClientCache");
 
-        private static readonly SpirareHttpClient instance = new SpirareHttpClient(singletonCacheFolderPath);
+        private static SpirareHttpClient instance;
 
-        public static SpirareHttpClient Instance => instance;
+        public static SpirareHttpClient Instance
+        {
+            set
+            {
+                instance = value;
+            }
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new SpirareHttpClient(singletonCacheFolderPath, true);
+                }
+
+                return instance;
+            }
+        }
 
         private readonly string cacheFolderPath;
-        private readonly ConcurrentDictionary<string, string> cacheFileDictionary = new ConcurrentDictionary<string, string>();
 
         private readonly ConcurrentDictionary<string, UniTask<string>> cacheDownloadTaskDictionary = new ConcurrentDictionary<string, UniTask<string>>();
 
-        private SpirareHttpClient(string cacheFolderPath)
+        private static readonly HashAlgorithm hasher = MD5.Create();
+
+        public SpirareHttpClient(string cacheFolderPath, bool clearCacheOnInitialize = false)
         {
             semaphore = new DynamicSemaphore(maxConnections, maxConnectionsLimit);
 
             this.cacheFolderPath = cacheFolderPath;
-            ClearFolder(cacheFolderPath);
+
+            if (clearCacheOnInitialize)
+            {
+                ClearCache();
+            }
+            else
+            {
+                CreateDirectory(cacheFolderPath);
+            }
         }
 
         public async UniTask<SpirareHttpClientResult<byte[]>> GetByteArrayAsync(string url, bool enableCache = false)
@@ -160,7 +186,7 @@ namespace HoloLab.Spirare
 
             if (enableCache)
             {
-                var cacheResult = await GetCacheFileAsync(url);
+                var cacheResult = await GetCacheFileAsync(url, extension);
                 if (cacheResult.Success)
                 {
                     return CreateSuccessResult(cacheResult.Filename);
@@ -169,8 +195,7 @@ namespace HoloLab.Spirare
 
             var downloadTaskSource = enableCache ? SetCacheDownloadTaskSource(url) : null;
 
-            var randomFileName = $"{Path.GetRandomFileName()}{extension}";
-            var filepath = Path.Combine(cacheFolderPath, randomFileName);
+            var filepath = GetCacheFilePath(url, extension);
             var downloadHandler = new DownloadHandlerFile(filepath);
 
             var result = await SendGetRequestAsync(url, downloadHandler);
@@ -180,7 +205,8 @@ namespace HoloLab.Spirare
 
                 if (enableCache)
                 {
-                    cacheFileDictionary.TryAdd(url, filepath);
+                    await SaveCacheMetaFile(url, filepath);
+
                     CompleteCacheDownloadTaskSouce(url, downloadTaskSource, filepath);
                 }
                 return CreateSuccessResult(filepath);
@@ -193,6 +219,11 @@ namespace HoloLab.Spirare
                 }
                 return CreateErrroResult<string>(result.Error);
             }
+        }
+
+        public void ClearCache()
+        {
+            ClearFolder(cacheFolderPath);
         }
 
         private UniTaskCompletionSource<string> SetCacheDownloadTaskSource(string url)
@@ -271,6 +302,53 @@ namespace HoloLab.Spirare
             }
         }
 
+        private string GetCacheFilePath(string url, string extension = "")
+        {
+            var hash = GetCacheFileHash(url);
+
+            var index = 0;
+            while (true)
+            {
+                var filename = $"{hash}-{index}{extension}";
+                var pathCandidate = Path.Combine(cacheFolderPath, filename);
+
+                if (File.Exists(pathCandidate))
+                {
+                    index += 1;
+                }
+                else
+                {
+                    return pathCandidate;
+                }
+            }
+        }
+
+        private string GetCacheFileHash(string url)
+        {
+            var hashBytes = hasher.ComputeHash(Encoding.UTF8.GetBytes(url));
+            var hash = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+            return hash;
+        }
+
+        private async UniTask<bool> SaveCacheMetaFile(string url, string filepath)
+        {
+            var metaFilePath = $"{filepath}.meta";
+            var data = Encoding.UTF8.GetBytes(url);
+            try
+            {
+                using (var fs = File.Open(metaFilePath, FileMode.CreateNew))
+                {
+                    await fs.WriteAsync(data, 0, data.Length);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+                return false;
+            }
+        }
+
         private async UniTask<string> SaveCacheAsync(string url, byte[] data)
         {
             try
@@ -283,16 +361,16 @@ namespace HoloLab.Spirare
                 return null;
             }
 
-            var randomFileName = Path.GetRandomFileName();
-            var cacheFilePath = Path.Combine(cacheFolderPath, randomFileName);
+            var cacheFilePath = GetCacheFilePath(url);
 
             try
             {
                 using (var fs = File.Open(cacheFilePath, FileMode.CreateNew))
                 {
                     await fs.WriteAsync(data, 0, data.Length);
-                    cacheFileDictionary.TryAdd(url, cacheFilePath);
                 }
+
+                await SaveCacheMetaFile(url, cacheFilePath);
                 return cacheFilePath;
             }
             catch (Exception ex)
@@ -302,11 +380,26 @@ namespace HoloLab.Spirare
             }
         }
 
-        private async UniTask<(bool Success, string Filename)> GetCacheFileAsync(string url)
+        private async UniTask<(bool Success, string Filename)> GetCacheFileAsync(string url, string extension = "")
         {
-            if (cacheFileDictionary.TryGetValue(url, out var cachePath))
+            var hash = GetCacheFileHash(url);
+
+            foreach (var filePath in Directory.EnumerateFiles(cacheFolderPath, $"{hash}-*{extension}", SearchOption.TopDirectoryOnly))
             {
-                return (true, cachePath);
+                try
+                {
+                    var metaFilePath = $"{filePath}.meta";
+                    if (File.Exists(metaFilePath))
+                    {
+                        var reader = File.OpenText(metaFilePath);
+                        var metaText = await reader.ReadLineAsync();
+                        if (url == metaText)
+                        {
+                            return (true, filePath);
+                        }
+                    }
+                }
+                catch { }
             }
 
             if (cacheDownloadTaskDictionary.TryGetValue(url, out var downloadTask))
@@ -352,6 +445,18 @@ namespace HoloLab.Spirare
             }
         }
 
+        private static void CreateDirectory(string folderPath)
+        {
+            try
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+        }
+
         private static void ClearFolder(string folderPath)
         {
             try
@@ -365,7 +470,6 @@ namespace HoloLab.Spirare
             catch (Exception ex)
             {
                 Debug.LogException(ex);
-                return;
             }
         }
 
