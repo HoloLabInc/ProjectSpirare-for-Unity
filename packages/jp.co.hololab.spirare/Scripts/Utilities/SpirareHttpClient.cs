@@ -90,7 +90,7 @@ namespace HoloLab.Spirare
 
             if (clearCacheOnInitialize)
             {
-                ClearFolder(cacheFolderPath);
+                ClearCache();
             }
         }
 
@@ -215,6 +215,11 @@ namespace HoloLab.Spirare
                 }
                 return CreateErrroResult<string>(result.Error);
             }
+        }
+
+        public void ClearCache()
+        {
+            ClearFolder(cacheFolderPath);
         }
 
         private UniTaskCompletionSource<string> SetCacheDownloadTaskSource(string url)
