@@ -92,6 +92,10 @@ namespace HoloLab.Spirare
             {
                 ClearCache();
             }
+            else
+            {
+                CreateDirectory(cacheFolderPath);
+            }
         }
 
         public async UniTask<SpirareHttpClientResult<byte[]>> GetByteArrayAsync(string url, bool enableCache = false)
@@ -441,6 +445,18 @@ namespace HoloLab.Spirare
             }
         }
 
+        private static void CreateDirectory(string folderPath)
+        {
+            try
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+        }
+
         private static void ClearFolder(string folderPath)
         {
             try
@@ -454,7 +470,6 @@ namespace HoloLab.Spirare
             catch (Exception ex)
             {
                 Debug.LogException(ex);
-                return;
             }
         }
 
