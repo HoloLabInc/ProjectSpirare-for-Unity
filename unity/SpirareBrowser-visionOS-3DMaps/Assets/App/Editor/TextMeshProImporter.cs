@@ -4,12 +4,12 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 
-namespace HoloLab.Spirare.Browser.VisionOS.Maps.Editor
+namespace HoloLab.Spirare.Browser.VisionOS3DMaps.Editor
 {
     [InitializeOnLoad]
     internal class TextMeshProImporter
     {
-        private static readonly string sessionKey = "_SpirareBrowserVisionOSMaps_TextMeshProImporter";
+        private static readonly string sessionKey = "_SpirareBrowserVisionOS3DMaps_TextMeshProImporter";
 
         private static bool IsNewSession
         {

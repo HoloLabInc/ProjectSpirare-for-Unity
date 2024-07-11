@@ -6,7 +6,7 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEditor.iOS.Xcode;
 
-namespace HoloLab.Spirare.Browser.VisionOS.Maps.Editor
+namespace HoloLab.Spirare.Browser.VisionOS3DMaps.Editor
 {
     public class VisionOSFileSharePostProcess : IPostprocessBuildWithReport
     {
