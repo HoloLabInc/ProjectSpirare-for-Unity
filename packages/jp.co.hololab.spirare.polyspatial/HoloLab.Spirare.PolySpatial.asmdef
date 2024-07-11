@@ -1,0 +1,18 @@
+{
+    "name": "HoloLab.Spirare.PolySpatial",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e0c997780b5b8ac43ac18452857ceebe",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:4fe4a1be2f2c04eecbd2036d47b4b310"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
