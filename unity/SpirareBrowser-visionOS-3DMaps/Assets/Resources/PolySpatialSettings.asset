@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 019d9e67133646548a506370e966316a, type: 3}
   m_Name: PolySpatialSettings
-  m_EditorClassIdentifier: Unity.PolySpatial:Unity.PolySpatial:PolySpatialSettings
-  m_PackageVersion: 1.2.3
+  m_EditorClassIdentifier: 
+  m_PackageVersion: 1.1.6
   m_EnableStatistics: 0
   m_ColliderSyncLayerMask:
     serializedVersion: 2
@@ -34,30 +34,46 @@ MonoBehaviour:
   m_ConnectionDiscoverySendInterval: 30
   m_ConnectionDiscoveryTimeOutDuration: 5
   m_DeviceDisplayProviderParameters:
-    dimensions: {x: 1830, y: 1600}
+    framebufferWidth: 1920
+    framebufferHeight: 1080
     leftEyePose:
-      position: {x: -0.033, y: -0.02, z: -0.01}
+      position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0, w: 1}
     rightEyePose:
-      position: {x: -0.033, y: -0.02, z: -0.01}
+      position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0, w: 1}
     leftProjectionHalfAngles:
-      left: -1.73205
+      left: -1
       right: 1
       top: 1
-      bottom: -1.19175
+      bottom: -1
     rightProjectionHalfAngles:
-      left: -1.73205
+      left: -1
       right: 1
       top: 1
-      bottom: -1.19175
+      bottom: -1
+  m_SimulatorDisplayProviderParameters:
+    framebufferWidth: 1920
+    framebufferHeight: 1080
+    leftEyePose:
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+    rightEyePose:
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+    leftProjectionHalfAngles:
+      left: -1
+      right: 1
+      top: 1
+      bottom: -1
+    rightProjectionHalfAngles:
+      left: -1
+      right: 1
+      top: 1
+      bottom: -1
   m_MaterialSwapSets: []
-  m_EnablePolySpatialRaycaster: 1
   m_SelectedValidationType: 1
   m_ShowWarningsForShaderGraphsInPackages: 1
-  m_MinifyShaderGraphNodeNames: 1
-  m_PreviewUseBackgroundColor: 1
-  m_PreviewBackgroundColor: {r: 0.192, g: 0.301, b: 0.474, a: 1}
   m_RuntimeMode: 0
   m_EnableTransformVerification: 0
   m_EnableProgressiveMipStreaming: 0
