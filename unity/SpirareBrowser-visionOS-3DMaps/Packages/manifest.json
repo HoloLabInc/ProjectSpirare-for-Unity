@@ -1,25 +1,26 @@
 {
   "dependencies": {
     "com.atteneder.gltfast": "https://github.com/HoloLabInc/glTFast.git#polyspatial-urp-transparent",
-    "com.cysharp.unitask": "2.5.3",
+    "com.cesium.unity": "1.11.0",
+    "com.cysharp.unitask": "2.5.5",
     "com.gwaredd.mggif": "https://github.com/gwaredd/mgGif.git?path=Assets/mgGif",
     "com.unity.ai.navigation": "1.1.5",
     "com.unity.cloud.draco": "5.1.0",
     "com.unity.collab-proxy": "2.2.0",
     "com.unity.feature.development": "1.0.1",
-    "com.unity.ide.rider": "3.0.27",
+    "com.unity.ide.rider": "3.0.31",
     "com.unity.ide.visualstudio": "2.0.22",
     "com.unity.ide.vscode": "1.2.5",
     "com.unity.nuget.newtonsoft-json": "3.2.1",
-    "com.unity.polyspatial.visionos": "1.1.4",
-    "com.unity.polyspatial.xr": "1.1.4",
+    "com.unity.polyspatial.visionos": "1.2.3",
+    "com.unity.polyspatial.xr": "1.2.3",
     "com.unity.render-pipelines.universal": "14.0.10",
     "com.unity.test-framework": "1.1.33",
-    "com.unity.textmeshpro": "3.0.8",
+    "com.unity.textmeshpro": "3.0.9",
     "com.unity.timeline": "1.7.6",
     "com.unity.ugui": "1.0.0",
     "com.unity.visualeffectgraph": "14.0.10",
-    "com.unity.visualscripting": "1.9.2",
+    "com.unity.visualscripting": "1.9.4",
     "com.unity.xr.management": "4.4.1",
     "com.unity.xr.visionos": "1.1.4",
     "jp.co.hololab.iwasmunity": "https://github.com/HoloLabInc/IwasmUnity.git?path=Assets/IwasmUnity#v0.3.0",
@@ -71,6 +72,13 @@
       "scopes": [
         "com.cysharp.unitask",
         "com.openupm"
+      ]
+    },
+    {
+      "name": "Cesium",
+      "url": "https://unity.pkg.cesium.com",
+      "scopes": [
+        "com.cesium.unity"
       ]
     }
   ]

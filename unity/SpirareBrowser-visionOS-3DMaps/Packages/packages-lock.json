@@ -12,8 +12,19 @@
       },
       "hash": "40888c418954f215b890b81ae01fdc4ece81c309"
     },
+    "com.cesium.unity": {
+      "version": "file:com.cesium.unity@1.11.0",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.mathematics": "1.2.0",
+        "com.unity.test-framework": "1.1.31",
+        "com.unity.shadergraph": "12.1.6",
+        "com.unity.inputsystem": "1.4.2"
+      }
+    },
     "com.cysharp.unitask": {
-      "version": "2.5.3",
+      "version": "2.5.5",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -109,7 +120,7 @@
       }
     },
     "com.unity.ide.rider": {
-      "version": "3.0.27",
+      "version": "3.0.31",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -171,7 +182,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.polyspatial": {
-      "version": "1.1.4",
+      "version": "1.2.3",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -189,19 +200,19 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.polyspatial.visionos": {
-      "version": "1.1.4",
+      "version": "1.2.3",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.polyspatial": "1.1.4",
-        "com.unity.polyspatial.xr": "1.1.4",
-        "com.unity.xr.visionos": "1.1.4",
+        "com.unity.polyspatial": "1.2.3",
+        "com.unity.polyspatial.xr": "1.2.3",
+        "com.unity.xr.visionos": "1.2.3",
         "com.unity.xr.management": "4.4.0"
       },
       "url": "https://packages.unity.com"
     },
     "com.unity.polyspatial.xr": {
-      "version": "1.1.4",
+      "version": "1.2.3",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -210,7 +221,7 @@
         "com.unity.textmeshpro": "3.0.7",
         "com.unity.xr.core-utils": "2.3.0",
         "com.unity.inputsystem": "1.4.4",
-        "com.unity.polyspatial": "1.1.4",
+        "com.unity.polyspatial": "1.2.3",
         "com.unity.xr.arfoundation": "5.1.0",
         "com.unity.xr.hands": "1.1.0"
       },
@@ -292,7 +303,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.textmeshpro": {
-      "version": "3.0.8",
+      "version": "3.0.9",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -331,7 +342,7 @@
       }
     },
     "com.unity.visualscripting": {
-      "version": "1.9.2",
+      "version": "1.9.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -402,8 +413,8 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.xr.visionos": {
-      "version": "1.1.4",
-      "depth": 0,
+      "version": "1.2.3",
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.xr.core-utils": "2.3.0",
