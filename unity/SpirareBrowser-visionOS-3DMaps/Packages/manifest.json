@@ -21,7 +21,7 @@
     "com.unity.visualeffectgraph": "14.0.10",
     "com.unity.visualscripting": "1.9.4",
     "com.unity.xr.management": "4.4.1",
-    "com.unity.xr.visionos": "1.1.4",
+    "com.unity.xr.visionos": "1.1.6",
     "jp.co.hololab.iwasmunity": "https://github.com/HoloLabInc/IwasmUnity.git?path=Assets/IwasmUnity#v0.3.0",
     "jp.co.hololab.positioningtools": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools#v0.7.0",
     "jp.co.hololab.positioningtools.geographiccoordinate": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.geographiccoordinate#v0.7.0",
