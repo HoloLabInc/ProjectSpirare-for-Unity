@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using System.Linq;
 
 #if LITMOTION_PRESENT
 using LitMotion;
@@ -126,7 +128,7 @@ namespace HoloLab.Spirare.Browser.UI
                 for (var i = 0; i < Input.touchCount; i++)
                 {
                     var touch = Input.GetTouch(i);
-                    if (touch.phase == TouchPhase.Began && IsOutsideTouched(touch))
+                    if (touch.phase == TouchPhase.Began && IsOutsideTouched(touch) && IsUITouched(touch) == false)
                     {
                         CloseMenu();
                         return;
@@ -139,6 +141,19 @@ namespace HoloLab.Spirare.Browser.UI
         {
             var insideTouched = RectTransformUtility.RectangleContainsScreenPoint(menuScrollView, touch.position, null);
             return !insideTouched;
+        }
+
+        private bool IsUITouched(Touch touch)
+        {
+            var pointerEventData = new PointerEventData(EventSystem.current)
+            {
+                position = touch.position
+            };
+
+            var results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointerEventData, results);
+            var uiLayer = LayerMask.NameToLayer("UI");
+            return results.Any(x => x.gameObject.layer == uiLayer);
         }
 
         private void CompleteMotion()
