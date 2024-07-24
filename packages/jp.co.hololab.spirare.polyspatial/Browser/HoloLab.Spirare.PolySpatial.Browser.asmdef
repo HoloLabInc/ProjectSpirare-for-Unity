@@ -1,9 +1,10 @@
 {
-    "name": "HoloLab.Spirare.PolySpatial",
+    "name": "HoloLab.Spirare.PolySpatial.Browser",
     "rootNamespace": "",
     "references": [
         "GUID:e0c997780b5b8ac43ac18452857ceebe",
-        "GUID:4fe4a1be2f2c04eecbd2036d47b4b310"
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:a9420e37d7990b54abdef6688edbe313"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
