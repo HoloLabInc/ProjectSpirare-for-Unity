@@ -17,10 +17,12 @@ namespace HoloLab.Spirare.Cesium3DMaps.PolySpatial
 
         private void Cesium3DTileset_OnTileGameObjectCreated(GameObject go)
         {
+            // go.AddComponent<TileGameObjectForPolySpatial>();
+
             var meshFilters = go.GetComponentsInChildren<MeshFilter>();
             foreach (var meshFilter in meshFilters)
             {
-                var mesh = meshFilter.mesh;
+                var mesh = meshFilter.sharedMesh;
 
                 // Change triangle order
                 var triangles = mesh.triangles;
