@@ -32,7 +32,7 @@ Due to a conversion error to MaterialX in `CesiumSelectTexCoords.shadersubgraph`
 
 Before:
 
-<img width="480" src="https://github.com/user-attachments/assets/f7c53d8c-29f9-4509-b928-df8411c3316a">
+<img width="480" src="https://github.com/user-attachments/assets/63e05475-ac73-40a8-b426-ad20fc098baa">
 
 After:
 
