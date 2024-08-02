@@ -1,8 +1,8 @@
-# SpirareBrowser-Quest-3DMaps
+# SpirareBrowser-visionOS-3DMaps
 
 This project is a browser application for Spirare that is capable of displaying a 3D map and overlaying POML data on it.
 
-<img width="480" alt="Spirare Browser Qeust 3DMaps Demo" src="https://github.com/HoloLabInc/ProjectSpirare-for-Unity/assets/4415085/c65bafcd-2058-4510-9d19-7f239d6c9f76">
+<img width="480" alt="Spirare Browser visionOS 3DMaps Demo" src="https://github.com/user-attachments/assets/be87fde1-22a5-4ce0-841b-ba4540c6b0d1">
 
 ## Target Devices
 
@@ -31,10 +31,12 @@ sed -i '' 's/makeNoLongerReadable != 0/false/g' ReinteropInitializer.cs
 Due to a conversion error to MaterialX in `CesiumSelectTexCoords.shadersubgraph`, modify it as shown in the images.
 
 Before:
-![0031e8e86db3-20240802](https://github.com/user-attachments/assets/f7c53d8c-29f9-4509-b928-df8411c3316a)
+
+<img width="480" src="https://github.com/user-attachments/assets/f7c53d8c-29f9-4509-b928-df8411c3316a">
 
 After:
-![9da213cd88bb-20240802](https://github.com/user-attachments/assets/107a0de5-b70b-4b30-a494-fad279911cfd)
+
+<img width="480" src="https://github.com/user-attachments/assets/107a0de5-b70b-4b30-a494-fad279911cfd">
 
 ### Get Google API Key
 
