@@ -66,6 +66,11 @@ POML has the following features:
 - Position Alignment Method
   - Scene Anchors
 
+### [SpirareBrowser-visionOS-3DMaps](./unity/SpirareBrowser-visionOS-3DMaps)
+
+- Target Devices
+  - Apple Vision Pro
+
 ## Unity Projects for Development
 
 ### [Spirare-Dev](./unity/Spirare-Dev)
