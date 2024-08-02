@@ -46,11 +46,11 @@ In the **Graph Settings**, make the following changes:
 - Check the box for Built-In Alpha Clipping
 - Check the box for Universal Alpha Clipping
 
-<img width="480" src="https://github.com/user-attachments/assets/74f839be-0b6d-4789-b5c2-46f20ee951c4">
+<img width="360" src="https://github.com/user-attachments/assets/74f839be-0b6d-4789-b5c2-46f20ee951c4">
 
 Delete **Smoothness** from **Fragment**
 
-<img width="360" src="https://github.com/user-attachments/assets/c902b852-3c02-41e8-96d4-67bc15fbef4c">
+<img width="240" src="https://github.com/user-attachments/assets/c902b852-3c02-41e8-96d4-67bc15fbef4c">
 
 ### Get Google API Key
 
