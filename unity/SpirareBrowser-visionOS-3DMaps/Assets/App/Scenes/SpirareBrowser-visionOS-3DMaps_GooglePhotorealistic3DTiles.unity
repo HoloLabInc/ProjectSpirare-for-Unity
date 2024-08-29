@@ -1056,6 +1056,10 @@ PrefabInstance:
       propertyPath: _opaqueMaterial
       value: 
       objectReference: {fileID: 2100000, guid: 724379af158ae4e38a3f56def45696d1, type: 2}
+    - target: {fileID: 5456901991263168612, guid: 666da7be6a42ab243a9b470c36526f11, type: 3}
+      propertyPath: pomlLoaderSettings
+      value: 
+      objectReference: {fileID: 11400000, guid: 09cce69c97d2a44e2a315012db253230, type: 2}
     m_RemovedComponents:
     - {fileID: 1824122919579149775, guid: 666da7be6a42ab243a9b470c36526f11, type: 3}
     - {fileID: 1824122919579149774, guid: 666da7be6a42ab243a9b470c36526f11, type: 3}
