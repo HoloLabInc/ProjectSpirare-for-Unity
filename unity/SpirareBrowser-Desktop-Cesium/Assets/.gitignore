@@ -1,6 +1,9 @@
 /_Dev_gitignore
 /_Dev_gitignore.meta
 
+/CesiumSettings
+/CesiumSettings.meta
+
 /StarterAssets
 /StarterAssets.meta
 
