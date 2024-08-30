@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.cesium.unity": "1.4.0",
+    "com.cesium.unity": "1.11.1",
     "com.cysharp.unitask": "2.3.3",
     "com.gwaredd.mggif": "https://github.com/gwaredd/mgGif.git?path=Assets/mgGif",
     "com.unity.ai.navigation": "1.1.5",

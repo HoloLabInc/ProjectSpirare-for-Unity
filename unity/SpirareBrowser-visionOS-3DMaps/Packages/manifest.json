@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.atteneder.gltfast": "https://github.com/HoloLabInc/glTFast.git#polyspatial-urp-transparent",
-    "com.cesium.unity": "1.11.0",
+    "com.cesium.unity": "1.11.1",
     "com.cysharp.unitask": "2.5.5",
     "com.gwaredd.mggif": "https://github.com/gwaredd/mgGif.git?path=Assets/mgGif",
     "com.unity.ai.navigation": "1.1.5",

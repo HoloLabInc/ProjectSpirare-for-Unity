@@ -21,12 +21,12 @@ Move the `Library/PackageCache/com.cesium.unity@x.x.x` folder into the `Packages
 Change the codes by executing the following commands.
 
 ```bash
-cd Packages/com.cesium.unity@1.11.0/Runtime/generated/Reinterop/Reinterop.RoslynSourceGenerator
+cd Packages/com.cesium.unity@1.11.1/Runtime/generated/Reinterop/Reinterop.RoslynSourceGenerator
 sed -i '' 's/UNITY_IOS/(UNITY_IOS || UNITY_VISIONOS)/g' *.cs
 sed -i '' 's/makeNoLongerReadable != 0/false/g' ReinteropInitializer.cs
 ```
 
-#### Edit `CesiumSelectTexCoords.shadersubgraph`
+#### Edit `CesiumSelectTexCoords.shadersubgraph` in `Cesium for Unity/Runtime/Resources` folder
 
 Due to a conversion error to MaterialX in `CesiumSelectTexCoords.shadersubgraph`, modify it as shown in the images.
 
@@ -38,7 +38,7 @@ After:
 
 <img width="480" src="https://github.com/user-attachments/assets/107a0de5-b70b-4b30-a494-fad279911cfd">
 
-#### Edit `CesiumUnlitTilesetShader.shadergraph`
+#### Edit `CesiumUnlitTilesetShader.shadergraph` in `Cesium for Unity/Runtime/Resources` folder
 
 In the **Graph Settings**, make the following changes:
 
