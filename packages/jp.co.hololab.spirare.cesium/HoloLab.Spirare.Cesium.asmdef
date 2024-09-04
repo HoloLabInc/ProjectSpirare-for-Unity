@@ -21,6 +21,16 @@
             "name": "Unity",
             "expression": "2021.3.18",
             "define": "UNITY_2021_3_18_OR_NEWER"
+        },
+        {
+            "name": "com.unity.splines",
+            "expression": "1.0.0",
+            "define": "PRESENT_SPLINES"
+        },
+        {
+            "name": "com.cesium.unity",
+            "expression": "1.8.0",
+            "define": "PRESENT_CESIUM_CARTOGRAPHIC_POLYGON"
         }
     ],
     "noEngineReferences": false
