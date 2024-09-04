@@ -465,8 +465,50 @@ namespace HoloLab.Spirare
 
         private static PomlElement InitCesium3dTilesElement(XmlNode node)
         {
-            var model = new PomlCesium3dTilesElement();
-            return model;
+            // <cesium3dtiles src="">
+            //   <mask>
+            //     <bounds vertices="geodetic: 35 135 33 135 33 134 35 134"/>
+            //   </mask>
+            // </cesium3dtiles>
+
+            var element = new PomlCesium3dTilesElement();
+
+            foreach (XmlNode childNode in node.ChildNodes)
+            {
+                var childNodeTag = childNode.Name.ToLower();
+                if (childNodeTag == "mask")
+                {
+                    var mask = CreateMask(childNode);
+                    element.Masks.Add(mask);
+                }
+            }
+            return element;
+
+            static PomlCesium3dTilesMask CreateMask(XmlNode maskNode)
+            {
+                var mask = new PomlCesium3dTilesMask();
+
+                foreach (XmlNode childNode in maskNode.ChildNodes)
+                {
+                    var childNodeTag = childNode.Name.ToLower();
+                    if (childNodeTag == "bounds")
+                    {
+                        var bounds = CreateBounds(childNode);
+                        mask.Bounds.Add(bounds);
+                    }
+                }
+
+                return mask;
+            }
+
+            static PomlCesium3dTilesMaskBounds CreateBounds(XmlNode boundsNode)
+            {
+                var maskBounds = new PomlCesium3dTilesMaskBounds
+                {
+                    Vertices = boundsNode.GetAttribute("vertices"),
+                };
+                return maskBounds;
+            }
         }
 
         private static PomlElement InitScreenSpaceElement(XmlNode node)

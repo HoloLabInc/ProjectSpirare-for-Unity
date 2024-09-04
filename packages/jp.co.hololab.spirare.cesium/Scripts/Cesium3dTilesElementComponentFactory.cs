@@ -45,9 +45,14 @@ namespace HoloLab.Spirare.Cesium
             }
 
             var cesium3dTileset = Instantiate(cesium3dTilesetPrefab, parentTransform);
-            cesium3dTileset.url = GetTilesetUrl(cesium3dTilesElement);
+            var cesium3dtilesElementComponent = cesium3dTileset.gameObject.AddComponent<Cesium3dTilesElementComponent>();
+            cesium3dtilesElementComponent.Initialize(cesium3dTilesElement, loadOptions);
+            _ = cesium3dtilesElementComponent.UpdateGameObject();
+            // cesium3dTileset.url = GetTilesetUrl(cesium3dTilesElement);
             return cesium3dTileset.gameObject;
         }
+
+        /*
 
         private string GetTilesetUrl(PomlCesium3dTilesElement cesium3dTilesElement)
         {
@@ -69,6 +74,8 @@ namespace HoloLab.Spirare.Cesium
                 return url;
             }
         }
+
+        */
 
         private static bool IsDescendantOfCesiumGeoreference(Transform transform)
         {

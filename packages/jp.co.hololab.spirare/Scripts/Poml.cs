@@ -332,6 +332,18 @@ namespace HoloLab.Spirare
         public PomlCesium3dTilesElement() : base(PomlElementType.Cesium3dTiles)
         {
         }
+
+        public List<PomlCesium3dTilesMask> Masks = new List<PomlCesium3dTilesMask>();
+    }
+
+    public sealed class PomlCesium3dTilesMask
+    {
+        public List<PomlCesium3dTilesMaskBounds> Bounds { get; } = new List<PomlCesium3dTilesMaskBounds>();
+    }
+
+    public sealed class PomlCesium3dTilesMaskBounds
+    {
+        public string Vertices { set; get; }
     }
 
     public sealed class PomlScreenSpaceElement : PomlElement
