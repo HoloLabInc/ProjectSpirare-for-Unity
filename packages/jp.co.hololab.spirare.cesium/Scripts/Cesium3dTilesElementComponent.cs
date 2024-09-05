@@ -3,13 +3,13 @@
 #endif
 
 using CesiumForUnity;
-using HoloLab.PositioningTools.CoordinateSystem;
 using HoloLab.PositioningTools.GeographicCoordinate;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -122,7 +122,7 @@ namespace HoloLab.Spirare.Cesium
             if (cesiumPolygonRasterOverlay == null)
             {
                 cesiumPolygonRasterOverlay = tileset.gameObject.AddComponent<CesiumPolygonRasterOverlay>();
-                cesiumPolygonRasterOverlay.materialKey = "clipping";
+                cesiumPolygonRasterOverlay.materialKey = "Clipping";
             }
 
             cesiumPolygonRasterOverlay.polygons = cesiumCartographicPolygons;
@@ -132,8 +132,6 @@ namespace HoloLab.Spirare.Cesium
         {
             var boundsObject = new GameObject(name);
             boundsObject.transform.SetParent(parent, false);
-
-            Debug.Log(bounds.Vertices);
 
             var splineContainer = boundsObject.AddComponent<SplineContainer>();
             var spline = splineContainer.Spline;
@@ -147,24 +145,14 @@ namespace HoloLab.Spirare.Cesium
                 spline.Add(knot, TangentMode.Linear);
             }
 
-            switch (vertices.CoordinateSystem)
+            if (vertices.CoordinateSystem == PomlBoundsVerticesAttribute.CoordinateSystemType.Geodetic)
             {
-                case PomlBoundsVerticesAttribute.CoordinateSystemType.Relative:
-
-                    break;
-                case PomlBoundsVerticesAttribute.CoordinateSystemType.Geodetic:
-                    //AddGeoreferenceElementComponentWhenGeodetic(lineObj, vertices, geoReferenceElementComponentFactory);
-                    //var points = ConvertPomlGeometryPositionsAttributeToUnityPositions(vertices);
-                    break;
+                AddCesiumGlobeAnchor(boundsObject, vertices);
             }
 
-
-
-            var cesiumGlobeAnchor = boundsObject.AddComponent<CesiumGlobeAnchor>();
             var cesiumCartographicPolygon = boundsObject.AddComponent<CesiumCartographicPolygon>();
             return cesiumCartographicPolygon;
         }
-
 #endif
 
         private static string GetTilesetUrl(PomlCesium3dTilesElement cesium3dTilesElement)
@@ -210,6 +198,20 @@ namespace HoloLab.Spirare.Cesium
                 target.Latitude, target.Longitude, target.EllipsoidalHeight,
                 origin.Latitude, origin.Longitude, origin.EllipsoidalHeight)
                 .ToUnityVector();
+        }
+
+        private static void AddCesiumGlobeAnchor(GameObject boundsObject, PomlBoundsVerticesAttribute vertices)
+        {
+            if (vertices.GeodeticPositions.Length == 0)
+            {
+                return;
+            }
+
+            var firstVertex = vertices.GeodeticPositions[0];
+            var cesiumGlobeAnchor = boundsObject.AddComponent<CesiumGlobeAnchor>();
+            Debug.Log(firstVertex);
+            var longitudeLatitudeHeight = new double3(firstVertex.Longitude, firstVertex.Latitude, firstVertex.EllipsoidalHeight);
+            cesiumGlobeAnchor.longitudeLatitudeHeight = longitudeLatitudeHeight;
         }
     }
 }
