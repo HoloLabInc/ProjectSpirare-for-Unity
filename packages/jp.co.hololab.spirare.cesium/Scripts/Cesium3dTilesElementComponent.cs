@@ -29,16 +29,32 @@ namespace HoloLab.Spirare.Cesium
         private CesiumPolygonRasterOverlay cesiumPolygonRasterOverlay;
 #endif
 
+        private bool useLocalFileServer = false;
+
         private static LocalFileServer localFileServer;
+        private static int localFileServerUsageCount = 0;
 
         private void Awake()
         {
             tileset = GetComponent<Cesium3DTileset>();
         }
 
+        private void OnDestroy()
+        {
+            if (useLocalFileServer)
+            {
+                localFileServerUsageCount -= 1;
+                if (localFileServerUsageCount == 0)
+                {
+                    localFileServer.Dispose();
+                    localFileServer = null;
+                }
+            }
+        }
+
         protected override Task UpdateGameObjectCore()
         {
-            StartLoacalFileServerIfNeeded(element);
+            StartLocalFileServerIfNeeded(element);
 
             var tilesetUrl = GetTilesetUrl(element);
             if (tileset.url != tilesetUrl)
@@ -51,22 +67,22 @@ namespace HoloLab.Spirare.Cesium
             return Task.CompletedTask;
         }
 
-        private void StartLoacalFileServerIfNeeded(PomlCesium3dTilesElement cesium3dTilesElement)
+        private void StartLocalFileServerIfNeeded(PomlCesium3dTilesElement cesium3dTilesElement)
         {
-            if (localFileServer != null)
-            {
-                return;
-            }
-
-            return;
-
-            // TODO: Dispose LocalFileServer
-
             var url = cesium3dTilesElement.Src;
             if (url.StartsWith("file://"))
             {
-                localFileServer = new LocalFileServer();
-                localFileServer.StartOnRandomPort();
+                if (useLocalFileServer == false)
+                {
+                    useLocalFileServer = true;
+                    localFileServerUsageCount += 1;
+                }
+
+                if (localFileServer == null)
+                {
+                    localFileServer = new LocalFileServer();
+                    localFileServer.StartOnRandomPort();
+                }
             }
         }
 
@@ -169,6 +185,12 @@ namespace HoloLab.Spirare.Cesium
 
                 var directoryPath = Path.GetDirectoryName(path);
                 var fileName = Path.GetFileName(path);
+
+                if (localFileServer == null)
+                {
+                    Debug.LogError("Local file server has not started.");
+                    return null;
+                }
 
                 var localServerUrl = $"http://localhost:{localFileServer.Port}/{fileName}?basepath={directoryPath}";
                 return localServerUrl;

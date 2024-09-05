@@ -10,26 +10,6 @@ namespace HoloLab.Spirare.Cesium
         [SerializeField]
         private Cesium3DTileset cesium3dTilesetPrefab;
 
-        private LocalFileServer localFileServer;
-
-        public void OnEnable()
-        {
-            if (localFileServer == null)
-            {
-                localFileServer = new LocalFileServer();
-                localFileServer.StartOnRandomPort();
-            }
-        }
-
-        public void OnDisable()
-        {
-            if (localFileServer != null)
-            {
-                localFileServer.Dispose();
-                localFileServer = null;
-            }
-        }
-
         public override GameObject Create(PomlCesium3dTilesElement cesium3dTilesElement, PomlLoadOptions loadOptions, Transform parentTransform = null)
         {
             if (cesium3dTilesetPrefab == null)
