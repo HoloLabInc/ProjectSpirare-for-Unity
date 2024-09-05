@@ -21,7 +21,7 @@ namespace HoloLab.Spirare.Cesium
         private Cesium3DTileset tileset;
 
 #if CESIUM_CARTOGRAPHIC_POLYGON_ENABLED
-        private List<CesiumCartographicPolygon> cesiumCartographicPolygons = new List<CesiumCartographicPolygon>();
+        private readonly List<CesiumCartographicPolygon> cesiumCartographicPolygons = new List<CesiumCartographicPolygon>();
         private GameObject maskObject;
         private CesiumPolygonRasterOverlay cesiumPolygonRasterOverlay;
 #endif
@@ -209,7 +209,6 @@ namespace HoloLab.Spirare.Cesium
 
             var firstVertex = vertices.GeodeticPositions[0];
             var cesiumGlobeAnchor = boundsObject.AddComponent<CesiumGlobeAnchor>();
-            Debug.Log(firstVertex);
             var longitudeLatitudeHeight = new double3(firstVertex.Longitude, firstVertex.Latitude, firstVertex.EllipsoidalHeight);
             cesiumGlobeAnchor.longitudeLatitudeHeight = longitudeLatitudeHeight;
         }
