@@ -5,13 +5,16 @@
 using CesiumForUnity;
 using HoloLab.PositioningTools.GeographicCoordinate;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Unity.Mathematics;
 using UnityEngine;
+
+#if CESIUM_CARTOGRAPHIC_POLYGON_ENABLED
+using System.Collections.Generic;
 using UnityEngine.Splines;
+#endif
 
 namespace HoloLab.Spirare.Cesium
 {
