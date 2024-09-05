@@ -8,7 +8,7 @@ namespace HoloLab.Spirare.Cesium
 {
     internal static class Poml3dTilesParserUtility
     {
-        private static readonly Regex geometryAttributesKeyRegex = new Regex(@"^(.*?):", RegexOptions.Compiled);
+        private static readonly Regex verticesAttributesKeyRegex = new Regex(@"^(.*?):", RegexOptions.Compiled);
 
         public static PomlBoundsVerticesAttribute ParseAsBoundsVerticesAttribute(string text)
         {
@@ -32,7 +32,7 @@ namespace HoloLab.Spirare.Cesium
 
         private static (CoordinateSystemType CoordinateSystem, string NumberArrayString) ParseCoordinateSystemType(string text)
         {
-            var match = geometryAttributesKeyRegex.Match(text);
+            var match = verticesAttributesKeyRegex.Match(text);
             if (match.Success)
             {
                 var key = match.Groups[1].Value.Trim().ToLower();
