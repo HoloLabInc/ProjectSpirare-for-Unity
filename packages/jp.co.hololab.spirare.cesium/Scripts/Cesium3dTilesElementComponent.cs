@@ -103,7 +103,7 @@ namespace HoloLab.Spirare.Cesium
 
             var mask = masks[0];
             CreateMaskObjects(mask);
-            UpdatePolygonRasterOverlay();
+            UpdatePolygonRasterOverlay(mask);
 #endif
         }
 
@@ -136,7 +136,7 @@ namespace HoloLab.Spirare.Cesium
             }
         }
 
-        private void UpdatePolygonRasterOverlay()
+        private void UpdatePolygonRasterOverlay(PomlCesium3dTilesMask mask)
         {
             if (cesiumPolygonRasterOverlay == null)
             {
@@ -145,6 +145,7 @@ namespace HoloLab.Spirare.Cesium
             }
 
             cesiumPolygonRasterOverlay.polygons = cesiumCartographicPolygons;
+            cesiumPolygonRasterOverlay.invertSelection = mask.Invreted;
         }
 
         private CesiumCartographicPolygon CreateCesiumCartographicPolygon(string name, Transform parent, PomlCesium3dTilesMaskBounds bounds)

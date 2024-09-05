@@ -491,7 +491,10 @@ namespace HoloLab.Spirare
 
             static PomlCesium3dTilesMask CreateMask(XmlNode maskNode)
             {
-                var mask = new PomlCesium3dTilesMask();
+                var mask = new PomlCesium3dTilesMask
+                {
+                    Invreted = maskNode.GetBooleanAttribute("inverted")
+                };
 
                 foreach (XmlNode childNode in maskNode.ChildNodes)
                 {

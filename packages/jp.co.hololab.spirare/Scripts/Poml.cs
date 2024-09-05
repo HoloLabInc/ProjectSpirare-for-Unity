@@ -338,6 +338,8 @@ namespace HoloLab.Spirare
 
     public sealed class PomlCesium3dTilesMask
     {
+        public bool Invreted { set; get; }
+
         public List<PomlCesium3dTilesMaskBounds> Bounds { get; } = new List<PomlCesium3dTilesMaskBounds>();
     }
 
