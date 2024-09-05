@@ -4,9 +4,11 @@
 
 using CesiumForUnity;
 using HoloLab.PositioningTools.CoordinateSystem;
+using HoloLab.PositioningTools.GeographicCoordinate;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Splines;
@@ -52,6 +54,10 @@ namespace HoloLab.Spirare.Cesium
             {
                 return;
             }
+
+            return;
+
+            // TODO: Dispose LocalFileServer
 
             var url = cesium3dTilesElement.Src;
             if (url.StartsWith("file://"))
@@ -116,10 +122,10 @@ namespace HoloLab.Spirare.Cesium
             if (cesiumPolygonRasterOverlay == null)
             {
                 cesiumPolygonRasterOverlay = tileset.gameObject.AddComponent<CesiumPolygonRasterOverlay>();
+                cesiumPolygonRasterOverlay.materialKey = "clipping";
             }
 
-            var polygons = cesiumPolygonRasterOverlay.polygons;
-            polygons.AddRange(cesiumCartographicPolygons);
+            cesiumPolygonRasterOverlay.polygons = cesiumCartographicPolygons;
         }
 
         private CesiumCartographicPolygon CreateCesiumCartographicPolygon(string name, Transform parent, PomlCesium3dTilesMaskBounds bounds)
@@ -127,11 +133,38 @@ namespace HoloLab.Spirare.Cesium
             var boundsObject = new GameObject(name);
             boundsObject.transform.SetParent(parent, false);
 
+            Debug.Log(bounds.Vertices);
+
             var splineContainer = boundsObject.AddComponent<SplineContainer>();
+            var spline = splineContainer.Spline;
+            spline.Closed = true;
+
+            var vertices = Poml3dTilesParserUtility.ParseAsBoundsVerticesAttribute(bounds.Vertices);
+            var points = ConvertBoundsVerticesAttributeToUnityPositions(vertices);
+            foreach (var point in points)
+            {
+                var knot = new BezierKnot(point);
+                spline.Add(knot, TangentMode.Linear);
+            }
+
+            switch (vertices.CoordinateSystem)
+            {
+                case PomlBoundsVerticesAttribute.CoordinateSystemType.Relative:
+
+                    break;
+                case PomlBoundsVerticesAttribute.CoordinateSystemType.Geodetic:
+                    //AddGeoreferenceElementComponentWhenGeodetic(lineObj, vertices, geoReferenceElementComponentFactory);
+                    //var points = ConvertPomlGeometryPositionsAttributeToUnityPositions(vertices);
+                    break;
+            }
+
+
+
             var cesiumGlobeAnchor = boundsObject.AddComponent<CesiumGlobeAnchor>();
             var cesiumCartographicPolygon = boundsObject.AddComponent<CesiumCartographicPolygon>();
             return cesiumCartographicPolygon;
         }
+
 #endif
 
         private static string GetTilesetUrl(PomlCesium3dTilesElement cesium3dTilesElement)
@@ -153,6 +186,30 @@ namespace HoloLab.Spirare.Cesium
             {
                 return url;
             }
+        }
+
+        private static Vector3[] ConvertBoundsVerticesAttributeToUnityPositions(PomlBoundsVerticesAttribute vertices)
+        {
+            switch (vertices.CoordinateSystem)
+            {
+                case PomlBoundsVerticesAttribute.CoordinateSystemType.Relative:
+                    return vertices.RelativePositions.Select(v => new Vector3(-v.y, 0, v.x)).ToArray();
+
+                case PomlBoundsVerticesAttribute.CoordinateSystemType.Geodetic:
+                    var firstVertex = vertices.GeodeticPositions.FirstOrDefault();
+                    return vertices.GeodeticPositions.Select(x => GeodeticToRelative(x, firstVertex)).ToArray();
+
+                default:
+                    return Array.Empty<Vector3>();
+            }
+        }
+
+        private static Vector3 GeodeticToRelative(PomlGeodeticPosition target, PomlGeodeticPosition origin)
+        {
+            return GeographicCoordinateConversion.GeodeticToEnu(
+                target.Latitude, target.Longitude, target.EllipsoidalHeight,
+                origin.Latitude, origin.Longitude, origin.EllipsoidalHeight)
+                .ToUnityVector();
         }
     }
 }
