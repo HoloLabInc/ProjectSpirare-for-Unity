@@ -14,22 +14,6 @@ namespace HoloLab.Spirare.Cesium
             return tokens;
         }
 
-        public static List<int> ParseAsIntArray(string text)
-        {
-            var tokens = SplitArrayString(text);
-            var values = new List<int>(tokens.Length);
-
-            foreach (var token in tokens)
-            {
-                if (!int.TryParse(token, out var value))
-                {
-                    break;
-                }
-                values.Add(value);
-            }
-            return values;
-        }
-
         public static List<float> ParseAsFloatArray(string text)
         {
             var tokens = SplitArrayString(text);
@@ -86,8 +70,8 @@ namespace HoloLab.Spirare.Cesium
                 var result = new PomlGeodeticPosition[values.Count / 2];
                 for (int i = 0; i < result.Length; i++)
                 {
-                    var longitude = values[i * 2];
-                    var latitude = values[i * 2 + 1];
+                    var latitude = values[i * 2];
+                    var longitude = values[i * 2 + 1];
                     result[i] = new PomlGeodeticPosition(longitude, latitude, 0);
                 }
                 return result;
@@ -97,8 +81,8 @@ namespace HoloLab.Spirare.Cesium
                 var result = new PomlGeodeticPosition[values.Count / 3];
                 for (int i = 0; i < result.Length; i++)
                 {
-                    var longitude = values[i * 3];
-                    var latitude = values[i * 3 + 1];
+                    var latitude = values[i * 3];
+                    var longitude = values[i * 3 + 1];
                     var ellipsoidalHeight = values[i * 3 + 2];
                     result[i] = new PomlGeodeticPosition(longitude, latitude, ellipsoidalHeight);
                 }
