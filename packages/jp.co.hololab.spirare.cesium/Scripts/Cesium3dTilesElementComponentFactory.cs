@@ -1,7 +1,6 @@
 using CesiumForUnity;
 using HoloLab.PositioningTools.CoordinateSystem;
 using System;
-using System.IO;
 using UnityEngine;
 
 namespace HoloLab.Spirare.Cesium
@@ -48,34 +47,8 @@ namespace HoloLab.Spirare.Cesium
             var cesium3dtilesElementComponent = cesium3dTileset.gameObject.AddComponent<Cesium3dTilesElementComponent>();
             cesium3dtilesElementComponent.Initialize(cesium3dTilesElement, loadOptions);
             _ = cesium3dtilesElementComponent.UpdateGameObject();
-            // cesium3dTileset.url = GetTilesetUrl(cesium3dTilesElement);
             return cesium3dTileset.gameObject;
         }
-
-        /*
-
-        private string GetTilesetUrl(PomlCesium3dTilesElement cesium3dTilesElement)
-        {
-            var url = cesium3dTilesElement.Src;
-
-            if (url.StartsWith("file://"))
-            {
-                // Remove file:// from url
-                var path = url.Substring(7);
-
-                var directoryPath = Path.GetDirectoryName(path);
-                var fileName = Path.GetFileName(path);
-
-                var localServerUrl = $"http://localhost:{localFileServer.Port}/{fileName}?basepath={directoryPath}";
-                return localServerUrl;
-            }
-            else
-            {
-                return url;
-            }
-        }
-
-        */
 
         private static bool IsDescendantOfCesiumGeoreference(Transform transform)
         {
