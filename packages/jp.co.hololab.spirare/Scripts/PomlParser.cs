@@ -122,6 +122,11 @@ namespace HoloLab.Spirare
                 // Ignore shape tags (<line>, etc.) within <geometry>.
                 childFilter = (n) => EnumLabel.TryGetValue<PomlGeometryType>(n.Name.ToLower(), out _) == false;
             }
+            else if (pomlElement.ElementType == PomlElementType.Cesium3dTiles)
+            {
+                // Ignore mask tags (<mask>) within <cesium3dtiles>.
+                childFilter = (n) => n.Name.ToLower() != "mask";
+            }
 
             // child elements
             var childElements = new List<PomlElement>();
