@@ -7,7 +7,8 @@
         "GUID:d8b63aba1907145bea998dd612889d6b",
         "GUID:5e7031352d050134eb5f29d15e79dbc3",
         "GUID:ddc9502104b19204e806efb31b283e26",
-        "GUID:0df9762fedbe5e44f8c93309c32c356e"
+        "GUID:0df9762fedbe5e44f8c93309c32c356e",
+        "GUID:21d1eb854b91ade49bc69a263d12bee2"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -21,6 +22,16 @@
             "name": "Unity",
             "expression": "2021.3.18",
             "define": "UNITY_2021_3_18_OR_NEWER"
+        },
+        {
+            "name": "com.unity.splines",
+            "expression": "1.0.0",
+            "define": "PRESENT_SPLINES"
+        },
+        {
+            "name": "com.cesium.unity",
+            "expression": "1.8.0",
+            "define": "PRESENT_CESIUM_CARTOGRAPHIC_POLYGON"
         }
     ],
     "noEngineReferences": false

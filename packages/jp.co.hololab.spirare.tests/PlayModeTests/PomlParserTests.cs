@@ -467,6 +467,46 @@ public class PomlParserTests
     }
 
     [Test]
+    public void Cesium3dTilesTag()
+    {
+        var xml = @"
+<poml>
+    <scene>
+        <cesium3dtiles src=""http://example.com/url1""/>
+        <cesium3dtiles src=""http://example.com/url2"">
+            <mask>
+                <bounds vertices=""geodetic: 35 135 33 135 33 134 35 134""/>
+            </mask>
+        </cesium3dtiles>
+    </scene>
+</poml>";
+
+        var elements = ParseSceneElements(xml);
+        Assert.That(elements.Length, Is.EqualTo(2));
+
+        {
+            var element = elements[0] as PomlCesium3dTilesElement;
+            Assert.That(element.ElementType, Is.EqualTo(PomlElementType.Cesium3dTiles));
+            Assert.That(element.Src, Is.EqualTo("http://example.com/url1"));
+        }
+        {
+            var element = elements[1] as PomlCesium3dTilesElement;
+            Assert.That(element.ElementType, Is.EqualTo(PomlElementType.Cesium3dTiles));
+            var masks = element.Masks;
+            Assert.That(masks.Count, Is.EqualTo(1));
+
+            var mask = masks[0];
+            var bounds = mask.Bounds;
+            Assert.That(bounds.Count, Is.EqualTo(1));
+
+            {
+                var bound = bounds[0];
+                Assert.That(bound.Vertices, Is.EqualTo("geodetic: 35 135 33 135 33 134 35 134"));
+            }
+        }
+    }
+
+    [Test]
     public void NestedElements()
     {
         var xml = @"

@@ -1,7 +1,6 @@
 using CesiumForUnity;
 using HoloLab.PositioningTools.CoordinateSystem;
 using System;
-using System.IO;
 using UnityEngine;
 
 namespace HoloLab.Spirare.Cesium
@@ -10,26 +9,6 @@ namespace HoloLab.Spirare.Cesium
     {
         [SerializeField]
         private Cesium3DTileset cesium3dTilesetPrefab;
-
-        private LocalFileServer localFileServer;
-
-        public void OnEnable()
-        {
-            if (localFileServer == null)
-            {
-                localFileServer = new LocalFileServer();
-                localFileServer.StartOnRandomPort();
-            }
-        }
-
-        public void OnDisable()
-        {
-            if (localFileServer != null)
-            {
-                localFileServer.Dispose();
-                localFileServer = null;
-            }
-        }
 
         public override GameObject Create(PomlCesium3dTilesElement cesium3dTilesElement, PomlLoadOptions loadOptions, Transform parentTransform = null)
         {
@@ -45,29 +24,10 @@ namespace HoloLab.Spirare.Cesium
             }
 
             var cesium3dTileset = Instantiate(cesium3dTilesetPrefab, parentTransform);
-            cesium3dTileset.url = GetTilesetUrl(cesium3dTilesElement);
+            var cesium3dtilesElementComponent = cesium3dTileset.gameObject.AddComponent<Cesium3dTilesElementComponent>();
+            cesium3dtilesElementComponent.Initialize(cesium3dTilesElement, loadOptions);
+            _ = cesium3dtilesElementComponent.UpdateGameObject();
             return cesium3dTileset.gameObject;
-        }
-
-        private string GetTilesetUrl(PomlCesium3dTilesElement cesium3dTilesElement)
-        {
-            var url = cesium3dTilesElement.Src;
-
-            if (url.StartsWith("file://"))
-            {
-                // Remove file:// from url
-                var path = url.Substring(7);
-
-                var directoryPath = Path.GetDirectoryName(path);
-                var fileName = Path.GetFileName(path);
-
-                var localServerUrl = $"http://localhost:{localFileServer.Port}/{fileName}?basepath={directoryPath}";
-                return localServerUrl;
-            }
-            else
-            {
-                return url;
-            }
         }
 
         private static bool IsDescendantOfCesiumGeoreference(Transform transform)
