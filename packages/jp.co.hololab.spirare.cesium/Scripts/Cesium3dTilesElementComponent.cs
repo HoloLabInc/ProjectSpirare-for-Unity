@@ -145,7 +145,7 @@ namespace HoloLab.Spirare.Cesium
             }
 
             cesiumPolygonRasterOverlay.polygons = cesiumCartographicPolygons;
-            cesiumPolygonRasterOverlay.invertSelection = mask.Invreted;
+            cesiumPolygonRasterOverlay.invertSelection = mask.Inverted;
         }
 
         private CesiumCartographicPolygon CreateCesiumCartographicPolygon(string name, Transform parent, PomlCesium3dTilesMaskBounds bounds)
