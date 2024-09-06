@@ -85,8 +85,8 @@ namespace HoloLab.Spirare
             var result = new PomlGeodeticPosition[values.Count / 3];
             for (int i = 0; i < result.Length; i++)
             {
-                var longitude = values[i * 3];
-                var latitude = values[i * 3 + 1];
+                var latitude = values[i * 3];
+                var longitude = values[i * 3 + 1];
                 var ellipsoidalHeight = values[i * 3 + 2];
                 result[i] = new PomlGeodeticPosition(longitude, latitude, ellipsoidalHeight);
             }
