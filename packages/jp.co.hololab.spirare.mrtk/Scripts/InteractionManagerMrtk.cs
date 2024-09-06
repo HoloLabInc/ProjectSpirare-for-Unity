@@ -16,7 +16,11 @@ namespace HoloLab.Spirare.Mrtk
 
         private void OnDisable()
         {
-            Microsoft.MixedReality.Toolkit.CoreServices.InputSystem.UnregisterHandler<IMixedRealityInputHandler>(this);
+            var mrtkInputSystem = Microsoft.MixedReality.Toolkit.CoreServices.InputSystem;
+            if (mrtkInputSystem != null)
+            {
+                mrtkInputSystem.UnregisterHandler<IMixedRealityInputHandler>(this);
+            }
         }
 
         public void OnInputUp(InputEventData eventData)
