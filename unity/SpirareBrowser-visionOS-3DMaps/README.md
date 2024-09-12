@@ -38,6 +38,19 @@ After:
 
 <img width="480" src="https://github.com/user-attachments/assets/107a0de5-b70b-4b30-a494-fad279911cfd">
 
+#### Edit `CesiumRasterOverlay.shadersubgraph` in `Cesium for Unity/Runtime/Resources` folder
+
+Add **Sampler State** and change **Wrap** to **Clamp**.
+
+Before:
+
+<img width="480" src="https://github.com/user-attachments/assets/ec9178b6-c0b0-4c93-87fc-f92678691cdc">
+
+After:
+
+<img width="480" src="https://github.com/user-attachments/assets/a6d9caf9-ac1d-40e8-8932-919ad46fb7a0">
+
+
 #### Edit `CesiumUnlitTilesetShader.shadergraph` in `Cesium for Unity/Runtime/Resources` folder
 
 In the **Graph Settings**, make the following changes:
