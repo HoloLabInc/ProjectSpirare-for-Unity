@@ -40,7 +40,7 @@ After:
 
 #### Edit `CesiumRasterOverlay.shadersubgraph` in `Cesium for Unity/Runtime/Resources` folder
 
-Add **Sampler State** and change **Wrap** to **Clamp**.
+Add **Sampler State** and set **Wrap** to **Clamp**.
 
 Before:
 
@@ -49,21 +49,6 @@ Before:
 After:
 
 <img width="480" src="https://github.com/user-attachments/assets/a6d9caf9-ac1d-40e8-8932-919ad46fb7a0">
-
-
-#### Edit `CesiumUnlitTilesetShader.shadergraph` in `Cesium for Unity/Runtime/Resources` folder
-
-In the **Graph Settings**, make the following changes:
-
-- Change Built-In Material to Unlit
-- Check the box for Built-In Alpha Clipping
-- Check the box for Universal Alpha Clipping
-
-<img width="360" src="https://github.com/user-attachments/assets/74f839be-0b6d-4789-b5c2-46f20ee951c4">
-
-Delete **Smoothness** from **Fragment**
-
-<img width="240" src="https://github.com/user-attachments/assets/c902b852-3c02-41e8-96d4-67bc15fbef4c">
 
 ### Get Google API Key
 
