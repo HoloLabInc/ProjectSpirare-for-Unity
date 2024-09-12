@@ -242,6 +242,9 @@
         },
         {
             "m_Id": "835b766fbb004dd48ef6368b581b59bd"
+        },
+        {
+            "m_Id": "079097024cd1491891405ee9c57b65b3"
         }
     ],
     "m_GroupDatas": [
@@ -276,6 +279,20 @@
                     "m_Id": "af3b945543674b91b77b84a6318a4ab7"
                 },
                 "m_SlotId": -1177420189
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "079097024cd1491891405ee9c57b65b3"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "d3652d02ebe04e0db11eb702720bc3b3"
+                },
+                "m_SlotId": 3
             }
         },
         {
@@ -1172,6 +1189,42 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.SamplerStateNode",
+    "m_ObjectId": "079097024cd1491891405ee9c57b65b3",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Sampler State",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -1092.967529296875,
+            "y": 1315.032470703125,
+            "width": 145.0,
+            "height": 138.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "0ec7d7a061af4f88bb18407b831cb965"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_filter": 0,
+    "m_wrap": 1,
+    "m_aniso": 0
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.AbsoluteNode",
     "m_ObjectId": "07e6e8388f6c4dfc85fa01d6bcbf454b",
     "m_Group": {
@@ -1463,6 +1516,19 @@
         "w": 0.0
     },
     "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.SamplerStateMaterialSlot",
+    "m_ObjectId": "0ec7d7a061af4f88bb18407b831cb965",
+    "m_Id": 0,
+    "m_DisplayName": "Out",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_BareResource": false
 }
 
 {
