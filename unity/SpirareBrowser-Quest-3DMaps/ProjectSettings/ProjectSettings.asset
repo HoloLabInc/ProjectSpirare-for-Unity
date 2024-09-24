@@ -159,7 +159,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: jp.co.hololab.spirarebrowserquest3dmaps
+    Android: jp.co.hololab.spirarebrowser.quest3dmaps
   buildNumber:
     Standalone: 0
     VisionOS: 0
