@@ -59,6 +59,13 @@ namespace HoloLab.Spirare.Browser.ARFoundation
 #endif
         }
 
+        private void OnDestroy()
+        {
+            displaySettingsState.OnOcclusionChanged -= DisplaySettingsState_OnOcclusionChanged;
+            occulusionDropdown.onValueChanged.RemoveListener(OnValueChanged);
+            ARSession.stateChanged -= ARSession_stateChanged;
+        }
+
         private void DisplaySettingsState_OnOcclusionChanged(OcclusionType occlusion)
         {
             ChangeDropdownSelection(occlusion);

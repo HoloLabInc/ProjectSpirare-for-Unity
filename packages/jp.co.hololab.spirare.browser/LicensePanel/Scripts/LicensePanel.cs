@@ -32,6 +32,12 @@ namespace HoloLab.Spirare.Browser
             closeButton.onClick.AddListener(CloseButton_OnClick);
         }
 
+        private void OnDestroy()
+        {
+            licensePanelState.OnIsPanelOpenChanged -= LicensePanelState_OnIsPanelOpenChanged;
+            closeButton.onClick.RemoveListener(CloseButton_OnClick);
+        }
+
         private void LicensePanelState_OnIsPanelOpenChanged()
         {
             if (licensePanelState.IsPanelOpen && initialized == false)

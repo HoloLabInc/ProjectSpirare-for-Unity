@@ -28,6 +28,15 @@ namespace HoloLab.Spirare.Browser
             displaySettingsState.OnStreetscapeGeometryOcclusionChanged += DisplaySettingsState_OnStreetscapeGeometryOcclusionChanged;
         }
 
+        private void OnDestroy()
+        {
+            displaySettingsState.OnIsMenuOpenChanged -= DisplaySettingsState_OnIsMenuOpenChanged;
+            displaySettingsState.OnOpacityChanged -= DisplaySettingsState_OnOpacityChanged;
+            displaySettingsState.OnFarClipChanged -= DisplaySettingsState_OnFarClipChanged;
+            displaySettingsState.OnOcclusionChanged -= DisplaySettingsState_OnOcclusionChanged;
+            displaySettingsState.OnStreetscapeGeometryOcclusionChanged -= DisplaySettingsState_OnStreetscapeGeometryOcclusionChanged;
+        }
+
         private void LoadState()
         {
             LoadIsMenuOpen();

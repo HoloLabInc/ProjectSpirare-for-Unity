@@ -30,6 +30,11 @@ namespace HoloLab.Spirare.Browser.UI
             displaySettingsState.OnIsMenuOpenChanged += DisplaySettingsState_OnIsMenuOpenChanged;
         }
 
+        private void OnDestroy()
+        {
+            displaySettingsState.OnIsMenuOpenChanged -= DisplaySettingsState_OnIsMenuOpenChanged;
+        }
+
         private void ChangeScale()
         {
             var screenWidth = Screen.width / Screen.dpi;

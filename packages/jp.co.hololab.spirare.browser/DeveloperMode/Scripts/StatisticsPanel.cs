@@ -16,6 +16,11 @@ namespace HoloLab.Spirare.Browser
             developerModeState.OnEnabledChanged += DeveloperModeState_OnEnabledChanged;
         }
 
+        private void OnDestroy()
+        {
+            developerModeState.OnEnabledChanged -= DeveloperModeState_OnEnabledChanged;
+        }
+
         private void DeveloperModeState_OnEnabledChanged(bool enabled)
         {
             ApplyDeveloerModeEnabled(enabled);
