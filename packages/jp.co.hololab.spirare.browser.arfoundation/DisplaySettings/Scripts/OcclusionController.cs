@@ -30,6 +30,11 @@ namespace HoloLab.Spirare.Browser.ARFoundation
             displaySettingsState.OnOcclusionChanged += DisplaySettingsState_OnOcclusionChanged;
         }
 
+        private void OnDestroy()
+        {
+            displaySettingsState.OnOcclusionChanged -= DisplaySettingsState_OnOcclusionChanged;
+        }
+
         private void DisplaySettingsState_OnOcclusionChanged(OcclusionType occlusion)
         {
             SetOcclusion(occlusion);
