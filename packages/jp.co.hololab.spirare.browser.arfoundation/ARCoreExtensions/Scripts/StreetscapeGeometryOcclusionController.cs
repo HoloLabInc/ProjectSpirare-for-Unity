@@ -24,6 +24,11 @@ namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
             displaySettingsState.OnStreetscapeGeometryOcclusionChanged += DisplaySettingsState_OnStreetscapeGeometryOcclusionChanged;
         }
 
+        private void OnDestroy()
+        {
+            displaySettingsState.OnStreetscapeGeometryOcclusionChanged -= DisplaySettingsState_OnStreetscapeGeometryOcclusionChanged;
+        }
+
         private void DisplaySettingsState_OnStreetscapeGeometryOcclusionChanged(StreetscapeGeometryOcclusionType occlusionType)
         {
             SetStreetscapeGeometryControllerOcclusionType(occlusionType);
