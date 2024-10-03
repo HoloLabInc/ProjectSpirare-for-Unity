@@ -24,6 +24,11 @@ namespace HoloLab.Spirare.Browser
             displaySettingsState.OnFarClipChanged += DisplaySettingsState_OnFarClipChanged;
         }
 
+        private void OnDestroy()
+        {
+            displaySettingsState.OnFarClipChanged -= DisplaySettingsState_OnFarClipChanged;
+        }
+
         private void DisplaySettingsState_OnFarClipChanged(float farClip)
         {
             SetFarClip(farClip);

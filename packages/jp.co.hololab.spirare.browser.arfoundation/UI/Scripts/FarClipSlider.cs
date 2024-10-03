@@ -32,6 +32,12 @@ namespace HoloLab.Spirare.Browser.ARFoundation
             farClipSlider.onValueChanged.AddListener(FarClipSlider_OnValueChanged);
         }
 
+        private void OnDestroy()
+        {
+            displaySettingsState.OnFarClipChanged -= DisplaySettingsState_OnFarClipChanged;
+            farClipSlider.onValueChanged.RemoveListener(FarClipSlider_OnValueChanged);
+        }
+
         private void DisplaySettingsState_OnFarClipChanged(float farClip)
         {
             UpdateSliderValue(farClip);
