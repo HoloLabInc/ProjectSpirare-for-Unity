@@ -28,6 +28,11 @@ namespace HoloLab.Spirare.Browser.ARFoundation
             displaySettingsState.OnOpacityChanged += DisplaySettingsState_OnOpacityChanged;
         }
 
+        private void OnDestroy()
+        {
+            displaySettingsState.OnOpacityChanged -= DisplaySettingsState_OnOpacityChanged;
+        }
+
         private void DisplaySettingsState_OnOpacityChanged(float opacity)
         {
             SetOpacity(opacity);

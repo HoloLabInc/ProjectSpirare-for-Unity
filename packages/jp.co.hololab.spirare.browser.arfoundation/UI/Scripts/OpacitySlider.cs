@@ -26,6 +26,13 @@ namespace HoloLab.Spirare.Browser.ARFoundation
             slider.onValueChanged.AddListener(OnValueChanged);
         }
 
+        private void OnDestroy()
+        {
+            displaySettingsState.OnOpacityChanged -= DisplaySettingsState_OnOpacityChanged;
+
+            slider.onValueChanged.RemoveListener(OnValueChanged);
+        }
+
         private void DisplaySettingsState_OnOpacityChanged(float opacity)
         {
             slider.value = Mathf.Clamp01(opacity);
