@@ -36,6 +36,7 @@ namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
         private void OnDestroy()
         {
             displaySettingsState.OnStreetscapeGeometryOcclusionChanged -= DisplaySettingsState_OnStreetscapeGeometryOcclusionChanged;
+            occulusionDropdown.onValueChanged.RemoveListener(OnValueChanged);
         }
 
         private void DisplaySettingsState_OnStreetscapeGeometryOcclusionChanged(StreetscapeGeometryOcclusionType occlusion)
