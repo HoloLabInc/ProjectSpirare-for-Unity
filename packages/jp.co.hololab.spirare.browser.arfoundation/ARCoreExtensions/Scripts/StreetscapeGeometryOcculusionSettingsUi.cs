@@ -3,14 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using static HoloLab.Spirare.Browser.DisplaySettingsState;
 
 namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
 {
-    public class StreetscapeGeometryOcculusionSettingsUi : MonoBehaviour
+    public class StreetscapeGeometryOcclusionSettingsUi : MonoBehaviour
     {
         [SerializeField]
-        private TMP_Dropdown occulusionDropdown = null;
+        [FormerlySerializedAs("occulusionDropdown")]
+        private TMP_Dropdown occlusionDropdown = null;
 
         [SerializeField]
         private DisplaySettingsState displaySettingsState;
@@ -30,13 +32,13 @@ namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
 
             displaySettingsState.OnStreetscapeGeometryOcclusionChanged += DisplaySettingsState_OnStreetscapeGeometryOcclusionChanged;
 
-            occulusionDropdown.onValueChanged.AddListener(OnValueChanged);
+            occlusionDropdown.onValueChanged.AddListener(OnValueChanged);
         }
 
         private void OnDestroy()
         {
             displaySettingsState.OnStreetscapeGeometryOcclusionChanged -= DisplaySettingsState_OnStreetscapeGeometryOcclusionChanged;
-            occulusionDropdown.onValueChanged.RemoveListener(OnValueChanged);
+            occlusionDropdown.onValueChanged.RemoveListener(OnValueChanged);
         }
 
         private void DisplaySettingsState_OnStreetscapeGeometryOcclusionChanged(StreetscapeGeometryOcclusionType occlusion)
@@ -55,7 +57,7 @@ namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
 
         private void UpdateDropdownOptions()
         {
-            occulusionDropdown.options = dropdownOptions.ConvertAll(option => new TMP_Dropdown.OptionData(option.DropdownLabel));
+            occlusionDropdown.options = dropdownOptions.ConvertAll(option => new TMP_Dropdown.OptionData(option.DropdownLabel));
 
             ChangeDropdownSelection(displaySettingsState.StreetscapeGeometryOcclusion);
         }
@@ -63,7 +65,7 @@ namespace HoloLab.Spirare.Browser.ARFoundation.ARCoreExtensions
         private void ChangeDropdownSelection(StreetscapeGeometryOcclusionType occlusion)
         {
             var index = dropdownOptions.FindIndex(option => option.Occlusion == occlusion);
-            occulusionDropdown.value = index;
+            occlusionDropdown.value = index;
         }
     }
 }
