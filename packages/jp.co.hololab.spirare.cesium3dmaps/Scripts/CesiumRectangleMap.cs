@@ -165,7 +165,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
             }
 
             LoadCenterPosition();
-            LoadNorthHeading();
+            LoadHeading();
             LoadScale();
             LoadAutoAdjustCenterHeight();
 
@@ -329,12 +329,12 @@ namespace HoloLab.Spirare.Cesium3DMaps
             PlayerPrefs.SetFloat(PlayerPrefs_HeadingKey, Heading);
         }
 
-        private void LoadNorthHeading()
+        private void LoadHeading()
         {
-            var northHeading = PlayerPrefs.GetFloat(PlayerPrefs_HeadingKey);
-            if (northHeading > 0)
+            var heading = PlayerPrefs.GetFloat(PlayerPrefs_HeadingKey);
+            if (heading > 0)
             {
-                Heading = northHeading;
+                Heading = heading;
             }
         }
 
