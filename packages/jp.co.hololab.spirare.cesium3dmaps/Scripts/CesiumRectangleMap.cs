@@ -90,6 +90,25 @@ namespace HoloLab.Spirare.Cesium3DMaps
         }
 
         [SerializeField]
+        [Tooltip("90 means the east is the forward direction.")]
+        private float heading;
+
+        public float Heading
+        {
+            get
+            {
+                return heading;
+            }
+            set
+            {
+                heading = value;
+                SaveHeading();
+                UpdateMap();
+                InvokeOnHeadingChanged(value);
+            }
+        }
+
+        [SerializeField]
         private bool autoAdjustCenterHeight = true;
 
         public bool AutoAdjustCenterHeight
@@ -126,10 +145,12 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
         private const string PlayerPrefs_CenterKey = "CesiumRectangleMap_Center";
         private const string PlayerPrefs_ScaleKey = "CesiumRectangleMap_Scale";
+        private const string PlayerPrefs_HeadingKey = "CesiumRectangleMap_Heading";
         private const string PlayerPrefs_AutoAdjustCenterHeightKey = "CesiumRectangleMap_AutoAdjustCenterHeight";
 
         public event Action<float> OnScaleChanged;
         public event Action<GeodeticPosition> OnCenterChanged;
+        public event Action<float> OnHeadingChanged;
         public event Action<(float MapSizeX, float MapSizeZ)> OnMapSizeChanged;
         public event Action<bool> OnAutoAdjustCenterHeightChanged;
 
@@ -144,6 +165,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
             }
 
             LoadCenterPosition();
+            LoadHeading();
             LoadScale();
             LoadAutoAdjustCenterHeight();
 
@@ -302,6 +324,20 @@ namespace HoloLab.Spirare.Cesium3DMaps
             Center = new GeodeticPosition(latitude, longitude, ellipsoidalHeight);
         }
 
+        private void SaveHeading()
+        {
+            PlayerPrefs.SetFloat(PlayerPrefs_HeadingKey, Heading);
+        }
+
+        private void LoadHeading()
+        {
+            var heading = PlayerPrefs.GetFloat(PlayerPrefs_HeadingKey);
+            if (heading > 0)
+            {
+                Heading = heading;
+            }
+        }
+
         private void SaveScale()
         {
             PlayerPrefs.SetFloat(PlayerPrefs_ScaleKey, Scale);
@@ -352,14 +388,24 @@ namespace HoloLab.Spirare.Cesium3DMaps
             foreach (var georeference in cesiumGeoreferences)
             {
                 georeference.SetOriginLongitudeLatitudeHeight(center.Longitude, center.Latitude, center.EllipsoidalHeight);
+                georeference.transform.rotation = Quaternion.AngleAxis(-heading, Vector3.up);
                 georeference.transform.localScale = scale * Vector3.one;
             }
         }
 
         private void UpdateCesiumGeodeticAreaExcluders()
         {
-            var upperLeftLonLatHeight = EnuToGeodetic(new EnuPosition(-mapSizeX / 2 / scale, mapSizeZ / 2 / scale, 0));
-            var lowerRightLonLatHeight = EnuToGeodetic(new EnuPosition(mapSizeX / 2 / scale, -mapSizeZ / 2 / scale, 0));
+            var halfX = mapSizeX / 2 / scale;
+            var halfZ = mapSizeZ / 2 / scale;
+
+            var theta = Mathf.Atan2(mapSizeZ, mapSizeX) + heading * Mathf.Deg2Rad;
+            var len = Mathf.Sqrt(halfX * halfX + halfZ * halfZ);
+
+            var upperLeftEnuPosition = new EnuPosition(-len * Mathf.Cos(theta), len * Mathf.Sin(theta), 0);
+            var lowerRightEnuPosition = new EnuPosition(-upperLeftEnuPosition.East, -upperLeftEnuPosition.North, 0);
+
+            var upperLeftLonLatHeight = EnuToGeodetic(upperLeftEnuPosition);
+            var lowerRightLonLatHeight = EnuToGeodetic(lowerRightEnuPosition);
 
             foreach (var cesiumGeodeticAreaExcluder in cesiumGeodeticAreaExcluders)
             {
@@ -368,6 +414,8 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
                 cesiumGeodeticAreaExcluder.LowerRightLongitude = lowerRightLonLatHeight.Longitude;
                 cesiumGeodeticAreaExcluder.LowerRightLatitude = lowerRightLonLatHeight.Latitude;
+
+                cesiumGeodeticAreaExcluder.NorthHeading = heading;
             }
         }
 
@@ -392,6 +440,18 @@ namespace HoloLab.Spirare.Cesium3DMaps
             try
             {
                 OnCenterChanged?.Invoke(center);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+        }
+
+        private void InvokeOnHeadingChanged(float heading)
+        {
+            try
+            {
+                OnHeadingChanged?.Invoke(heading);
             }
             catch (Exception ex)
             {
