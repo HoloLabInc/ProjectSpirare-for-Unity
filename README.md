@@ -2,17 +2,9 @@
 
 This repository contains Unity packages and applications for Project Spirare.
 
-## Project Spirare
+Please refer to the following documentation page for more details about Project Spirare.
 
-Project Spirare is a project that defines and implements a versatile format for describing 3D content.
-In this project, a file format called POML is defined.
-
-POML has the following features:
-
-- XML-based format
-- Ability to define the placement of files, such as 3D models, images, and videos
-- Independent of specific engines or applications
-- Loadable at runtime
+https://docs.spirare.hololab.co.jp/
 
 ## Unity Projects for Browser Applications
 
