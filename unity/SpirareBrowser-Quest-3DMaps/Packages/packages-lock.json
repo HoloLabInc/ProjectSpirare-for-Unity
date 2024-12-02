@@ -364,18 +364,18 @@
       "hash": "156a84363b5db486eb3f74bdbfb33daf714416ea"
     },
     "jp.co.hololab.positioningtools": {
-      "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools#v0.5.0-quest",
+      "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools#v0.8.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "accbf6b8efa16517c824358f10a53374c049ca9a"
+      "hash": "bb6df8f6b116bb6a7ed8debe45d2a8a69c4b0484"
     },
     "jp.co.hololab.positioningtools.geographiccoordinate": {
-      "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.geographiccoordinate#v0.5.0-quest",
+      "version": "https://github.com/HoloLabInc/PositioningTools-Unity.git?path=packages/jp.co.hololab.positioningtools.geographiccoordinate#v0.8.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "accbf6b8efa16517c824358f10a53374c049ca9a"
+      "hash": "bb6df8f6b116bb6a7ed8debe45d2a8a69c4b0484"
     },
     "jp.co.hololab.spirare": {
       "version": "file:../../../packages/jp.co.hololab.spirare",
