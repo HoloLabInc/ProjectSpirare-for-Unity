@@ -10,8 +10,6 @@ using Unity.Mathematics;
 using UnityEngine.VFX;
 using System.IO.Compression;
 using System.IO;
-using Codice.Client.Common.GameUI;
-using System.Security.Cryptography;
 
 namespace HoloLab.Spirare.Components.SplatVfx
 {
@@ -54,8 +52,10 @@ namespace HoloLab.Spirare.Components.SplatVfx
         {
             using var inputFileStream = new MemoryStream(spzBytes);
             using var gzipStream = new GZipStream(inputFileStream, CompressionMode.Decompress);
+            using var binaryReader = new BinaryReader(gzipStream);
 
-            if (SpzUtils.TryReadHeader(gzipStream, out var header) == false)
+            //if (SpzUtils.TryReadHeader(gzipStream, out var header) == false)
+            if (SpzUtils.TryReadHeader(binaryReader, out var header) == false)
             {
                 splatData = null;
                 return CreateSplatDataResultType.InvalidHeader;
@@ -67,22 +67,28 @@ namespace HoloLab.Spirare.Components.SplatVfx
                 return CreateSplatDataResultType.InvalidHeader;
             }
 
-            if (SpzUtils.TryReadBody(gzipStream, header, out var spzBody) == false)
+            //if (SpzUtils.TryReadBody(gzipStream, header, out var spzBody) == false)
+            if (SpzUtils.TryReadBody(binaryReader, header, out var spzBody) == false)
             {
                 splatData = null;
                 return CreateSplatDataResultType.InvalidBody;
             }
 
-            var data = ScriptableObject.CreateInstance<SplatData>();
+            splatData = ScriptableObject.CreateInstance<SplatData>();
 
-            var arrays = LoadDataArrays(spzBytes);
+            /*
+             var arrays = LoadDataArrays(spzBytes);
             data.PositionArray = arrays.position;
             data.AxisArray = arrays.axis;
             data.ColorArray = arrays.color;
             data.ReleaseGpuResources();
+            */
 
-            splatData = null;
-            return CreateSplatDataResultType.InvalidHeader;
+            splatData.PositionArray = spzBody.Positions;
+            splatData.AxisArray = spzBody.Axis;
+            splatData.ColorArray = spzBody.Colors;
+
+            return CreateSplatDataResultType.Success;
         }
 
         private static bool IsValidHeader(SpzHeader header)
@@ -161,11 +167,11 @@ namespace HoloLab.Spirare.Components.SplatVfx
 
         private static class SpzUtils
         {
-            public static bool TryReadHeader(GZipStream gzipStream, out SpzHeader header)
+            public static bool TryReadHeader(BinaryReader binaryReader, out SpzHeader header)
             {
                 try
                 {
-                    using var binaryReader = new BinaryReader(gzipStream);
+                    // using var binaryReader = new BinaryReader(gzipStream);
                     var magic = binaryReader.ReadUInt32();
                     var version = binaryReader.ReadUInt32();
                     var numPoints = binaryReader.ReadUInt32();
@@ -194,13 +200,22 @@ namespace HoloLab.Spirare.Components.SplatVfx
                 }
             }
 
-            public static bool TryReadBody(GZipStream gzipStream, SpzHeader header, out SpzBody body)
+            public static bool TryReadBody(BinaryReader binaryReader, SpzHeader header, out SpzBody body)
             {
                 try
                 {
-                    using var binaryReader = new BinaryReader(gzipStream);
+                    // using var binaryReader = new BinaryReader(gzipStream);
                     var positions = ReadPositions(binaryReader, header);
                     var colors = ReadColors(binaryReader, header);
+                    var axes = ReadAxes(binaryReader, header);
+
+                    body = new SpzBody()
+                    {
+                        Positions = positions,
+                        Colors = colors,
+                        Axis = axes
+                    };
+                    return true;
                 }
                 catch (Exception ex)
                 {
@@ -225,6 +240,16 @@ namespace HoloLab.Spirare.Components.SplatVfx
 
             private static Vector3 ReadPosition(BinaryReader binaryReader, float scale, byte[] bytes)
             {
+                static int Read24bInt(BinaryReader binaryReader, byte[] bytes)
+                {
+                    bytes[0] = binaryReader.ReadByte();
+                    bytes[1] = binaryReader.ReadByte();
+                    bytes[2] = binaryReader.ReadByte();
+                    bytes[3] = (bytes[2] & 0x80) == 0x80 ? (byte)0xff : (byte)0x00;
+
+                    return BitConverter.ToInt32(bytes, 0);
+                }
+
                 var x = Read24bInt(binaryReader, bytes) * scale;
                 var y = Read24bInt(binaryReader, bytes) * scale;
                 var z = Read24bInt(binaryReader, bytes) * scale;
@@ -232,18 +257,18 @@ namespace HoloLab.Spirare.Components.SplatVfx
                 return new Vector3(x, y, z);
             }
 
-            private static int Read24bInt(BinaryReader binaryReader, byte[] bytes)
-            {
-                bytes[0] = binaryReader.ReadByte();
-                bytes[1] = binaryReader.ReadByte();
-                bytes[2] = binaryReader.ReadByte();
-                bytes[3] = (bytes[2] & 0x80) == 0x80 ? (byte)0xff : (byte)0x00;
-
-                return BitConverter.ToInt32(bytes, 0);
-            }
-
             private static Color[] ReadColors(BinaryReader binaryReader, SpzHeader header)
             {
+                static byte ReadColorByte(BinaryReader binaryReader)
+                {
+                    var SH_C0 = 0.282f;
+                    var value = binaryReader.ReadByte();
+
+                    // The following implementation references Babylon.js.
+                    var color = Math.Clamp((byte)((value / 255f - SH_C0) * (1 + SH_C0 * 4) * 255), (byte)0, (byte)255);
+                    return color;
+                }
+
                 var alphas = ReadAlphas(binaryReader, header);
 
                 var colors = new Color[header.NumPoints];
@@ -259,16 +284,6 @@ namespace HoloLab.Spirare.Components.SplatVfx
                 return colors;
             }
 
-            private static byte ReadColorByte(BinaryReader binaryReader)
-            {
-                var SH_C0 = 0.282f;
-                var value = binaryReader.ReadByte();
-
-                // The following implementation references Babylon.js.
-                var color = Math.Clamp((byte)((value / 255f - SH_C0) * (1 + SH_C0 * 4) * 255), (byte)0, (byte)255);
-                return color;
-            }
-
             private static byte[] ReadAlphas(BinaryReader binaryReader, SpzHeader header)
             {
                 var alphas = new byte[header.NumPoints];
@@ -280,20 +295,41 @@ namespace HoloLab.Spirare.Components.SplatVfx
                 return alphas;
             }
 
-
             private static Vector3[] ReadAxes(BinaryReader binaryReader, SpzHeader header)
             {
+                var scales = ReadScales(binaryReader, header);
+
                 var positions = new Vector3[header.NumPoints * 3];
-                var bytes = new byte[4];
                 for (var i = 0; i < header.NumPoints; i++)
                 {
-                    // positions[i] = ReadPosition(binaryReader, positionScale, bytes);
+                    var scale = scales[i];
+                    positions[i * 3 + 0] = new Vector3(scale.x, 0, 0);
+                    positions[i * 3 + 1] = new Vector3(0, scale.y, 0);
+                    positions[i * 3 + 2] = new Vector3(0, 0, scale.z);
                 }
 
                 return positions;
             }
 
+            private static Vector3[] ReadScales(BinaryReader binaryReader, SpzHeader header)
+            {
+                static float ReadScale(BinaryReader binaryReader)
+                {
+                    var value = binaryReader.ReadByte();
+                    return Mathf.Exp(value / 16f - 10);
+                }
 
+                var scales = new Vector3[header.NumPoints];
+                for (var i = 0; i < header.NumPoints; i++)
+                {
+                    var x = ReadScale(binaryReader);
+                    var y = ReadScale(binaryReader);
+                    var z = ReadScale(binaryReader);
+                    scales[i] = new Vector3(x, y, z);
+                }
+
+                return scales;
+            }
         }
 
         private class SpzHeader
