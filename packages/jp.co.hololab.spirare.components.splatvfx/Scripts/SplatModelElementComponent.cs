@@ -25,6 +25,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
         private PointCloudPlyComponent pointCloudPrefab;
 
         private static readonly SplatVfxSplatLoader splatLoader = new SplatVfxSplatLoader();
+        private static readonly SplatVfxSpzLoader spzLoader = new SplatVfxSpzLoader();
         private static readonly SplatVfxPlyLoader splatPlyLoader = new SplatVfxPlyLoader();
         private static readonly PointCloudPlyLoader pointCloudPlyLoader = new PointCloudPlyLoader();
 
@@ -102,6 +103,13 @@ namespace HoloLab.Spirare.Components.SplatVfx
             {
                 case ".splat":
                     (success, modelObject) = await splatLoader.LoadAsync(transform, element.Src, splatPrefab, cancellationToken: cancellationToken);
+                    if (success)
+                    {
+                        modelType = ModelType.Splat;
+                    }
+                    break;
+                case ".spz":
+                    (success, modelObject) = await spzLoader.LoadAsync(transform, element.Src, splatPrefab, cancellationToken: cancellationToken);
                     if (success)
                     {
                         modelType = ModelType.Splat;
