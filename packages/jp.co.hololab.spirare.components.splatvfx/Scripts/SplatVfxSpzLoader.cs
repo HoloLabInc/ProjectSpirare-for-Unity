@@ -10,6 +10,8 @@ using Unity.Mathematics;
 using UnityEngine.VFX;
 using System.IO.Compression;
 using System.IO;
+using Codice.Client.Common.GameUI;
+using System.Security.Cryptography;
 
 namespace HoloLab.Spirare.Components.SplatVfx
 {
@@ -19,6 +21,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
         {
             Success,
             InvalidHeader,
+            InvalidBody,
         }
 
         public async Task<(bool Success, GameObject SplatObject)> LoadAsync(Transform parent, string src, VisualEffect splatPrefab,
@@ -64,6 +67,12 @@ namespace HoloLab.Spirare.Components.SplatVfx
                 return CreateSplatDataResultType.InvalidHeader;
             }
 
+            if (SpzUtils.TryReadBody(gzipStream, header, out var spzBody) == false)
+            {
+                splatData = null;
+                return CreateSplatDataResultType.InvalidBody;
+            }
+
             var data = ScriptableObject.CreateInstance<SplatData>();
 
             var arrays = LoadDataArrays(spzBytes);
@@ -72,7 +81,8 @@ namespace HoloLab.Spirare.Components.SplatVfx
             data.ColorArray = arrays.color;
             data.ReleaseGpuResources();
 
-            return data;
+            splatData = null;
+            return CreateSplatDataResultType.InvalidHeader;
         }
 
         private static bool IsValidHeader(SpzHeader header)
@@ -157,43 +167,13 @@ namespace HoloLab.Spirare.Components.SplatVfx
                 {
                     using var binaryReader = new BinaryReader(gzipStream);
                     var magic = binaryReader.ReadUInt32();
-                    Debug.Log(magic);
-                    /*
-                    if (magic != 0x5053474e)
-                    {
-                        Debug.LogError("Invalid magic number");
-                        header = null;
-                        return false;
-                    }
-                    */
-
-                    Debug.Log("magic number is correct");
-
                     var version = binaryReader.ReadUInt32();
-                    Debug.Log(version);
-
-                    /*
-                    if (version != 2)
-                    {
-                        Debug.LogError($"Version {version} is not supported");
-                        header = null;
-                        return false;
-                    }
-                    */
-
                     var numPoints = binaryReader.ReadUInt32();
                     var shDegree = binaryReader.ReadByte();
                     var fractionalBits = binaryReader.ReadByte();
                     var flags = binaryReader.ReadByte();
                     var reserved = binaryReader.ReadByte();
 
-                    /*
-                    if (reserved != 0)
-                    {
-                        Debug.LogError("Reserved must be 0");
-                        return false;
-                    }
-                    */
                     header = new SpzHeader()
                     {
                         Magic = magic,
@@ -213,6 +193,107 @@ namespace HoloLab.Spirare.Components.SplatVfx
                     return false;
                 }
             }
+
+            public static bool TryReadBody(GZipStream gzipStream, SpzHeader header, out SpzBody body)
+            {
+                try
+                {
+                    using var binaryReader = new BinaryReader(gzipStream);
+                    var positions = ReadPositions(binaryReader, header);
+                    var colors = ReadColors(binaryReader, header);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex);
+                    body = null;
+                    return false;
+                }
+            }
+
+            private static Vector3[] ReadPositions(BinaryReader binaryReader, SpzHeader header)
+            {
+                var positionScale = 1f / (1 << header.FractionalBits);
+                var positions = new Vector3[header.NumPoints];
+                var bytes = new byte[4];
+                for (var i = 0; i < header.NumPoints; i++)
+                {
+                    positions[i] = ReadPosition(binaryReader, positionScale, bytes);
+                }
+
+                return positions;
+            }
+
+            private static Vector3 ReadPosition(BinaryReader binaryReader, float scale, byte[] bytes)
+            {
+                var x = Read24bInt(binaryReader, bytes) * scale;
+                var y = Read24bInt(binaryReader, bytes) * scale;
+                var z = Read24bInt(binaryReader, bytes) * scale;
+
+                return new Vector3(x, y, z);
+            }
+
+            private static int Read24bInt(BinaryReader binaryReader, byte[] bytes)
+            {
+                bytes[0] = binaryReader.ReadByte();
+                bytes[1] = binaryReader.ReadByte();
+                bytes[2] = binaryReader.ReadByte();
+                bytes[3] = (bytes[2] & 0x80) == 0x80 ? (byte)0xff : (byte)0x00;
+
+                return BitConverter.ToInt32(bytes, 0);
+            }
+
+            private static Color[] ReadColors(BinaryReader binaryReader, SpzHeader header)
+            {
+                var alphas = ReadAlphas(binaryReader, header);
+
+                var colors = new Color[header.NumPoints];
+                for (var i = 0; i < header.NumPoints; i++)
+                {
+                    var r = ReadColorByte(binaryReader);
+                    var g = ReadColorByte(binaryReader);
+                    var b = ReadColorByte(binaryReader);
+                    var color = new Color(r, g, b, alphas[i]);
+                    colors[i] = color;
+                }
+
+                return colors;
+            }
+
+            private static byte ReadColorByte(BinaryReader binaryReader)
+            {
+                var SH_C0 = 0.282f;
+                var value = binaryReader.ReadByte();
+
+                // The following implementation references Babylon.js.
+                var color = Math.Clamp((byte)((value / 255f - SH_C0) * (1 + SH_C0 * 4) * 255), (byte)0, (byte)255);
+                return color;
+            }
+
+            private static byte[] ReadAlphas(BinaryReader binaryReader, SpzHeader header)
+            {
+                var alphas = new byte[header.NumPoints];
+                for (var i = 0; i < header.NumPoints; i++)
+                {
+                    alphas[i] = binaryReader.ReadByte();
+                }
+
+                return alphas;
+            }
+
+
+            private static Vector3[] ReadAxes(BinaryReader binaryReader, SpzHeader header)
+            {
+                var positions = new Vector3[header.NumPoints * 3];
+                var bytes = new byte[4];
+                for (var i = 0; i < header.NumPoints; i++)
+                {
+                    // positions[i] = ReadPosition(binaryReader, positionScale, bytes);
+                }
+
+                return positions;
+            }
+
+
         }
 
         private class SpzHeader
@@ -224,6 +305,13 @@ namespace HoloLab.Spirare.Components.SplatVfx
             public byte FractionalBits;
             public byte Flags;
             public byte Reserved;
+        }
+
+        private class SpzBody
+        {
+            public Vector3[] Positions;
+            public Vector3[] Axis;
+            public Color[] Colors;
         }
     }
 }

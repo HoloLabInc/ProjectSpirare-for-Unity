@@ -20,3 +20,5 @@ MonoBehaviour:
     modelElementObjectFactory: {fileID: 11400000, guid: 895906503dee8ef4099973ada1a5ac60, type: 2}
   - extension: .ply
     modelElementObjectFactory: {fileID: 11400000, guid: d0e8b19a8af999b4dbc1b646bab8b09f, type: 2}
+  - extension: .spz
+    modelElementObjectFactory: {fileID: 11400000, guid: 895906503dee8ef4099973ada1a5ac60, type: 2}
