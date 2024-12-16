@@ -54,7 +54,6 @@ namespace HoloLab.Spirare.Components.SplatVfx
             using var gzipStream = new GZipStream(inputFileStream, CompressionMode.Decompress);
             using var binaryReader = new BinaryReader(gzipStream);
 
-            //if (SpzUtils.TryReadHeader(gzipStream, out var header) == false)
             if (SpzUtils.TryReadHeader(binaryReader, out var header) == false)
             {
                 splatData = null;
@@ -67,7 +66,6 @@ namespace HoloLab.Spirare.Components.SplatVfx
                 return CreateSplatDataResultType.InvalidHeader;
             }
 
-            //if (SpzUtils.TryReadBody(gzipStream, header, out var spzBody) == false)
             if (SpzUtils.TryReadBody(binaryReader, header, out var spzBody) == false)
             {
                 splatData = null;
@@ -171,7 +169,6 @@ namespace HoloLab.Spirare.Components.SplatVfx
             {
                 try
                 {
-                    // using var binaryReader = new BinaryReader(gzipStream);
                     var magic = binaryReader.ReadUInt32();
                     var version = binaryReader.ReadUInt32();
                     var numPoints = binaryReader.ReadUInt32();
@@ -204,7 +201,6 @@ namespace HoloLab.Spirare.Components.SplatVfx
             {
                 try
                 {
-                    // using var binaryReader = new BinaryReader(gzipStream);
                     var positions = ReadPositions(binaryReader, header);
                     var colors = ReadColors(binaryReader, header);
                     var axes = ReadAxes(binaryReader, header);
@@ -259,13 +255,13 @@ namespace HoloLab.Spirare.Components.SplatVfx
 
             private static Color[] ReadColors(BinaryReader binaryReader, SpzHeader header)
             {
-                static byte ReadColorByte(BinaryReader binaryReader)
+                static float ReadColorByte(BinaryReader binaryReader)
                 {
                     var SH_C0 = 0.282f;
                     var value = binaryReader.ReadByte();
 
                     // The following implementation references Babylon.js.
-                    var color = Math.Clamp((byte)((value / 255f - SH_C0) * (1 + SH_C0 * 4) * 255), (byte)0, (byte)255);
+                    var color = Math.Clamp((value / 255f - SH_C0) * (1 + SH_C0 * 4), 0f, 1f);
                     return color;
                 }
 
@@ -284,12 +280,12 @@ namespace HoloLab.Spirare.Components.SplatVfx
                 return colors;
             }
 
-            private static byte[] ReadAlphas(BinaryReader binaryReader, SpzHeader header)
+            private static float[] ReadAlphas(BinaryReader binaryReader, SpzHeader header)
             {
-                var alphas = new byte[header.NumPoints];
+                var alphas = new float[header.NumPoints];
                 for (var i = 0; i < header.NumPoints; i++)
                 {
-                    alphas[i] = binaryReader.ReadByte();
+                    alphas[i] = binaryReader.ReadByte() / 255f;
                 }
 
                 return alphas;
