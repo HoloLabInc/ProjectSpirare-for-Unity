@@ -6,6 +6,7 @@ using SplatVfx;
 using UnityEngine.VFX;
 using System.IO.Compression;
 using System.IO;
+using Unity.Mathematics;
 
 namespace HoloLab.Spirare.Components.SplatVfx
 {
@@ -193,7 +194,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
                 var y = Read24bInt(binaryReader, bytes) * scale;
                 var z = Read24bInt(binaryReader, bytes) * scale;
 
-                return new Vector3(x, y, z);
+                return new Vector3(x, y, -z);
             }
 
             private static Color[] ReadColors(BinaryReader binaryReader, SpzHeader header)
@@ -238,16 +239,17 @@ namespace HoloLab.Spirare.Components.SplatVfx
             {
                 var scales = ReadScales(binaryReader, header);
 
-                var positions = new Vector3[header.NumPoints * 3];
+                var axes = new Vector3[header.NumPoints * 3];
                 for (var i = 0; i < header.NumPoints; i++)
                 {
+                    var quaternion = ReadQuaternion(binaryReader);
                     var scale = scales[i];
-                    positions[i * 3 + 0] = new Vector3(scale.x, 0, 0);
-                    positions[i * 3 + 1] = new Vector3(0, scale.y, 0);
-                    positions[i * 3 + 2] = new Vector3(0, 0, scale.z);
+                    axes[i * 3 + 0] = math.mul(quaternion, math.float3(scale.x, 0, 0));
+                    axes[i * 3 + 1] = math.mul(quaternion, math.float3(0, scale.y, 0));
+                    axes[i * 3 + 2] = math.mul(quaternion, math.float3(0, 0, scale.z));
                 }
 
-                return positions;
+                return axes;
             }
 
             private static Vector3[] ReadScales(BinaryReader binaryReader, SpzHeader header)
@@ -268,6 +270,22 @@ namespace HoloLab.Spirare.Components.SplatVfx
                 }
 
                 return scales;
+            }
+
+            private static quaternion ReadQuaternion(BinaryReader binaryReader)
+            {
+                static float ReadQuaternionValue(BinaryReader binaryReader)
+                {
+                    var value = binaryReader.ReadByte();
+                    return value / 127.5f - 1f;
+                }
+
+                var x = ReadQuaternionValue(binaryReader);
+                var y = ReadQuaternionValue(binaryReader);
+                var z = ReadQuaternionValue(binaryReader);
+                var w = math.sqrt(math.max(0f, 1 - x * x - y * y - z * z));
+
+                return new quaternion(x, y, -z, -w);
             }
         }
 
