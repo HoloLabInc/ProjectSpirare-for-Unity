@@ -388,7 +388,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
             foreach (var georeference in cesiumGeoreferences)
             {
                 georeference.SetOriginLongitudeLatitudeHeight(center.Longitude, center.Latitude, center.EllipsoidalHeight);
-                georeference.transform.rotation = Quaternion.AngleAxis(-heading, Vector3.up);
+                georeference.transform.localRotation = Quaternion.AngleAxis(-heading, Vector3.up);
                 georeference.transform.localScale = scale * Vector3.one;
             }
         }
