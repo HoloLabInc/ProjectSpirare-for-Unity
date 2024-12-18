@@ -1,29 +1,15 @@
-﻿using Cysharp.Threading.Tasks;
-using SplatVfx;
+﻿using SplatVfx;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.VFX;
-using UnityEngine.VFX.Utility;
 
 namespace HoloLab.Spirare.Components.SplatVfx
 {
-    internal class SplatVfxPlyLoader
+    internal class SplatVfxPlyLoader : SplatLoaderBase
     {
         private readonly SplatVfxPlyParser parser = new SplatVfxPlyParser();
-
-        public enum LoadingStatus
-        {
-            None,
-            DataFetching,
-            ModelLoading,
-            ModelInstantiating,
-            Loaded,
-            DataFetchError,
-            ModelLoadError,
-            ModelInstantiateError
-        }
 
         public enum LoadErrorType
         {
@@ -86,35 +72,6 @@ namespace HoloLab.Spirare.Components.SplatVfx
 
             return splatData;
         }
-
-        private static async UniTask<(bool Success, byte[] Data)> FetchData(string src, Action<LoadingStatus> onLoadingStatusChanged)
-        {
-            InvokeLoadingStatusChanged(LoadingStatus.DataFetching, onLoadingStatusChanged);
-
-            var result = await SpirareHttpClient.Instance.GetByteArrayAsync(src, enableCache: true);
-            if (result.Success)
-            {
-                return (true, result.Data);
-            }
-            else
-            {
-                InvokeLoadingStatusChanged(LoadingStatus.DataFetchError, onLoadingStatusChanged);
-                Debug.LogWarning($"Failed to get model data: {src}");
-
-                return (false, null);
-            }
-        }
-
-        private static void InvokeLoadingStatusChanged(LoadingStatus status, Action<LoadingStatus> onLoadingStatusChanged)
-        {
-            try
-            {
-                onLoadingStatusChanged?.Invoke(status);
-            }
-            catch (Exception e)
-            {
-                Debug.LogException(e);
-            }
-        }
     }
 }
+

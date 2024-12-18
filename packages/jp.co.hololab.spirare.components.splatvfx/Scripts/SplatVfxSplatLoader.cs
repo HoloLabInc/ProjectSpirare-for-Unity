@@ -2,30 +2,16 @@
 using UnityEngine;
 using System.Threading;
 using System;
-using Cysharp.Threading.Tasks;
 using SplatVfx;
 using System.Runtime.InteropServices;
 using Unity.Burst;
 using Unity.Mathematics;
-using UnityEngine.VFX.Utility;
 using UnityEngine.VFX;
 
 namespace HoloLab.Spirare.Components.SplatVfx
 {
-    internal class SplatVfxSplatLoader
+    internal class SplatVfxSplatLoader : SplatLoaderBase
     {
-        public enum LoadingStatus
-        {
-            None,
-            DataFetching,
-            ModelLoading,
-            ModelInstantiating,
-            Loaded,
-            DataFetchError,
-            ModelLoadError,
-            ModelInstantiateError
-        }
-
         public async Task<(bool Success, GameObject SplatObject)> LoadAsync(Transform parent, string src, VisualEffect splatPrefab,
             Action<LoadingStatus> onLoadingStatusChanged = null,
             CancellationToken cancellationToken = default)
@@ -108,36 +94,6 @@ namespace HoloLab.Spirare.Components.SplatVfx
             axis2 = math.mul(q, math.float3(0, src.sy, 0));
             axis3 = math.mul(q, math.float3(0, 0, src.sz));
             color = (Vector4)math.float4(src.r, src.g, src.b, src.a) / 255;
-        }
-
-        private static async UniTask<(bool Success, byte[] Data)> FetchData(string src, Action<LoadingStatus> onLoadingStatusChanged)
-        {
-            InvokeLoadingStatusChanged(LoadingStatus.DataFetching, onLoadingStatusChanged);
-
-            var result = await SpirareHttpClient.Instance.GetByteArrayAsync(src, enableCache: true);
-            if (result.Success)
-            {
-                return (true, result.Data);
-            }
-            else
-            {
-                InvokeLoadingStatusChanged(LoadingStatus.DataFetchError, onLoadingStatusChanged);
-                Debug.LogWarning($"Failed to get model data: {src}");
-
-                return (false, null);
-            }
-        }
-
-        private static void InvokeLoadingStatusChanged(LoadingStatus status, Action<LoadingStatus> onLoadingStatusChanged)
-        {
-            try
-            {
-                onLoadingStatusChanged?.Invoke(status);
-            }
-            catch (Exception e)
-            {
-                Debug.LogException(e);
-            }
         }
     }
 }
