@@ -21,7 +21,9 @@ Move the `Library/PackageCache/com.cesium.unity@x.x.x` folder into the `Packages
 Change the codes by executing the following commands.
 
 ```bash
-cd Packages/com.cesium.unity@1.11.1/Runtime/generated/Reinterop/Reinterop.RoslynSourceGenerator
+cd Packages
+cd "$(ls -d com.cesium.unity@* | sort -V | tail -n 1)"
+cd Runtime/generated/Reinterop.RoslynSourceGenerator
 sed -i '' 's/UNITY_IOS/(UNITY_IOS || UNITY_VISIONOS)/g' *.cs
 sed -i '' 's/makeNoLongerReadable != 0/false/g' ReinteropInitializer.cs
 ```
