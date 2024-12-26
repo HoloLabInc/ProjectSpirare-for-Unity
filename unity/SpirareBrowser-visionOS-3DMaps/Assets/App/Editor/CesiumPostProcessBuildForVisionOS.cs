@@ -5,6 +5,7 @@ using UnityEditor.iOS.Xcode;
 using System.IO;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using System.Linq;
 
 namespace HoloLab.Spirare.Browser.VisionOS3DMaps.Editor
 {
@@ -36,6 +37,15 @@ namespace HoloLab.Spirare.Browser.VisionOS3DMaps.Editor
             var targetGuid = proj.GetUnityFrameworkTargetGuid();
 
             var libraryFiles = Directory.GetFiles(librariesPath, "*.a", SearchOption.AllDirectories);
+            if (libraryFiles.Any(x => Path.GetFileName(x) == "libjpeg.a") && libraryFiles.Any(x => Path.GetFileName(x) == "libturbojpeg.a"))
+            {
+                libraryFiles = libraryFiles.Where(x => Path.GetFileName(x) != "libjpeg.a").ToArray();
+            }
+            if (libraryFiles.Any(x => Path.GetFileName(x) == "libwebpdecoder.a") && libraryFiles.Any(x => Path.GetFileName(x) == "libwebp.a"))
+            {
+                libraryFiles = libraryFiles.Where(x => Path.GetFileName(x) != "libwebpdecoder.a").ToArray();
+            }
+
             foreach (var libraryFile in libraryFiles)
             {
                 var relativePath = Path.GetRelativePath(pathToBuiltProject, libraryFile);
