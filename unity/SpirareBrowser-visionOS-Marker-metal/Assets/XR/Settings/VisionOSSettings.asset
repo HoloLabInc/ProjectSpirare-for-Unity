@@ -17,7 +17,7 @@ MonoBehaviour:
   m_WorldSensingUsageDescription: Use world sensing
   m_RuntimeSettings: {fileID: 11400000, guid: 79b6defbe573941ff9dc580a201ec70d, type: 2}
   m_UpperLimbVisibility: 0
-  m_FoveatedRendering: 1
+  m_FoveatedRendering: 0
   m_MetalImmersionStyle: 0
   m_RealityKitImmersionStyle: 0
   m_MetalImmersiveOverlays: 0
