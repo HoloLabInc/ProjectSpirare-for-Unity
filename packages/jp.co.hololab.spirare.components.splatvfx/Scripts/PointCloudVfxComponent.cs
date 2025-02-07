@@ -19,9 +19,6 @@ namespace HoloLab.Spirare.Components.SplatVfx
         }
 
         [SerializeField]
-        private VisualEffectAsset vfxAsset;
-
-        [SerializeField]
         private List<VfxAssetWithCapacity> vfxAssets;
 
         private VisualEffect vfx;
@@ -29,7 +26,6 @@ namespace HoloLab.Spirare.Components.SplatVfx
         private void Awake()
         {
             vfx = GetComponent<VisualEffect>();
-            // vfx.visualEffectAsset = vfxAsset;
         }
 
         public void SetBakedPointCloud(BakedPointCloud bakedPointCloud)
