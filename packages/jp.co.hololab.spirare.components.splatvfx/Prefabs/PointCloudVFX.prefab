@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5691634656483946303}
   - component: {fileID: 6185204825945116523}
   - component: {fileID: 7662497544640011337}
+  - component: {fileID: 8023050393926205208}
   m_Layer: 0
   m_Name: PointCloudVFX
   m_TagString: Untagged
@@ -28,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: -1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -41,7 +42,7 @@ VisualEffect:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 97667008718604732}
   m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: 5e04bd3ebd402824fa2f04169c3fd71f, type: 3}
+  m_Asset: {fileID: 0}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
   m_StartSeed: 0
@@ -111,3 +112,37 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &8023050393926205208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97667008718604732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08c4430b7d7200942a9e51ffd71e3ca3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vfxAsset: {fileID: 8926484042661614526, guid: 5e04bd3ebd402824fa2f04169c3fd71f, type: 3}
+  vfxAssets:
+  - Capacity: 65536
+    VfxAsset: {fileID: 8926484042661614526, guid: 132e9f954b0705e41894fbcd77aafb83, type: 3}
+  - Capacity: 131072
+    VfxAsset: {fileID: 8926484042661614526, guid: d71db066ead90a448ac7b70f39158b88, type: 3}
+  - Capacity: 262144
+    VfxAsset: {fileID: 8926484042661614526, guid: d0cfbb15778c43d4ca0e69ddc55682d7, type: 3}
+  - Capacity: 524288
+    VfxAsset: {fileID: 8926484042661614526, guid: 5ed1f7199b437ef4eaa2d91ceef2ec7c, type: 3}
+  - Capacity: 1048576
+    VfxAsset: {fileID: 8926484042661614526, guid: dc8b7f17baed8c2458487b3ff9bb1f96, type: 3}
+  - Capacity: 2097152
+    VfxAsset: {fileID: 8926484042661614526, guid: 6f76013ba98d1264e99588aa57ac75df, type: 3}
+  - Capacity: 4194304
+    VfxAsset: {fileID: 8926484042661614526, guid: 54c9067801b98414e90c21ba6ca1b96d, type: 3}
+  - Capacity: 8388608
+    VfxAsset: {fileID: 8926484042661614526, guid: 0b720671649150b4499ee5ec1c04802e, type: 3}
+  - Capacity: 16777216
+    VfxAsset: {fileID: 8926484042661614526, guid: a56945777e7f18c48afb3d61b76e90d0, type: 3}
+  - Capacity: 33554432
+    VfxAsset: {fileID: 8926484042661614526, guid: bcdbf6219f4af3841bb60cb43d5b7d4e, type: 3}

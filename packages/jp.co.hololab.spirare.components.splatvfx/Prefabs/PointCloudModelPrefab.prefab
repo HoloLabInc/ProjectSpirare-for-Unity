@@ -183,5 +183,5 @@ MonoBehaviour:
   renderMode: 2
   meshFilter: {fileID: 7173623183370951692}
   pointCloudRenderer: {fileID: 3529769441840722230}
-  pointCloudVfxPrefab: {fileID: 6185204825945116523, guid: a75e52cfc2c35524abfdcec3679355f1, type: 3}
+  pointCloudVfxPrefab: {fileID: 8023050393926205208, guid: a75e52cfc2c35524abfdcec3679355f1, type: 3}
   pointCloudRenderSettings: {fileID: 11400000, guid: ded41cd6464be1743836dcb24d3829f9, type: 2}
