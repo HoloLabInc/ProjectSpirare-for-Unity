@@ -137,6 +137,25 @@ namespace HoloLab.Spirare.Pcx
             }
         }
 
+        public BakedPointCloud ImportAsBakedPointCloud(string path)
+        {
+            try
+            {
+                var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+                var header = ReadDataHeader(new StreamReader(stream));
+                var body = ReadDataBody(header, new BinaryReader(stream));
+                var data = ScriptableObject.CreateInstance<BakedPointCloud>();
+                data.Initialize(body.vertices, body.colors);
+                data.name = Path.GetFileNameWithoutExtension(path);
+                return data;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("Failed importing " + path + ". " + e.Message);
+                return null;
+            }
+        }
+
         DataHeader ReadDataHeader(StreamReader reader)
         {
             var data = new DataHeader();
