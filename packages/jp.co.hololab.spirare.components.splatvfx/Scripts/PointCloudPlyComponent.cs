@@ -1,11 +1,12 @@
 ﻿using HoloLab.Spirare.Pcx;
 using UnityEngine;
+using UnityEngine.VFX;
 
 namespace HoloLab.Spirare.Components.SplatVfx
 {
     public class PointCloudPlyComponent : MonoBehaviour
     {
-        private enum RenderMode { Mesh, PointCloud }
+        private enum RenderMode { Mesh, PointCloud, VFXGraph }
 
         [SerializeField]
         private RenderMode renderMode = RenderMode.PointCloud;
@@ -17,22 +18,32 @@ namespace HoloLab.Spirare.Components.SplatVfx
         private PointCloudRenderer pointCloudRenderer;
 
         [SerializeField]
+        private VisualEffect pointCloudVfxPrefab;
+
+        [SerializeField]
         private PointCloudRenderSettings pointCloudRenderSettings;
 
         private MeshRenderer meshRenderer;
         private Material meshMaterial;
+        private VisualEffect pointCloudVfx;
 
         private void Awake()
         {
+            if (renderMode != RenderMode.PointCloud)
+            {
+                GameObject.Destroy(pointCloudRenderer);
+            }
+
+            if (renderMode != RenderMode.Mesh)
+            {
+                GameObject.Destroy(meshFilter.gameObject);
+            }
+
             switch (renderMode)
             {
                 case RenderMode.Mesh:
                     meshRenderer = meshFilter.GetComponent<MeshRenderer>();
                     meshMaterial = meshRenderer.material;
-                    GameObject.Destroy(pointCloudRenderer);
-                    break;
-                case RenderMode.PointCloud:
-                    GameObject.Destroy(meshFilter.gameObject);
                     break;
             }
 
@@ -57,6 +68,22 @@ namespace HoloLab.Spirare.Components.SplatVfx
                     var cloud = importer.ImportAsPointCloudData(filePath);
                     pointCloudRenderer.sourceData = cloud;
                     return cloud != null;
+                case RenderMode.VFXGraph:
+                    var bakedCloud = importer.ImportAsBakedPointCloud(filePath);
+                    if (bakedCloud == null)
+                    {
+                        return false;
+                    }
+
+                    pointCloudVfx = Instantiate(pointCloudVfxPrefab, transform);
+                    pointCloudVfx.SetTexture("PositionMap", bakedCloud.positionMap);
+                    pointCloudVfx.SetTexture("ColorMap", bakedCloud.colorMap);
+
+                    if (pointCloudRenderSettings != null)
+                    {
+                        PointCloudRenderSettings_OnPointSizeChanged(pointCloudRenderSettings.PointSize);
+                    }
+                    return true;
             }
             return false;
         }
@@ -70,6 +97,9 @@ namespace HoloLab.Spirare.Components.SplatVfx
                     break;
                 case RenderMode.PointCloud:
                     pointCloudRenderer.pointSize = pointSize / 2;
+                    break;
+                case RenderMode.VFXGraph:
+                    pointCloudVfx.SetFloat("PointSize", pointSize);
                     break;
             }
         }
