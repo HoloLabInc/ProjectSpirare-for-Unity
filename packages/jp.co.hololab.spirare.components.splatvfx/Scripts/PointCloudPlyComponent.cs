@@ -103,8 +103,16 @@ namespace HoloLab.Spirare.Components.SplatVfx
                 case RenderMode.VFXGraph:
                     if (pointCloudVfx != null)
                     {
-                        // pointCloudVfx.SetFloat("PointSize", pointSize);
-                        // TODO
+                        if (pointSize == 0)
+                        {
+                            pointCloudVfx.SetFloat("PointSize", 0.001f);
+                            pointCloudVfx.SetBool("ScreenSpaceSizeEnabled", true);
+                        }
+                        else
+                        {
+                            pointCloudVfx.SetFloat("PointSize", pointSize);
+                            pointCloudVfx.SetBool("ScreenSpaceSizeEnabled", false);
+                        }
                     }
                     break;
             }
