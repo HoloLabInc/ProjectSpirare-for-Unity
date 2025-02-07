@@ -1,6 +1,5 @@
 ﻿using HoloLab.Spirare.Pcx;
 using UnityEngine;
-using UnityEngine.VFX;
 
 namespace HoloLab.Spirare.Components.SplatVfx
 {
@@ -18,14 +17,14 @@ namespace HoloLab.Spirare.Components.SplatVfx
         private PointCloudRenderer pointCloudRenderer;
 
         [SerializeField]
-        private VisualEffect pointCloudVfxPrefab;
+        private PointCloudVfxComponent pointCloudVfxPrefab;
 
         [SerializeField]
         private PointCloudRenderSettings pointCloudRenderSettings;
 
         private MeshRenderer meshRenderer;
         private Material meshMaterial;
-        private VisualEffect pointCloudVfx;
+        private PointCloudVfxComponent pointCloudVfx;
 
         private void Awake()
         {
@@ -76,13 +75,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
                     }
 
                     pointCloudVfx = Instantiate(pointCloudVfxPrefab, transform);
-                    pointCloudVfx.transform.localScale = new Vector3(-1, 1, 1);
-                    pointCloudVfx.SetUInt("PointCount", (uint)bakedCloud.pointCount);
-                    var bounds = bakedCloud.bounds;
-                    pointCloudVfx.SetVector3("BoundsCenter", bounds.center);
-                    pointCloudVfx.SetVector3("BoundsSize", bounds.size);
-                    pointCloudVfx.SetTexture("PositionMap", bakedCloud.positionMap);
-                    pointCloudVfx.SetTexture("ColorMap", bakedCloud.colorMap);
+                    pointCloudVfx.SetBakedPointCloud(bakedCloud);
 
                     if (pointCloudRenderSettings != null)
                     {
@@ -106,16 +99,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
                 case RenderMode.VFXGraph:
                     if (pointCloudVfx != null)
                     {
-                        if (pointSize == 0)
-                        {
-                            pointCloudVfx.SetFloat("PointSize", 0.001f);
-                            pointCloudVfx.SetBool("ScreenSpaceSizeEnabled", true);
-                        }
-                        else
-                        {
-                            pointCloudVfx.SetFloat("PointSize", pointSize);
-                            pointCloudVfx.SetBool("ScreenSpaceSizeEnabled", false);
-                        }
+                        pointCloudVfx.SetPointSize(pointSize);
                     }
                     break;
             }
