@@ -78,6 +78,9 @@ namespace HoloLab.Spirare.Components.SplatVfx
                     pointCloudVfx = Instantiate(pointCloudVfxPrefab, transform);
                     pointCloudVfx.transform.localScale = new Vector3(-1, 1, 1);
                     pointCloudVfx.SetUInt("PointCount", (uint)bakedCloud.pointCount);
+                    var bounds = bakedCloud.bounds;
+                    pointCloudVfx.SetVector3("BoundsCenter", bounds.center);
+                    pointCloudVfx.SetVector3("BoundsSize", bounds.size);
                     pointCloudVfx.SetTexture("PositionMap", bakedCloud.positionMap);
                     pointCloudVfx.SetTexture("ColorMap", bakedCloud.colorMap);
 

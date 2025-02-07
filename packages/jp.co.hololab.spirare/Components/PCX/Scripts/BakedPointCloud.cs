@@ -7,6 +7,7 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HoloLab.Spirare.Pcx
 {
@@ -24,6 +25,8 @@ namespace HoloLab.Spirare.Pcx
         /// Color map texture
         public Texture2D colorMap { get { return _colorMap; } }
 
+        public Bounds bounds { get { return _bounds; } }
+
         #endregion
 
         #region Serialized data members
@@ -31,12 +34,15 @@ namespace HoloLab.Spirare.Pcx
         [SerializeField] int _pointCount;
         [SerializeField] Texture2D _positionMap;
         [SerializeField] Texture2D _colorMap;
+        [SerializeField] Bounds _bounds;
 
         #endregion
 
         public void Initialize(List<Vector3> positions, List<Color32> colors)
         {
             _pointCount = positions.Count;
+
+            _bounds = CalcBounds(positions);
 
             var width = Mathf.CeilToInt(Mathf.Sqrt(_pointCount));
 
@@ -61,13 +67,28 @@ namespace HoloLab.Spirare.Pcx
                     _positionMap.SetPixel(x, y, new Color(p.x, p.y, p.z));
                     _colorMap.SetPixel(x, y, colors[i]);
 
-                    i1 ++;
+                    i1++;
                     i2 += 132049U; // prime
                 }
             }
 
             _positionMap.Apply(false, true);
             _colorMap.Apply(false, true);
+        }
+
+        private static Bounds CalcBounds(List<Vector3> positions)
+        {
+            var minX = positions.Min(p => p.x);
+            var minY = positions.Min(p => p.y);
+            var minZ = positions.Min(p => p.z);
+
+            var maxX = positions.Max(p => p.x);
+            var maxY = positions.Max(p => p.y);
+            var maxZ = positions.Max(p => p.z);
+
+            var bounds = new Bounds();
+            bounds.SetMinMax(new Vector3(minX, minY, minZ), new Vector3(maxX, maxY, maxZ));
+            return bounds;
         }
     }
 }
