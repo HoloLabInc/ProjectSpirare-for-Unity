@@ -31,7 +31,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
         {
             if (renderMode != RenderMode.PointCloud)
             {
-                GameObject.Destroy(pointCloudRenderer);
+                GameObject.Destroy(pointCloudRenderer.gameObject);
             }
 
             if (renderMode != RenderMode.Mesh)
@@ -76,6 +76,8 @@ namespace HoloLab.Spirare.Components.SplatVfx
                     }
 
                     pointCloudVfx = Instantiate(pointCloudVfxPrefab, transform);
+                    pointCloudVfx.transform.localScale = new Vector3(-1, 1, 1);
+                    pointCloudVfx.SetUInt("PointCount", (uint)bakedCloud.pointCount);
                     pointCloudVfx.SetTexture("PositionMap", bakedCloud.positionMap);
                     pointCloudVfx.SetTexture("ColorMap", bakedCloud.colorMap);
 
@@ -99,7 +101,11 @@ namespace HoloLab.Spirare.Components.SplatVfx
                     pointCloudRenderer.pointSize = pointSize / 2;
                     break;
                 case RenderMode.VFXGraph:
-                    pointCloudVfx.SetFloat("PointSize", pointSize);
+                    if (pointCloudVfx != null)
+                    {
+                        // pointCloudVfx.SetFloat("PointSize", pointSize);
+                        // TODO
+                    }
                     break;
             }
         }
