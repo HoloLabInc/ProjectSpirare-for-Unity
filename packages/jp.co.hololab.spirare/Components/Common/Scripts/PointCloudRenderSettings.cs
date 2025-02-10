@@ -27,7 +27,33 @@ namespace HoloLab.Spirare
             }
         }
 
+        private readonly List<Component> referrers = new List<Component>();
+        public List<Component> Referrers => referrers;
+
         public event Action<float> OnPointSizeChanged;
+        public event Action<List<Component>> OnReferrersChanged;
+
+        private void OnEnable()
+        {
+            runtimePointSize = pointSize;
+        }
+
+        public void AddReferrer(Component referrer)
+        {
+            if (referrers.Contains(referrer) == false)
+            {
+                referrers.Add(referrer);
+                InvokeOnReferrersChanged();
+            }
+        }
+
+        public void RemoveReferrer(Component referrer)
+        {
+            if (referrers.Remove(referrer))
+            {
+                InvokeOnReferrersChanged();
+            }
+        }
 
         private void InvokeOnPointSizeChanged(float size)
         {
@@ -41,9 +67,16 @@ namespace HoloLab.Spirare
             }
         }
 
-        private void OnEnable()
+        private void InvokeOnReferrersChanged()
         {
-            runtimePointSize = pointSize;
+            try
+            {
+                OnReferrersChanged?.Invoke(referrers);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
         }
     }
 }

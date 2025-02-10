@@ -50,6 +50,22 @@ namespace HoloLab.Spirare.Components.SplatVfx
             {
                 PointCloudRenderSettings_OnPointSizeChanged(pointCloudRenderSettings.PointSize);
                 pointCloudRenderSettings.OnPointSizeChanged += PointCloudRenderSettings_OnPointSizeChanged;
+
+                if (renderMode == RenderMode.VFXGraph)
+                {
+                    pointCloudRenderSettings.AddReferrer(this);
+                }
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (pointCloudRenderSettings != null)
+            {
+                if (renderMode == RenderMode.VFXGraph)
+                {
+                    pointCloudRenderSettings.RemoveReferrer(this);
+                }
             }
         }
 
