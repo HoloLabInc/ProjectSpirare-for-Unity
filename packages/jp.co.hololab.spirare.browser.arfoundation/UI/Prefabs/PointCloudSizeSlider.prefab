@@ -96,13 +96,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1260784548756487786, guid: c212f73a5af60e6429c742b8d9d52366, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 2382838639567678584, guid: c212f73a5af60e6429c742b8d9d52366, type: 3}
       propertyPath: m_text
       value: Point Cloud Point Size
       objectReference: {fileID: 0}
+    - target: {fileID: 2382838639567678584, guid: c212f73a5af60e6429c742b8d9d52366, type: 3}
+      propertyPath: m_fontSize
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2382838639567678584, guid: c212f73a5af60e6429c742b8d9d52366, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7176769648654681139, guid: c212f73a5af60e6429c742b8d9d52366, type: 3}
       propertyPath: m_Material
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343195459010913511, guid: c212f73a5af60e6429c742b8d9d52366, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 8620196537449864022, guid: c212f73a5af60e6429c742b8d9d52366, type: 3}
       propertyPath: m_AnchorMax.y

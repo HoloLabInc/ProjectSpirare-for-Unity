@@ -52,7 +52,11 @@ namespace HoloLab.Spirare.Browser.ARFoundation
         private void UpdatePointSizeText(float pointSize)
         {
             string pointSizeText;
-            if (pointSize > 0.001f)
+            if (pointSize <= 0)
+            {
+                pointSizeText = $"1px";
+            }
+            else if (pointSize > 0.001f)
             {
                 pointSizeText = $"{(int)Mathf.Round(pointSize * 1000)}mm";
             }
