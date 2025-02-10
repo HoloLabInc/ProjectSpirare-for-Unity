@@ -26,7 +26,10 @@ namespace HoloLab.Spirare.Browser.ARFoundation
 
         private void Start()
         {
+            RenderSettings_OnReferrersChanged(renderSettings.Referrers);
             UpdateSliderValue(renderSettings.PointSize);
+
+            renderSettings.OnReferrersChanged += RenderSettings_OnReferrersChanged;
             renderSettings.OnPointSizeChanged += RenderSettings_OnPointSizeChanged;
 
             pointCloudSizeSlider.onValueChanged.AddListener(PointCloudSizeSlider_OnValueChanged);
@@ -34,8 +37,22 @@ namespace HoloLab.Spirare.Browser.ARFoundation
 
         private void OnDestroy()
         {
+            renderSettings.OnReferrersChanged -= RenderSettings_OnReferrersChanged;
             renderSettings.OnPointSizeChanged -= RenderSettings_OnPointSizeChanged;
+
             pointCloudSizeSlider.onValueChanged.RemoveListener(PointCloudSizeSlider_OnValueChanged);
+        }
+
+        private void RenderSettings_OnReferrersChanged(List<Component> referres)
+        {
+            if (referres.Count == 0)
+            {
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                gameObject.SetActive(true);
+            }
         }
 
         private void RenderSettings_OnPointSizeChanged(float pointSize)
