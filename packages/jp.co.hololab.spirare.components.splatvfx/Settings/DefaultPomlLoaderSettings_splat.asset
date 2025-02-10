@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: deddd2a2488e60641854a003e28b44cd, type: 3}
   m_Name: DefaultPomlLoaderSettings_splat
   m_EditorClassIdentifier: 
-  modelElementObjectFactory: {fileID: 11400000, guid: cccf29435ce01ea48bbc082af9df6899, type: 2}
+  modelElementObjectFactory: {fileID: 11400000, guid: b7ce9b686ef5ab34aa36b3def2b79ef9, type: 2}
   imageElementObjectFactory: {fileID: 11400000, guid: 0a72e0a0c773ebf4995186ce611ed0fe, type: 2}
   videoElementObjectFactory: {fileID: 11400000, guid: 0ae4360eac6bdf94080d5ce40deef69e, type: 2}
   textElementObjectFactory: {fileID: 11400000, guid: 67998f9a447c35949a09d1516008f906, type: 2}
