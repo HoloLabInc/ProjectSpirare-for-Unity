@@ -45,7 +45,7 @@ namespace HoloLab.Spirare.Browser.ARFoundation
 
         private void UpdateSliderValue(float farClip)
         {
-            farClipSlider.value = LogarithmicInverseLerp(farClipMin, farClipMax, farClip);
+            farClipSlider.value = UiUtils.LogarithmicInverseLerp(farClipMin, farClipMax, farClip);
             UpdateFarClipText(farClip);
         }
 
@@ -56,25 +56,10 @@ namespace HoloLab.Spirare.Browser.ARFoundation
 
         private void FarClipSlider_OnValueChanged(float value)
         {
-            var farClip = LogarithmicLerp(farClipMin, farClipMax, value);
+            var farClip = UiUtils.LogarithmicLerp(farClipMin, farClipMax, value);
 
             UpdateFarClipText(farClip);
             displaySettingsState.FarClip = farClip;
-        }
-
-        private static float LogarithmicLerp(float a, float b, float t)
-        {
-            var logA = Mathf.Log(a);
-            var logB = Mathf.Log(b);
-
-            return Mathf.Exp(Mathf.Lerp(logA, logB, t));
-        }
-
-        private static float LogarithmicInverseLerp(float a, float b, float t)
-        {
-            var logA = Mathf.Log(a);
-            var logB = Mathf.Log(b);
-            return Mathf.InverseLerp(logA, logB, Mathf.Log(t));
         }
     }
 }

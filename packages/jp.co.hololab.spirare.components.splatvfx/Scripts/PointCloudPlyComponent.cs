@@ -5,7 +5,7 @@ namespace HoloLab.Spirare.Components.SplatVfx
 {
     public class PointCloudPlyComponent : MonoBehaviour
     {
-        private enum RenderMode { Mesh, PointCloud }
+        private enum RenderMode { Mesh, PointCloud, VFXGraph }
 
         [SerializeField]
         private RenderMode renderMode = RenderMode.PointCloud;
@@ -17,22 +17,32 @@ namespace HoloLab.Spirare.Components.SplatVfx
         private PointCloudRenderer pointCloudRenderer;
 
         [SerializeField]
+        private PointCloudVfxComponent pointCloudVfxPrefab;
+
+        [SerializeField]
         private PointCloudRenderSettings pointCloudRenderSettings;
 
         private MeshRenderer meshRenderer;
         private Material meshMaterial;
+        private PointCloudVfxComponent pointCloudVfx;
 
         private void Awake()
         {
+            if (renderMode != RenderMode.PointCloud)
+            {
+                GameObject.Destroy(pointCloudRenderer.gameObject);
+            }
+
+            if (renderMode != RenderMode.Mesh)
+            {
+                GameObject.Destroy(meshFilter.gameObject);
+            }
+
             switch (renderMode)
             {
                 case RenderMode.Mesh:
                     meshRenderer = meshFilter.GetComponent<MeshRenderer>();
                     meshMaterial = meshRenderer.material;
-                    GameObject.Destroy(pointCloudRenderer);
-                    break;
-                case RenderMode.PointCloud:
-                    GameObject.Destroy(meshFilter.gameObject);
                     break;
             }
 
@@ -40,6 +50,22 @@ namespace HoloLab.Spirare.Components.SplatVfx
             {
                 PointCloudRenderSettings_OnPointSizeChanged(pointCloudRenderSettings.PointSize);
                 pointCloudRenderSettings.OnPointSizeChanged += PointCloudRenderSettings_OnPointSizeChanged;
+
+                if (renderMode == RenderMode.VFXGraph)
+                {
+                    pointCloudRenderSettings.AddReferrer(this);
+                }
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (pointCloudRenderSettings != null)
+            {
+                if (renderMode == RenderMode.VFXGraph)
+                {
+                    pointCloudRenderSettings.RemoveReferrer(this);
+                }
             }
         }
 
@@ -57,6 +83,21 @@ namespace HoloLab.Spirare.Components.SplatVfx
                     var cloud = importer.ImportAsPointCloudData(filePath);
                     pointCloudRenderer.sourceData = cloud;
                     return cloud != null;
+                case RenderMode.VFXGraph:
+                    var bakedCloud = importer.ImportAsBakedPointCloud(filePath);
+                    if (bakedCloud == null)
+                    {
+                        return false;
+                    }
+
+                    pointCloudVfx = Instantiate(pointCloudVfxPrefab, transform);
+                    pointCloudVfx.SetBakedPointCloud(bakedCloud);
+
+                    if (pointCloudRenderSettings != null)
+                    {
+                        PointCloudRenderSettings_OnPointSizeChanged(pointCloudRenderSettings.PointSize);
+                    }
+                    return true;
             }
             return false;
         }
@@ -70,6 +111,12 @@ namespace HoloLab.Spirare.Components.SplatVfx
                     break;
                 case RenderMode.PointCloud:
                     pointCloudRenderer.pointSize = pointSize / 2;
+                    break;
+                case RenderMode.VFXGraph:
+                    if (pointCloudVfx != null)
+                    {
+                        pointCloudVfx.SetPointSize(pointSize);
+                    }
                     break;
             }
         }
