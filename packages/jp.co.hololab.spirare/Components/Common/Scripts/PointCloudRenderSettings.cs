@@ -9,32 +9,42 @@ namespace HoloLab.Spirare
     {
         [SerializeField]
         private float pointSize = 0f;
+        private float runtimePointSize;
 
         public float PointSize
         {
             get
             {
-                return pointSize;
+                return runtimePointSize;
             }
             set
             {
-                pointSize = value;
-                InvokeOnPointSizeChanged();
+                if (runtimePointSize != value)
+                {
+                    runtimePointSize = value;
+                    InvokeOnPointSizeChanged(value);
+                }
             }
         }
 
         public event Action<float> OnPointSizeChanged;
 
-        private void InvokeOnPointSizeChanged()
+        private void InvokeOnPointSizeChanged(float size)
         {
             try
             {
-                OnPointSizeChanged?.Invoke(pointSize);
+                OnPointSizeChanged?.Invoke(size);
             }
             catch (Exception ex)
             {
                 Debug.LogException(ex);
             }
         }
+
+        private void OnEnable()
+        {
+            runtimePointSize = pointSize;
+        }
     }
 }
+
