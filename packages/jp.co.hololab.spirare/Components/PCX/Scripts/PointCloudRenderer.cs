@@ -79,7 +79,7 @@ namespace HoloLab.Spirare.Pcx
             _diskMaterial.hideFlags = HideFlags.DontSave;
             _diskMaterial.EnableKeyword("_COMPUTE_BUFFER");
 
-            _useScriptableRenderPipeline = GraphicsSettings.renderPipelineAsset != null;
+            _useScriptableRenderPipeline = GraphicsSettings.defaultRenderPipeline != null;
         }
 
         void OnValidate()
