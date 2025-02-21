@@ -46,13 +46,27 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
         private void Awake()
         {
-            InstantiateCreditObjects();
-
-            ShowCreditText = showCreditText;
+            if (creditPrefab != null)
+            {
+                ChangeCredit(creditPrefab);
+            }
         }
 
-        private void InstantiateCreditObjects()
+        public void ChangeCredit(AbstractCesiumRectangleMapCredit creditPrefab)
         {
+            var credits = new List<AbstractCesiumRectangleMapCredit>()
+            {
+                creditFront, creditBack, creditLeft, creditRight
+            };
+
+            foreach (var credit in credits)
+            {
+                if (credit != null)
+                {
+                    Destroy(credit.gameObject);
+                }
+            }
+
             creditFront = Instantiate(creditPrefab, transform);
 
             creditBack = Instantiate(creditPrefab, transform);
@@ -63,6 +77,11 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
             creditRight = Instantiate(creditPrefab, transform);
             creditRight.transform.localRotation = Quaternion.AngleAxis(270, Vector3.up);
+
+            var baseCubeScale = baseCube.transform.localScale;
+            UpdateCreditPosition(baseCubeScale.x, baseCubeScale.z);
+
+            ShowCreditText = showCreditText;
         }
 
         public void ChangeSize(float x, float z)
@@ -73,6 +92,11 @@ namespace HoloLab.Spirare.Cesium3DMaps
             baseCubeScale.z = z;
             baseCube.transform.localScale = baseCubeScale;
 
+            UpdateCreditPosition(x, z);
+        }
+
+        private void UpdateCreditPosition(float x, float z)
+        {
             creditFront.transform.localPosition = new Vector3(0, 0, -(z / 2 + creditTextSurfaceOffset));
             creditFront.SetWidth(x);
 

@@ -143,6 +143,9 @@ namespace HoloLab.Spirare.Cesium3DMaps
         public BaseMapSettings BaseMapSettings => baseMapSettings;
 
         private int baseMapIndex = -1;
+
+        public int BaseMapIndex => baseMapIndex;
+
         private GameObject baseMapObject;
 
         private CesiumGeoreference[] cesiumGeoreferences;
@@ -301,6 +304,8 @@ namespace HoloLab.Spirare.Cesium3DMaps
                     }
                 }
             }
+
+            mapBase.ChangeCredit(baseMapSetting.CreditPrefab);
         }
 
         private void AttachTilesetClipperForChildTilesets()

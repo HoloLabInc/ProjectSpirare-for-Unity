@@ -15,11 +15,11 @@ namespace HoloLab.Spirare.Cesium3DMaps
         private GameObject mapPrefab;
 
         [SerializeField]
-        private GameObject creditPrefab;
+        private AbstractCesiumRectangleMapCredit creditPrefab;
 
         public string MapName => mapName;
         public GameObject MapPrefab => mapPrefab;
-        public GameObject CreditPrefab => creditPrefab;
+        public AbstractCesiumRectangleMapCredit CreditPrefab => creditPrefab;
     }
 
     public class BaseMapSettings : ScriptableObject
