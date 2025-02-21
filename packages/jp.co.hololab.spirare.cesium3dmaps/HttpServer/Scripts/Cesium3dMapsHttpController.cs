@@ -69,7 +69,15 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
 
     <h2>Settings Page for Map</h2>
     <form action=""/map/position"" method=""POST"" accept-charset=""utf-8"">
-      {baseMapSelectionHtml}
+      <fieldset>
+        {baseMapSelectionHtml}
+      <div>
+        <button type=""submit"">Update</button>
+      </div>
+      </fieldset>
+    </form>
+    <form action=""/map/position"" method=""POST"" accept-charset=""utf-8"">
+      <fieldset>
       <div>
         <label for=""latlon"">Latitude Longitude</label>
         <input
@@ -97,6 +105,7 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
       <div>
         <button type=""submit"">Update</button>
       </div>
+      </fieldset>
     </form>
   </body>
 </html>
