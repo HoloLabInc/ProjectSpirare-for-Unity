@@ -21,6 +21,34 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
         [Route("/map")]
         public string Index()
         {
+            var baseMapSettings = cesiumRectangleMap.BaseMapSettings;
+            string baseMapSelectionOptions = "";
+            if (baseMapSettings != null && baseMapSettings.BaseMaps.Count >= 1)
+            {
+                for (var i = 0; i < baseMapSettings.BaseMaps.Count; i++)
+                {
+                    var baseMapSetting = baseMapSettings.BaseMaps[i];
+                    baseMapSelectionOptions += $@"
+          <option value=""{i}"">{baseMapSetting.MapName}</option>"
+;
+                }
+            }
+            else
+            {
+                baseMapSelectionOptions = @"
+          <option value=""""></option>
+";
+            }
+
+            var baseMapSelectionHtml = $@"
+      <div>
+        <label for=""base-map"">Base map</label>
+        <select name=""base-map"" id=""base-map"">
+{baseMapSelectionOptions}
+        </select>
+      </div>
+";
+
             var center = cesiumRectangleMap.Center;
             var latLon = $"{center.Latitude},{center.Longitude}";
             var height = center.EllipsoidalHeight.ToString();
@@ -30,11 +58,16 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
 
             var html = $@"
 <html>
+  <head>
+    <meta charset=""UTF-8"">
+  </head>
+
   <body>
     <a href=""/"">Back</a>
 
     <h2>Settings Page for Map</h2>
     <form action=""/map/position"" method=""POST"" accept-charset=""utf-8"">
+      {baseMapSelectionHtml}
       <div>
         <label for=""latlon"">Latitude Longitude</label>
         <input
