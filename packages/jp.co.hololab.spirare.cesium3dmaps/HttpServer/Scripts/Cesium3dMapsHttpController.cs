@@ -25,11 +25,13 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
             string baseMapSelectionOptions = "";
             if (baseMapSettings != null && baseMapSettings.BaseMaps.Count >= 1)
             {
+                var currentIndex = cesiumRectangleMap.BaseMapIndex;
                 for (var i = 0; i < baseMapSettings.BaseMaps.Count; i++)
                 {
                     var baseMapSetting = baseMapSettings.BaseMaps[i];
+                    var selected = i == currentIndex ? "selected" : "";
                     baseMapSelectionOptions += $@"
-          <option value=""{i}"">{baseMapSetting.MapName}</option>"
+          <option value=""{i}"" {selected}>{baseMapSetting.MapName}</option>"
 ;
                 }
             }
@@ -111,6 +113,14 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
                 var body = await reader.ReadToEndAsync();
 
                 var queries = HttpQueryParser.ParseQueryString(body);
+
+                if (queries.TryGetValue("base-map", out var baseMapIndexString))
+                {
+                    if (int.TryParse(baseMapIndexString, out var baseMapIndex))
+                    {
+                        cesiumRectangleMap.SelectBaseMap(baseMapIndex);
+                    }
+                }
 
                 if (queries.TryGetValue("latlon", out var latLonString))
                 {
