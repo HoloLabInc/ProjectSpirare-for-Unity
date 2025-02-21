@@ -140,7 +140,10 @@ namespace HoloLab.Spirare.Cesium3DMaps
         [SerializeField]
         private BaseMapSettings baseMapSettings;
 
+        public BaseMapSettings BaseMapSettings => baseMapSettings;
+
         private int baseMapIndex = -1;
+        private GameObject baseMapObject;
 
         private CesiumGeoreference[] cesiumGeoreferences;
         private CesiumGeodeticAreaExcluder[] cesiumGeodeticAreaExcluders;
@@ -253,7 +256,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
             if (baseMapIndex != index)
             {
-                //var baseMapSetting = baseMaps[index];
                 ChangeBaseMap(index);
             }
 
@@ -269,18 +271,29 @@ namespace HoloLab.Spirare.Cesium3DMaps
                 return;
             }
 
+            if (cesiumGeoreferences.Length == 0)
+            {
+                Debug.LogWarning("CesiumGeoreference is not found.");
+                return;
+            }
+
             var baseMaps = baseMapSettings.BaseMaps;
             if (index < 0 || index >= baseMaps.Count)
             {
                 return;
             }
 
+            if (baseMapObject != null)
+            {
+                Destroy(baseMapObject);
+            }
+
             var baseMapSetting = baseMaps[index];
-            var mapObject = Instantiate(baseMapSetting.MapPrefab, cesiumGeoreferences[0].transform);
+            baseMapObject = Instantiate(baseMapSetting.MapPrefab, cesiumGeoreferences[0].transform);
 
             if (attatchTilesetClipperForChildTilesets)
             {
-                if (mapObject.TryGetComponent<Cesium3DTileset>(out var tileset))
+                if (baseMapObject.TryGetComponent<Cesium3DTileset>(out var tileset))
                 {
                     if (tileset.gameObject.TryGetComponent<CesiumRectangleMapTilesetClipper>(out _) == false)
                     {
