@@ -137,6 +137,11 @@ namespace HoloLab.Spirare.Cesium3DMaps
         [SerializeField]
         private CesiumRectangleMapBase mapBase;
 
+        [SerializeField]
+        private BaseMapSettings baseMapSettings;
+
+        private int baseMapIndex = -1;
+
         private CesiumGeoreference[] cesiumGeoreferences;
         private CesiumGeodeticAreaExcluder[] cesiumGeodeticAreaExcluders;
 
@@ -147,6 +152,8 @@ namespace HoloLab.Spirare.Cesium3DMaps
         private const string PlayerPrefs_ScaleKey = "CesiumRectangleMap_Scale";
         private const string PlayerPrefs_HeadingKey = "CesiumRectangleMap_Heading";
         private const string PlayerPrefs_AutoAdjustCenterHeightKey = "CesiumRectangleMap_AutoAdjustCenterHeight";
+        private const string PlayerPrefs_BaseMapIndexKey = "CesiumRectangleMap_BaseMapIndex";
+        private const string PlayerPrefs_BaseMapNameKey = "CesiumRectangleMap_BaseMapName";
 
         public event Action<float> OnScaleChanged;
         public event Action<GeodeticPosition> OnCenterChanged;
@@ -168,7 +175,9 @@ namespace HoloLab.Spirare.Cesium3DMaps
             LoadHeading();
             LoadScale();
             LoadAutoAdjustCenterHeight();
+            LoadBaseMapSelection();
 
+            ChangeBaseMap(baseMapIndex);
             UpdateMap();
             UpdateMapBase();
 
@@ -226,6 +235,59 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
             Center = newMapCenterWithSameHeight;
             Scale = mapScale;
+        }
+
+        public void SelectBaseMap(int index)
+        {
+            if (baseMapSettings == null)
+            {
+                Debug.LogWarning("BaseMapSettings is not set.");
+                return;
+            }
+
+            var baseMaps = baseMapSettings.BaseMaps;
+            if (index < 0 || index >= baseMaps.Count)
+            {
+                return;
+            }
+
+            if (baseMapIndex != index)
+            {
+                //var baseMapSetting = baseMaps[index];
+                ChangeBaseMap(index);
+            }
+
+            baseMapIndex = index;
+            SaveBaseMapSelection();
+        }
+
+        private void ChangeBaseMap(int index)
+        {
+            if (baseMapSettings == null)
+            {
+                Debug.LogWarning("BaseMapSettings is not set.");
+                return;
+            }
+
+            var baseMaps = baseMapSettings.BaseMaps;
+            if (index < 0 || index >= baseMaps.Count)
+            {
+                return;
+            }
+
+            var baseMapSetting = baseMaps[index];
+            var mapObject = Instantiate(baseMapSetting.MapPrefab, cesiumGeoreferences[0].transform);
+
+            if (attatchTilesetClipperForChildTilesets)
+            {
+                if (mapObject.TryGetComponent<Cesium3DTileset>(out var tileset))
+                {
+                    if (tileset.gameObject.TryGetComponent<CesiumRectangleMapTilesetClipper>(out _) == false)
+                    {
+                        tileset.gameObject.AddComponent<CesiumRectangleMapTilesetClipper>();
+                    }
+                }
+            }
         }
 
         private void AttachTilesetClipperForChildTilesets()
@@ -366,6 +428,49 @@ namespace HoloLab.Spirare.Cesium3DMaps
             }
 
             AutoAdjustCenterHeight = value == 1;
+        }
+
+        private void SaveBaseMapSelection()
+        {
+            PlayerPrefs.SetInt(PlayerPrefs_BaseMapIndexKey, baseMapIndex);
+            if (baseMapSettings != null)
+            {
+                var baseMaps = baseMapSettings.BaseMaps;
+                if (0 < baseMapIndex || baseMapIndex < baseMaps.Count)
+                {
+                    var baseMapName = baseMaps[baseMapIndex].MapName;
+                    PlayerPrefs.SetString(PlayerPrefs_BaseMapNameKey, baseMapName);
+                }
+            }
+        }
+
+        private void LoadBaseMapSelection()
+        {
+            var mapName = PlayerPrefs.GetString(PlayerPrefs_BaseMapNameKey, "");
+            if (string.IsNullOrEmpty(mapName) == false && baseMapSettings != null)
+            {
+                var baseMaps = baseMapSettings.BaseMaps;
+                for (var i = 0; i < baseMaps.Count; i++)
+                {
+                    if (baseMaps[i].MapName == mapName)
+                    {
+                        baseMapIndex = i;
+                        return;
+                    }
+                }
+            }
+
+            baseMapIndex = PlayerPrefs.GetInt(PlayerPrefs_BaseMapIndexKey, -1);
+
+            if (baseMapIndex < 0)
+            {
+                baseMapIndex = 0;
+            }
+
+            if (baseMapSettings != null && baseMapSettings.BaseMaps.Count <= baseMapIndex)
+            {
+                baseMapIndex = 0;
+            }
         }
 
         #endregion
