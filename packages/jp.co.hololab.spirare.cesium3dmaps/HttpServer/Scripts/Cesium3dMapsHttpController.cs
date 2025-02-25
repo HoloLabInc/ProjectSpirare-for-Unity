@@ -21,6 +21,36 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
         [Route("/map")]
         public string Index()
         {
+            var baseMapSettings = cesiumRectangleMap.BaseMapSettings;
+            string baseMapSelectionOptions = "";
+            if (baseMapSettings != null && baseMapSettings.BaseMaps.Count >= 1)
+            {
+                var currentIndex = cesiumRectangleMap.BaseMapIndex;
+                for (var i = 0; i < baseMapSettings.BaseMaps.Count; i++)
+                {
+                    var baseMapSetting = baseMapSettings.BaseMaps[i];
+                    var selected = i == currentIndex ? "selected" : "";
+                    baseMapSelectionOptions += $@"
+          <option value=""{i}"" {selected}>{baseMapSetting.MapName}</option>"
+;
+                }
+            }
+            else
+            {
+                baseMapSelectionOptions = @"
+          <option value=""""></option>
+";
+            }
+
+            var baseMapSelectionHtml = $@"
+      <div>
+        <label for=""base-map"">Base map</label>
+        <select name=""base-map"" id=""base-map"">
+{baseMapSelectionOptions}
+        </select>
+      </div>
+";
+
             var center = cesiumRectangleMap.Center;
             var latLon = $"{center.Latitude},{center.Longitude}";
             var height = center.EllipsoidalHeight.ToString();
@@ -30,11 +60,25 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
 
             var html = $@"
 <html>
+  <head>
+    <meta charset=""UTF-8"">
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+  </head>
+
   <body>
     <a href=""/"">Back</a>
 
     <h2>Settings Page for Map</h2>
     <form action=""/map/position"" method=""POST"" accept-charset=""utf-8"">
+      <fieldset>
+        {baseMapSelectionHtml}
+      <div>
+        <button type=""submit"">Update</button>
+      </div>
+      </fieldset>
+    </form>
+    <form action=""/map/position"" method=""POST"" accept-charset=""utf-8"">
+      <fieldset>
       <div>
         <label for=""latlon"">Latitude Longitude</label>
         <input
@@ -62,6 +106,7 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
       <div>
         <button type=""submit"">Update</button>
       </div>
+      </fieldset>
     </form>
   </body>
 </html>
@@ -78,6 +123,14 @@ namespace HoloLab.Spirare.Cesium3DMaps.HttpServer
                 var body = await reader.ReadToEndAsync();
 
                 var queries = HttpQueryParser.ParseQueryString(body);
+
+                if (queries.TryGetValue("base-map", out var baseMapIndexString))
+                {
+                    if (int.TryParse(baseMapIndexString, out var baseMapIndex))
+                    {
+                        cesiumRectangleMap.SelectBaseMap(baseMapIndex);
+                    }
+                }
 
                 if (queries.TryGetValue("latlon", out var latLonString))
                 {

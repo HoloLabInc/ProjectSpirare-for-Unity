@@ -5,8 +5,13 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1880583417923694539, guid: da1c29b2554e56949a95adf9dd7b60b7, type: 3}
+      propertyPath: showCreditText
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1880583419116144429, guid: da1c29b2554e56949a95adf9dd7b60b7, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -56,6 +61,12 @@ PrefabInstance:
       value: CesiumRectangleMapForSpirare
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 1880583418490132331, guid: da1c29b2554e56949a95adf9dd7b60b7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7509795691312813834}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: da1c29b2554e56949a95adf9dd7b60b7, type: 3}
 --- !u!4 &4238588975547037039 stripped
 Transform:
@@ -67,6 +78,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4238588975547037039}
     m_Modifications:
     - target: {fileID: 451510481513926598, guid: 6afd5c5640f35ac4b94fe08a3ed2b431, type: 3}
@@ -122,4 +134,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6afd5c5640f35ac4b94fe08a3ed2b431, type: 3}
+--- !u!4 &7509795691312813834 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 451510481513926616, guid: 6afd5c5640f35ac4b94fe08a3ed2b431, type: 3}
+  m_PrefabInstance: {fileID: 7961292119559461074}
+  m_PrefabAsset: {fileID: 0}

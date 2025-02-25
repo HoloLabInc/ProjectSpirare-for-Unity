@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/App/Scenes/SpirareBrowser-visionOS-3DMaps_GooglePhotorealistic3DTiles.unity
+    path: Assets/App/Scenes/SpirareBrowser-visionOS-3DMaps.unity
     guid: 5c91388defc8e4b8fabc1c2ea0f7659a
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: af38f411976c65548b6ff30516e63cf9, type: 2}
