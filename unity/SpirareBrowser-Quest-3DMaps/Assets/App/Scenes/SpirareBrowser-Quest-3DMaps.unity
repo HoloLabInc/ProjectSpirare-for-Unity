@@ -9859,8 +9859,8 @@ MonoBehaviour:
   useRecommendedMSAALevel: 1
   _monoscopic: 0
   _sharpenType: 0
-  enableDynamicResolution: 0
-  minDynamicResolutionScale: 1
+  enableDynamicResolution: 1
+  minDynamicResolutionScale: 0.8
   maxDynamicResolutionScale: 1
   minRenderScale: 0.7
   maxRenderScale: 1
