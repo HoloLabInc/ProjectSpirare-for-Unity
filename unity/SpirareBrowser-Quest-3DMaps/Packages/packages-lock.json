@@ -13,7 +13,7 @@
       "url": "https://unity.pkg.cesium.com"
     },
     "com.cysharp.unitask": {
-      "version": "2.5.4",
+      "version": "2.5.10",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -145,7 +145,7 @@
       }
     },
     "com.unity.ide.rider": {
-      "version": "3.0.31",
+      "version": "3.0.34",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -316,7 +316,7 @@
       }
     },
     "com.unity.visualscripting": {
-      "version": "1.9.4",
+      "version": "1.9.5",
       "depth": 0,
       "source": "registry",
       "dependencies": {
