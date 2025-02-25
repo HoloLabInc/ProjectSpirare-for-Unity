@@ -9860,7 +9860,7 @@ MonoBehaviour:
   _monoscopic: 0
   _sharpenType: 0
   enableDynamicResolution: 1
-  minDynamicResolutionScale: 0.8
+  minDynamicResolutionScale: 0.7
   maxDynamicResolutionScale: 1
   minRenderScale: 0.7
   maxRenderScale: 1
