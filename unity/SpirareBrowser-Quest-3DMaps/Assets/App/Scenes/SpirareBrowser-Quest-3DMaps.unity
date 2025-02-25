@@ -5316,6 +5316,17 @@ MonoBehaviour:
   installationRoutineCheckpoint:
     _installationRoutineId: 
     _installationVariants: []
+--- !u!114 &1037730465 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7509795691312813845, guid: 6d93fdac22fa57f4a873cf11831d1023, type: 3}
+  m_PrefabInstance: {fileID: 1156910837}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 206ecf807e2890744ba5feb03cfeae92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1041492615
 GameObject:
   m_ObjectHideFlags: 0
@@ -11265,7 +11276,7 @@ PrefabInstance:
     - target: {fileID: 1772720907554413436, guid: 86840e072aee0874aa0037d3419358b7, type: 3}
       propertyPath: pomlContentManager
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1037730465}
     - target: {fileID: 6425339106632995163, guid: 86840e072aee0874aa0037d3419358b7, type: 3}
       propertyPath: m_RootOrder
       value: 6
