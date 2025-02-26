@@ -128,12 +128,16 @@ PrefabInstance:
       value: -180
       objectReference: {fileID: 0}
     - target: {fileID: 6304709373605013168, guid: 936e3a9f071724470b5da3cdc6d7bd9a, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 68
+      objectReference: {fileID: 0}
+    - target: {fileID: 6304709373605013168, guid: 936e3a9f071724470b5da3cdc6d7bd9a, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 6837774916127900926, guid: 936e3a9f071724470b5da3cdc6d7bd9a, type: 3}
       propertyPath: m_Name
-      value: CesiumRectangleMapCredit_GoogleMapTilesApi_TextMeshPro
+      value: CesiumRectangleMapCredit_GoogleMapTilesApi
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

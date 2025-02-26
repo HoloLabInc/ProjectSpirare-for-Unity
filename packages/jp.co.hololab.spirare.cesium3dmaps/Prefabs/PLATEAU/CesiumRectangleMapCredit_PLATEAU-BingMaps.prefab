@@ -351,27 +351,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6837774916127900926, guid: 936e3a9f071724470b5da3cdc6d7bd9a, type: 3}
       propertyPath: m_Name
-      value: CesiumRectangleMapCredit_PLATEAU_TextMeshPro
-      objectReference: {fileID: 0}
-    - target: {fileID: 7696124908142339035, guid: 936e3a9f071724470b5da3cdc6d7bd9a, type: 3}
-      propertyPath: m_fontSize
-      value: 26
-      objectReference: {fileID: 0}
-    - target: {fileID: 7696124908142339035, guid: 936e3a9f071724470b5da3cdc6d7bd9a, type: 3}
-      propertyPath: m_fontSizeMax
-      value: 26
-      objectReference: {fileID: 0}
-    - target: {fileID: 7696124908142339035, guid: 936e3a9f071724470b5da3cdc6d7bd9a, type: 3}
-      propertyPath: m_fontSizeMin
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7696124908142339035, guid: 936e3a9f071724470b5da3cdc6d7bd9a, type: 3}
-      propertyPath: m_fontSizeBase
-      value: 26
-      objectReference: {fileID: 0}
-    - target: {fileID: 7696124908142339035, guid: 936e3a9f071724470b5da3cdc6d7bd9a, type: 3}
-      propertyPath: m_enableAutoSizing
-      value: 1
+      value: CesiumRectangleMapCredit_PLATEAU-BingMaps
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
