@@ -147,7 +147,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
         public int BaseMapIndex => baseMapIndex;
 
         private GameObject baseMapObject;
-
+        private BaseMapTileset baseMapTileset;
         private CesiumGeoreference[] cesiumGeoreferences;
         private CesiumGeodeticAreaExcluder[] cesiumGeodeticAreaExcluders;
 
@@ -293,6 +293,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
             var baseMapSetting = baseMaps[index];
             baseMapObject = Instantiate(baseMapSetting.MapPrefab, cesiumGeoreferences[0].transform);
+            baseMapTileset = baseMapObject.AddComponent<BaseMapTileset>();
 
             if (attatchTilesetClipperForChildTilesets)
             {
@@ -329,7 +330,15 @@ namespace HoloLab.Spirare.Cesium3DMaps
             {
                 if (autoAdjustCenterHeight && MapOriginIsVisible())
                 {
-                    AdjustMapHeight();
+                    if (baseMapTileset != null && baseMapTileset.AllCollidersEnabled)
+                    {
+                        AdjustMapHeight();
+                    }
+                    else
+                    {
+                        yield return null;
+                        continue;
+                    }
                 }
 
                 yield return new WaitForSeconds(0.5f);
