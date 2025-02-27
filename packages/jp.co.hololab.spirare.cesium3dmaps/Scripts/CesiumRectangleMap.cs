@@ -129,6 +129,9 @@ namespace HoloLab.Spirare.Cesium3DMaps
             }
         }
 
+        [SerializeField]
+        private float autoAdjustCenterHeightMin = float.MinValue;
+
         private float? centerTargetEllipsoidalHeight = null;
 
         [SerializeField]
@@ -411,7 +414,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
                 }
 
                 var heightChange = hitPointLocal.y / scale;
-                centerTargetEllipsoidalHeight = (float)center.EllipsoidalHeight + heightChange;
+                centerTargetEllipsoidalHeight = Mathf.Max((float)center.EllipsoidalHeight + heightChange, autoAdjustCenterHeightMin);
             }
         }
 

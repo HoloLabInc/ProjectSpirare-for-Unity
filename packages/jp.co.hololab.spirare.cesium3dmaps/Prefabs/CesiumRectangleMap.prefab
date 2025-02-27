@@ -249,6 +249,7 @@ MonoBehaviour:
     ellipsoidalHeight: 0
   heading: 0
   autoAdjustCenterHeight: 1
+  autoAdjustCenterHeightMin: -500000
   attatchTilesetClipperForChildTilesets: 1
   mapBase: {fileID: 1880583417923694539}
   baseMapSettings: {fileID: 0}
