@@ -47,6 +47,35 @@ namespace HoloLab.Spirare.Cesium3DMaps
             }
         }
 
+        public void EnableColliders()
+        {
+            collidersEnabled = true;
+
+            foreach (var baseMapTile in baseMapTiles)
+            {
+                if (baseMapTile != null && baseMapTile.gameObject != null && baseMapTile.gameObject.activeInHierarchy)
+                {
+                    foreach (var meshCollider in baseMapTile.MeshColliders)
+                    {
+                        tileMeshCollidersToBeActive.Enqueue(meshCollider);
+                    }
+                }
+            }
+        }
+
+        public void DisableColliders()
+        {
+            collidersEnabled = false;
+
+            foreach (var baseMapTile in baseMapTiles)
+            {
+                if (baseMapTile != null && baseMapTile.gameObject != null && baseMapTile.gameObject.activeInHierarchy)
+                {
+                    DisableCollider(baseMapTile);
+                }
+            }
+        }
+
         private void Tileset_OnTileGameObjectCreated(GameObject tileObject)
         {
             var baseMapTile = tileObject.AddComponent<BaseMapTile>();
@@ -81,19 +110,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
             baseMapTiles.Remove(baseMapTile);
         }
 
-        public void DisableColliders()
-        {
-            collidersEnabled = false;
-
-            foreach (var baseMapTile in baseMapTiles)
-            {
-                if (baseMapTile != null && baseMapTile.gameObject != null && baseMapTile.gameObject.activeInHierarchy)
-                {
-                    DisableCollider(baseMapTile);
-                }
-            }
-        }
-
         private void DisableCollider(BaseMapTile baseMapTile)
         {
             foreach (var meshCollider in baseMapTile.MeshColliders)
@@ -101,22 +117,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
                 if (meshCollider != null)
                 {
                     meshCollider.enabled = false;
-                }
-            }
-        }
-
-        public void EnableColliders()
-        {
-            collidersEnabled = true;
-
-            foreach (var baseMapTile in baseMapTiles)
-            {
-                if (baseMapTile != null && baseMapTile.gameObject != null && baseMapTile.gameObject.activeInHierarchy)
-                {
-                    foreach (var meshCollider in baseMapTile.MeshColliders)
-                    {
-                        tileMeshCollidersToBeActive.Enqueue(meshCollider);
-                    }
                 }
             }
         }

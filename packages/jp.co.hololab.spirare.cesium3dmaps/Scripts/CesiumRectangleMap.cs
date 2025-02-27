@@ -150,6 +150,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
         private BaseMapTileset baseMapTileset;
         private CesiumGeoreference[] cesiumGeoreferences;
         private CesiumGeodeticAreaExcluder[] cesiumGeodeticAreaExcluders;
+        private CesiumRectanbleMapManipulator cesiumRectangleMapManipulator;
 
         private Camera mainCamera;
         private RaycastHit[] hits = new RaycastHit[100];
@@ -188,6 +189,17 @@ namespace HoloLab.Spirare.Cesium3DMaps
             UpdateMapBase();
 
             StartCoroutine(AdjustMapHeightLoopCoroutine());
+
+            cesiumRectangleMapManipulator = GetComponentInChildren<CesiumRectanbleMapManipulator>();
+            cesiumRectangleMapManipulator.OnChangeScaleStarted += () =>
+            {
+                DisableBaseMapColliders();
+            };
+
+            cesiumRectangleMapManipulator.OnChangeScaleEnded += () =>
+            {
+                EnableBaseMapColliders();
+            };
         }
 
         private void Update()
@@ -264,6 +276,22 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
             baseMapIndex = index;
             SaveBaseMapSelection();
+        }
+
+        public void EnableBaseMapColliders()
+        {
+            if (baseMapTileset != null)
+            {
+                baseMapTileset.EnableColliders();
+            }
+        }
+
+        public void DisableBaseMapColliders()
+        {
+            if (baseMapTileset != null)
+            {
+                baseMapTileset.DisableColliders();
+            }
         }
 
         private void ChangeBaseMap(int index)
