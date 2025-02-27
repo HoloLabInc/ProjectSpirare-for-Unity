@@ -2,7 +2,6 @@ using CesiumForUnity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace HoloLab.Spirare.Cesium3DMaps
@@ -11,17 +10,16 @@ namespace HoloLab.Spirare.Cesium3DMaps
     {
         private Cesium3DTileset tileset;
 
-        private List<GameObject> tileObjects = new List<GameObject>();
+        private bool collidersEnabled = true;
 
-        private Queue<MeshFilter> tileMeshFilters = new Queue<MeshFilter>();
-
-        private Queue<MeshCollider> tileMeshCollidersToBeActive = new Queue<MeshCollider>();
+        private readonly List<BaseMapTile> baseMapTiles = new List<BaseMapTile>();
+        private readonly Queue<MeshCollider> tileMeshCollidersToBeActive = new Queue<MeshCollider>();
 
         public bool AllCollidersEnabled
         {
             get
             {
-                return tileMeshFilters.Count == 0 && tileMeshCollidersToBeActive.Count == 0;
+                return tileMeshCollidersToBeActive.Count == 0;
             }
         }
 
@@ -33,7 +31,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
         private void Update()
         {
-            if (tileMeshCollidersToBeActive.Count > 0)
+            if (collidersEnabled && tileMeshCollidersToBeActive.Count > 0)
             {
                 while (tileMeshCollidersToBeActive.Count > 0)
                 {
@@ -51,78 +49,75 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
         private void Tileset_OnTileGameObjectCreated(GameObject tileObject)
         {
-            tileObjects.Add(tileObject);
             var baseMapTile = tileObject.AddComponent<BaseMapTile>();
+            baseMapTiles.Add(baseMapTile);
+
+            var colliders = baseMapTile.AddMeshColliders(convex: true);
+            foreach (var collider in colliders)
+            {
+                tileMeshCollidersToBeActive.Enqueue(collider);
+            }
+
             baseMapTile.OnMapTileEnabled += BaseMapTile_OnMapTileEnabled;
             baseMapTile.OnMapTileDisabled += BaseMapTile_OnMapTileDisabled;
-
-            var meshFilters = tileObject.GetComponentsInChildren<MeshFilter>(includeInactive: true);
-            foreach (var meshFilter in meshFilters)
-            {
-                var meshCollider = meshFilter.gameObject.AddComponent<MeshCollider>();
-                meshCollider.enabled = false;
-                meshCollider.convex = true;
-
-                tileMeshCollidersToBeActive.Enqueue(meshCollider);
-            }
+            baseMapTile.OnMapTileDestroyed += BaseMapTile_OnMapTileDestroyed;
         }
 
-        private void BaseMapTile_OnMapTileDisabled(GameObject tileObject)
+        private void BaseMapTile_OnMapTileEnabled(BaseMapTile baseMapTile)
         {
-            var meshColliders = gameObject.GetComponentsInChildren<MeshCollider>(includeInactive: true);
-            foreach (var meshCollider in meshColliders)
-            {
-                meshCollider.enabled = false;
-            }
-        }
-
-        private void BaseMapTile_OnMapTileEnabled(GameObject tileObject)
-        {
-            var meshColliders = gameObject.GetComponentsInChildren<MeshCollider>(includeInactive: true);
-            foreach (var meshCollider in meshColliders)
+            foreach (var meshCollider in baseMapTile.MeshColliders)
             {
                 tileMeshCollidersToBeActive.Enqueue(meshCollider);
             }
         }
 
-        public bool TryGetMinimumHeight(out float yInWorldSpace)
+        private void BaseMapTile_OnMapTileDisabled(BaseMapTile baseMapTile)
         {
-            float? minimumHeight = null;
+            DisableCollider(baseMapTile);
+        }
 
-            var count = tileObjects.Count(x => x != null && x.activeInHierarchy);
-            if (count < 10)
-            {
-                yInWorldSpace = 0;
-                return false;
-            }
+        private void BaseMapTile_OnMapTileDestroyed(BaseMapTile baseMapTile)
+        {
+            baseMapTiles.Remove(baseMapTile);
+        }
 
-            foreach (var tileObject in tileObjects)
+        public void DisableColliders()
+        {
+            collidersEnabled = false;
+
+            foreach (var baseMapTile in baseMapTiles)
             {
-                if (tileObject != null && tileObject.activeInHierarchy)
+                if (baseMapTile != null && baseMapTile.gameObject != null && baseMapTile.gameObject.activeInHierarchy)
                 {
-                    var bounds = tileObject.GetComponentInChildren<MeshRenderer>().bounds;
-                    var minY = bounds.min.y;
-
-                    if (minimumHeight.HasValue)
-                    {
-                        minimumHeight = Mathf.Min(minimumHeight.Value, minY);
-                    }
-                    else
-                    {
-                        minimumHeight = minY;
-                    }
+                    DisableCollider(baseMapTile);
                 }
             }
+        }
 
-            if (minimumHeight.HasValue)
+        private void DisableCollider(BaseMapTile baseMapTile)
+        {
+            foreach (var meshCollider in baseMapTile.MeshColliders)
             {
-                yInWorldSpace = minimumHeight.Value;
-                return true;
+                if (meshCollider != null)
+                {
+                    meshCollider.enabled = false;
+                }
             }
-            else
+        }
+
+        public void EnableColliders()
+        {
+            collidersEnabled = true;
+
+            foreach (var baseMapTile in baseMapTiles)
             {
-                yInWorldSpace = 0;
-                return false;
+                if (baseMapTile != null && baseMapTile.gameObject != null && baseMapTile.gameObject.activeInHierarchy)
+                {
+                    foreach (var meshCollider in baseMapTile.MeshColliders)
+                    {
+                        tileMeshCollidersToBeActive.Enqueue(meshCollider);
+                    }
+                }
             }
         }
     }
