@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6026558516975112370}
   - component: {fileID: 3823388863974882590}
   - component: {fileID: 9183829503207199014}
+  - component: {fileID: 6864779631648539611}
   - component: {fileID: 4474584872205397531}
   m_Layer: 2
   m_Name: Tileset_GooglePhotorealistic3DTiles
@@ -88,6 +89,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settings: {fileID: 11400000, guid: 7f948eef0a404a64eb497bdaced032b5, type: 2}
+--- !u!114 &6864779631648539611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3882610283956612430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa8b631603070bc469b0da9471e619cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useConvexColliders: 1
 --- !u!114 &4474584872205397531
 MonoBehaviour:
   m_ObjectHideFlags: 0

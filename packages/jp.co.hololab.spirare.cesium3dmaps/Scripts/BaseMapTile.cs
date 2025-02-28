@@ -34,7 +34,11 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
             foreach (var meshFilter in meshFilters)
             {
-                var meshCollider = meshFilter.gameObject.AddComponent<MeshCollider>();
+                if (meshFilter.gameObject.TryGetComponent<MeshCollider>(out var meshCollider) == false)
+                {
+                    meshCollider = meshFilter.gameObject.AddComponent<MeshCollider>();
+                }
+
                 meshCollider.enabled = enabled;
                 meshCollider.convex = convex;
 

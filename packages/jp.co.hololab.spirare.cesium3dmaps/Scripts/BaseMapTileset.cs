@@ -85,9 +85,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
         {
             var baseMapTile = tileObject.AddComponent<BaseMapTile>();
 
-            // Test
-            useConvexColliders = true;
-
             var colliders = baseMapTile.AddMeshColliders(convex: useConvexColliders, enabled: false);
             foreach (var collider in colliders)
             {
