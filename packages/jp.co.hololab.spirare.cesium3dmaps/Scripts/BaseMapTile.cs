@@ -28,14 +28,14 @@ namespace HoloLab.Spirare.Cesium3DMaps
             OnMapTileDestroyed?.Invoke(this);
         }
 
-        public IList<MeshCollider> AddMeshColliders(bool convex)
+        public IList<MeshCollider> AddMeshColliders(bool convex, bool enabled)
         {
             var meshFilters = gameObject.GetComponentsInChildren<MeshFilter>(includeInactive: true);
 
             foreach (var meshFilter in meshFilters)
             {
                 var meshCollider = meshFilter.gameObject.AddComponent<MeshCollider>();
-                meshCollider.enabled = false;
+                meshCollider.enabled = enabled;
                 meshCollider.convex = convex;
 
                 meshColliders.Add(meshCollider);

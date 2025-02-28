@@ -198,13 +198,31 @@ namespace HoloLab.Spirare.Cesium3DMaps
             cesiumRectangleMapManipulator = GetComponentInChildren<CesiumRectanbleMapManipulator>();
             cesiumRectangleMapManipulator.OnChangeScaleStarted += () =>
             {
-                DisableBaseMapColliders();
+                StartMapScaleChange();
             };
 
             cesiumRectangleMapManipulator.OnChangeScaleEnded += () =>
             {
-                EnableBaseMapColliders();
+                EndMapScaleChange();
             };
+        }
+
+        public void StartMapScaleChange()
+        {
+            // If a convex colliders are used, scaling can significantly impact performance.
+            // Threrfore, disable colliders during the scale change.
+            if (baseMapTileset != null && baseMapTileset.UseConvexColliders)
+            {
+                baseMapTileset.DisableColliders();
+            }
+        }
+
+        public void EndMapScaleChange()
+        {
+            if (baseMapTileset != null && baseMapTileset.UseConvexColliders)
+            {
+                baseMapTileset.EnableColliders();
+            }
         }
 
         private void Update()
@@ -281,22 +299,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
             baseMapIndex = index;
             SaveBaseMapSelection();
-        }
-
-        public void EnableBaseMapColliders()
-        {
-            if (baseMapTileset != null)
-            {
-                baseMapTileset.EnableColliders();
-            }
-        }
-
-        public void DisableBaseMapColliders()
-        {
-            if (baseMapTileset != null)
-            {
-                baseMapTileset.DisableColliders();
-            }
         }
 
         private void ChangeBaseMap(int index)

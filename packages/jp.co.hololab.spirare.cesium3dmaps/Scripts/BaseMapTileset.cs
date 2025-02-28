@@ -8,6 +8,11 @@ namespace HoloLab.Spirare.Cesium3DMaps
 {
     public class BaseMapTileset : MonoBehaviour
     {
+        [SerializeField]
+        private bool useConvexColliders = false;
+
+        public bool UseConvexColliders => useConvexColliders;
+
         private Cesium3DTileset tileset;
 
         private bool collidersEnabled = true;
@@ -79,17 +84,33 @@ namespace HoloLab.Spirare.Cesium3DMaps
         private void Tileset_OnTileGameObjectCreated(GameObject tileObject)
         {
             var baseMapTile = tileObject.AddComponent<BaseMapTile>();
-            baseMapTiles.Add(baseMapTile);
 
-            var colliders = baseMapTile.AddMeshColliders(convex: true);
-            foreach (var collider in colliders)
+            //useConvexColliders = true;
+            if (useConvexColliders)
             {
-                tileMeshCollidersToBeActive.Enqueue(collider);
-            }
+                var colliders = baseMapTile.AddMeshColliders(convex: true, enabled: false);
+                foreach (var collider in colliders)
+                {
+                    tileMeshCollidersToBeActive.Enqueue(collider);
+                }
 
-            baseMapTile.OnMapTileEnabled += BaseMapTile_OnMapTileEnabled;
-            baseMapTile.OnMapTileDisabled += BaseMapTile_OnMapTileDisabled;
-            baseMapTile.OnMapTileDestroyed += BaseMapTile_OnMapTileDestroyed;
+                baseMapTiles.Add(baseMapTile);
+                baseMapTile.OnMapTileEnabled += BaseMapTile_OnMapTileEnabled;
+                baseMapTile.OnMapTileDisabled += BaseMapTile_OnMapTileDisabled;
+                baseMapTile.OnMapTileDestroyed += BaseMapTile_OnMapTileDestroyed;
+            }
+            else
+            {
+                var colliders = baseMapTile.AddMeshColliders(convex: false, enabled: false);
+                foreach (var collider in colliders)
+                {
+                    tileMeshCollidersToBeActive.Enqueue(collider);
+                }
+
+                baseMapTile.OnMapTileEnabled += BaseMapTile_OnMapTileEnabled;
+                baseMapTile.OnMapTileDisabled += BaseMapTile_OnMapTileDisabled;
+                baseMapTile.OnMapTileDestroyed += BaseMapTile_OnMapTileDestroyed;
+            }
         }
 
         private void BaseMapTile_OnMapTileEnabled(BaseMapTile baseMapTile)
@@ -102,7 +123,11 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
         private void BaseMapTile_OnMapTileDisabled(BaseMapTile baseMapTile)
         {
-            DisableCollider(baseMapTile);
+            // To distribute the performance impact of enabling the collider over frames, disable the collider once.
+            if (useConvexColliders)
+            {
+                DisableCollider(baseMapTile);
+            }
         }
 
         private void BaseMapTile_OnMapTileDestroyed(BaseMapTile baseMapTile)
