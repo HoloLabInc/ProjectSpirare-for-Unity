@@ -34,9 +34,6 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
         private int PointerCount => pointerDataList.Count;
 
-        public event Action OnChangeScaleStarted;
-        public event Action OnChangeScaleEnded;
-
         private void Start()
         {
             cesiumRectangleMap = GetComponentInParent<CesiumRectangleMap>();
@@ -73,7 +70,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
             if (PointerCount == 2)
             {
-                OnChangeScaleStarted?.Invoke();
+                cesiumRectangleMap.StartMapScaleChange();
             }
         }
 
@@ -114,7 +111,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
             if (PointerCount == 1)
             {
-                OnChangeScaleEnded?.Invoke();
+                cesiumRectangleMap.EndMapScaleChange();
             }
         }
 
