@@ -158,6 +158,8 @@ namespace HoloLab.Spirare.Cesium3DMaps
         private Camera mainCamera;
         private RaycastHit[] hits = new RaycastHit[100];
 
+        private Coroutine adjustMapHeightLoopCoroutine;
+
         private const string PlayerPrefs_CenterKey = "CesiumRectangleMap_Center";
         private const string PlayerPrefs_ScaleKey = "CesiumRectangleMap_Scale";
         private const string PlayerPrefs_HeadingKey = "CesiumRectangleMap_Heading";
@@ -187,11 +189,11 @@ namespace HoloLab.Spirare.Cesium3DMaps
             LoadAutoAdjustCenterHeight();
             LoadBaseMapSelection();
 
+            adjustMapHeightLoopCoroutine = StartCoroutine(AdjustMapHeightLoopCoroutine());
+
             ChangeBaseMap(baseMapIndex);
             UpdateMap();
             UpdateMapBase();
-
-            StartCoroutine(AdjustMapHeightLoopCoroutine());
 
             cesiumRectangleMapManipulator = GetComponentInChildren<CesiumRectanbleMapManipulator>();
             cesiumRectangleMapManipulator.OnChangeScaleStarted += () =>
@@ -317,6 +319,12 @@ namespace HoloLab.Spirare.Cesium3DMaps
                 return;
             }
 
+            if (adjustMapHeightLoopCoroutine != null)
+            {
+                StopCoroutine(adjustMapHeightLoopCoroutine);
+                adjustMapHeightLoopCoroutine = null;
+            }
+
             if (baseMapObject != null)
             {
                 Destroy(baseMapObject);
@@ -338,6 +346,8 @@ namespace HoloLab.Spirare.Cesium3DMaps
             }
 
             mapBase.ChangeCredit(baseMapSetting.CreditPrefab);
+
+            adjustMapHeightLoopCoroutine = StartCoroutine(AdjustMapHeightLoopCoroutine());
         }
 
         private void AttachTilesetClipperForChildTilesets()
@@ -355,7 +365,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
         private IEnumerator AdjustMapHeightLoopCoroutine()
         {
             // Wait a few seconds for initial loading
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(5f);
 
             while (true)
             {
