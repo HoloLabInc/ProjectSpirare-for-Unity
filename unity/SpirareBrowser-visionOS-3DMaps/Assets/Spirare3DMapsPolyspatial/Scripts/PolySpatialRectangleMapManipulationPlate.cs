@@ -25,6 +25,8 @@ namespace HoloLab.Spirare.Cesium3DMaps.PolySpatial
 
         private List<PointerData> pointerDataList = new List<PointerData>();
 
+        private bool scaleChanging;
+
         private void Awake()
         {
             rectangleMap = GetComponentInParent<CesiumRectangleMap>();
@@ -53,6 +55,12 @@ namespace HoloLab.Spirare.Cesium3DMaps.PolySpatial
                     InputDevicePosition = touchData.inputDevicePosition,
                     PreviousInputDevicePosition = touchData.inputDevicePosition,
                 });
+
+                if (pointerDataList.Count >= 2 && scaleChanging == false)
+                {
+                    scaleChanging = true;
+                    rectangleMap.StartMapScaleChange();
+                }
             }
         }
 
@@ -87,6 +95,12 @@ namespace HoloLab.Spirare.Cesium3DMaps.PolySpatial
         public override void OnTouchEnded(SpatialPointerState touchData)
         {
             pointerDataList.RemoveAll(x => x.InteractionId == touchData.interactionId);
+
+            if (pointerDataList.Count <= 1 && scaleChanging)
+            {
+                scaleChanging = false;
+                rectangleMap.EndMapScaleChange();
+            }
         }
 
         private void ChangeMapCenter(Vector3 delta)

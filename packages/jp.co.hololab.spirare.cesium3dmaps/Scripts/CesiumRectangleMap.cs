@@ -129,6 +129,9 @@ namespace HoloLab.Spirare.Cesium3DMaps
             }
         }
 
+        [SerializeField]
+        private float autoAdjustCenterHeightMin = float.MinValue;
+
         private float? centerTargetEllipsoidalHeight = null;
 
         [SerializeField]
@@ -147,12 +150,14 @@ namespace HoloLab.Spirare.Cesium3DMaps
         public int BaseMapIndex => baseMapIndex;
 
         private GameObject baseMapObject;
-
+        private BaseMapTileset baseMapTileset;
         private CesiumGeoreference[] cesiumGeoreferences;
         private CesiumGeodeticAreaExcluder[] cesiumGeodeticAreaExcluders;
 
         private Camera mainCamera;
         private RaycastHit[] hits = new RaycastHit[100];
+
+        private Coroutine adjustMapHeightLoopCoroutine;
 
         private const string PlayerPrefs_CenterKey = "CesiumRectangleMap_Center";
         private const string PlayerPrefs_ScaleKey = "CesiumRectangleMap_Scale";
@@ -183,11 +188,29 @@ namespace HoloLab.Spirare.Cesium3DMaps
             LoadAutoAdjustCenterHeight();
             LoadBaseMapSelection();
 
+            adjustMapHeightLoopCoroutine = StartCoroutine(AdjustMapHeightLoopCoroutine());
+
             ChangeBaseMap(baseMapIndex);
             UpdateMap();
             UpdateMapBase();
+        }
 
-            StartCoroutine(AdjustMapHeightLoopCoroutine());
+        public void StartMapScaleChange()
+        {
+            // If a convex colliders are used, scaling can significantly impact performance.
+            // Threrfore, disable colliders during the scale change.
+            if (baseMapTileset != null && baseMapTileset.UseConvexColliders)
+            {
+                baseMapTileset.DisableColliders();
+            }
+        }
+
+        public void EndMapScaleChange()
+        {
+            if (baseMapTileset != null && baseMapTileset.UseConvexColliders)
+            {
+                baseMapTileset.EnableColliders();
+            }
         }
 
         private void Update()
@@ -286,6 +309,12 @@ namespace HoloLab.Spirare.Cesium3DMaps
                 return;
             }
 
+            if (adjustMapHeightLoopCoroutine != null)
+            {
+                StopCoroutine(adjustMapHeightLoopCoroutine);
+                adjustMapHeightLoopCoroutine = null;
+            }
+
             if (baseMapObject != null)
             {
                 Destroy(baseMapObject);
@@ -293,6 +322,10 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
             var baseMapSetting = baseMaps[index];
             baseMapObject = Instantiate(baseMapSetting.MapPrefab, cesiumGeoreferences[0].transform);
+            if (baseMapObject.TryGetComponent<BaseMapTileset>(out baseMapTileset) == false)
+            {
+                baseMapTileset = baseMapObject.AddComponent<BaseMapTileset>();
+            }
 
             if (attatchTilesetClipperForChildTilesets)
             {
@@ -306,6 +339,8 @@ namespace HoloLab.Spirare.Cesium3DMaps
             }
 
             mapBase.ChangeCredit(baseMapSetting.CreditPrefab);
+
+            adjustMapHeightLoopCoroutine = StartCoroutine(AdjustMapHeightLoopCoroutine());
         }
 
         private void AttachTilesetClipperForChildTilesets()
@@ -323,13 +358,21 @@ namespace HoloLab.Spirare.Cesium3DMaps
         private IEnumerator AdjustMapHeightLoopCoroutine()
         {
             // Wait a few seconds for initial loading
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(5f);
 
             while (true)
             {
                 if (autoAdjustCenterHeight && MapOriginIsVisible())
                 {
-                    AdjustMapHeight();
+                    if (baseMapTileset != null && baseMapTileset.AllCollidersEnabled)
+                    {
+                        AdjustMapHeight();
+                    }
+                    else
+                    {
+                        yield return null;
+                        continue;
+                    }
                 }
 
                 yield return new WaitForSeconds(0.5f);
@@ -374,7 +417,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
                 }
 
                 var heightChange = hitPointLocal.y / scale;
-                centerTargetEllipsoidalHeight = (float)center.EllipsoidalHeight + heightChange;
+                centerTargetEllipsoidalHeight = Mathf.Max((float)center.EllipsoidalHeight + heightChange, autoAdjustCenterHeightMin);
             }
         }
 

@@ -67,6 +67,11 @@ namespace HoloLab.Spirare.Cesium3DMaps
             pointerDataList.Add(pointerData);
 
             eventData.Use();
+
+            if (PointerCount == 2)
+            {
+                cesiumRectangleMap.StartMapScaleChange();
+            }
         }
 
         public void OnPointerDragged(MixedRealityPointerEventData eventData)
@@ -103,6 +108,11 @@ namespace HoloLab.Spirare.Cesium3DMaps
             pointerDataList.Remove(pointerData);
 
             eventData.Use();
+
+            if (PointerCount == 1)
+            {
+                cesiumRectangleMap.EndMapScaleChange();
+            }
         }
 
         public void OnPointerClicked(MixedRealityPointerEventData eventData)

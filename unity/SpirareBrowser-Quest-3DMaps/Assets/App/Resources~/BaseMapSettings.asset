@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseMaps:
   - mapName: Photorealistic 3D Tiles
-    mapPrefab: {fileID: 3882610283956612430, guid: ee7750aed5f06ba41a39e0d67fd5546c, type: 3}
+    mapPrefab: {fileID: 1880373387116972676, guid: 7942d559d45e0e14f8936c61a2ba149a, type: 3}
     creditPrefab: {fileID: 1718243800610894358, guid: 42559f762907b459b832bd5a2ebb8c21, type: 3}
