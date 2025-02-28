@@ -9,7 +9,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
     public class BaseMapTileset : MonoBehaviour
     {
         [SerializeField]
-        private bool useConvexColliders = false;
+        private bool useConvexColliders = true;
 
         public bool UseConvexColliders => useConvexColliders;
 
