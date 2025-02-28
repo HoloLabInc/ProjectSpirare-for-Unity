@@ -12,7 +12,7 @@ using UnityEngine;
 namespace HoloLab.Spirare.Cesium3DMaps
 {
 #if MRTK2_PRESENT
-    public class CesiumRectanbleMapManipulator : MonoBehaviour, IMixedRealityPointerHandler
+    public class CesiumRectangleMapManipulator : MonoBehaviour, IMixedRealityPointerHandler
     {
         private class PointerData
         {
@@ -194,7 +194,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
         }
     }
 #else
-    public class CesiumRectanbleMapManipulator : MonoBehaviour { }
+    public class CesiumRectangleMapManipulator : MonoBehaviour { }
 #endif
 }
 
