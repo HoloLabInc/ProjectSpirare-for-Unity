@@ -295,7 +295,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8189102324329880296, guid: 979523ece0eaa0f4cb19335a2d7f5dd4, type: 3}
       propertyPath: onManipulationEnded.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: EnableBaseMapColliders
+      value: EndMapScaleChange
       objectReference: {fileID: 0}
     - target: {fileID: 8189102324329880296, guid: 979523ece0eaa0f4cb19335a2d7f5dd4, type: 3}
       propertyPath: onManipulationStarted.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -303,7 +303,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8189102324329880296, guid: 979523ece0eaa0f4cb19335a2d7f5dd4, type: 3}
       propertyPath: onManipulationStarted.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: DisableBaseMapColliders
+      value: StartMapScaleChange
       objectReference: {fileID: 0}
     - target: {fileID: 8189102324329880296, guid: 979523ece0eaa0f4cb19335a2d7f5dd4, type: 3}
       propertyPath: onManipulationEnded.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
