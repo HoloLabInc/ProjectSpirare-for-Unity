@@ -334,7 +334,10 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
             var baseMapSetting = baseMaps[index];
             baseMapObject = Instantiate(baseMapSetting.MapPrefab, cesiumGeoreferences[0].transform);
-            baseMapTileset = baseMapObject.AddComponent<BaseMapTileset>();
+            if (baseMapObject.TryGetComponent<BaseMapTileset>(out baseMapTileset) == false)
+            {
+                baseMapTileset = baseMapObject.AddComponent<BaseMapTileset>();
+            }
 
             if (attatchTilesetClipperForChildTilesets)
             {
