@@ -74,7 +74,7 @@ namespace HoloLab.Spirare.Cesium3DMaps
 
             foreach (var baseMapTile in baseMapTiles)
             {
-                if (baseMapTile != null && baseMapTile.gameObject != null && baseMapTile.gameObject.activeInHierarchy)
+                if (baseMapTile != null && baseMapTile.gameObject != null)
                 {
                     DisableCollider(baseMapTile);
                 }
@@ -85,32 +85,20 @@ namespace HoloLab.Spirare.Cesium3DMaps
         {
             var baseMapTile = tileObject.AddComponent<BaseMapTile>();
 
-            //useConvexColliders = true;
-            if (useConvexColliders)
-            {
-                var colliders = baseMapTile.AddMeshColliders(convex: true, enabled: false);
-                foreach (var collider in colliders)
-                {
-                    tileMeshCollidersToBeActive.Enqueue(collider);
-                }
+            // Test
+            useConvexColliders = true;
 
-                baseMapTiles.Add(baseMapTile);
-                baseMapTile.OnMapTileEnabled += BaseMapTile_OnMapTileEnabled;
-                baseMapTile.OnMapTileDisabled += BaseMapTile_OnMapTileDisabled;
-                baseMapTile.OnMapTileDestroyed += BaseMapTile_OnMapTileDestroyed;
-            }
-            else
+            var colliders = baseMapTile.AddMeshColliders(convex: useConvexColliders, enabled: false);
+            foreach (var collider in colliders)
             {
-                var colliders = baseMapTile.AddMeshColliders(convex: false, enabled: false);
-                foreach (var collider in colliders)
-                {
-                    tileMeshCollidersToBeActive.Enqueue(collider);
-                }
-
-                baseMapTile.OnMapTileEnabled += BaseMapTile_OnMapTileEnabled;
-                baseMapTile.OnMapTileDisabled += BaseMapTile_OnMapTileDisabled;
-                baseMapTile.OnMapTileDestroyed += BaseMapTile_OnMapTileDestroyed;
+                tileMeshCollidersToBeActive.Enqueue(collider);
             }
+
+            baseMapTiles.Add(baseMapTile);
+
+            baseMapTile.OnMapTileEnabled += BaseMapTile_OnMapTileEnabled;
+            baseMapTile.OnMapTileDisabled += BaseMapTile_OnMapTileDisabled;
+            baseMapTile.OnMapTileDestroyed += BaseMapTile_OnMapTileDestroyed;
         }
 
         private void BaseMapTile_OnMapTileEnabled(BaseMapTile baseMapTile)
