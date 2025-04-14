@@ -302,6 +302,7 @@ GameObject:
   m_Component:
   - component: {fileID: 92103696}
   - component: {fileID: 92103695}
+  - component: {fileID: 92103697}
   m_Layer: 0
   m_Name: CesiumGeoReference
   m_TagString: Untagged
@@ -321,6 +322,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1305e05d46db92498ce698a4c366a5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ellipsoidOverride: {fileID: 0}
+  _originPlacement: 1
   _originAuthority: 0
   _latitude: 35.6812027882608
   _longitude: 139.7669065318
@@ -347,6 +350,21 @@ Transform:
   - {fileID: 1272119968}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &92103697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 92103694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be1fb41cdd01d7649a082f1a8f2bd114, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useMainCamera: 1
+  _useSceneViewCameraInEditor: 1
+  _additionalCameras: []
 --- !u!4 &156344916 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1450815045170518645, guid: e01a644518586084caf99e7e7cc7802a, type: 3}
@@ -665,6 +683,14 @@ PrefabInstance:
     - target: {fileID: 1450815045170518645, guid: e01a644518586084caf99e7e7cc7802a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1450815045170518647, guid: e01a644518586084caf99e7e7cc7802a, type: 3}
+      propertyPath: _ionServer
+      value: 
+      objectReference: {fileID: 11400000, guid: bf74a086441a7e64f8e08587fdb2cb8c, type: 2}
+    - target: {fileID: 1450815045170518647, guid: e01a644518586084caf99e7e7cc7802a, type: 3}
+      propertyPath: _forbidHoles
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
