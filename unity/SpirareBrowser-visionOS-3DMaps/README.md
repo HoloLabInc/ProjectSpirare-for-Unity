@@ -16,6 +16,12 @@ Apple Vision Pro
 
 Move the `Library/PackageCache/com.cesium.unity@x.x.x` folder into the `Packages` folder.
 
+#### Update the asmdef file
+
+Select `Cesium for Unity/Runtime/CesiumRuntime.asmdef`, enable the **visionOS** checkbox, then click the **Apply** button.
+
+<img width="480" src="https://github.com/user-attachments/assets/7759b41d-c444-4867-821c-46eed973fcf3">
+
 #### Change the codes
 
 Change the codes by executing the following commands.
