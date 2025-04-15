@@ -13,7 +13,7 @@
       "hash": "40888c418954f215b890b81ae01fdc4ece81c309"
     },
     "com.cesium.unity": {
-      "version": "file:com.cesium.unity@1.14.0",
+      "version": "file:com.cesium.unity@1.15.5",
       "depth": 0,
       "source": "embedded",
       "dependencies": {
