@@ -1,6 +1,6 @@
 {
     "name": "jp.co.hololab.spirare.polyspatial",
-    "version": "1.5.0",
+    "version": "1.6.0",
     "displayName": "Spirare PolySpatial",
     "description": "Spirare module for PolySpatial",
     "unity": "2022.3",
