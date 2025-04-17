@@ -2,8 +2,8 @@
   "dependencies": {
     "com.cysharp.unitask": "2.5.10",
     "com.gwaredd.mggif": "https://github.com/gwaredd/mgGif.git?path=Assets/mgGif",
-    "com.meta.xr.mrutilitykit": "74.0.1",
-    "com.meta.xr.sdk.core": "74.0.0",
+    "com.meta.xr.mrutilitykit": "74.0.2",
+    "com.meta.xr.sdk.core": "74.0.2",
     "com.unity.ai.navigation": "2.0.7",
     "com.unity.cloud.draco": "5.1.8",
     "com.unity.cloud.gltfast": "6.2.0",
