@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/App/Scenes/SpirareBrowser-Quest-Marker.unity
+    guid: 1be18a8800247eb4188d16186097b004
+  m_configObjects:
+    UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 548ca33798412b442af98ce376ef00ba, type: 2}
+    UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: cd9f02c9222767143a8c3d4242757896, type: 2}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: ef5e267b2c693a74dadb5004e364b4d0, type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 838aa734b6180dd4daf8ca635916b822, type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: cdf7072b096dae04a8649a535edee89c, type: 2}
+  m_UseUCBPForAssetBundles: 0
