@@ -16,6 +16,7 @@
   </application>
   <uses-feature android:name="android.hardware.vr.headtracking" android:version="1" android:required="true" />
   <uses-feature android:name="oculus.software.eye_tracking" android:required="false" />
+  <uses-feature android:name="com.oculus.feature.BOUNDARYLESS_APP" android:required="true" />
   <uses-permission android:name="com.oculus.permission.EYE_TRACKING" />
   <uses-permission android:name="horizonos.permission.HEADSET_CAMERA" />
 </manifest>
