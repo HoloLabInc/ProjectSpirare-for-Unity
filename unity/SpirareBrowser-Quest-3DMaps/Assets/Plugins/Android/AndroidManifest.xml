@@ -14,4 +14,5 @@
     <meta-data android:name="com.oculus.supportedDevices" android:value="quest|quest2|questpro" />
   </application>
   <uses-feature android:name="android.hardware.vr.headtracking" android:version="1" android:required="true" />
+  <uses-feature android:name="com.oculus.feature.BOUNDARYLESS_APP" android:required="true" />
 </manifest>
