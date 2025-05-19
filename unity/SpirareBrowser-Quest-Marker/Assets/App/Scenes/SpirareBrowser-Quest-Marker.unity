@@ -7292,6 +7292,10 @@ PrefabInstance:
       propertyPath: displayModeInBuild
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 451510481513926599, guid: 6afd5c5640f35ac4b94fe08a3ed2b431, type: 3}
+      propertyPath: pomlLoaderSettings
+      value: 
+      objectReference: {fileID: 11400000, guid: c9abef68f4db6484e8227a7b6d3697f8, type: 2}
     - target: {fileID: 451510481513926616, guid: 6afd5c5640f35ac4b94fe08a3ed2b431, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
