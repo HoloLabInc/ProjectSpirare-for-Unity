@@ -116,7 +116,11 @@ namespace HoloLab.Spirare
         // TODO: Move the code to the Positioning Tools
         private async UniTask<(bool Success, CardinalDirection CardinalDirection)> GetCardinalDirectionAsync(int timeoutMilliseconds)
         {
+#if UNITY_6000_0_OR_NEWER
+            var cardinalDirectionService = FindFirstObjectByType<CardinalDirectionServiceComponent>();
+#else
             var cardinalDirectionService = FindObjectOfType<CardinalDirectionServiceComponent>();
+#endif
             if (cardinalDirectionService == null)
             {
                 return (false, new CardinalDirection());
@@ -132,7 +136,11 @@ namespace HoloLab.Spirare
 
         private async UniTask<(bool Success, GeographicLocation GeographicLocation)> GetGeographicLocationAsync(int timeoutMilliseconds)
         {
+#if UNITY_6000_0_OR_NEWER
+            var geographicLocationService = FindFirstObjectByType<GeographicLocationServiceComponent>();
+#else
             var geographicLocationService = FindObjectOfType<GeographicLocationServiceComponent>();
+#endif
             if (geographicLocationService == null)
             {
                 return (false, new GeographicLocation());
