@@ -24,7 +24,11 @@ namespace HoloLab.Spirare.Browser
 
         private void Awake()
         {
+#if UNITY_6000_0_OR_NEWER
+            contentsManager = FindFirstObjectByType<PomlContentsManager>();
+#else
             contentsManager = FindObjectOfType<PomlContentsManager>();
+#endif
 
             loadMessageText.text = "";
 

@@ -138,7 +138,11 @@ namespace HoloLab.Spirare
             // If Width is specified, perform word wrapping for the text
             if (element.Width != 0f)
             {
+#if UNITY_6000_0_OR_NEWER
+                textMeshPro.textWrappingMode = TextWrappingModes.Normal;
+#else
                 textMeshPro.enableWordWrapping = true;
+#endif
             }
 
             // If Height is specified, hide characters that don't fit in the area
