@@ -46,7 +46,7 @@ https://docs.spirare.hololab.co.jp/
 - Target Devices
   - Meta Quest
 
-### [SpirareBrowser-Quest-Space](./unity/SpirareBrowser-Quest-Marker)
+### [SpirareBrowser-Quest-Marker](./unity/SpirareBrowser-Quest-Marker)
 
 - Target Devices
   - Meta Quest 3 / Meta Quest 3S
