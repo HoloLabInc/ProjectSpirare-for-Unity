@@ -46,6 +46,13 @@ https://docs.spirare.hololab.co.jp/
 - Target Devices
   - Meta Quest
 
+### [SpirareBrowser-Quest-Marker](./unity/SpirareBrowser-Quest-Marker)
+
+- Target Devices
+  - Meta Quest 3 / Meta Quest 3S
+- Position Alignment Method
+  - Marker tracking (QR)
+
 ### [SpirareBrowser-Quest-Cesium](./unity/SpirareBrowser-Quest-Cesium)
 
 - Target Devices
