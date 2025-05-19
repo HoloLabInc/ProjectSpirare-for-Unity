@@ -9,6 +9,7 @@ EditorBuildSettings:
     path: Assets/App/Scenes/SpirareBrowser-Quest-Marker.unity
     guid: 1be18a8800247eb4188d16186097b004
   m_configObjects:
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: e99457341ef84324ba01ffee0f7e311a, type: 2}
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 548ca33798412b442af98ce376ef00ba, type: 2}
     UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: cd9f02c9222767143a8c3d4242757896, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
