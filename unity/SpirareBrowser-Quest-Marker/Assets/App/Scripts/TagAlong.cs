@@ -18,15 +18,9 @@ namespace HoloLab.Spirare.Quest
         private void Start()
         {
             mainCamera = Camera.main;
-
-            var cameraTransform = mainCamera.transform;
-            var targetPosition = cameraTransform.position + cameraTransform.forward * distanceFromCamera;
-            transform.position = targetPosition;
-            transform.LookAt(cameraTransform.position);
-            transform.Rotate(0, 180, 0);
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             var cameraTransform = mainCamera.transform;
             var targetPosition = cameraTransform.position + cameraTransform.forward * distanceFromCamera;
