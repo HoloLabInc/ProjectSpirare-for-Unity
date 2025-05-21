@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace HoloLab.Spirare.Quest
 {
@@ -10,12 +11,49 @@ namespace HoloLab.Spirare.Quest
         [SerializeField]
         private float distanceFromCamera = 1f;
 
+        [SerializeField]
+        private ScrollRect contentScrollRect;
+
+        [SerializeField]
+        private List<MenuItem> menuItems = new List<MenuItem>();
+
         private Canvas menuCanvas;
+
+        private enum MenuType
+        {
+            Content = 0,
+            License
+        }
+
+        [Serializable]
+        private class MenuItem
+        {
+            public MenuType menuType;
+            public Toggle navToggle;
+            public GameObject content;
+        }
 
         private void Start()
         {
             menuCanvas = GetComponentInChildren<Canvas>();
             menuCanvas.gameObject.SetActive(false);
+
+            OnNavToggleSelected(menuItems[0]);
+
+            foreach (var menuItem in menuItems)
+            {
+                menuItem.navToggle.onValueChanged.AddListener(isToggled =>
+                {
+                    if (isToggled)
+                    {
+                        OnNavToggleSelected(menuItem);
+                    }
+                    else
+                    {
+                        menuItem.navToggle.SetIsOnWithoutNotify(true);
+                    }
+                });
+            }
         }
 
         private void Update()
@@ -38,6 +76,25 @@ namespace HoloLab.Spirare.Quest
             }
 
             menuCanvas.gameObject.SetActive(active);
+        }
+
+        private void OnNavToggleSelected(MenuItem selectedMenuItem)
+        {
+            foreach (var menuItem in menuItems)
+            {
+                if (menuItem == selectedMenuItem)
+                {
+                    menuItem.navToggle.SetIsOnWithoutNotify(true);
+                    menuItem.content.SetActive(true);
+                }
+                else
+                {
+                    menuItem.navToggle.SetIsOnWithoutNotify(false);
+                    menuItem.content.SetActive(false);
+                }
+            }
+
+            contentScrollRect.verticalNormalizedPosition = 1f;
         }
     }
 }
