@@ -105,6 +105,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3696389619441563607}
   - component: {fileID: 4244809809661953339}
+  - component: {fileID: 5301799840600549349}
   - component: {fileID: 8743312633918669750}
   m_Layer: 0
   m_Name: ISDK_RayInteraction
@@ -154,6 +155,18 @@ MonoBehaviour:
   _selectSurface: {fileID: 0}
   _movementProvider: {fileID: 0}
   _tiebreakerScore: 0
+--- !u!114 &5301799840600549349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5991053765806687603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b99af0ee8e4a2a4b9316f1f2186fc97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8743312633918669750
 MonoBehaviour:
   m_ObjectHideFlags: 0
