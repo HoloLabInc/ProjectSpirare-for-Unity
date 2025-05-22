@@ -17,7 +17,7 @@ namespace HoloLab.Spirare
     {
         public static RenderPipelineType GetRenderPipelineType()
         {
-            var renderPipelineAsset = GraphicsSettings.renderPipelineAsset;
+            var renderPipelineAsset = GraphicsSettings.defaultRenderPipeline;
 
             if (renderPipelineAsset == null)
             {
