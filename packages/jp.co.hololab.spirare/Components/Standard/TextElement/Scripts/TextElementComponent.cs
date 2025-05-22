@@ -18,6 +18,14 @@ namespace HoloLab.Spirare
         [SerializeField]
         private GameObject backPlate;
 
+        [SerializeField]
+        private UnlitMaterialType unlitMaterialType = UnlitMaterialType.Unlit_Color;
+        public UnlitMaterialType UnlitMaterialType
+        {
+            get => unlitMaterialType;
+            set => unlitMaterialType = value;
+        }
+
         private RectTransform textRectTransform;
         private Renderer backPlateRenderer;
 
@@ -115,8 +123,13 @@ namespace HoloLab.Spirare
             var bc = element.BackgroundColor;
             if (bc.a > 0f)
             {
-                var material = backPlateRenderer.material;
-                material.color = element.BackgroundColor;
+                if (backPlateRenderer.material != null)
+                {
+                    Destroy(backPlateRenderer.material);
+                }
+
+                var material = UnlitMaterialUtility.CreateUnlitMaterial(unlitMaterialType, element.BackgroundColor, enableAlpha: true);
+                backPlateRenderer.material = material;
             }
             else
             {

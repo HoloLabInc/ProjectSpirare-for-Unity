@@ -186,8 +186,6 @@ MonoBehaviour:
   uiCanvasBackface: {fileID: 391604285866125485}
   playButton: {fileID: 6158540076819709984}
   playButtonBackface: {fileID: 1435831179314236906}
-  backfaceSolidMaterial: {fileID: 2100000, guid: 86eef376a70e8dc4bb8162c1fa3cace0,
-    type: 2}
 --- !u!114 &8730507528999979332
 MonoBehaviour:
   m_ObjectHideFlags: 0

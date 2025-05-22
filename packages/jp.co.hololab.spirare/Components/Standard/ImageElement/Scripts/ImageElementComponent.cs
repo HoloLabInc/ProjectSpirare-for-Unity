@@ -17,7 +17,12 @@ namespace HoloLab.Spirare
         private GameObject imagePlaneBackface = null;
 
         [SerializeField]
-        private Material backfaceSolidMaterial = null;
+        private UnlitMaterialType unlitMaterialType = UnlitMaterialType.Unlit_Color;
+        public UnlitMaterialType UnlitMaterialType
+        {
+            get => unlitMaterialType;
+            set => unlitMaterialType = value;
+        }
 
         private Renderer frontfaceRenderer;
         private Collider frontfaceCollider;
@@ -128,8 +133,7 @@ namespace HoloLab.Spirare
                 switch (element.BackfaceMode)
                 {
                     case PomlBackfaceModeType.Solid:
-                        backfaceMaterial = new Material(backfaceSolidMaterial);
-                        backfaceMaterial.color = element.BackfaceColor;
+                        backfaceMaterial = UnlitMaterialUtility.CreateUnlitMaterial(unlitMaterialType, element.BackfaceColor, enableAlpha: true);
                         backfaceRenderer.material = backfaceMaterial;
                         break;
                     case PomlBackfaceModeType.Visible:

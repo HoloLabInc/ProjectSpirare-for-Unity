@@ -12,7 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3352fc3da2dd43409bca579c116572d, type: 3}
   m_Name: StandardTextElementObjectFactory
   m_EditorClassIdentifier: 
-  builtInTextElementComponentPrefab: {fileID: 4612856805404001844, guid: 1dd41ee3680e36942aab2576774315c8,
-    type: 3}
-  urpTextElementComponentPrefab: {fileID: 5436978412963542038, guid: a48cf78e9ca96ef4f9629d8740900e11,
-    type: 3}
+  textElementComponentPrefab: {fileID: 4612856805404001844, guid: 1dd41ee3680e36942aab2576774315c8, type: 3}
