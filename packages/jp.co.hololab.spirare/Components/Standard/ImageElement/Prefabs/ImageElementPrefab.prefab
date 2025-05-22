@@ -156,8 +156,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imagePlane: {fileID: 1437385374035517025}
   imagePlaneBackface: {fileID: 8828359394432944801}
-  backfaceSolidMaterial: {fileID: 2100000, guid: 4be68e4c028d3084c8e96773c898e119,
-    type: 2}
 --- !u!1 &8828359394432944801
 GameObject:
   m_ObjectHideFlags: 0
